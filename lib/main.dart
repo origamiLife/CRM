@@ -1,52 +1,111 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:origamilift/import/import.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // ใช้สำหรับรอการ initialize
+  await initializeDateFormatting('th', null); // เตรียมข้อมูลสำหรับ Locale ภาษาไทย
+  checkDeviceType();
+  var appDocumentDirectory = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter(appDocumentDirectory.path);
+  await Hive.openBox('userBox'); // เปิด Box สำหรับเก็บข้อมูล
   runApp(const MyApp());
+}
+
+bool isAndroid = false;
+bool isTablet = false;
+bool isIPad = false;
+bool isIPhone = false;
+Future<void> checkDeviceType() async {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  // ความกว้างของหน้าจอ
+  double screenWidth = window.physicalSize.shortestSide;
+  // ความยาวของหน้าจอ
+  double screenHeight = window.physicalSize.longestSide;
+  if (Platform.isAndroid) {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    if (androidInfo.isPhysicalDevice) {
+      print('Android Device: ${androidInfo.model}');
+    }
+    if (screenWidth > 1440 || screenHeight <= 1900) {
+      isAndroid = false;
+      isTablet = true;
+      print("This Android device is a Tablet");
+    } else {
+      isAndroid = true;
+      isTablet = false;
+      print("This Android device is a Phone");
+    }
+    isIPad = false;
+    isIPhone = false;
+  } else if (Platform.isIOS) {
+    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    // เช็คชื่อรุ่นว่าเป็น iPad หรือไม่
+    if ((iosInfo.model?.toLowerCase().contains("ipad") ?? false) || screenWidth > 1440 || screenHeight <= 1900) {
+      isIPad = true;
+      isIPhone = false;
+      print("This device is an iPad");
+    } else {
+      isIPad = false;
+      isIPhone = true;
+      print("This device is an iPhone");
+    }
+    isAndroid = false;
+    isTablet = false;
+  }
+  print('$isAndroid , $isTablet , $isIPad , $isIPhone');
+  if(isAndroid == true || isIPhone == true){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    });
+  }else{
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   // หมุนหน้าจอเป็นแนวนอนอัตโนมัติและล็อคไว้
+    //   SystemChrome.setPreferredOrientations([
+    //     DeviceOrientation.landscapeRight,
+    //     DeviceOrientation.landscapeLeft,
+    //   ]);
+    // });
+  }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Origami',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        useMaterial3: false,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Theme.of(context).colorScheme.inversePrimary,
+          brightness: Brightness.light,
+        ),
+        textTheme: TextTheme(
+          displayLarge: GoogleFonts.openSans(
+            fontSize: 72,
+            fontWeight: FontWeight.bold,
+          ),
+          //GoogleFonts.oswald
+          titleLarge: GoogleFonts.openSans(
+            fontSize: 28,
+          ),
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginPage(num: 0, popPage: 0),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -59,67 +118,35 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'You have pushed the button this many times:',
+              ),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ));
   }
 }
