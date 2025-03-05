@@ -2,8 +2,6 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
-int selectedRadio = 2;
-
 class TranslatePage extends StatefulWidget {
   const TranslatePage({
     Key? key,

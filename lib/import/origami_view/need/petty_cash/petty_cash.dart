@@ -132,34 +132,36 @@ class _PettyCashState extends State<PettyCash> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      floatingActionButton: (isSave != false)
-          ? FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  used_id = '';
-                  _detailyController.clear();
-                  _quantityController.clear();
-                  _priceController.clear();
-                  _amountController.clear();
-                  isSave = false;
-                });
-              },
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(100),
-                  bottomLeft: Radius.circular(100),
-                  bottomRight: Radius.circular(100),
-                  topLeft: Radius.circular(100),
-                ),
-              ),
-              elevation: 0,
-              backgroundColor: Color(0xFFFF9900),
-            )
-          : Container(),
+      floatingActionButton:
+      // (isSave != false)
+      //     ? FloatingActionButton(
+      //         onPressed: () {
+      //           setState(() {
+      //             used_id = '';
+      //             _detailyController.clear();
+      //             _quantityController.clear();
+      //             _priceController.clear();
+      //             _amountController.clear();
+      //             isSave = false;
+      //           });
+      //         },
+      //         child: Icon(
+      //           Icons.add,
+      //           color: Colors.white,
+      //         ),
+      //         shape: const RoundedRectangleBorder(
+      //           borderRadius: BorderRadius.only(
+      //             topRight: Radius.circular(100),
+      //             bottomLeft: Radius.circular(100),
+      //             bottomRight: Radius.circular(100),
+      //             topLeft: Radius.circular(100),
+      //           ),
+      //         ),
+      //         elevation: 0,
+      //         backgroundColor: Color(0xFFFF9900),
+      //       )
+      //     :
+      Container(),
       body: loading(),
     );
   }
@@ -442,7 +444,7 @@ class _PettyCashState extends State<PettyCash> {
                                   _subjectController.clear();
                                 });
                               },
-                              icon: Icon(Icons.arrow_back_ios_sharp)),
+                              icon: Icon(Icons.clear)),
                       Spacer(),
                       Container(
                         padding: EdgeInsets.only(left: 16, right: 16),
@@ -651,8 +653,7 @@ class _PettyCashState extends State<PettyCash> {
                         ),
                       ),
                       DataColumn(
-                        label: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        label: Flexible(
                           child: Text(
                             'Item Name',
                             style: GoogleFonts.openSans(
@@ -695,17 +696,22 @@ class _PettyCashState extends State<PettyCash> {
                           DataCell(
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  item.item_name??'',
-                                  style: GoogleFonts.openSans(
-                                    color: const Color(0xFF555555),
+                                Expanded(
+                                  child: Text(
+                                    item.item_name??'',
+                                    style: GoogleFonts.openSans(
+                                      color: const Color(0xFF555555),
+                                    ),
                                   ),
                                 ),
-                                Text(
-                                  "(${item.used_date??''})",
-                                  style: GoogleFonts.openSans(
-                                    color: const Color(0xFF555555),
+                                Expanded(
+                                  child: Text(
+                                    "(${item.used_date??''})",
+                                    style: GoogleFonts.openSans(
+                                      color: const Color(0xFF555555),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -751,31 +757,28 @@ class _PettyCashState extends State<PettyCash> {
                                 Row(
                                   children: [
                                     const Icon(Icons.currency_bitcoin_outlined),
-                                    const SizedBox(
-                                      width: 4,
-                                    ),
+                                    const SizedBox(width: 4),
                                     Flexible(
                                       child: Text(
                                         'Expense request',
                                         style: GoogleFonts.openSans(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
-                                          color: const Color(0xFF555555),
+                                          color: Color(0xFF555555),
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
+                                const SizedBox(height: 8),
+
                                 Container(
                                   height: 48,
-                                  padding: EdgeInsets.only(left: 16),
+                                  padding: const EdgeInsets.only(left: 16),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
                                     border: Border.all(
-                                      color: Color(0xFF555555),
+                                      color: const Color(0xFF555555),
                                       width: 1.0,
                                     ),
                                   ),
@@ -785,71 +788,66 @@ class _PettyCashState extends State<PettyCash> {
                                       isDense: true,
                                       filled: true,
                                       fillColor: Colors.white,
-                                      hintText: 'subject',
+                                      hintText: 'Subject',
                                       hintStyle: GoogleFonts.openSans(
-                                        color: const Color(0xFF555555),
-                                      ),
-                                      labelStyle: GoogleFonts.openSans(
                                         color: const Color(0xFF555555),
                                       ),
                                       border: InputBorder.none,
-                                      suffixIcon: Container(
-                                        alignment: Alignment.centerRight,
-                                        width: 10,
-                                        child: Center(
-                                          child: IconButton(
-                                            onPressed: () {
-                                              _subjectController.clear();
-                                            },
-                                            icon: const Icon(Icons.close),
-                                            color: Color(0xFF555555),
-                                            iconSize: 16,
-                                          ),
-                                        ),
+                                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                                      suffixIcon: IconButton(
+                                        onPressed: () {
+                                          _subjectController.clear();
+                                        },
+                                        icon: const Icon(Icons.close, size: 16),
+                                        color: Color(0xFF555555),
                                       ),
                                     ),
-                                    onChanged: (value) {},
+                                    cursorColor: const Color(0xFF555555),
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                      color: const Color(0xFF555555),
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: TextFormField(
-                                    minLines: 3,
-                                    maxLines: null,
-                                    keyboardType: TextInputType.text,
-                                    controller: _descriptionController,
-                                    style: GoogleFonts.openSans(
-                                        color: const Color(0xFF555555),
-                                        fontSize: 14),
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      hintText: '$Type_something...',
-                                      hintStyle: GoogleFonts.openSans(
-                                          fontSize: 14,
-                                          color: const Color(0xFF555555)),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color(0xFF555555)),
-                                      ),
-                                    ),
-                                    onChanged: (value) {},
-                                  ),
-                                ),
+                                const SizedBox(height: 8),
+                                _buildTextField(_descriptionController, '$Type_something...', (value) {
+                                  // _searchSubject = value;
+                                }),
+                                // Container(
+                                //   decoration: BoxDecoration(
+                                //     borderRadius: BorderRadius.circular(15),
+                                //     border: Border.all(
+                                //       color: const Color(0xFF555555),
+                                //       width: 1.0,
+                                //     ),
+                                //   ),
+                                //   child: TextFormField(
+                                //     minLines: 3,
+                                //     maxLines: null,
+                                //     keyboardType: TextInputType.text,
+                                //     controller: _descriptionController,
+                                //     style: GoogleFonts.openSans(
+                                //       color: const Color(0xFF555555),
+                                //       fontSize: 14,
+                                //     ),
+                                //     decoration: InputDecoration(
+                                //       isDense: true,
+                                //       filled: true,
+                                //       fillColor: Colors.white,
+                                //       hintText: '$Type_something...',
+                                //       hintStyle: GoogleFonts.openSans(
+                                //         fontSize: 14,
+                                //         color: const Color(0xFF555555),
+                                //       ),
+                                //       contentPadding: const EdgeInsets.all(12),
+                                //       border: OutlineInputBorder(
+                                //         borderRadius: BorderRadius.circular(15),
+                                //         borderSide: BorderSide.none,
+                                //       ),
+                                //       focusedBorder: OutlineInputBorder(
+                                //         borderRadius: BorderRadius.circular(15),
+                                //         borderSide: const BorderSide(color: Color(0xFF555555)),
+                                //       ),
+                                //     ),
+                                //     cursorColor: const Color(0xFF555555),
+                                //   ),
+                                // ),
                               ],
                             ),
                             actions: <Widget>[
@@ -903,6 +901,39 @@ class _PettyCashState extends State<PettyCash> {
             );
           }
         });
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      Function(String) onChanged) {
+    return Container(
+      decoration: _inputDecoration(),
+      child: TextFormField(
+        // minLines: (controller == _noteController)?5:null,
+        // maxLines: null,
+        controller: controller,
+        keyboardType:
+        hintText == '0' ? TextInputType.number : TextInputType.text,
+        style: GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+        decoration: InputDecoration(
+          isDense: true,
+          filled: true,
+          fillColor: Colors.white,
+          hintText: hintText,
+          hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.black38),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide.none),
+        ),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  BoxDecoration _inputDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(15.0),
+      border: Border.all(color: Color(0xFFFF9900), width: 1.0),
+    );
   }
 
   List<UsedData> _usedData = [];

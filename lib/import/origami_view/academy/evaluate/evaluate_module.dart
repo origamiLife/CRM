@@ -1,21 +1,14 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
-import '../../../login/origami_login.dart';
-import '../../language/translate.dart';
-import '../academy.dart';
-import 'announcements/announcements.dart';
-import 'attach_file/attach_file.dart';
-import 'certification/certification.dart';
-import 'curriculum/curriculum.dart';
-import 'description/description.dart';
-import 'discussion/discussion.dart';
-import 'instructors/instructors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'dart:convert';
-import 'package:google_fonts/google_fonts.dart';
-import 'dart:async';
+import 'package:origamilift/import/import.dart';
+import 'package:origamilift/import/origami_view/academy/academy.dart';
+import 'package:origamilift/import/origami_view/academy/evaluate/announcements/announcements.dart';
+import 'package:origamilift/import/origami_view/academy/evaluate/attach_file/attach_file.dart';
+import 'package:origamilift/import/origami_view/academy/evaluate/certification/certification.dart';
+import 'package:origamilift/import/origami_view/academy/evaluate/curriculum/curriculum.dart';
+import 'package:origamilift/import/origami_view/academy/evaluate/description/description.dart';
+import 'package:origamilift/import/origami_view/academy/evaluate/discussion/discussion.dart';
+import 'package:origamilift/import/origami_view/academy/evaluate/instructors/instructors.dart';
 
 class EvaluateModule extends StatefulWidget {
   EvaluateModule({

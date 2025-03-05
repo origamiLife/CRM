@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:origamilift/import/origami_view/language/translate.dart';
+import 'package:origamilift/import/import.dart';
 
 class Announcements extends StatefulWidget {
   Announcements({super.key,});

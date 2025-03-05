@@ -61,9 +61,7 @@ class _NeedsViewState extends State<NeedsView> {
                     getfirstDay: firstDay,
                     getlastDay: lastDay,
                   ),
-                  SizedBox(
-                    height: 8
-                  ),
+                  SizedBox(height: 8),
                   Divider(),
                   Container(
                     padding: EdgeInsets.only(top: 16),
@@ -78,9 +76,7 @@ class _NeedsViewState extends State<NeedsView> {
                     priority: priority,
                     callbackId: (String value) => priorityId = value,
                   ),
-                  SizedBox(
-                    height: 16
-                  ),
+                  SizedBox(height: 16),
                   Container(
                     padding: EdgeInsets.only(top: 16),
                     child: Text(
@@ -91,9 +87,7 @@ class _NeedsViewState extends State<NeedsView> {
                   ),
                   SizedBox(height: 16),
                   _department(departmentOption),
-                  SizedBox(
-                    height: 16
-                  ),
+                  SizedBox(height: 16),
                   Container(
                     padding: EdgeInsets.only(top: 16),
                     child: Text(
@@ -104,9 +98,7 @@ class _NeedsViewState extends State<NeedsView> {
                   ),
                   SizedBox(height: 16),
                   _project(projectOption),
-                  SizedBox(
-                    height: 16
-                  ),
+                  SizedBox(height: 16),
                   Container(
                     padding: EdgeInsets.only(top: 16),
                     child: Text(
@@ -237,24 +229,24 @@ class _NeedsViewState extends State<NeedsView> {
         children: List.generate(NeedTypeItemOption.length, (indexItem) {
           indexI = indexItem;
           NeedTypeItemOption.sort(
-              (a, b) => b.type_id?.compareTo(a.type_id ?? '') ?? 0);
+              (a, b) => b.type_id.compareTo(a.type_id));
           NeedTypeItemOption.sort(
-              (a, b) => b.type_color?.compareTo(a.type_color ?? '') ?? 0);
+              (a, b) => b.type_color.compareTo(a.type_color));
           NeedTypeItemOption.sort(
-              (a, b) => b.type_name?.compareTo(a.type_name ?? '') ?? 0);
+              (a, b) => b.type_name.compareTo(a.type_name));
           NeedTypeItemOption.sort(
-              (a, b) => b.type_image?.compareTo(a.type_image ?? '') ?? 0);
+              (a, b) => b.type_image.compareTo(a.type_image));
           return SpeedDialChild(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                NeedTypeItemOption[indexItem].type_image ?? '',
+                NeedTypeItemOption[indexItem].type_image,
                 width: 40,
                 height: 40,
                 fit: BoxFit.cover,
               ),
             ),
-            label: NeedTypeItemOption[indexItem].type_name ?? '',
+            label: NeedTypeItemOption[indexItem].type_name,
             labelStyle: GoogleFonts.openSans(
               fontSize: 14.0,
               color: Color(0xFF555555),
@@ -265,31 +257,18 @@ class _NeedsViewState extends State<NeedsView> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             onTap: () {
-              showModalBottomSheet<void>(
-                barrierColor: Colors.black87,
-                backgroundColor: Colors.transparent,
-                context: context,
-                isScrollControlled: true,
-                isDismissible: false,
-                enableDrag: false,
-                builder: (BuildContext context) {
-                  return Container(
-                    color: Colors.white,
-                    child: FractionallySizedBox(
-                      heightFactor: 0.96,
-                      child: Scaffold(
-                        backgroundColor: Colors.transparent,
-                        body: NeedDetail(
-                          needTypeItem: NeedTypeItemOption[indexItem],
-                          Authorization: widget.Authorization,
-                          employee: widget.employee,
-                          request_id: '',
-                          // detailItem: ,
-                        ),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      NeedDetail(
+                        needTypeItem: NeedTypeItemOption[indexItem],
+                        Authorization: widget.Authorization,
+                        employee: widget.employee,
+                        request_id: '',
+                        // detailItem: ,
                       ),
-                    ),
-                  );
-                },
+                ),
               );
             },
           );
@@ -398,7 +377,7 @@ class _NeedsViewState extends State<NeedsView> {
                               setState(() {
                                 _selectcolor = index;
                               });
-                              typeName = NeedTypeOption[index].typeId ?? '';
+                              typeName = NeedTypeOption[index].typeId;
                               fetchNeedResponse();
                             },
                             child: Padding(
@@ -425,7 +404,7 @@ class _NeedsViewState extends State<NeedsView> {
                                     padding: EdgeInsets.only(
                                         bottom: 6, top: 6, left: 16, right: 16),
                                     child: Text(
-                                      NeedTypeOption[index].typeName ?? '',
+                                      NeedTypeOption[index].typeName,
                                       style: GoogleFonts.openSans(
                                           color: (index == _selectcolor)
                                               ? Colors.white
@@ -445,10 +424,10 @@ class _NeedsViewState extends State<NeedsView> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: List.generate(
-                        NeedTypeOption[_selectcolor].typeStatus?.length ?? 0,
+                        NeedTypeOption[_selectcolor].typeStatus.length ,
                         (index) {
                       final typeStatus =
-                          NeedTypeOption[_selectcolor].typeStatus?[index];
+                          NeedTypeOption[_selectcolor].typeStatus[index];
                       return Padding(
                         padding: const EdgeInsets.only(left: 8, top: 4),
                         child: InkWell(
@@ -456,7 +435,7 @@ class _NeedsViewState extends State<NeedsView> {
                             setState(() {
                               _indexcolor = index;
                             });
-                            status_id = typeStatus?.statusId ?? '';
+                            status_id = typeStatus.statusId;
                             fetchNeedResponse();
                           },
                           child: Padding(
@@ -475,7 +454,7 @@ class _NeedsViewState extends State<NeedsView> {
                                     child: Padding(
                                   padding: EdgeInsets.only(left: 8, right: 16),
                                   child: Text(
-                                    "${typeStatus?.statusName}",
+                                    "${typeStatus.statusName}",
                                     style: GoogleFonts.openSans(
                                       color: (index == _indexcolor)
                                           ? Colors.white
@@ -1279,31 +1258,31 @@ class _NeedsViewState extends State<NeedsView> {
 
 // models.dart
 class NeedData {
-  final String? requestNo;
-  final String? requestEmpId;
-  final String? requestEmpName;
-  final String? paytoEmpId;
-  final String? departmentId;
-  final String? departmentName;
-  final String? effectiveDate;
-  final String? divisionId;
-  final String? divisionName;
-  final String? returnDate;
-  final String? needSubject;
-  final String? needReason;
-  final String? assetId;
-  final String? assetName;
-  final String? accountId;
-  final String? accountName;
-  final String? contactId;
-  final String? contactName;
-  final String? priorityId;
-  final String? priorityName;
-  final String? priorityColor;
-  final String? projectId;
-  final String? projectName;
-  final String? paytoEmpName;
-  final String? need_type_name;
+  final String requestNo;
+  final String requestEmpId;
+  final String requestEmpName;
+  final String paytoEmpId;
+  final String departmentId;
+  final String departmentName;
+  final String effectiveDate;
+  final String divisionId;
+  final String divisionName;
+  final String returnDate;
+  final String needSubject;
+  final String needReason;
+  final String assetId;
+  final String assetName;
+  final String accountId;
+  final String accountName;
+  final String contactId;
+  final String contactName;
+  final String priorityId;
+  final String priorityName;
+  final String priorityColor;
+  final String projectId;
+  final String projectName;
+  final String paytoEmpName;
+  final String need_type_name;
   final List<String>? needItem_id;
   final List<String>? needItem_date;
   final List<String>? needItem_note;
@@ -1313,31 +1292,31 @@ class NeedData {
   final List<NeedItemData> itemData;
 
   NeedData({
-    this.requestNo,
-    this.requestEmpId,
-    this.requestEmpName,
-    this.paytoEmpId,
-    this.departmentId,
-    this.departmentName,
-    this.effectiveDate,
-    this.divisionId,
-    this.divisionName,
-    this.returnDate,
-    this.needSubject,
-    this.needReason,
-    this.assetId,
-    this.assetName,
-    this.accountId,
-    this.accountName,
-    this.contactId,
-    this.contactName,
-    this.priorityId,
-    this.priorityName,
-    this.priorityColor,
-    this.projectId,
-    this.projectName,
-    this.paytoEmpName,
-    this.need_type_name,
+    required this.requestNo,
+    required this.requestEmpId,
+    required this.requestEmpName,
+    required this.paytoEmpId,
+    required this.departmentId,
+    required this.departmentName,
+    required this.effectiveDate,
+    required this.divisionId,
+    required this.divisionName,
+    required this.returnDate,
+    required this.needSubject,
+    required this.needReason,
+    required this.assetId,
+    required this.assetName,
+    required this.accountId,
+    required this.accountName,
+    required this.contactId,
+    required this.contactName,
+    required this.priorityId,
+    required this.priorityName,
+    required this.priorityColor,
+    required this.projectId,
+    required this.projectName,
+    required this.paytoEmpName,
+    required this.need_type_name,
     this.needItem_id,
     this.needItem_date,
     this.needItem_note,
@@ -1349,73 +1328,75 @@ class NeedData {
 
   factory NeedData.fromJson(Map<String, dynamic> json) {
     return NeedData(
-      requestNo: json['request_no'],
-      requestEmpId: json['request_emp_id'],
-      requestEmpName: json['request_emp_name'],
-      paytoEmpId: json['payto_emp_id'],
-      departmentId: json['department_id'],
-      departmentName: json['department_name'],
-      effectiveDate: json['effective_date'],
-      divisionId: json['division_id'],
-      divisionName: json['division_name'],
-      returnDate: json['return_date'],
-      needSubject: json['need_subject'],
-      needReason: json['need_reason'],
-      assetId: json['asset_id'],
-      assetName: json['asset_name'],
-      accountId: json['account_id'],
-      accountName: json['account_name'],
-      contactId: json['contact_id'],
-      contactName: json['contact_name'],
-      priorityId: json['priority_id'],
-      priorityName: json['priority_name'],
-      priorityColor: json['priority_color'],
-      projectId: json['project_id'],
-      projectName: json['project_name'],
-      paytoEmpName: json['payto_emp_name'],
-      need_type_name: json['need_type_name'],
+      requestNo: json['request_no'] ?? '',
+      requestEmpId: json['request_emp_id'] ?? '',
+      requestEmpName: json['request_emp_name'] ?? '',
+      paytoEmpId: json['payto_emp_id'] ?? '',
+      departmentId: json['department_id'] ?? '',
+      departmentName: json['department_name'] ?? '',
+      effectiveDate: json['effective_date'] ?? '',
+      divisionId: json['division_id'] ?? '',
+      divisionName: json['division_name'] ?? '',
+      returnDate: json['return_date'] ?? '',
+      needSubject: json['need_subject'] ?? '',
+      needReason: json['need_reason'] ?? '',
+      assetId: json['asset_id'] ?? '',
+      assetName: json['asset_name'] ?? '',
+      accountId: json['account_id'] ?? '',
+      accountName: json['account_name'] ?? '',
+      contactId: json['contact_id'] ?? '',
+      contactName: json['contact_name'] ?? '',
+      priorityId: json['priority_id'] ?? '',
+      priorityName: json['priority_name'] ?? '',
+      priorityColor: json['priority_color'] ?? '',
+      projectId: json['project_id'] ?? '',
+      projectName: json['project_name'] ?? '',
+      paytoEmpName: json['payto_emp_name'] ?? '',
+      need_type_name: json['need_type_name'] ?? '',
       needItem_id: List<String>.from(json['n_item_id']),
       needItem_date: List<String>.from(json['n_item_date']),
       needItem_note: List<String>.from(json['n_item_note']),
       needItem_quantity: List<String>.from(json['n_item_quantity']),
       needItem_price: List<String>.from(json['n_item_price']),
       needItem_unit: List<String>.from(json['n_item_unit']),
-      itemData: (json['need_item_data'] as List)
-          .map((item) => NeedItemData.fromJson(item))
-          .toList(),
+      itemData: (json['need_item_data'] as List?)
+              ?.map((item) => NeedItemData.fromJson(item))
+              .toList() ??
+          [],
     );
   }
 }
 
 class NeedItemData {
-  final String? itemId;
+  final String itemId;
   final String? item_sort;
-  final String? itemName;
-  final String? itemQuantity;
-  final String? itemPrice;
-  final String? unitCode;
-  final String? unitDesc;
-  final String? itemAmount;
-  final String? itemNote;
-  final String? itemDate;
+  final String itemName;
+  final String itemQuantity;
+  final String itemPrice;
+  final String unitCode;
+  final String unitDesc;
+  final String itemAmount;
+  final String itemNote;
+  final String itemDate;
   final List<String>? itemImage;
   final List<String>? image_base64;
   final List<String>? image_type_data;
 
-  NeedItemData(
-      {this.itemId,
-      this.item_sort,
-      this.itemName,
-      this.itemQuantity,
-      this.itemPrice,
-      this.unitCode,
-      this.unitDesc,
-      this.itemAmount,
-      this.itemNote,
-      this.itemDate,
-      this.itemImage,
-      this.image_base64,
-      this.image_type_data});
+  NeedItemData({
+    required this.itemId,
+    this.item_sort,
+    required this.itemName,
+    required this.itemQuantity,
+    required this.itemPrice,
+    required this.unitCode,
+    required this.unitDesc,
+    required this.itemAmount,
+    required this.itemNote,
+    required this.itemDate,
+    required this.itemImage,
+    required this.image_base64,
+    required this.image_type_data,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -1437,16 +1418,16 @@ class NeedItemData {
 
   factory NeedItemData.fromJson(Map<String, dynamic> json) {
     return NeedItemData(
-      itemId: json['item_id'],
-      item_sort: json['item_sort'],
-      itemName: json['item_name'],
-      itemQuantity: json['item_quantity'],
-      itemPrice: json['item_price'],
-      unitCode: json['unit_code'],
-      unitDesc: json['unit_desc'],
-      itemAmount: json['item_amount'],
-      itemNote: json['item_note'],
-      itemDate: json['item_date'],
+      itemId: json['item_id'] ?? '',
+      item_sort: json['item_sort'] ?? '',
+      itemName: json['item_name'] ?? '',
+      itemQuantity: json['item_quantity'] ?? '',
+      itemPrice: json['item_price'] ?? '',
+      unitCode: json['unit_code'] ?? '',
+      unitDesc: json['unit_desc'] ?? '',
+      itemAmount: json['item_amount'] ?? '',
+      itemNote: json['item_note'] ?? '',
+      itemDate: json['item_date'] ?? '',
       itemImage: List<String>.from(json['item_image']),
       image_base64: List<String>.from(json['image_base64']),
       image_type_data: List<String>.from(json['image_type_data']),
@@ -1455,186 +1436,187 @@ class NeedItemData {
 }
 
 class NeedRespond {
-  final String? mny_request_id;
-  final String? mny_request_generate_code;
-  final String? mny_request_type_id;
-  final String? mny_type_name;
-  final String? mny_type_color;
-  final String? create_date_display;
-  final String? create_date;
-  final String? effective_date_display;
-  final String? effective_date;
-  final String? mny_request_location;
-  final String? mny_request_note;
-  final String? need_subject;
-  final String? emp_to;
-  final String? emp_id;
-  final String? request_emp;
-  final String? mny_request_total;
-  final String? need_amount;
-  final String? project_name;
-  final String? request_detail;
-  final String? request_name;
-  final String? request_status;
-  final String? request_ap_status;
-  final String? action_data;
-  final String? request_approve_step;
-  final String? request_step;
-  final String? status_desc;
-  final String? tb_action;
-  final String? need_status;
-  final String? request_budget;
-  final String? asset_name;
-  final String? request_clearing;
-  final String? request_ref;
-  final String? request_ref_id;
-  final String? request_ref_type;
-  final String? request_edit;
-  final String? remark;
-  final String? can_manage;
-  final String? cash_id;
-  final String? cash_name;
-  final String? request_item;
-  final String? priority_id;
-  final String? priority_name;
-  final String? priority_color;
-  final String? pay_type;
-  final String? request_verify;
-  final String? payto_type;
-  final String? approve_step;
-  final String? request_remark;
+  final String mny_request_id;
+  final String mny_request_generate_code;
+  final String mny_request_type_id;
+  final String mny_type_name;
+  final String mny_type_color;
+  final String create_date_display;
+  final String create_date;
+  final String effective_date_display;
+  final String effective_date;
+  final String mny_request_location;
+  final String mny_request_note;
+  final String need_subject;
+  final String emp_to;
+  final String emp_id;
+  final String request_emp;
+  final String mny_request_total;
+  final String need_amount;
+  final String project_name;
+  final String request_detail;
+  final String request_name;
+  final String request_status;
+  final String request_ap_status;
+  final String action_data;
+  final String request_approve_step;
+  final String request_step;
+  final String status_desc;
+  final String tb_action;
+  final String need_status;
+  final String request_budget;
+  final String asset_name;
+  final String request_clearing;
+  final String request_ref;
+  final String request_ref_id;
+  final String request_ref_type;
+  final String request_edit;
+  final String remark;
+  final String can_manage;
+  final String cash_id;
+  final String cash_name;
+  final String request_item;
+  final String priority_id;
+  final String priority_name;
+  final String priority_color;
+  final String pay_type;
+  final String request_verify;
+  final String payto_type;
+  final String approve_step;
+  final String request_remark;
 
   NeedRespond({
-    this.mny_request_id,
-    this.mny_request_generate_code,
-    this.mny_request_type_id,
-    this.mny_type_name,
-    this.mny_type_color,
-    this.create_date_display,
-    this.create_date,
-    this.effective_date_display,
-    this.effective_date,
-    this.mny_request_location,
-    this.mny_request_note,
-    this.need_subject,
-    this.emp_to,
-    this.emp_id,
-    this.request_emp,
-    this.mny_request_total,
-    this.need_amount,
-    this.project_name,
-    this.request_detail,
-    this.request_name,
-    this.request_status,
-    this.request_ap_status,
-    this.action_data,
-    this.request_approve_step,
-    this.request_step,
-    this.status_desc,
-    this.tb_action,
-    this.need_status,
-    this.request_budget,
-    this.asset_name,
-    this.request_clearing,
-    this.request_ref,
-    this.request_ref_id,
-    this.request_ref_type,
-    this.request_edit,
-    this.remark,
-    this.can_manage,
-    this.cash_id,
-    this.cash_name,
-    this.request_item,
-    this.priority_id,
-    this.priority_name,
-    this.priority_color,
-    this.pay_type,
-    this.request_verify,
-    this.payto_type,
-    this.approve_step,
-    this.request_remark,
+    required this.mny_request_id,
+    required this.mny_request_generate_code,
+    required this.mny_request_type_id,
+    required this.mny_type_name,
+    required this.mny_type_color,
+    required this.create_date_display,
+    required this.create_date,
+    required this.effective_date_display,
+    required this.effective_date,
+    required this.mny_request_location,
+    required this.mny_request_note,
+    required this.need_subject,
+    required this.emp_to,
+    required this.emp_id,
+    required this.request_emp,
+    required this.mny_request_total,
+    required this.need_amount,
+    required this.project_name,
+    required this.request_detail,
+    required this.request_name,
+    required this.request_status,
+    required this.request_ap_status,
+    required this.action_data,
+    required this.request_approve_step,
+    required this.request_step,
+    required this.status_desc,
+    required this.tb_action,
+    required this.need_status,
+    required this.request_budget,
+    required this.asset_name,
+    required this.request_clearing,
+    required this.request_ref,
+    required this.request_ref_id,
+    required this.request_ref_type,
+    required this.request_edit,
+    required this.remark,
+    required this.can_manage,
+    required this.cash_id,
+    required this.cash_name,
+    required this.request_item,
+    required this.priority_id,
+    required this.priority_name,
+    required this.priority_color,
+    required this.pay_type,
+    required this.request_verify,
+    required this.payto_type,
+    required this.approve_step,
+    required this.request_remark,
   });
 
   factory NeedRespond.fromJson(Map<String, dynamic> json) {
     return NeedRespond(
-      mny_request_id: json['mny_request_id'],
-      mny_request_generate_code: json['mny_request_generate_code'],
-      mny_request_type_id: json['mny_request_type_id'],
-      mny_type_name: json['mny_type_name'],
-      mny_type_color: json['mny_type_color'],
-      create_date_display: json['create_date_display'],
-      create_date: json['create_date'],
-      effective_date_display: json['effective_date_display'],
-      effective_date: json['effective_date'],
-      mny_request_location: json['mny_request_location'],
-      mny_request_note: json['mny_request_note'],
-      need_subject: json['need_subject'],
-      emp_to: json['emp_to'],
-      emp_id: json['emp_id'],
-      request_emp: json['request_emp'],
-      mny_request_total: json['mny_request_total'],
-      need_amount: json['need_amount'],
-      project_name: json['project_name'],
-      request_detail: json['request_detail'],
-      request_name: json['request_name'],
-      request_status: json['request_status'],
-      request_ap_status: json['request_ap_status'],
-      action_data: json['action_data'],
-      request_approve_step: json['request_approve_step'],
-      request_step: json['request_step'],
-      status_desc: json['status_desc'],
-      tb_action: json['tb_action'],
-      need_status: json['need_status'],
-      request_budget: json['request_budget'],
-      asset_name: json['asset_name'],
-      request_clearing: json['request_clearing'],
-      request_ref: json['request_ref'],
-      request_ref_id: json['request_ref_id'],
-      request_ref_type: json['request_ref_type'],
-      request_edit: json['request_edit'],
-      remark: json['remark'],
-      can_manage: json['can_manage'],
-      cash_id: json['cash_id'],
-      cash_name: json['cash_name'],
-      request_item: json['request_item'],
-      priority_id: json['priority_id'],
-      priority_name: json['priority_name'],
-      priority_color: json['priority_color'],
-      pay_type: json['pay_type'],
-      request_verify: json['request_verify'],
-      payto_type: json['payto_type'],
-      approve_step: json['approve_step'],
-      request_remark: json['request_remark'],
+      mny_request_id: json['mny_request_id'] ?? '',
+      mny_request_generate_code: json['mny_request_generate_code'] ?? '',
+      mny_request_type_id: json['mny_request_type_id'] ?? '',
+      mny_type_name: json['mny_type_name'] ?? '',
+      mny_type_color: json['mny_type_color'] ?? '',
+      create_date_display: json['create_date_display'] ?? '',
+      create_date: json['create_date'] ?? '',
+      effective_date_display: json['effective_date_display'] ?? '',
+      effective_date: json['effective_date'] ?? '',
+      mny_request_location: json['mny_request_location'] ?? '',
+      mny_request_note: json['mny_request_note'] ?? '',
+      need_subject: json['need_subject'] ?? '',
+      emp_to: json['emp_to'] ?? '',
+      emp_id: json['emp_id'] ?? '',
+      request_emp: json['request_emp'] ?? '',
+      mny_request_total: json['mny_request_total'] ?? '',
+      need_amount: json['need_amount'] ?? '',
+      project_name: json['project_name'] ?? '',
+      request_detail: json['request_detail'] ?? '',
+      request_name: json['request_name'] ?? '',
+      request_status: json['request_status'] ?? '',
+      request_ap_status: json['request_ap_status'] ?? '',
+      action_data: json['action_data'] ?? '',
+      request_approve_step: json['request_approve_step'] ?? '',
+      request_step: json['request_step'] ?? '',
+      status_desc: json['status_desc'] ?? '',
+      tb_action: json['tb_action'] ?? '',
+      need_status: json['need_status'] ?? '',
+      request_budget: json['request_budget'] ?? '',
+      asset_name: json['asset_name'] ?? '',
+      request_clearing: json['request_clearing'] ?? '',
+      request_ref: json['request_ref'] ?? '',
+      request_ref_id: json['request_ref_id'] ?? '',
+      request_ref_type: json['request_ref_type'] ?? '',
+      request_edit: json['request_edit'] ?? '',
+      remark: json['remark'] ?? '',
+      can_manage: json['can_manage'] ?? '',
+      cash_id: json['cash_id'] ?? '',
+      cash_name: json['cash_name'] ?? '',
+      request_item: json['request_item'] ?? '',
+      priority_id: json['priority_id'] ?? '',
+      priority_name: json['priority_name'] ?? '',
+      priority_color: json['priority_color'] ?? '',
+      pay_type: json['pay_type'] ?? '',
+      request_verify: json['request_verify'] ?? '',
+      payto_type: json['payto_type'] ?? '',
+      approve_step: json['approve_step'] ?? '',
+      request_remark: json['request_remark'] ?? '',
     );
   }
 }
 
 class NeedTypeRespond {
-  String? typeId;
-  String? typeName;
-  String? typeColor;
-  String? typeImage;
+  String typeId;
+  String typeName;
+  String typeColor;
+  String typeImage;
   List<Status> typeStatus;
   List<String> statusListString;
 
   NeedTypeRespond({
-    this.typeId,
-    this.typeName,
-    this.typeColor,
-    this.typeImage,
+    required this.typeId,
+    required this.typeName,
+    required this.typeColor,
+    required this.typeImage,
     required this.typeStatus,
     required this.statusListString,
   });
 
   factory NeedTypeRespond.fromJson(Map<String, dynamic> json) {
     return NeedTypeRespond(
-      typeId: json['type_id'],
-      typeName: json['type_name'],
-      typeColor: json['type_color'],
-      typeImage: json['type_image'],
-      typeStatus: (json['type_status'] as List)
-          .map((statusJson) => Status.fromJson(statusJson))
-          .toList(),
+      typeId: json['type_id'] ?? '',
+      typeName: json['type_name'] ?? '',
+      typeColor: json['type_color'] ?? '',
+      typeImage: json['type_image'] ?? '',
+      typeStatus: (json['type_status'] as List?)
+              ?.map((statusJson) => Status.fromJson(statusJson))
+              .toList() ??
+          [],
       statusListString:
           (json['status_list_string'] as List).map((e) => e as String).toList(),
     );
@@ -1642,44 +1624,44 @@ class NeedTypeRespond {
 }
 
 class Status {
-  final String? statusId;
-  final String? statusName;
+  final String statusId;
+  final String statusName;
   final int? statusFlag;
 
   Status({
-    this.statusId,
-    this.statusName,
+    required this.statusId,
+    required this.statusName,
     this.statusFlag,
   });
 
   factory Status.fromJson(Map<String, dynamic> json) {
     return Status(
-      statusId: json['status_id'],
-      statusName: json['status_name'],
+      statusId: json['status_id'] ?? '',
+      statusName: json['status_name'] ?? '',
       statusFlag: int.parse(json['status_flag'].toString()),
     );
   }
 }
 
 class NeedTypeItemRespond {
-  final String? type_id;
-  final String? type_name;
-  final String? type_color;
-  final String? type_image;
+  final String type_id;
+  final String type_name;
+  final String type_color;
+  final String type_image;
 
   NeedTypeItemRespond({
-    this.type_id,
-    this.type_name,
-    this.type_color,
-    this.type_image,
+    required this.type_id,
+    required this.type_name,
+    required this.type_color,
+    required this.type_image,
   });
 
   factory NeedTypeItemRespond.fromJson(Map<String, dynamic> json) {
     return NeedTypeItemRespond(
-      type_id: json['type_id'],
-      type_name: json['type_name'],
-      type_color: json['type_color'],
-      type_image: json['type_image'],
+      type_id: json['type_id'] ?? '',
+      type_name: json['type_name'] ?? '',
+      type_color: json['type_color'] ?? '',
+      type_image: json['type_image'] ?? '',
     );
   }
 }
@@ -1703,12 +1685,12 @@ class AnnounceData {
 
   factory AnnounceData.fromJson(Map<String, dynamic> json) {
     return AnnounceData(
-      announce_id: json['announce_id'],
-      announce_subject: json['announce_subject'],
-      announce_description: json['announce_description'],
-      announce_date: json['announce_date'],
-      announce_accept: json['announce_accept'],
-      announce_button: json['announce_button'],
+      announce_id: json['announce_id'] ?? '',
+      announce_subject: json['announce_subject'] ?? '',
+      announce_description: json['announce_description'] ?? '',
+      announce_date: json['announce_date'] ?? '',
+      announce_accept: json['announce_accept'] ?? '',
+      announce_button: json['announce_button'] ?? '',
     );
   }
 }

@@ -1,16 +1,6 @@
 import 'package:http/http.dart' as http;
-import '../../../main.dart';
-import '../../login/origami_login.dart';
-import '../language/translate.dart';
-import 'evaluate/evaluate_module.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'dart:convert';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
-import 'dart:async';
+import 'package:origamilift/import/import.dart';
+import 'package:origamilift/import/origami_view/academy/evaluate/evaluate_module.dart';
 
 class AcademyPage extends StatefulWidget {
   AcademyPage({
@@ -122,21 +112,21 @@ class _AcademyPageState extends State<AcademyPage> {
                 Navigator.pop(context);
               },
             ),
-            TextButton(
-              child: Text(
-                Enroll,
-                style: GoogleFonts.openSans(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
-              ),
-              onPressed: () {
-                // setState(() {
-                //   // fetchApprovelMassage(setApprovel?.mny_request_id,"N",_commentN);
-                // });
-                Navigator.pop(context);
-              },
-            ),
+            // TextButton(
+            //   child: Text(
+            //     Enroll,
+            //     style: GoogleFonts.openSans(
+            //       fontWeight: FontWeight.bold,
+            //       color: Colors.green,
+            //     ),
+            //   ),
+            //   onPressed: () {
+            //     // setState(() {
+            //     //   // fetchApprovelMassage(setApprovel?.mny_request_id,"N",_commentN);
+            //     // });
+            //     Navigator.pop(context);
+            //   },
+            // ),
           ],
         );
       },
@@ -829,64 +819,65 @@ class _AcademyPageState extends State<AcademyPage> {
                                           ),
                                         ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      if (_academy[index].academy_date ==
-                                          "Time Out")
-                                        Container(
-                                          alignment: Alignment.bottomRight,
-                                          padding: EdgeInsets.all(8),
-                                          child: Container(
-                                            padding: EdgeInsets.all(4),
-                                            decoration: BoxDecoration(
-                                              color: Colors.green,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Text(
-                                              Enroll,
-                                              style: GoogleFonts.openSans(
-                                                color: Colors.white,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
+                                  // Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.end,
+                                  //   children: [
+                                  //     if (_academy[index].academy_date ==
+                                  //         "Time Out")
+                                  //       Container(
+                                  //         alignment: Alignment.bottomRight,
+                                  //         padding: EdgeInsets.all(8),
+                                  //         child: Container(
+                                  //           padding: EdgeInsets.all(4),
+                                  //           decoration: BoxDecoration(
+                                  //             color: Colors.green,
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(10),
+                                  //           ),
+                                  //           child: Text(
+                                  //             Enroll,
+                                  //             style: GoogleFonts.openSans(
+                                  //               color: Colors.white,
+                                  //             ),
+                                  //             overflow: TextOverflow.ellipsis,
+                                  //             maxLines: 1,
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //   ],
+                                  // ),
                                 ],
                               ),
                             )
-                          : Expanded(
-                              flex: 1,
-                              child: Container(
-                                alignment: Alignment.bottomLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: InkWell(
-                                    onTap: () {}, // _showDialogA,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(6),
-                                        child: Text(
-                                          '$Enroll',
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                          : Container()
+                      // Expanded(
+                      //         flex: 1,
+                      //         child: Container(
+                      //           alignment: Alignment.bottomLeft,
+                      //           child: Padding(
+                      //             padding: const EdgeInsets.all(4),
+                      //             child: InkWell(
+                      //               onTap: () {}, // _showDialogA,
+                      //               child: Container(
+                      //                 decoration: BoxDecoration(
+                      //                   color: Colors.green,
+                      //                   borderRadius: BorderRadius.circular(10),
+                      //                 ),
+                      //                 child: Padding(
+                      //                   padding: const EdgeInsets.all(6),
+                      //                   child: Text(
+                      //                     '$Enroll',
+                      //                     style: GoogleFonts.openSans(
+                      //                       fontSize: 12,
+                      //                       color: Colors.white,
+                      //                     ),
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
                     ],
                   ),
                 ),

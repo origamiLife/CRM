@@ -12,6 +12,7 @@ import 'activity/activity.dart';
 import 'calendar/calendar.dart';
 import 'contact/contact.dart';
 import 'helpdesk/help_desk.dart';
+import 'language/translate_page.dart';
 import 'need/need_view/need.dart';
 import 'need/need_view/need_approve.dart';
 import 'need/petty_cash/petty_cash.dart';
@@ -849,7 +850,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        // 'Authorization': widget.Authorization,
       },
     );
     if (response.statusCode == 200) {

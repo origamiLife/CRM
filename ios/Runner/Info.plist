@@ -33,16 +33,6 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>We need Bluetooth access to connect with devices.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>We need camera access to capture photos.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to provide personalized services.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>We need microphone access for voice recording.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need photo library access to select images.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -63,9 +53,26 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 
+    <key>NSCameraUsageDescription</key>
+    <string>Origami ขอสิทธิ์การเข้าถึงกล้องเพื่อสแกนเอกสารโครงการและถ่ายภาพสำหรับรายงาน</string>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Origami ขอสิทธิ์เข้าถึงคลังภาพของคุณเพื่อให้คุณอัปโหลดรูปภาพและเอกสารที่เกี่ยวข้องกับโครงการได้</string>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Origami ขอสิทธิ์เข้าถึงไมโครโฟนเพื่อเปิดใช้งานการบันทึกเสียงสำหรับการอัปเดตโครงการและการสื่อสารในทีม</string>
+
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Origami ใช้ตำแหน่งของคุณเพื่อนำทางและระบุไซต์โครงการอย่างแม่นยำระหว่าง การใช้งาน</string>
+
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>เราต้องการตำแหน่งของคุณเพื่อให้บริการตลอดเวลา</string>
+    <string>Origami ต้องขอสิทธิ์เข้าถึงตำแหน่งของคุณตลอดเวลาเพื่อตรวจสอบการอัปเดตโครงการอย่างต่อเนื่องและสร้างรายงานที่แม่นยำ</string>
+
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>เราต้องการตำแหน่งของคุณเพื่อให้บริการตลอดเวลา</string>
+    <string>Origami ใช้ตำแหน่งของคุณเพื่อนำทางและอัปเดตโครงการ แม้ว่าแอปจะทำงานอยู่เบื้องหลังก็ตาม</string>
+
+    <key>GMSApiKey</key>
+    <string>AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siow</string>
+
 </dict>
 </plist>

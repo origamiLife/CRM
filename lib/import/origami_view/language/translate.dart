@@ -1,4 +1,5 @@
 import 'package:origamilift/import/origami_view/language/translate_page.dart';
+import '../../../main.dart';
 import 'ENG.dart';
 import 'TH.dart';
 
@@ -16,7 +17,6 @@ void Translate() {
   }
 }
 
-String host = 'https://www.origami.life';
 // origami view
 String need = '';
 String request = '';

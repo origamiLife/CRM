@@ -14,6 +14,7 @@ import 'dart:io';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:origamilift/import/import.dart';
 
 class Curriculum extends StatefulWidget {
   Curriculum({

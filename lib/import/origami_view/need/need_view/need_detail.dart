@@ -14,7 +14,6 @@ import '../widget_mini/mini_item.dart';
 import '../widget_mini/mini_project.dart';
 import '../widget_mini/mini_unit.dart';
 
-
 class NeedDetail extends StatefulWidget {
   const NeedDetail({
     super.key,
@@ -301,7 +300,7 @@ class _NeedDetailState extends State<NeedDetail> {
                 InkWell(
                   onTap: () {
                     showModalBottomSheet<void>(
-                      barrierColor: Colors.black87,
+                      barrierColor: Colors.black12,
                       backgroundColor: Colors.transparent,
                       context: context,
                       isScrollControlled: true,
@@ -401,10 +400,7 @@ class _NeedDetailState extends State<NeedDetail> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          '$Subject ',
-                          style: optionStyle,
-                        ),
+                        _buildSectionTitle('$Subject'),
                         Text(
                           '*',
                           style: GoogleFonts.openSans(
@@ -414,50 +410,9 @@ class _NeedDetailState extends State<NeedDetail> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Color(0xFFFF9900),
-                          width: 1.0,
-                        ),
-                      ),
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        controller: _subjectController,
-                        style: GoogleFonts.openSans(
-                            color: Color(0xFF555555), fontSize: 14),
-                        decoration: InputDecoration(
-                          labelStyle: GoogleFonts.openSans(color: Colors.blue),
-                          isDense: true,
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: (widget.request_id == '')
-                              ? '$Subject....'
-                              : _searchSubject,
-                          hintStyle: GoogleFonts.openSans(
-                              fontSize: 14,
-                              color: (_searchSubject == '')
-                                  ? Colors.black38
-                                  : Color(0xFF555555)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF555555)),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          _searchSubject = value;
-                        },
-                      ),
-                    ),
+                    _buildTextField(_subjectController, '$Subject...', (value) {
+                      _searchSubject = value;
+                    }),
                   ],
                 ),
               ),
@@ -467,53 +422,10 @@ class _NeedDetailState extends State<NeedDetail> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$Reason',
-                    style: optionStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: Color(0xFFFF9900),
-                        width: 1.0,
-                      ),
-                    ),
-                    child: TextFormField(
-                      minLines: 5,
-                      maxLines: null,
-                      keyboardType: TextInputType.text,
-                      controller: _noteController,
-                      style: GoogleFonts.openSans(
-                          color: Color(0xFF555555), fontSize: 14),
-                      decoration: InputDecoration(
-                        isDense: true,
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: (widget.request_id == '')
-                            ? '$Type_something...'
-                            : _reson,
-                        hintStyle: GoogleFonts.openSans(
-                            fontSize: 14,
-                            color: (_reson == '')
-                                ? Colors.black38
-                                : Color(0xFF555555)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF555555)),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        _reson = value;
-                      },
-                    ),
-                  ),
+                  _buildSectionTitle('$Reason'),
+                  _buildTextField(_noteController, '$Type_something...', (value) {
+                    _reson = value;
+                  }),
                 ],
               ),
               SizedBox(
@@ -522,16 +434,7 @@ class _NeedDetailState extends State<NeedDetail> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Text(
-                      '$Priority',
-                      style: optionStyle,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  _buildSectionTitle('$Priority'),
                   _priority(priorityOption),
                 ],
               ),
@@ -544,13 +447,7 @@ class _NeedDetailState extends State<NeedDetail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '$Effective_date',
-                          style: optionStyle,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
+                        _buildSectionTitle('$Effective_date'),
                         Container(
                           height: 48,
                           width: double.infinity,
@@ -598,13 +495,7 @@ class _NeedDetailState extends State<NeedDetail> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '$Return_date',
-                                style: optionStyle,
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
+                              _buildSectionTitle('$Return_date'),
                               Container(
                                 height: 48,
                                 width: double.infinity,
@@ -659,13 +550,7 @@ class _NeedDetailState extends State<NeedDetail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '$Department',
-                          style: optionStyle,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
+                        _buildSectionTitle('$Department'),
                         _department(departmentOption)
                       ],
                     ),
@@ -677,13 +562,7 @@ class _NeedDetailState extends State<NeedDetail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '$Division',
-                          style: optionStyle,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
+                        _buildSectionTitle('$Division'),
                         _division(DivisionOption),
                       ],
                     ),
@@ -696,13 +575,7 @@ class _NeedDetailState extends State<NeedDetail> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$Payto',
-                    style: optionStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  _buildSectionTitle('$Payto'),
                   _employee(employeeOption),
                 ],
               ),
@@ -712,13 +585,7 @@ class _NeedDetailState extends State<NeedDetail> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$Project',
-                    style: optionStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  _buildSectionTitle('$Project'),
                   _project(projectList),
                 ],
               ),
@@ -728,13 +595,7 @@ class _NeedDetailState extends State<NeedDetail> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$Account',
-                    style: optionStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  _buildSectionTitle('$Account'),
                   _account(accountOption),
                 ],
               ),
@@ -744,13 +605,7 @@ class _NeedDetailState extends State<NeedDetail> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$Asset',
-                    style: optionStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  _buildSectionTitle('$Asset'),
                   _asset(assetOption),
                 ],
               ),
@@ -760,13 +615,7 @@ class _NeedDetailState extends State<NeedDetail> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$Contact',
-                    style: optionStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  _buildSectionTitle('$Contact'),
                   _contact(contactOption),
                 ],
               ),
@@ -936,8 +785,6 @@ class _NeedDetailState extends State<NeedDetail> {
                           Padding(
                             padding: const EdgeInsets.only(top: 6, bottom: 6),
                             child: Container(
-
-
                               padding: EdgeInsets.only(
                                   top: 14, bottom: 14, left: 2, right: 2),
                               decoration: BoxDecoration(
@@ -945,13 +792,13 @@ class _NeedDetailState extends State<NeedDetail> {
                                 color: (priority.priority_name == 'Low')
                                     ? Colors.green
                                     : (priority.priority_name == 'Medium')
-                                    ? Colors.yellow
-                                    : (priority.priority_name == 'High')
-                                    ? Color(0xFFFF9900)
-                                    : (priority.priority_name ==
-                                    'Very high')
-                                    ? Colors.redAccent
-                                    : Color(0xFF555555),
+                                        ? Colors.yellow
+                                        : (priority.priority_name == 'High')
+                                            ? Color(0xFFFF9900)
+                                            : (priority.priority_name ==
+                                                    'Very high')
+                                                ? Colors.redAccent
+                                                : Color(0xFF555555),
                               ),
                             ),
                           ),
@@ -1272,7 +1119,7 @@ class _NeedDetailState extends State<NeedDetail> {
   }
 
   List<ItemData> filteredItem = [];
-  String edititemText = '$Item';
+  String edititemText = 'Item';
   String selectItemId = '';
   Widget _selectItem(List<ItemData> itemOption) {
     return DropdownNeed(
@@ -1298,7 +1145,7 @@ class _NeedDetailState extends State<NeedDetail> {
   }
 
   List<ItemData> filteredUnit = [];
-  String editunitText = '$Unit';
+  String editunitText = 'unit';
   String unitText = '';
   String editunit_id = '';
   Widget _selectUnit(List<UnitData> unitOption) {
@@ -1349,15 +1196,15 @@ class _NeedDetailState extends State<NeedDetail> {
     List<String>? imageTypeData,
   ) async {
     saveItemList.add(NeedItemData(
-      itemId: saveId,
-      itemName: saveName,
-      itemQuantity: saveQuantity,
-      itemPrice: savePrice,
-      unitCode: saveunitCode,
-      unitDesc: saveunitDesc,
-      itemAmount: saveAmount,
-      itemNote: saveNote,
-      itemDate: saveDate,
+      itemId: saveId ?? '',
+      itemName: saveName ?? '',
+      itemQuantity: saveQuantity ?? '',
+      itemPrice: savePrice ?? '',
+      unitCode: saveunitCode ?? '',
+      unitDesc: saveunitDesc ?? '',
+      itemAmount: saveAmount ?? '',
+      itemNote: saveNote ?? '',
+      itemDate: saveDate ?? '',
       itemImage: saveImage,
       image_base64: imageBase64,
       image_type_data: imageTypeData,
@@ -1398,7 +1245,7 @@ class _NeedDetailState extends State<NeedDetail> {
                   InkWell(
                     onTap: () {
                       showModalBottomSheet<void>(
-                        barrierColor: Colors.black87,
+                        barrierColor: Colors.black12,
                         backgroundColor: Colors.transparent,
                         context: context,
                         isScrollControlled: true,
@@ -1422,6 +1269,7 @@ class _NeedDetailState extends State<NeedDetail> {
               child: Column(
                 children: [
                   _iT(),
+                  SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -1435,115 +1283,7 @@ class _NeedDetailState extends State<NeedDetail> {
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                if (selectItemId == '') {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext dialogContext) {
-                                      return AlertDialog(
-                                        elevation: 0,
-                                        title: Icon(
-                                          Icons.info_outline,
-                                          size: 64,
-                                          color: Colors.red,
-                                        ),
-                                        content: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                '$Error_Item',
-                                                style: GoogleFonts.openSans(
-                                                  color: Color(0xFF555555),
-                                                ),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: Text(
-                                              '$Close',
-                                              style: GoogleFonts.openSans(
-                                                color: Color(0xFF555555),
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              // Navigator.of(dialogContext).pop();
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  setState(() {
-                                    // imageItem = myList;
-                                    // if (isSave == true) {
-                                    //   myList.add(base64Image ?? '');
-                                    //   myList = myList.toSet().toList();
-                                    // }
-                                    imageItem = myList;
-                                    print(imageItem);
-
-                                    // if(imageItem.length == 0){
-                                    //   Navigator.pop(context);
-                                    //   showModalBottomSheet<void>(
-                                    //     barrierColor: Colors.black87,
-                                    //     backgroundColor: Colors.transparent,
-                                    //     context: context,
-                                    //     isScrollControlled: true,
-                                    //     builder: (BuildContext context) {
-                                    //       return _bill();
-                                    //     },
-                                    //   );
-                                    // }else
-                                    if (imageItem.length > 0) {
-                                      addSaveItem(
-                                        selectItemId,
-                                        edititemText,
-                                        quantityT,
-                                        priceT,
-                                        editunit_id,
-                                        editunitText,
-                                        sumT,
-                                        _detail,
-                                        _itemdate,
-                                        imageItem,
-                                        imageBase64,
-                                        imageTypeData,
-                                      );
-
-                                      addItemId.add(selectItemId);
-                                      addItemDate.add(_itemdate);
-                                      addItemNote.add(_detail);
-                                      addItemQuantity.add(quantityT);
-                                      addItemPrice.add(priceT);
-                                      addItemUnit.add(editunit_id);
-
-                                      selectItemId = '';
-                                      edititemText = '$Item';
-                                      _itemdate = '';
-                                      _quantityController.text = '';
-                                      _amountController.text = '';
-                                      _priceController.text = '';
-                                      editunit_id = '';
-                                      editunitText = '$Unit';
-                                      sumT = '';
-                                      selectedImages = [];
-                                      myList = [];
-                                      imageItem = [];
-                                      Navigator.pop(context);
-                                    }
-                                  });
-                                }
-                              });
-                            },
+                            onPressed: () => _handleAddItem(context),
                             child: Container(
                               padding: EdgeInsets.all(14),
                               width: double.infinity,
@@ -1556,9 +1296,7 @@ class _NeedDetailState extends State<NeedDetail> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 16,
-                        ),
+                        SizedBox(width: 16),
                         Expanded(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -1568,20 +1306,7 @@ class _NeedDetailState extends State<NeedDetail> {
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                Navigator.pop(context);
-                                selectItemId = '';
-                                edititemText = '$Item';
-                                _quantityController.text = '';
-                                _amountController.text = '';
-                                _priceController.text = '';
-                                editunitText = '$Unit';
-                                editunit_id = '';
-                                sumT = '';
-                                imageItem = [];
-                              });
-                            },
+                            onPressed: () => _handleCloseItem(context),
                             child: Container(
                               padding: EdgeInsets.all(14),
                               width: double.infinity,
@@ -1597,6 +1322,7 @@ class _NeedDetailState extends State<NeedDetail> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 18),
                 ],
               ),
             ),
@@ -1606,394 +1332,268 @@ class _NeedDetailState extends State<NeedDetail> {
     );
   }
 
+  void _handleAddItem(BuildContext context) {
+    if (selectItemId.isEmpty) {
+      showErrorDialog(context, '$Error_Item');
+      return;
+    }
+
+    imageItem = myList;
+    print(imageItem);
+
+    if (imageItem.isNotEmpty) {
+      addSaveItem(
+        selectItemId,
+        edititemText,
+        quantityT,
+        priceT,
+        editunit_id,
+        editunitText,
+        sumT,
+        _detail,
+        _itemdate,
+        imageItem,
+        imageBase64,
+        imageTypeData,
+      );
+
+      addItemId.add(selectItemId);
+      addItemDate.add(_itemdate);
+      addItemNote.add(_detail);
+      addItemQuantity.add(quantityT);
+      addItemPrice.add(priceT);
+      addItemUnit.add(editunit_id);
+    }
+
+    _resetForm();
+    Navigator.pop(context);
+  }
+
+  void _handleCloseItem(BuildContext context) {
+    _resetForm();
+    Navigator.pop(context);
+  }
+
+  void _resetForm() {
+    selectItemId = '';
+    edititemText = 'Item';
+    _itemdate = '';
+    _quantityController.clear();
+    _amountController.clear();
+    _priceController.clear();
+    editunit_id = '';
+    editunitText = 'unit';
+    sumT = '';
+    selectedImages.clear();
+    myList.clear();
+    imageItem.clear();
+  }
+
+  void showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          elevation: 0,
+          title: Icon(Icons.info_outline, size: 64, color: Colors.red),
+          content: Text(
+            message,
+            style: GoogleFonts.openSans(color: Color(0xFF555555)),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                '$Close',
+                style: GoogleFonts.openSans(color: Color(0xFF555555)),
+              ),
+              onPressed: () => Navigator.pop(dialogContext),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _iT() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 16, right: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionTitle('$Item :'),
+          _selectItem(itemOption),
+          _buildSectionTitle('$Detail :'),
+          _buildTextField(_quantityController, '$Type_something...', (value) {
+            _detail = value;
+          }),
+          _buildSectionTitle('$Quantity :'),
+          _buildTextField(_amountController, '0', (value) {
+            setState(() {
+              quantityT = value;
+              quantity = double.tryParse(value) ?? 0;
+              sum = price * quantity;
+              sumT = sum.toString();
+            });
+          }),
+          Row(
             children: [
-              Container(
-                child: Text(
-                  '$Item : ',
-                  style: optionStyle,
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Column(
-                children: [
-                  _selectItem(itemOption),
-                  // SizedBox(
-                  //   height: 8,
-                  // ),
-                  // _selectAsset(assetOption),
-                ],
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: Text(
-                '$Detail : ',
-                style: optionStyle,
-              ),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(
-                    color: Color(0xFFFF9900),
-                    width: 1.0,
-                  ),
-                ),
-                child: TextFormField(
-                  minLines: 2,
-                  maxLines: null,
-                  keyboardType: TextInputType.text,
-                  controller: _quantityController,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: '$Type_something...',
-                    hintStyle: GoogleFonts.openSans(
-                      fontSize: 14,
-                      color: (_quantityController.text == '')
-                          ? Colors.black38
-                          : Color(0xFF555555),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF555555)),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    _detail = value;
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: Text(
-                '$Quantity : ',
-                style: optionStyle,
-              ),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16),
-              child: Container(
-                height: 48,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(
-                    color: Color(0xFFFF9900),
-                    width: 1.0,
-                  ),
-                ),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  controller: _amountController,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: '0',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14,
-                        color: (_amountController.text == '')
-                            ? Colors.black38
-                            : Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF555555)),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      quantityT = value;
-                      quantity = double.parse(value);
-                      sum = (priceT == '') ? 0 : price * double.parse(value);
-                      sumT = sum.toString();
-                      print(sumT);
-                    });
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 16, right: 16),
-                    child: Text(
-                      '$Price : ',
-                      style: optionStyle,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        border: Border.all(
-                          color: Color(0xFFFF9900),
-                          width: 1.0,
-                        ),
-                      ),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: _priceController,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: '0',
-                          hintStyle: GoogleFonts.openSans(
-                              fontSize: 14,
-                              color: (_priceController.text == '')
-                                  ? Colors.black38
-                                  : Color(0xFF555555)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF555555)),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            priceT = value;
-                            price = double.parse(value);
-                            sum = (quantityT == '')
-                                ? 0
-                                : quantity * double.parse(value);
-                            sumT = sum.toString();
-                            print(sumT);
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  // Expanded(child: _selectUnit(unitOption)),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '$Unit : ',
-                    style: optionStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 16),
-                    child: _selectUnit(unitOption),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 16, right: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                child: Text(
-                  '$Total_price : ',
-                  style: optionStyle,
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Container(
-                height: 48,
-                width: double.infinity,
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    color: Color(0xFFFF9900),
-                    width: 1.0,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                    (_amountController.text == '' ||
-                            _priceController.text == '')
-                        ? '0'
-                        : '${quantity * price}',
-                    style: GoogleFonts.openSans(
-                      fontSize: 16,
-                      color: (_amountController.text == '' ||
-                              _priceController.text == '')
-                          ? Colors.black38
-                          : Color(0xFF555555),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '$Add_Image',
-                style: GoogleFonts.openSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF555555),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          showModalBottomSheet<void>(
-                            barrierColor: Colors.black87,
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            isScrollControlled: true,
-                            isDismissible: false,
-                            enableDrag: false,
-                            builder: (BuildContext context) {
-                              return _bill();
-                            },
-                          );
-                        },
-                        child: Container(
-                            alignment: Alignment.bottomRight,
-                            height: 90,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Color(0xFFFF9900),
-                                width: 1.0,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.add,
-                                      color: Color(0xFFFF9900),
-                                    ),
-                                    Text(
-                                      '$Add_Image',
-                                      style: GoogleFonts.openSans(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFFFF9900),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )),
-                      ),
-                    ),
-                    Row(
-                      children: List.generate(
-                        myList.length,
-                        (index) {
-                          Uint8List bytes = base64Decode(myList[index]);
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.memory(
-                                bytes,
-                                height: 90,
-                                width: 90,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    _buildSectionTitle('$Price :'),
+                    _buildTextField(_priceController, '0', (value) {
+                      setState(() {
+                        priceT = value;
+                        price = double.tryParse(value) ?? 0;
+                        sum = price * quantity;
+                        sumT = sum.toString();
+                      });
+                    }),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSectionTitle('$Unit :'),
+                    _selectUnit(unitOption),
                   ],
                 ),
               ),
             ],
           ),
+          _buildSectionTitle('$Total_price :'),
+          _buildTotalPriceContainer(),
+          _buildSectionTitle('$Add_Image'),
+          _buildImagePicker(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+      child: Text(
+        title,
+        style: optionStyle,
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      Function(String) onChanged) {
+    return Container(
+      decoration: _inputDecoration(),
+      child: TextFormField(
+        minLines: (controller == _noteController)?5:null,
+        maxLines: null,
+        controller: controller,
+        keyboardType:
+            hintText == '0' ? TextInputType.number : TextInputType.text,
+        style: GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+        decoration: InputDecoration(
+          isDense: true,
+          filled: true,
+          fillColor: Colors.white,
+          hintText: hintText,
+          hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.black38),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide.none),
         ),
-      ],
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  BoxDecoration _inputDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(15.0),
+      border: Border.all(color: Color(0xFFFF9900), width: 1.0),
+    );
+  }
+
+  Widget _buildTotalPriceContainer() {
+    return Container(
+      height: 48,
+      width: double.infinity,
+      alignment: Alignment.centerLeft,
+      decoration: _inputDecoration(),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: Text(
+          (_amountController.text.isEmpty || _priceController.text.isEmpty)
+              ? '0'
+              : '${quantity * price}',
+          style: GoogleFonts.openSans(fontSize: 16, color: Color(0xFF555555)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImagePicker() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                builder: (context) => _bill(),
+              );
+            },
+            child: _buildAddImageButton(),
+          ),
+          SizedBox(width: 8),
+          Row(
+            children: List.generate(
+              myList.length,
+              (index) {
+                Uint8List bytes = base64Decode(myList[index]);
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.memory(bytes,
+                        height: 90, width: 90, fit: BoxFit.cover),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddImageButton() {
+    return Container(
+      alignment: Alignment.center,
+      height: 90,
+      decoration: _inputDecoration(),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.add, color: Color(0xFFFF9900)),
+            Text('$Add_Image',
+                style: GoogleFonts.openSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFFF9900))),
+          ],
+        ),
+      ),
     );
   }
 
@@ -2004,357 +1604,187 @@ class _NeedDetailState extends State<NeedDetail> {
     return Container(
       color: Colors.white,
       child: FractionallySizedBox(
-        // heightFactor: 0.8,
+        heightFactor: 0.8,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
-            backgroundColor: (saveItemList.length == 0)
-                ? Colors.white
-                : Colors.grey.shade100,
+            backgroundColor:
+                saveItemList.isEmpty ? Colors.white : Colors.grey.shade100,
             appBar: AppBar(
               backgroundColor: Colors.white,
               title: Text(
                 '',
-                style: GoogleFonts.openSans(
-                  color: Color(0xFF555555),
-                ),
+                style: GoogleFonts.openSans(color: Color(0xFF555555)),
               ),
+              leading: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.clear)),
             ),
-            body: (saveItemList.length == 0)
+            body: saveItemList.isEmpty
                 ? Center(
-                    child: Container(
-                      child: Text(
-                        '$Empty',
-                        style: GoogleFonts.openSans(
+                    child: Text(
+                      '$Empty',
+                      style: GoogleFonts.openSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                      ),
+                          color: Colors.grey),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
                     ),
                   )
                 : SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        children: List.generate(
-                          saveItemList.length,
-                          (index) {
-                            return Column(
-                              children: [
-                                Card(
-                                  elevation: 0,
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: ListTile(
-                                    subtitle: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              (saveItemList[index].itemName ==
-                                                      '')
-                                                  ? Container()
-                                                  : Column(
-                                                      children: [
-                                                        SizedBox(height: 8),
-                                                        Text(
-                                                          saveItemList[index]
-                                                                  .itemName ??
-                                                              '',
-                                                          style: GoogleFonts
-                                                              .openSans(
-                                                            fontSize: 18.0,
-                                                            color: Color(
-                                                                0xFFFF9900),
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 1,
-                                                        ),
-                                                      ],
-                                                    ),
-                                              SizedBox(height: 8),
-                                              (saveItemList[index].itemDate ==
-                                                      '')
-                                                  ? Container()
-                                                  : Column(
-                                                      children: [
-                                                        Text(
-                                                          '$Date : ${saveItemList[index].itemDate ?? ''}',
-                                                          style: GoogleFonts
-                                                              .openSans(
-                                                            fontSize: 14.0,
-                                                            color: Color(
-                                                                0xFF555555),
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 8),
-                                                      ],
-                                                    ),
-                                              Text(
-                                                "$Detail : ${(saveItemList[index].itemNote == '') ? '-' : saveItemList[index].itemNote ?? ''}",
-                                                style: GoogleFonts.openSans(
-                                                  fontSize: 14.0,
-                                                  color: Color(0xFF555555),
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                              ),
-                                              SizedBox(height: 8),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "$Quantity : ${(saveItemList[index].itemQuantity == '') ? '0' : saveItemList[index].itemQuantity} ",
-                                                    style: GoogleFonts.openSans(
-                                                      fontSize: 14.0,
-                                                      color: Color(0xFF555555),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 8,
-                                                  ),
-                                                  Text(
-                                                    "$Price : ${(saveItemList[index].itemPrice == '') ? '0' : saveItemList[index].itemPrice} $Baht",
-                                                    style: GoogleFonts.openSans(
-                                                      fontSize: 14.0,
-                                                      color: Color(0xFF555555),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                "$Total_price : ${(saveItemList[index].itemPrice == '' || saveItemList[index].itemQuantity == '') ? '0' : "${double.parse(saveItemList[index].itemPrice ?? '') * double.parse(saveItemList[index].itemQuantity ?? '')}"} "
-                                                "${(saveItemList[index].unitCode == '') ? '$Baht/$Unit' : " $Baht/${saveItemList[index].unitDesc ?? ''}"}",
-                                                style: GoogleFonts.openSans(
-                                                  fontSize: 14.0,
-                                                  color: Color(0xFF555555),
-                                                ),
-                                              ),
-                                              SizedBox(height: 8),
-                                            ],
-                                          ),
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      children: saveItemList.map((item) {
+                        return Column(
+                          children: [
+                            Card(
+                              elevation: 0,
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: ListTile(
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (item.itemName.isNotEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Text(
+                                          item.itemName,
+                                          style: GoogleFonts.openSans(
+                                              fontSize: 18.0,
+                                              color: Color(0xFFFF9900),
+                                              fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Container(
-                                                height: 25,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                                child: Icon(
-                                                  null,
-                                                  color: Color(0xFF555555),
-                                                  size: 30,
-                                                )),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            Container(
-                                                height: 25,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                                child: Icon(
-                                                  null,
-                                                  color: Color(0xFF555555),
-                                                  size: 30,
-                                                )),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            InkWell(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                splashColor: Colors.black12,
-                                                onTap: () {
-                                                  setState(() {
-                                                    fetchDeleteItem(
-                                                        (saveItemList[index]
-                                                            .itemId));
-                                                    saveItemList
-                                                        .removeAt(index);
-                                                    Navigator.pop(context);
-                                                  });
-                                                },
-                                                child: Container(
-                                                  alignment:
-                                                      Alignment.bottomRight,
-                                                  height: 25,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
-                                                  child: FaIcon(
-                                                    FontAwesomeIcons.trashAlt,
-                                                    color: Colors.redAccent,
-                                                  ),
-                                                )),
-                                          ],
+                                      ),
+                                    SizedBox(height: 8),
+                                    if (item.itemDate.isNotEmpty)
+                                      Text(
+                                        '$Date : ${item.itemDate}',
+                                        style: GoogleFonts.openSans(
+                                            fontSize: 14.0,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "$Detail : ${item.itemNote.isEmpty ? '-' : item.itemNote}",
+                                      style: GoogleFonts.openSans(
+                                          fontSize: 14.0,
+                                          color: Color(0xFF555555)),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                    SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "$Quantity : ${item.itemQuantity.isEmpty ? '0' : item.itemQuantity}",
+                                          style: GoogleFonts.openSans(
+                                              fontSize: 14.0,
+                                              color: Color(0xFF555555)),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          "$Price : ${item.itemPrice.isEmpty ? '0' : item.itemPrice} $Baht",
+                                          style: GoogleFonts.openSans(
+                                              fontSize: 14.0,
+                                              color: Color(0xFF555555)),
                                         ),
                                       ],
                                     ),
-                                    // Add more details as needed
-                                  ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "$Total_price : ${(item.itemPrice.isEmpty || item.itemQuantity.isEmpty) ? '0' : "${double.parse(item.itemPrice) * double.parse(item.itemQuantity)}"} "
+                                      "${item.unitCode.isEmpty ? '$Baht/$Unit' : " $Baht/${item.unitDesc}"}",
+                                      style: GoogleFonts.openSans(
+                                          fontSize: 14.0,
+                                          color: Color(0xFF555555)),
+                                    ),
+                                    SizedBox(height: 8),
+                                  ],
                                 ),
-                                (widget.request_id == '')
-                                    ? SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: List.generate(
-                                            saveItemList[index]
-                                                .itemImage!
-                                                .length,
-                                            (indexI) {
-                                              Uint8List bytes = base64Decode(
-                                                  saveItemList[index]
-                                                      .itemImage![indexI]);
-                                              return Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 8),
-                                                  child: Image.memory(
-                                                    bytes,
+                                trailing: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Icon(null,
+                                        color: Color(0xFF555555), size: 30),
+                                    SizedBox(height: 8),
+                                    Icon(null,
+                                        color: Color(0xFF555555), size: 30),
+                                    SizedBox(height: 8),
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      splashColor: Colors.black12,
+                                      onTap: () {
+                                        setState(() {
+                                          fetchDeleteItem(item.itemId);
+                                          saveItemList.remove(item);
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      child: FaIcon(FontAwesomeIcons.trashAlt,
+                                          color: Colors.redAccent),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            if (widget.request_id.isEmpty)
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: item.itemImage!.map((img) {
+                                    Uint8List bytes = base64Decode(img);
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: Image.memory(bytes, width: 120),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            else
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: item.itemImage!.map((img) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(right: 8),
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _launchUrl(Uri.parse(img));
+                                          });
+                                        },
+                                        child: img.contains('.pdf')
+                                            ? Image.network(
+                                                "https://techterms.com/img/lg/pdf_109.png",
+                                                height: 120,
+                                                width: 120,
+                                                fit: BoxFit.cover)
+                                            : img.contains('.jpeg')
+                                                ? Image.network(img,
+                                                    height: 120,
                                                     width: 120,
-                                                  ));
-                                            },
-                                          ),
-                                        ),
-                                      )
-                                    : SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: List.generate(
-                                            saveItemList[index]
-                                                .itemImage!
-                                                .length,
-                                            (indexI) {
-                                              return Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 8),
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    final Uri _url = Uri.parse(
-                                                        saveItemList[index]
-                                                                .itemImage![
-                                                            indexI]);
-                                                    setState(() {
-                                                      _launchUrl(_url);
-                                                    });
-                                                  },
-                                                  child: (saveItemList[index]
-                                                          .itemImage![indexI]
-                                                          .contains('.pdf'))
-                                                      ? ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          child: Image.network(
-                                                            "https://techterms.com/img/lg/pdf_109.png",
-                                                            height: 120,
-                                                            width: 120,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        )
-                                                      : (saveItemList[index]
-                                                              .itemImage![
-                                                                  indexI]
-                                                              .contains(
-                                                                  '.jpeg'))
-                                                          ? ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                              child:
-                                                                  Image.network(
-                                                                saveItemList[
-                                                                            index]
-                                                                        .itemImage![
-                                                                    indexI],
-                                                                height: 120,
-                                                                width: 120,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            )
-                                                          : Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                border:
-                                                                    Border.all(
-                                                                  color: Color(
-                                                                      0xFF555555),
-                                                                  width: 1.0,
-                                                                ),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
-                                                                color: Color(
-                                                                    0xFF555555),
-                                                              ),
-                                                              child: ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
-                                                                child: Image
-                                                                    .network(
-                                                                  '$host//images/ogm_logo.png?v=1723543870265',
-                                                                  height: 120,
-                                                                  width: 120,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                  // Container(
-                                                  //             decoration:
-                                                  //                 BoxDecoration(
-                                                  //             borderRadius:
-                                                  //                 BorderRadius
-                                                  //                     .circular(
-                                                  //                         10),
-                                                  //           ),
-                                                  //   child: Image.network('$host//images/ogm_logo.png?v=1723543870265',s),
-                                                  // ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
+                                                    fit: BoxFit.cover)
+                                                : Image.network(
+                                                    '$host//images/ogm_logo.png?v=1723543870265',
+                                                    height: 120,
+                                                    width: 120,
+                                                    fit: BoxFit.cover),
                                       ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
-                                  child: Divider(
-                                    color: Colors.amber,
-                                  ),
+                                    );
+                                  }).toList(),
                                 ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
+                              ),
+                            Divider(color: Colors.amber),
+                          ],
+                        );
+                      }).toList(),
                     ),
                   ),
           ),
@@ -2424,7 +1854,7 @@ class _NeedDetailState extends State<NeedDetail> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        onTap: () => _pickImage(),
+                        onTap: () => _pickCameraImage(),
                         child: Icon(
                           Icons.camera_alt_outlined,
                           color: Color(0xFF555555),
@@ -2660,7 +2090,7 @@ class _NeedDetailState extends State<NeedDetail> {
           ],
         ),
         SizedBox(
-          height: 8,
+          height: 18,
         ),
       ],
     );
@@ -2668,30 +2098,29 @@ class _NeedDetailState extends State<NeedDetail> {
 
   final ImagePicker picker = ImagePicker();
 
-  void _pickImage() async {
+  void _pickCameraImage() async {
     setState(() {
       _isLoading = true;
     });
+
     try {
       final XFile? image = await picker.pickImage(source: ImageSource.camera);
       if (image != null) {
-        setState(() {
-          selectedImages.add(File(image.path));
-          Navigator.pop(context);
-          setState(() {
-            showModalBottomSheet<void>(
-              barrierColor: Colors.black12,
-              backgroundColor: Colors.transparent,
-              context: context,
-              isScrollControlled: true,
-              isDismissible: false,
-              enableDrag: false,
-              builder: (BuildContext context) {
-                return _bill();
-              },
-            );
-          });
-        });
+        selectedImages.add(File(image.path));
+
+        Navigator.pop(context); // ย้ายออกจาก setState
+
+        showModalBottomSheet<void>(
+          barrierColor: Colors.black12,
+          backgroundColor: Colors.transparent,
+          context: context,
+          isScrollControlled: true,
+          isDismissible: false,
+          enableDrag: false,
+          builder: (BuildContext context) {
+            return _bill();
+          },
+        );
       }
     } catch (e) {
       print('Error picking image: $e');
@@ -2761,7 +2190,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/project.php?page=$project_number&search=$project_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2806,7 +2236,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/account.php?page=$account_number&search=$account_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2849,7 +2280,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/contact.php?page=$contact_number&search=$contact_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2892,7 +2324,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/department.php?page=$department_number&search=$department_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2936,7 +2369,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/asset.php?page=$asset_number&search=$asset_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2980,7 +2414,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/division.php?page=$division_number&search=$division_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -3024,7 +2459,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/employee.php?page=$employee_number&search=$employee_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -3069,7 +2505,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=$Item_type_id');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -3113,7 +2550,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/unit.php?page=$unit_number&search=$unit_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -3156,7 +2594,8 @@ class _NeedDetailState extends State<NeedDetail> {
         '$host/api/origami/need/priority.php?page=$priority_number&search=$priority_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -3221,7 +2660,8 @@ class _NeedDetailState extends State<NeedDetail> {
 
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -3281,11 +2721,11 @@ class _NeedDetailState extends State<NeedDetail> {
   NeedData? detailItem;
   int i = 0;
   Future<void> fetchDetail(action_type, need_id, type_id) async {
-    final uri =
-        Uri.parse('$host/api/origami/need/detail.php');
+    final uri = Uri.parse('$host/api/origami/need/detail.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -3330,11 +2770,11 @@ class _NeedDetailState extends State<NeedDetail> {
   }
 
   Future<void> fetchDeleteItem(item_sort) async {
-    final uri =
-        Uri.parse('$host/api/origami/need/delete-item.php');
+    final uri = Uri.parse('$host/api/origami/need/delete-item.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

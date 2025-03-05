@@ -232,7 +232,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: Image.network(
-                                '$host/uploads/employee/5/employee/19777.jpg?v=1730343291',
+                                widget.employee.emp_avatar??'',
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -251,7 +251,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               ),
                             ),
                             Text(
-                              '27/11/2024',
+                              startDate,
                               style: GoogleFonts.openSans(
                                 fontSize: 14,
                                 color: Colors.grey,
@@ -282,15 +282,16 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 8),
-                        Text(
-                          '$beginStartDate - $beginEndDate',
-                          style: GoogleFonts.openSans(
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        // SizedBox(height: 8),
+                        // Text(
+                        //   '$startDate ${selectedStartTime?.format(context)??'00:00'} - '
+                        //       '$endDate ${selectedEndTime?.format(context)??'00:00'}',
+                        //   style: GoogleFonts.openSans(
+                        //     fontSize: 14,
+                        //     color: Colors.grey,
+                        //     fontWeight: FontWeight.w500,
+                        //   ),
+                        // ),
                         SizedBox(height: 8),
                         Padding(
                           padding: const EdgeInsets.only(

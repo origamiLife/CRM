@@ -18,117 +18,43 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _emailforgotController = TextEditingController();
+  final TextEditingController _forgotController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  DateTime? lastPressed;
+  bool isPass = true;
+  bool _forgot = false;
 
-  void _login() async {
-    // _loadSelectedRadio();
-    String username = _usernameController.text;
-    String password = _passwordController.text;
-    // _saveCredentials(username, password);
-    saveCredentials(username,password);
-    if (username.isEmpty && password.isEmpty) {
-      // Show error message if username or password is empty
-      //*********************************************************
-      // if (_formKey.currentState!.validate()) {
-      //   String email = _usernameController.text;
-      //   String password = _passwordController.text;
-      //   Fluttertoast.showToast(msg: 'Logged in as $email');
-      // }
-      //*********************************************************
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please enter both email and password.',
-              style: GoogleFonts.openSans(
-                color: Colors.white,
-              )),
-        ),
-      );
-      return;
-    } else if (username.isNotEmpty && password.isNotEmpty) {
-      final uri = Uri.parse('https://www.origami.life/api/origami/signin.php');
-      final response = await http.post(
-        uri,
-        body: {
-          'username': username, //chakrit@trandar.com
-          'password': password, //@HengL!ke08
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status'] == true) {
-          final String Authorization = jsonResponse['Authorization'];
-          final List<dynamic> employeeJson = jsonResponse['employee_data'];
-          List<Employee> employee = [];
-          setState(() {
-            employee =
-                employeeJson.map((json) => Employee.fromJson(json)).toList();
-          });
-          setState(() {
-            _isLoading = true;
-          });
-          await Future.delayed(Duration(seconds: 1));
-          final Employee employee1 = employee[0];
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OrigamiPage(
-                employee: employee1,
-                popPage: widget.popPage,
-                Authorization: Authorization,
-              ),
-            ),
-          );
-        } else {
-          final String error_message = jsonResponse['message'];
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                error_message, // 'Email or Password is incorrect, please try again',
-                style: GoogleFonts.openSans(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          );
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Status Code Error!',
-                style: GoogleFonts.openSans(
-                  color: Colors.white,
-                )),
-          ),
-        );
-      }
-    }
-  }
-
-  Future<void> _saveCredentials(String username, String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('username', username);
-    await prefs.setString('password', password);
-  }
-
-  Future<void> _loadCredentials() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    (widget.num == 1)?prefs.clear():Container();
-    String username = prefs.getString('username') ?? '';
-    String password = prefs.getString('password') ?? '';
-    setState(() {
-      _usernameController.text = username;
-      _passwordController.text = password;
+  @override
+  void initState() {
+    super.initState();
+    Translate();
+    loadCredentials();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkDeviceType(context);
+      getDeviceInfo(context);
     });
-    if (username.isNotEmpty && password.isNotEmpty) {
-      (widget.num == 0)?_login():prefs.clear();
-    }
+    _forgotController.addListener(() {
+      forgot_mail = _forgotController.text;
+      print("Current text: ${_forgotController.text}");
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _forgotController.dispose();
+    super.dispose();
   }
 
   // ฟังก์ชันในการบันทึกข้อมูล
-  Future<void> saveCredentials(username,password) async {
+  Future<void> saveCredentials(username, password) async {
     var box = await Hive.openBox('userBox');
     // บันทึกข้อมูลลงใน Box
     await box.put('username', username);
@@ -137,383 +63,265 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> loadCredentials() async {
     var box = await Hive.openBox('userBox');
-    if(widget.num == 1){
-      box.clear();
-      _usernameController.clear();
-      _passwordController.clear();
+
+    if (widget.num == 1) {
+      await box.clear();
     }
-    String? username = box.get('username');
-    String? password = box.get('password');
+
+    String? username = box.get('username') ?? '';
+    String? password = box.get('password') ?? '';
+
     setState(() {
-      _usernameController.text = username??'';
-      _passwordController.text = password??'';
+      _usernameController.text = username ?? '';
+      _passwordController.text = password ?? '';
     });
-    if (username!.isNotEmpty && password!.isNotEmpty) {
-      if(widget.num == 0){
-        _login();
-      }else{
-        box.clear();
-        _usernameController.clear();
-        _passwordController.clear();
-      }
+
+    if (username!.isNotEmpty && password!.isNotEmpty && widget.num == 0) {
+      _login();
     }
+
     print('Username: $username');
     print('Password: $password');
   }
 
+  Future<void> checkDeviceType(BuildContext? context) async {
+    try {
+      // รีเซ็ตค่าตัวแปรทั้งหมด
+      isAndroid = false;
+      isTablet = false;
+      isIPad = false;
+      isIPhone = false;
 
-  _loadSelectedRadio() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      selectedRadio = prefs.getInt('selectedRadio') ?? 2;
-      Translate();
-    });
+      if (Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        isAndroid = true;
+
+        final shortestSide = context != null
+            ? MediaQuery.of(context).size.shortestSide
+            : WidgetsBinding.instance.platformDispatcher.views.first
+                    .physicalSize.shortestSide /
+                WidgetsBinding
+                    .instance.platformDispatcher.views.first.devicePixelRatio;
+
+        isTablet = shortestSide >= 600; // เช็คว่าเป็น Tablet หรือไม่
+
+        if (isTablet) {
+          isAndroid = false; // ถ้าเป็น Tablet ให้ reset ค่า isAndroid
+        }
+      } else if (Platform.isIOS) {
+        final deviceInfo = DeviceInfoPlugin();
+        final iosInfo = await deviceInfo.iosInfo;
+        final model = iosInfo.model?.toLowerCase() ?? '';
+
+        if (model.contains("ipad")) {
+          isIPad = true;
+          isTablet = true; // ถ้าเป็น iPad ให้ตั้งค่า isTablet = true
+        } else if (model.contains("iphone")) {
+          isIPhone = true;
+        }
+      }
+
+      // ถ้าเป็น iPad ให้ตั้งค่าอื่นๆ เป็น false
+      if (isIPad) {
+        isAndroid = false;
+        isIPhone = false;
+        isTablet = false; // ทำให้ตัวแปรอื่นๆ เป็น false เมื่อเป็น iPad
+      }
+
+      print(
+          'isAndroid: $isAndroid, isIPhone: $isIPhone, isTablet: $isTablet, isIPad: $isIPad');
+    } catch (e) {
+      print("Error checking device type: $e");
+    }
   }
 
-  String forgot_mail = '';
-  @override
-  void initState() {
-    super.initState();
-    Translate();
-    _loadSelectedRadio();
-    loadCredentials();
-    // _loadCredentials();
-    _emailforgotController.addListener(() {
-      forgot_mail = _emailforgotController.text;
-      print("Current text: ${_emailforgotController.text}");
-    });
+  Future<void> getDeviceInfo(BuildContext context) async {
+    try {
+      if (Platform.isAndroid || Platform.isIOS) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+        if (Platform.isAndroid) {
+          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+          bool isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
+          print("📱 Android Device Info:");
+          print("Brand: ${androidInfo.brand}");
+          print("Model: ${androidInfo.model}");
+          print("Android Version: ${androidInfo.version.release}");
+          print(isTablet ? "📲 เป็น Tablet" : "📱 เป็น Phone");
+        } else if (Platform.isIOS) {
+          IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+          bool isIPad = iosInfo.model.toLowerCase().contains("ipad");
+
+          print("🍏 iOS Device Info:");
+          print("Model: ${iosInfo.model}");
+          print("System Name: ${iosInfo.systemName}");
+          print("iOS Version: ${iosInfo.systemVersion}");
+          print(isIPad ? "📲 เป็น iPad" : "📱 เป็น iPhone");
+        }
+      } else {
+        print("❌ ไม่รองรับอุปกรณ์นี้");
+      }
+    } catch (e) {
+      print("⚠️ Error checking device type: $e");
+    }
   }
 
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    _emailforgotController.dispose();
-    super.dispose();
-  }
-
-  DateTime? lastPressed;
-  bool isPass = true;
-  bool _forgot = false;
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // เช็คว่ามีการกดปุ่มย้อนกลับครั้งล่าสุดหรือไม่ และเวลาห่างจากปัจจุบันมากกว่า 2 วินาทีหรือไม่
-        final now = DateTime.now();
-        final maxDuration = Duration(seconds: 2);
-        final isWarning =
-            lastPressed == null || now.difference(lastPressed!) > maxDuration;
+    return PopScope(
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          final now = DateTime.now();
+          final maxDuration = Duration(seconds: 2);
+          final isWarning =
+              lastPressed == null || now.difference(lastPressed!) > maxDuration;
 
-        if (isWarning) {
-          // ถ้ายังไม่ได้กดสองครั้งภายในเวลาที่กำหนด ให้แสดง SnackBar แจ้งเตือน
-          lastPressed = DateTime.now();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Press back again to exit',
-                style: GoogleFonts.openSans(
-                  color: Colors.white,
+          if (isWarning) {
+            lastPressed = now;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Press back again to exit',
+                  style: TextStyle(fontFamily: 'Arial', color: Colors.white),
                 ),
+                duration: maxDuration,
               ),
-              duration: maxDuration,
-            ),
-          );
-          return false; // ไม่ออกจากแอป
+            );
+          } else {
+            SystemNavigator.pop();
+          }
         }
-        // ถ้ากดปุ่มย้อนกลับสองครั้งภายในเวลาที่กำหนด ให้ออกจากแอป
-        return true;
       },
       child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image:
-                    AssetImage('assets/images/logoOrigami/default_bg.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Container(
-                  color: Color.fromRGBO(0, 0, 0, 0.2),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 24,right: 24),
-                    child: (_forgot == false)?_loginWidget():_forgotWidget(),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'version 1.0.2',
-                  style: GoogleFonts.openSans(
-                    color: Color(0xFF555555),
-                  ),
-                ),
-              ),
-            ],
-          )),
-    );
-  }
-
-  Widget _loginWidget(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 400,
-          child: Padding(
-            padding: const EdgeInsets.all(24),
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: SizedBox.expand(
+            // กำหนดให้เต็มจอ
             child: Container(
-              width: 400,
-              child: Image.asset(
-                'assets/images/logoOrigami/ogm_logo.png',
-                fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/logoOrigami/default_bg.png'),
+                  fit: BoxFit.cover, // ปรับให้รูปเต็มหน้าจอ
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: SingleChildScrollView(child: _forgot ? _forgotWidget() : _loginWidget()),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _loginWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.width * 0.7,
+          width: MediaQuery.of(context).size.width *
+              0.5, // ทำให้ขนาดภาพปรับตามหน้าจอ
+          constraints: const BoxConstraints(
+              maxWidth: 400), // จำกัดขนาดไม่ให้ใหญ่เกินไป
+          padding: const EdgeInsets.all(8),
+          child: Image.asset(
+            'assets/images/logoOrigami/origami_logo.png',
+            fit: BoxFit.contain,
+          ),
+        ),
         _isLoading
             ? Center(
-          child: LoadingAnimationWidget
-              .staggeredDotsWave(
-            size: 75,
-            color: Colors.amber,
-          ),
-        )
-            : Container(),
-        SizedBox(height: 16),
-        Container(
-          width: 400,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(
-                        r'[a-zA-Z0-9@#%&*_!$%^(),.?":;{}|<>-]')), // เฉพาะตัวอักษรภาษาอังกฤษและช่องว่าง
-                  ],
-                  controller: _usernameController,
-                  style: GoogleFonts.openSans(
-                    color: Colors.white,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: GoogleFonts.openSans(
-                      color: Colors.white,
-                    ),
-                    hintStyle: GoogleFonts.openSans(
-                      color: Colors.white,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFFF9900),
-                        width: 1.0,
-                      ),
-                      borderRadius:
-                      BorderRadius.circular(10),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        color: Color(
-                            0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
-                        width: 1,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(
-                            0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius:
-                      BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(
-                            0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius:
-                      BorderRadius.circular(10),
-                    ),
-                  ),
+                child: LoadingAnimationWidget.horizontalRotatingDots(
+                  size: 75,
+                  color: Colors.white,
                 ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(
-                        r'[a-zA-Z0-9@#%&*_!$%^(),.?":;{}|<>-]')), // เฉพาะตัวอักษรภาษาอังกฤษและช่องว่าง
-                  ],
-                  controller: _passwordController,
-                  style: GoogleFonts.openSans(
-                    color: Colors.white,
-                  ),
-                  obscureText: isPass,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    labelStyle: GoogleFonts.openSans(
-                      color: Colors.white,
-                    ),
-                    hintStyle: GoogleFonts.openSans(
-                      color: Colors.white,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.lock,
-                      color: Colors.white,
-                    ),
-                    suffixIcon: Container(
-                      alignment: Alignment.centerRight,
-                      width: 10,
-                      child: Center(
-                        child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                (isPass == true)
-                                    ? isPass = false
-                                    : isPass = true;
-                              });
-                            },
-                            icon: Icon(isPass
-                                ? Icons.remove_red_eye
-                                : Icons
-                                .remove_red_eye_outlined),
-                            color: Colors.white,
-                            iconSize: 18),
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFFF9900),
-                        width: 1.0,
-                      ),
-                      borderRadius:
-                      BorderRadius.circular(10),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        color: Color(
-                            0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
-                        width: 1,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(
-                            0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius:
-                      BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(
-                            0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius:
-                      BorderRadius.circular(10),
+              )
+            : Column(
+                children: [
+                  Text(
+                    'Origami',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Colors.white70,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 50,
                     ),
                   ),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _forgot = true;
-                        });
-                      },
-                      child: Padding(
-                        padding:
-                        const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.end,
-                          children: [
-                            Icon(Icons.lock_open,
-                                color: Colors.white,
-                                size: 20),
-                            SizedBox(width: 8),
-                            Text(
-                              'Forgot Pwd?',
-                              style:
-                              GoogleFonts.openSans(
-                                color: Colors.white,
-                                fontWeight:
-                                FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  Text(
+                    'System',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Colors.white70,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 70,
                     ),
-                  ],
-                ),
-                SizedBox(height: 16.0),
-                Container(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(1),
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(15),
-                      ),
-                    ),
-                    onPressed: _login,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 60,
-                          right: 60,
-                          bottom: 14,
-                          top: 14),
-                      child: Text(
-                        'LOGIN',
-                        style: GoogleFonts.openSans(
-                          color: Color(0xFF555555),
+                  ),
+                ],
+              ),
+        const SizedBox(height: 24),
+        Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              _buildTextField(
+                  _usernameController, 'Username', Icons.person),
+              const SizedBox(height: 18),
+              _buildPasswordField(),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: _onForgotPasswordPressed,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.lock_open, color: Colors.white, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        'Forgot Pwd?',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          color: Colors.white,
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+              _buildLoginButton(),
+              const SizedBox(height: 30), // ป้องกันปุ่มล้นขอบล่าง
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _forgotWidget(){
+  void _onForgotPasswordPressed() {
+    setState(() => _forgot = true);
+  }
+
+  Widget _forgotWidget() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          width: 150,
-          height: 150,
+          height: MediaQuery.of(context).size.width * 0.8,
+          width: MediaQuery.of(context).size.width *
+              0.5, // ทำให้ขนาดภาพปรับตามหน้าจอ
+          constraints: const BoxConstraints(
+              maxWidth: 600), // จำกัดขนาดไม่ให้ใหญ่เกินไป
+          padding: const EdgeInsets.all(8),
           child: Image.asset(
-            'assets/images/logoOrigami/ogm_logo.png',
-            fit: BoxFit.cover,
+            'assets/images/logoOrigami/origami_logo.png',
+            fit: BoxFit.contain,
           ),
         ),
         Form(
@@ -523,10 +331,10 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 16),
               Text(
                 'Forgot your password?',
-                style:
-                GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: (isIPad || isTablet) ? 40 : 20,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -535,137 +343,85 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   '    Please enter your email address to request a password reset.',
-                  style:
-                  GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     color: Colors.orange.shade50,
-                    fontSize: 16,
+                    fontSize: (isIPad || isTablet) ? 24 : 16,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: _emailforgotController,
-                  style: GoogleFonts.openSans(
-                    color: Colors.white,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: GoogleFonts.openSans(
-                      color: Colors.white,
-                    ),
-                    hintStyle: GoogleFonts.openSans(
-                      color: Colors.white,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFFF9900),
-                        width: 1.0,
-                      ),
-                      borderRadius:
-                      BorderRadius.circular(10),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        color: Color(
-                            0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
-                        width: 1,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(
-                            0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius:
-                      BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(
-                            0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius:
-                      BorderRadius.circular(10),
-                    ),
-                  ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _forgotController,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'[a-zA-Z0-9@#%&*_!$^(),.?":;{}|<>-]')),
+                ],
+                style:
+                    TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Email',
+                  hintStyle: TextStyle(
+                      fontFamily: 'Arial', color: Color(0xFF555555)),
+                  prefixIcon: Icon(Icons.email, color: Color(0xFF555555)),
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 30.0),
               Container(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(1),
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.red,
+                    backgroundColor: Colors.red,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   onPressed: () => _fetchForgetMail(),
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        left: 60,
-                        right: 60,
-                        bottom: 14,
-                        top: 14),
+                        left: 60, right: 60, bottom: 12, top: 12),
                     child: Text(
                       'SEND',
-                      style: GoogleFonts.openSans(
-                        color: Color(0xFF555555),
-                        fontWeight: FontWeight.w500,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
                 ),
               ),
               SizedBox(height: 8),
-              Row(
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _forgot = false;
-                      });
-                    },
-                    child: Padding(
-                      padding:
-                      const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.chevron_left,
-                              color: Colors.white,
-                              size: 20),
-                          SizedBox(width: 8),
-                          Text(
-                            'Return to login.',
-                            style:
-                            GoogleFonts.openSans(
-                              color: Colors.white,
-                              fontWeight:
-                              FontWeight.w500,
-                            ),
-                          ),
-                        ],
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _forgot = false;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.chevron_left, color: Colors.white, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        'Return to login.',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                  Spacer(),
-                ],
+                ),
               ),
             ],
           ),
@@ -674,113 +430,162 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _listItem() {
-    return FractionallySizedBox(
-      heightFactor: 1,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          backgroundColor: Colors.black12,
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(child: SizedBox()),
-                      Container(
-                        width: 150,
-                        height: 150,
-                        child: Image.asset(
-                          'assets/images/logoOrigami/ogm_logo.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Text(
-                        'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-                        style: GoogleFonts.openSans(
-                          color: Color(0xFF555555),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFFF9900),
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 60, right: 60, bottom: 16, top: 16),
-                            child: Text(
-                              'Log in',
-                              style: GoogleFonts.openSans(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        ElevatedButton(
-                          onPressed: _login,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 60, right: 60, bottom: 16, top: 16),
-                            child: Text(
-                              'Contact',
-                              style: GoogleFonts.openSans(
-                                color: Color(0xFF555555),
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 16, bottom: 16, left: 30, right: 30),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        "https://t3.ftcdn.net/jpg/02/92/36/80/360_F_292368014_9EgJRdKkquD0THERDS3ZqEj94WsSoHAo.jpg",
-                        height: 160,
-                        width: double.infinity,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+  Widget _buildTextField(
+      TextEditingController controller, String hintText, IconData icon) {
+    return TextFormField(
+      controller: controller,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(
+            RegExp(r'[a-zA-Z0-9@#%&*_!$^(),.?":;{}|<>-]')),
+      ],
+      style: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        hintText: hintText,
+        hintStyle: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
+        prefixIcon: Icon(icon, color: Color(0xFF555555)),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      controller: _passwordController,
+      obscureText: isPass,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(
+            RegExp(r'[a-zA-Z0-9@#%&*_!$^(),.?":;{}|<>-]')),
+      ],
+      style: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        hintText: 'Password',
+        hintStyle: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
+        prefixIcon: Icon(Icons.lock, color: Color(0xFF555555)),
+        suffixIcon: IconButton(
+          onPressed: () => setState(() => isPass = !isPass),
+          icon: Icon(
+              isPass ? Icons.remove_red_eye : Icons.remove_red_eye_outlined),
+          color: Color(0xFF555555),
+          iconSize: 18,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(12),
+          backgroundColor: Colors.red,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        onPressed: _login,
+        child: Text(
+          'LOGIN',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
     );
   }
 
+  Future<void> _login() async {
+    // _loadSelectedRadio();
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+    // _saveCredentials(username, password);
+    saveCredentials(username, password);
+    if (username.isEmpty && password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter both email and password.',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Colors.white,
+              )),
+        ),
+      );
+      return;
+    } else if (username.isNotEmpty && password.isNotEmpty) {
+      _fetchLogin(username, password);
+    }
+  }
+
+  Future<void> _fetchLogin(String username, String password) async {
+    final uri = Uri.parse('$host/api/origami/signin.php');
+    final response = await http.post(
+      uri,
+      body: {
+        // 'username': 'chakrit@trandar.com',
+        // 'password': '@HengL!ke08',
+        'username': username,
+        'password': password,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      if (jsonResponse['status'] == true) {
+        final String Authorization = jsonResponse['Authorization'];
+        final List<dynamic> employeeJson = jsonResponse['employee_data'];
+        List<Employee> employee = [];
+        setState(() {
+          employee =
+              employeeJson.map((json) => Employee.fromJson(json)).toList();
+        });
+        setState(() {
+          _isLoading = true;
+        });
+        await Future.delayed(Duration(seconds: 1));
+        final Employee employee1 = employee.first;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OrigamiPage(
+              employee: employee1,
+              popPage: widget.popPage,
+              Authorization: Authorization,
+            ),
+          ),
+        );
+      } else {
+        final String error_message = jsonResponse['message'];
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              error_message, // 'Email or Password is incorrect, please try again',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Status Code Error!',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Colors.white,
+              )),
+        ),
+      );
+    }
+  }
+
+  String forgot_mail = '';
   Future<void> _fetchForgetMail() async {
     final uri = Uri.parse("$host/api/origami/forgot_password.php");
     final response = await http.post(
@@ -797,7 +602,8 @@ class _LoginPageState extends State<LoginPage> {
           SnackBar(
             content: Text(
               message,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.white,
               ),
             ),
@@ -808,40 +614,39 @@ class _LoginPageState extends State<LoginPage> {
       throw Exception('Failed to load projects');
     }
   }
-
 }
 
 class Employee {
-  final String? emp_id;
-  final String? emp_code;
-  final String? emp_name;
-  final String? emp_avatar;
-  final String? comp_id;
-  final String? comp_description;
-  final String? comp_logo;
-  final String? dept_id;
-  final String? dept_description;
-  final String? dna_id;
-  final String? dna_name;
-  final String? dna_color;
-  final String? dna_logo;
-  final String? password_verify;
+  final String emp_id;
+  final String emp_code;
+  final String emp_name;
+  final String emp_avatar;
+  final String comp_id;
+  final String comp_description;
+  final String comp_logo;
+  final String dept_id;
+  final String dept_description;
+  final String dna_id;
+  final String dna_name;
+  final String dna_color;
+  final String dna_logo;
+  final String password_verify;
 
   const Employee({
-    this.emp_id,
-    this.emp_code,
-    this.emp_name,
-    this.emp_avatar,
-    this.comp_id,
-    this.comp_description,
-    this.comp_logo,
-    this.dept_id,
-    this.dept_description,
-    this.dna_id,
-    this.dna_name,
-    this.dna_color,
-    this.dna_logo,
-    this.password_verify,
+    required this.emp_id,
+    required this.emp_code,
+    required this.emp_name,
+    required this.emp_avatar,
+    required this.comp_id,
+    required this.comp_description,
+    required this.comp_logo,
+    required this.dept_id,
+    required this.dept_description,
+    required this.dna_id,
+    required this.dna_name,
+    required this.dna_color,
+    required this.dna_logo,
+    required this.password_verify,
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) {
@@ -862,14 +667,4 @@ class Employee {
       password_verify: json['password_verify'] ?? '',
     );
   }
-}
-
-class Responsive {
-  static bool isMobile(BuildContext context) =>
-      MediaQuery.of(context).size.width < 600;
-  static bool isTablet(BuildContext context) =>
-      MediaQuery.of(context).size.width >= 600 &&
-          MediaQuery.of(context).size.width < 1200;
-  static bool isDesktop(BuildContext context) =>
-      MediaQuery.of(context).size.width >= 1200;
 }

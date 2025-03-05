@@ -43,69 +43,6 @@ class _MiniDivisionState extends State<MiniDivision> {
               children: [
                 Card(color: Color(0xFFFF9900),child: Padding(padding: EdgeInsets.only(left: 40,right: 40,top: 8)),),
                 Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Container(
-                    height: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(
-                        color: Color(0xFFFF9900),
-                        width: 1.0,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: TextField(
-                        controller: _searchDivision,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: '$Search...',
-                          hintStyle: GoogleFonts.openSans(color: Color(0xFF555555),),
-                          labelStyle: GoogleFonts.openSans(color: Color(0xFF555555),),
-                          border: InputBorder.none,
-                          icon: Icon(Icons.search,color: Color(0xFFFF9900),),
-                          suffixIcon: Card(
-                            elevation: 0,
-                            color: Color(0xFFFF9900),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(25),
-                              ),
-                            ),
-                            child: InkWell(
-                              onTap: () {
-                                Division_name = _searchDivision.text;
-                                _showDown = true;
-                                fetchDivision(int_Division, Division_name);
-                              },
-                              child: Container(
-                                alignment: Alignment.centerRight,
-                                width: 10,
-                                child: Center(
-                                    child: Text('$Search',
-                                        style: GoogleFonts.openSans(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ))),
-                              ),
-                            ),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            Division_name = value;
-                            fetchDivision(int_Division, Division_name);
-                            _searchText = value;
-                            // filterData_Division();
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextFormField(
                     controller: _searchDivision,
