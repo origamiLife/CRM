@@ -31,9 +31,11 @@ export 'package:multi_select_flutter/multi_select_flutter.dart';
 export 'package:open_file/open_file.dart';
 export 'package:xml/xml.dart'; // สำหรับอ่าน XML
 export 'package:flutter_speed_dial/flutter_speed_dial.dart';
-export 'package:carousel_slider_plus/carousel_slider_plus.dart';
+// export 'package:carousel_slider_plus/carousel_slider_plus.dart';
 export 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 export 'package:origamilift/import/origami_view/language/translate.dart';
 export 'package:origamilift/import/origami_view/origami.dart';
 export 'package:origamilift/import/login/origami_login.dart';
+export 'package:quickalert/quickalert.dart';
+export 'package:carousel_slider/carousel_slider.dart';
 

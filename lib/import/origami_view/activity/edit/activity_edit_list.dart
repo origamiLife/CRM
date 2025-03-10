@@ -159,6 +159,7 @@ class _ActivityEditListState extends State<ActivityEditList> {
                           employee: widget.employee,
                           Authorization: widget.Authorization,
                           skoopDetail: getSkoopDetail[0],
+                          activity_id: widget.activity.activity_id,
                         ),
                       ),
                     ).then((value) {
@@ -228,7 +229,7 @@ class _ActivityEditListState extends State<ActivityEditList> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: Image.network(
-                                    widget.employee.emp_avatar ?? '',
+                                    widget.employee.emp_avatar,
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -823,7 +824,7 @@ class _ActivityEditListState extends State<ActivityEditList> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: Image.network(
-                                widget.employee.emp_avatar ?? '',
+                                widget.employee.emp_avatar,
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -1692,7 +1693,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
     final uri = Uri.parse('$host/crm/ios_activity_info.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

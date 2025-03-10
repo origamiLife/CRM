@@ -555,7 +555,7 @@ class _WorkPageState extends State<WorkPage> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       // เข้าถึงข้อมูลในคีย์ 'instructors'
-      final List<dynamic> dataJson = jsonResponse['data'];
+      final List<dynamic> dataJson = jsonResponse['data']??[];
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
       return dataJson.map((json) => ModelWorkList.fromJson(json)).toList();
     } else {
@@ -586,112 +586,112 @@ class _WorkPageState extends State<WorkPage> {
 }
 
 class ModelWorkList {
-  String? see_id;
-  String? TYPE;
-  String? from_date;
-  String? from_time;
-  String? to_date;
-  String? to_time;
-  String? total_date;
-  String? total_date_hour;
-  String? total_time;
-  String? reason;
-  String? dt;
-  String? note;
-  String? leave_name;
-  String? leave_name_th;
-  String? state_approve;
-  String? leave_color;
-  String? name_approve;
-  String? approve_comment;
-  String? approve_del;
-  String? del_status;
+  String see_id;
+  String TYPE;
+  String from_date;
+  String from_time;
+  String to_date;
+  String to_time;
+  String total_date;
+  String total_date_hour;
+  String total_time;
+  String reason;
+  String dt;
+  String note;
+  String leave_name;
+  String leave_name_th;
+  String state_approve;
+  String leave_color;
+  String name_approve;
+  String approve_comment;
+  String approve_del;
+  String del_status;
 
   ModelWorkList({
-    this.see_id,
-    this.TYPE,
-    this.from_date,
-    this.from_time,
-    this.to_date,
-    this.to_time,
-    this.total_date,
-    this.total_date_hour,
-    this.total_time,
-    this.reason,
-    this.dt,
-    this.note,
-    this.leave_name,
-    this.leave_name_th,
-    this.state_approve,
-    this.leave_color,
-    this.name_approve,
-    this.approve_comment,
-    this.approve_del,
-    this.del_status,
+    required this.see_id,
+    required this.TYPE,
+    required this.from_date,
+    required this.from_time,
+    required this.to_date,
+    required this.to_time,
+    required this.total_date,
+    required this.total_date_hour,
+    required this.total_time,
+    required this.reason,
+    required this.dt,
+    required this.note,
+    required this.leave_name,
+    required this.leave_name_th,
+    required this.state_approve,
+    required this.leave_color,
+    required this.name_approve,
+    required this.approve_comment,
+    required this.approve_del,
+    required this.del_status,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ModelWorkList.fromJson(Map<String, dynamic> json) {
     return ModelWorkList(
-      see_id: json['see_id'],
-      TYPE: json['TYPE'],
-      from_date: json['from_date'],
-      from_time: json['from_time'],
-      to_date: json['to_date'],
-      to_time: json['to_time'],
-      total_date: json['total_date'],
-      total_date_hour: json['total_date_hour'],
-      total_time: json['total_time'],
-      reason: json['reason'],
-      dt: json['dt'],
-      note: json['note'],
-      leave_name: json['leave_name'],
-      leave_name_th: json['leave_name_th'],
-      state_approve: json['state_approve'],
-      leave_color: json['leave_color'],
-      name_approve: json['name_approve'],
-      approve_comment: json['approve_comment'],
-      approve_del: json['approve_del'],
-      del_status: json['del_status'],
+      see_id: json['see_id']??''??'',
+      TYPE: json['TYPE']??'',
+      from_date: json['from_date']??'',
+      from_time: json['from_time']??'',
+      to_date: json['to_date']??'',
+      to_time: json['to_time']??'',
+      total_date: json['total_date']??'',
+      total_date_hour: json['total_date_hour']??'',
+      total_time: json['total_time']??'',
+      reason: json['reason']??'',
+      dt: json['dt']??'',
+      note: json['note']??'',
+      leave_name: json['leave_name']??'',
+      leave_name_th: json['leave_name_th']??'',
+      state_approve: json['state_approve']??'',
+      leave_color: json['leave_color']??'',
+      name_approve: json['name_approve']??'',
+      approve_comment: json['approve_comment']??'',
+      approve_del: json['approve_del']??'',
+      del_status: json['del_status']??'',
     );
   }
 }
 
 class ModelWork {
-  String? leave_type_id;
-  String? leave_type_color;
-  String? leave_type_name_en;
-  String? leave_type_name_th;
-  String? before_day;
-  String? hours_day;
-  String? total;
-  String? used;
-  String? available;
+  String leave_type_id;
+  String leave_type_color;
+  String leave_type_name_en;
+  String leave_type_name_th;
+  String before_day;
+  String hours_day;
+  String total;
+  String used;
+  String available;
 
   ModelWork({
-    this.leave_type_id,
-    this.leave_type_color,
-    this.leave_type_name_en,
-    this.leave_type_name_th,
-    this.before_day,
-    this.hours_day,
-    this.total,
-    this.used,
-    this.available,
+    required this.leave_type_id,
+    required this.leave_type_color,
+    required this.leave_type_name_en,
+    required this.leave_type_name_th,
+    required this.before_day,
+    required this.hours_day,
+    required this.total,
+    required this.used,
+    required this.available,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ModelWork.fromJson(Map<String, dynamic> json) {
     return ModelWork(
-      leave_type_id: json['leave_type_id'],
-      leave_type_color: json['leave_type_color'],
-      leave_type_name_en: json['leave_type_name_en'],
-      leave_type_name_th: json['leave_type_name_th'],
-      before_day: json['before_day'],
-      hours_day: json['hours_day'],
-      total: json['total'],
-      used: json['used'],
-      available: json['Available'],
+      leave_type_id: json['leave_type_id']??'',
+      leave_type_color: json['leave_type_color']??'',
+      leave_type_name_en: json['leave_type_name_en']??'',
+      leave_type_name_th: json['leave_type_name_th']??'',
+      before_day: json['before_day']??'',
+      hours_day: json['hours_day']??'',
+      total: json['total']??'',
+      used: json['used']??'',
+      available: json['Available']??'',
     );
   }
 }

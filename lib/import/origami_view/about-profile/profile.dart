@@ -162,337 +162,339 @@ class _ProfilePageState extends State<ProfilePage> {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Container(
-              width: 450,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 1.0,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 0,
-                    blurRadius: 0,
-                    offset: Offset(0, 3), // x, y
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: 450,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 1.0,
                   ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Color(int.parse(
-                                          '0xFF${profileData.dna_color}')),
-                                      width: 5,
-                                    ),
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 40,
-                                    backgroundColor: Colors.white,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(25),
-                                      child: Image.network(
-                                        profileData.emp_avatar ?? '',
-                                        fit: BoxFit.fill,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 0,
+                      blurRadius: 0,
+                      offset: Offset(0, 3), // x, y
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Color(int.parse(
+                                            '0xFF${profileData.dna_color}')),
+                                        width: 5,
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 5,
-                                child: Container(
-                                  // decoration: BoxDecoration(
-                                  //   color: Colors.white,
-                                  //   borderRadius: BorderRadius.circular(10),
-                                  //   boxShadow: [
-                                  //     BoxShadow(
-                                  //       color: Colors.grey.withOpacity(0.1),
-                                  //       spreadRadius: 0,
-                                  //       blurRadius: 0,
-                                  //       offset: Offset(1, 3), // x, y
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            '${profileData.emp_prefix} ${profileData.emp_firstname}  ${profileData.emp_lastname}',
-                                            style: GoogleFonts.openSans(
-                                              fontSize: 18,
-                                              color: Color(0xFF555555),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Nickname: ${profileData.emp_nickname}",
-                                              style: GoogleFonts.openSans(
-                                                fontSize: 14,
-                                                color: Color(0xFF555555),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Color(int.parse(
-                                          '0xFF${profileData.dna_color}')),
-                                      width: 5,
-                                    ),
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 30,
-                                    backgroundColor: Colors.white,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(25),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                    child: CircleAvatar(
+                                      radius: 40,
+                                      backgroundColor: Colors.white,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(25),
                                         child: Image.network(
-                                          profileData.dna_logo ?? '',
+                                          profileData.emp_avatar ?? '',
                                           fit: BoxFit.fill,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                flex: 5,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'DNA',
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 16,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.bold,
+                                Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    // decoration: BoxDecoration(
+                                    //   color: Colors.white,
+                                    //   borderRadius: BorderRadius.circular(10),
+                                    //   boxShadow: [
+                                    //     BoxShadow(
+                                    //       color: Colors.grey.withOpacity(0.1),
+                                    //       spreadRadius: 0,
+                                    //       blurRadius: 0,
+                                    //       offset: Offset(1, 3), // x, y
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              '${profileData.emp_prefix} ${profileData.emp_firstname}  ${profileData.emp_lastname}',
+                                              style: GoogleFonts.openSans(
+                                                fontSize: 18,
+                                                color: Color(0xFF555555),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                            ),
                                           ),
-                                        ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Nickname: ${profileData.emp_nickname}",
+                                                style: GoogleFonts.openSans(
+                                                  fontSize: 14,
+                                                  color: Color(0xFF555555),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          profileData.dna_name,
-                                          style: GoogleFonts.openSans(
-                                              fontSize: 14,
-                                              color: Color(0xFF555555)),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        'Birth Date',
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Color(0xFF555555),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            profileData.emp_birthday,
-                            style: GoogleFonts.openSans(
-                                fontSize: 14, color: Color(0xFF555555)),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            "(${profileData.emp_age} years old)",
-                            style: GoogleFonts.openSans(
-                                fontSize: 14, color: Color(0xFF555555)),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        'Start Date',
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Color(0xFF555555),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        profileData.emp_start_date,
-                        style: GoogleFonts.openSans(
-                            fontSize: 14, color: Color(0xFF555555)),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        'Home Location',
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Color(0xFF555555),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        profileData.home_location,
-                        style: GoogleFonts.openSans(
-                            fontSize: 14, color: Color(0xFF555555)),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Signature ',
-                            style: GoogleFonts.openSans(
-                              fontSize: 16,
-                              color: Color(0xFF555555),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 0,
-                                  blurRadius: 1,
-                                  // offset: Offset(0, 1), // x, y
                                 ),
                               ],
                             ),
-                            child: Image.memory(
-                              imageBytes,
-                              height: 150,
-                              width: double.infinity,
-                              fit: BoxFit.fill,
+                            SizedBox(height: 8),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Color(int.parse(
+                                            '0xFF${profileData.dna_color}')),
+                                        width: 5,
+                                      ),
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: Colors.white,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(25),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.network(
+                                            profileData.dna_logo ?? '',
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 5,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'DNA',
+                                            style: GoogleFonts.openSans(
+                                              fontSize: 16,
+                                              color: Color(0xFF555555),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            profileData.dna_name,
+                                            style: GoogleFonts.openSans(
+                                                fontSize: 14,
+                                                color: Color(0xFF555555)),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Text(
+                          'Birth Date',
+                          style: GoogleFonts.openSans(
+                            fontSize: 16,
+                            color: Color(0xFF555555),
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              profileData.emp_birthday,
+                              style: GoogleFonts.openSans(
+                                  fontSize: 14, color: Color(0xFF555555)),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "(${profileData.emp_age} years old)",
+                              style: GoogleFonts.openSans(
+                                  fontSize: 14, color: Color(0xFF555555)),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Text(
+                          'Start Date',
+                          style: GoogleFonts.openSans(
+                            fontSize: 16,
+                            color: Color(0xFF555555),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          profileData.emp_start_date,
+                          style: GoogleFonts.openSans(
+                              fontSize: 14, color: Color(0xFF555555)),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Text(
+                          'Home Location',
+                          style: GoogleFonts.openSans(
+                            fontSize: 16,
+                            color: Color(0xFF555555),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          profileData.home_location,
+                          style: GoogleFonts.openSans(
+                              fontSize: 14, color: Color(0xFF555555)),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Signature ',
+                              style: GoogleFonts.openSans(
+                                fontSize: 16,
+                                color: Color(0xFF555555),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 0,
+                                    blurRadius: 1,
+                                    // offset: Offset(0, 1), // x, y
+                                  ),
+                                ],
+                              ),
+                              child: Image.memory(
+                                imageBytes,
+                                height: 150,
+                                width: double.infinity,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-            //   child: ElevatedButton(
-            //     style: ElevatedButton.styleFrom(
-            //       foregroundColor: Colors.white,
-            //       backgroundColor: Color.fromRGBO(0, 185, 0, 1),
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(15.0),
-            //       ),
-            //     ),
-            //     onPressed: () {
-            //       // _fetchProfileSave();
-            //     },
-            //     child: Container(
-            //       width: double.infinity,
-            //       child: Center(
-            //         child: Text(
-            //           'Success',
-            //           style: GoogleFonts.openSans(fontSize: 16.0),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-          ],
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //       foregroundColor: Colors.white,
+              //       backgroundColor: Color.fromRGBO(0, 185, 0, 1),
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(15.0),
+              //       ),
+              //     ),
+              //     onPressed: () {
+              //       // _fetchProfileSave();
+              //     },
+              //     child: Container(
+              //       width: double.infinity,
+              //       child: Center(
+              //         child: Text(
+              //           'Success',
+              //           style: GoogleFonts.openSans(fontSize: 16.0),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );

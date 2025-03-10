@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:origamilift/import/import.dart';
 
-String host = 'https://www.origami.life';
+String host = 'https://dev.origami.life';
 int selectedRadio = 2;
 bool isAndroid = false;
 bool isTablet = false;
@@ -17,11 +17,11 @@ void main() async {
   var appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   await Hive.openBox('userBox'); // เปิด Box สำหรับเก็บข้อมูล
-  // บังคับให้แอปทำงานในแนวตั้งก่อนเรียก runApp()
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]).then((_) => runApp(const MyApp()));
+
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      // debugShowCheckedModeBanner: false,
       title: 'Origami',
       theme: ThemeData(
         useMaterial3: false,
@@ -38,18 +38,20 @@ class MyApp extends StatelessWidget {
           seedColor: Theme.of(context).colorScheme.inversePrimary,
           brightness: Brightness.light,
         ),
-        textTheme: TextTheme(
-          displayLarge: GoogleFonts.openSans(
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 72,
             fontWeight: FontWeight.bold,
           ),
           //GoogleFonts.oswald
-          titleLarge: GoogleFonts.openSans(
+          titleLarge: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 28,
           ),
         ),
       ),
-      home: LoginPage(num: 0, popPage: 0),
+      home: const LoginPage(num: 0, popPage: 0),
     );
   }
 }

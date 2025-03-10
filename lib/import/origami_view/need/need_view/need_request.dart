@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 import '../widget_other/dropdown_need.dart';
 import 'need.dart';
-import 'need_approve_detail.dart';
+import 'need_request_detail.dart';
 import 'need_detail.dart';
 
 class NeedRequest extends StatefulWidget {
@@ -149,7 +149,7 @@ class _NeedRequestState extends State<NeedRequest> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${ApprovelList?[indexA].mny_type_name ?? ''} - ${ApprovelList?[indexA].mny_request_generate_code ?? ''}',
+                                  '${ApprovelList[indexA].mny_type_name ?? ''} - ${ApprovelList?[indexA].mny_request_generate_code ?? ''}',
                                   style: GoogleFonts.openSans(
                                     fontSize: 14.0,
                                     color: Color(0xFF555555),
@@ -158,7 +158,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  "$Date : ${ApprovelList?[indexA].create_date_display ?? ''} ",
+                                  "$Date : ${ApprovelList[indexA].create_date_display ?? ''} ",
                                   style: GoogleFonts.openSans(
                                     fontSize: 14.0,
                                     color: Colors.grey,
@@ -167,7 +167,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  "$Amount : ${ApprovelList?[indexA].need_amount ?? ''} $Baht",
+                                  "$Amount : ${ApprovelList[indexA].need_amount ?? ''} $Baht",
                                   style: GoogleFonts.openSans(
                                     fontSize: 14.0,
                                     color: Colors.grey,

@@ -1,21 +1,14 @@
 import 'package:http/http.dart' as http;
-import 'package:origamilift/import/login/origami_login.dart';
-import 'package:origamilift/import/origami_view/language/translate.dart';
+
+import '../../../../import.dart';
 import '../../academy.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'dart:convert';
-import 'package:google_fonts/google_fonts.dart';
-import 'dart:async';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:origamilift/import/import.dart';
 
 class Certification extends StatefulWidget {
   Certification({
     super.key,
     required this.employee,
-    required this.academy, required this.Authorization,
+    required this.academy,
+    required this.Authorization,
   });
   final Employee employee;
   final AcademyRespond academy;
@@ -27,66 +20,18 @@ class Certification extends StatefulWidget {
 class _CertificationState extends State<Certification> {
   bool isSwitch = false;
 
-  Future<List<CertificationData>> fetchCertification() async {
-    final uri = Uri.parse(
-        "$host/api/origami/academy/certification.php");
-    final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
-        'academy_id': widget.academy.academy_id,
-        'academy_type': widget.academy.academy_type,
-      },
+  TextStyle _getTextStyle(double fontSize, FontWeight fontWeight, Color color) {
+    return TextStyle(
+      fontFamily: 'Arial',
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
     );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      // เข้าถึงข้อมูลในคีย์ 'academy_data'
-      final List<dynamic> academiesJson = jsonResponse['certification_data'];
-      // แปลงข้อมูลจาก JSON เป็น List<AcademyRespond>
-      return academiesJson
-          .map((json) => CertificationData.fromJson(json))
-          .toList();
-    } else {
-      throw Exception('Failed to load academies');
-    }
   }
 
   @override
   void initState() {
     super.initState();
-    fetchCertification();
-  }
-
-  Widget loading() {
-    return FutureBuilder<List<CertificationData>>(
-      future: fetchCertification(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-              child: Text(
-            'Error: ${snapshot.error}',
-            style: GoogleFonts.openSans(
-              color: Color(0xFF555555),
-            ),
-          ));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-              child: Text(
-            '$Empty',
-            style: GoogleFonts.openSans(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
-            ),
-          ));
-        } else {
-          return _getContentWidget(snapshot.data!);
-        }
-      },
-    );
   }
 
   Future<void> _launchURL(Uri url) async {
@@ -97,10 +42,51 @@ class _CertificationState extends State<Certification> {
 
   @override
   Widget build(BuildContext context) {
-    return loading();
+    return FutureBuilder<List<CertificationData>>(
+      future: fetchCertification(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+              child: Text(
+            'Error: ${snapshot.error}',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+            ),
+          ));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+              child: Text(
+            NotFoundDataTS,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.0,
+              color: const Color(0xFF555555),
+              fontWeight: FontWeight.w700,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ));
+        } else {
+          return (snapshot.data!.first.certificationList.isEmpty)
+              ? Center(
+                  child: Text(
+                  NotFoundDataTS,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0,
+                    color: const Color(0xFF555555),
+                    fontWeight: FontWeight.w700,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ))
+              : _getContentWidget(snapshot.data!);
+        }
+      },
+    );
   }
 
-  @override
   Widget _getContentWidget(List<CertificationData> listCertification) {
     return Container(
       color: Colors.grey.shade50,
@@ -110,15 +96,14 @@ class _CertificationState extends State<Certification> {
           child: Column(
             children: List.generate(listCertification.length, (index) {
               final certification = listCertification[index];
+              courseId = certification.courseId;
               return Column(
                 children: [
                   InkWell(
                     borderRadius: BorderRadius.circular(10),
                     onTap: () {
                       setState(() {
-                        (isSwitch == false)
-                            ? isSwitch = true
-                            : isSwitch = false;
+                        isSwitch = !isSwitch;
                       });
                     },
                     child: (isSwitch == true)
@@ -136,10 +121,11 @@ class _CertificationState extends State<Certification> {
                                   Expanded(
                                     child: Text(
                                       certification.courseName,
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
                                         fontSize: 18.0,
                                         color: Color(0xFF555555),
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                   ),
@@ -164,10 +150,11 @@ class _CertificationState extends State<Certification> {
                                 Expanded(
                                   child: Text(
                                     certification.courseName,
-                                    style: GoogleFonts.openSans(
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
                                       fontSize: 16,
                                       color: Color(0xFF555555),
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
@@ -182,275 +169,232 @@ class _CertificationState extends State<Certification> {
                             ),
                           ),
                   ),
-                  Column(
-                    children: List.generate(
-                        certification.certificationList.length, (indexI) {
-                      final certificate =
-                          certification.certificationList[indexI];
-                      return (isSwitch == false)
-                          ? Card(
-                              color: Colors.white,
-                              elevation: 0,
-                              child: Container(
-                                padding: EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          LayoutBuilder(
-                                              builder: (context, constraints) {
-                                            return Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                Positioned(
-                                                  child: Image.network(
-                                                    (certificate.certificationName ==
-                                                            'Certificate Bronze')
-                                                        ? '$host/images/certification/1.png?v=2'
-                                                        : (certificate
-                                                                    .certificationName ==
-                                                                'Certificate Platinum')
-                                                            ? '$host/images/certification/3.png?v=2'
-                                                            : (certificate
-                                                                        .certificationName ==
-                                                                    'Certificate Gold')
-                                                                ? '$host/images/certification/2.png?v=2'
-                                                                : '$host/images/certification/4.png?v=2',
-                                                    width: constraints.maxWidth,
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                                Center(
-                                                  child: Text(
-                                                    certificate
-                                                        .certificationName,
-                                                    style: GoogleFonts.openSans(
-                                                      fontSize:
-                                                          constraints.maxWidth *
-                                                              0.1,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color(0xFF555555),
-                                                    ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          }),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          (certificate.canDownload == "Y")
-                                              ? InkWell(
-                                                  onTap: () {
-                                                    courseId =
-                                                        certification.courseId;
-                                                    certificationId =
-                                                        certificate
-                                                            .certificationId;
-                                                    Download();
-                                                  },
-                                                  child: Container(
-                                                    padding: EdgeInsets.all(8),
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          Colors.amber.shade200,
-                                                      // border: Border.all(color: Colors.grey),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.cloud_download,
-                                                          color: Colors.white,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 4,
-                                                        ),
-                                                        Text(
-                                                          'Download',
-                                                          style: GoogleFonts
-                                                              .openSans(
-                                                            color: Color(
-                                                                0xFF555555),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                              : Container(
-                                                  padding: EdgeInsets.all(8),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey.shade200,
-                                                    // border: Border.all(color: Colors.grey),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.cloud_download,
-                                                        color: Colors.white,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 4,
-                                                      ),
-                                                      Text(
-                                                        'Download',
-                                                        style: GoogleFonts
-                                                            .openSans(
-                                                          color:
-                                                              Color(0xFF555555),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            certificate.certificationName,
-                                            style: GoogleFonts.openSans(
-                                              fontSize: 18.0,
-                                              color: Color(0xFF555555),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            certificate
-                                                .certificationDescription,
-                                            style: GoogleFonts.openSans(
-                                              fontSize: 14.0,
-                                              color: Color(0xFF555555),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          SizedBox(height: 8),
-                                          Column(
-                                            children: List.generate(
-                                                certificate
-                                                    .certificationCondition
-                                                    .length, (indexII) {
-                                              final condition = certificate
-                                                      .certificationCondition[
-                                                  indexII];
-                                              return Column(
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.all(4),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.grey),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(50),
-                                                        ),
-                                                        child: Text(
-                                                            '${condition.percent} %',
-                                                            style: GoogleFonts
-                                                                .openSans(
-                                                              color: Color(
-                                                                  0xFF555555),
-                                                            )),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 4,
-                                                      ),
-                                                      (condition.icon == "W")
-                                                          ? Icon(
-                                                              Icons
-                                                                  .hourglass_bottom_outlined,
-                                                              color:
-                                                                  Colors.amber,
-                                                              size: 24,
-                                                            )
-                                                          : (condition.icon ==
-                                                                  "N")
-                                                              ? Icon(
-                                                                  Icons.close,
-                                                                  color: Colors
-                                                                      .red,
-                                                                  size: 24,
-                                                                )
-                                                              : Icon(
-                                                                  Icons.check,
-                                                                  color: Colors
-                                                                      .green,
-                                                                  size: 24,
-                                                                ),
-                                                      SizedBox(
-                                                        width: 4,
-                                                      ),
-                                                      Expanded(
-                                                        child: Text(
-                                                          condition.condition,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 2,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 8),
-                                                ],
-                                              );
-                                            }),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Container();
-                    }),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
+                  if (!isSwitch) _buildCertificationList(certification),
+                  SizedBox(height: 8),
                 ],
               );
-            }),
+            }).toList(), // เพิ่ม .toList()
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildCertificationCard(CertificationData certification) {
+    return Card(
+      color: Colors.white,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                certification.courseName,
+                style: _getTextStyle(18.0, FontWeight.w700, Color(0xFF555555)),
+              ),
+            ),
+            Icon(
+              Icons.keyboard_arrow_down,
+              color: Color(0xFF555555),
+              size: 30,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCertificationList(CertificationData certification) {
+    return Column(
+      children: List.generate(certification.certificationList.length, (index) {
+        final certificate = certification.certificationList[index];
+        return Card(
+          color: Color(0xFFF5F5F5),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 0,
+                  blurRadius: 2,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 2, child: _buildCertificateImage(certificate)),
+                  SizedBox(width: 8),
+                  Expanded(
+                      flex: 3, child: _buildCertificateDetails(certificate)),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildCertificateImage(CertificationList certificate) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.network(
+              _getCertificateImage(certificate.certificationName),
+              width: double.infinity,
+              fit: BoxFit.fill,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(
+                  Icons.error,
+                );
+              },
+            ),
+            Center(
+              child: Text(
+                certificate.certificationName,
+                style: _getTextStyle(14.0, FontWeight.w600, Color(0xFF555555)),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8),
+        _buildDownloadButton(certificate),
+      ],
+    );
+  }
+
+  Widget _buildCertificateDetails(CertificationList certificate) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Text(
+            certificate.certificationName,
+            style: _getTextStyle(18.0, FontWeight.w700, Color(0xFF555555)),
+            maxLines: 1,
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(
+          certificate.certificationDescription,
+          style: _getTextStyle(14.0, FontWeight.w600, Color(0xFF555555)),
+        ),
+        SizedBox(height: 8),
+        _buildCertificationConditions(certificate),
+      ],
+    );
+  }
+
+  Widget _buildCertificationConditions(CertificationList certificate) {
+    return Column(
+      children: certificate.certificationCondition.map((condition) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Row(
+            children: [
+              // SizedBox(width: 8),
+              Icon(Icons.lens_sharp, color: Colors.green, size: 8),
+              SizedBox(width: 4),
+              Flexible(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                    condition.condition,
+                    style:
+                        _getTextStyle(14.0, FontWeight.w400, Color(0xFF555555)),
+                    // overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildDownloadButton(CertificationList certificate) {
+    return InkWell(
+      onTap: () {
+        if (certificate.canDownload == "Y") {
+          certificationId = certificate.certificationId;
+          Download();
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: certificate.canDownload == "Y"
+              ? Colors.amber.shade200
+              : Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.cloud_download, color: Colors.white),
+            SizedBox(width: 4),
+            Text(
+              '$DownloadTS',
+              style: _getTextStyle(14.0, FontWeight.w600, Color(0xFF555555)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getCertificateImage(String certificationName) {
+    switch (certificationName) {
+      case 'Certificate Bronze':
+        return '$host/images/certification/1.png?v=2';
+      case 'Certificate Platinum':
+        return '$host/images/certification/3.png?v=2';
+      case 'Certificate Gold':
+        return '$host/images/certification/2.png?v=2';
+      default:
+        return '$host/images/certification/4.png?v=2';
+    }
+  }
+
+  Future<List<CertificationData>> fetchCertification() async {
+    final uri = Uri.parse("$host/api/origami/academy/certification.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'Authorization': widget.Authorization,
+        'academy_id': widget.academy.academy_id,
+        'academy_type': widget.academy.academy_type,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['certification_data'];
+      return dataJson.map((json) => CertificationData.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load academies');
+    }
   }
 
   String courseId = "";
@@ -460,8 +404,7 @@ class _CertificationState extends State<Certification> {
   Future<void> Download() async {
     try {
       final response = await http.post(
-        Uri.parse(
-            '$host/api/origami/academy/certificationDownload.php'),
+        Uri.parse('$host/api/origami/academy/certificationDownload.php'),
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -475,6 +418,7 @@ class _CertificationState extends State<Certification> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
+          print("$jsonResponse");
           certification_file = jsonResponse['certification_file'];
           print("message: $certification_file");
           final Uri _url = Uri.parse(certification_file);
@@ -508,11 +452,12 @@ class CertificationData {
 
   factory CertificationData.fromJson(Map<String, dynamic> json) {
     return CertificationData(
-      courseId: json['course_id'],
-      courseName: json['course_name'],
-      certificationList: (json['cerification_list'] as List)
-          .map((item) => CertificationList.fromJson(item))
-          .toList(),
+      courseId: json['course_id'] ?? '',
+      courseName: json['course_name'] ?? '',
+      certificationList: (json['cerification_list'] as List?)
+              ?.map((item) => CertificationList.fromJson(item))
+              .toList() ??
+          [],
     );
   }
 }
@@ -534,13 +479,14 @@ class CertificationList {
 
   factory CertificationList.fromJson(Map<String, dynamic> json) {
     return CertificationList(
-      certificationId: json['certification_id'],
-      certificationName: json['certification_name'],
-      certificationDescription: json['certification_description'],
-      certificationCondition: (json['certification_condition'] as List)
-          .map((item) => CertificationCondition.fromJson(item))
-          .toList(),
-      canDownload: json['can_download'],
+      certificationId: json['certification_id'] ?? '',
+      certificationName: json['certification_name'] ?? '',
+      certificationDescription: json['certification_description'] ?? '',
+      certificationCondition: (json['certification_condition'] as List?)
+              ?.map((item) => CertificationCondition.fromJson(item))
+              .toList() ??
+          [],
+      canDownload: json['can_download'] ?? '',
     );
   }
 }
@@ -558,9 +504,9 @@ class CertificationCondition {
 
   factory CertificationCondition.fromJson(Map<String, dynamic> json) {
     return CertificationCondition(
-      condition: json['condition'],
-      percent: json['percent'],
-      icon: json['icon'],
+      condition: json['condition'] ?? '',
+      percent: json['percent'] ?? '',
+      icon: json['icon'] ?? '',
     );
   }
 }

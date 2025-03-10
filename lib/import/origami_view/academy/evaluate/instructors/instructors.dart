@@ -1,19 +1,15 @@
-import 'package:http/http.dart' as http;
-import 'package:origamilift/import/origami_view/language/translate.dart';
-import '../../../../login/origami_login.dart';
+import '../../../../import.dart';
 import '../../academy.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:async';
-import 'package:origamilift/import/import.dart';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class Instructors extends StatefulWidget {
-  Instructors({super.key, required this.employee, required this.academy, required this.Authorization, });
+  Instructors({
+    super.key,
+    required this.employee,
+    required this.academy,
+    required this.Authorization,
+  });
   final Employee employee;
   final AcademyRespond academy;
   final String Authorization;
@@ -22,11 +18,11 @@ class Instructors extends StatefulWidget {
 }
 
 class _InstructorsState extends State<Instructors> {
-
   Future<List<Instructor>> fetchInstructors() async {
     final uri = Uri.parse("$host/api/origami/academy/instructors.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -41,14 +37,11 @@ class _InstructorsState extends State<Instructors> {
       // เข้าถึงข้อมูลในคีย์ 'instructors'
       final List<dynamic> instructorsJson = jsonResponse['instructors'];
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
-      return instructorsJson
-          .map((json) => Instructor.fromJson(json))
-          .toList();
+      return instructorsJson.map((json) => Instructor.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load instructors');
     }
   }
-  
 
   @override
   void initState() {
@@ -58,21 +51,24 @@ class _InstructorsState extends State<Instructors> {
 
   @override
   Widget build(BuildContext context) {
-    return loading();
-  }
-
-  Widget loading() {
     return FutureBuilder<List<Instructor>>(
       future: fetchInstructors(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('$Empty',style: GoogleFonts.openSans(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF555555),
-          ),));
+          return Center(
+              child: Text(
+            NotFoundDataTS,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.0,
+              color: const Color(0xFF555555),
+              fontWeight: FontWeight.w700,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ));
         } else {
           return _getContentWidget(snapshot.data!);
         }
@@ -80,7 +76,7 @@ class _InstructorsState extends State<Instructors> {
     );
   }
 
-  Widget _getContentWidget(List<Instructor> instructor){
+  Widget _getContentWidget(List<Instructor> instructor) {
     return SafeArea(
       child: Container(
         color: Colors.grey.shade50,
@@ -91,161 +87,199 @@ class _InstructorsState extends State<Instructors> {
               children: List.generate(instructor.length, (index) {
                 return Column(
                   children: [
-                    Container(
-                      // color: Colors.transparent,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              instructor[index].courseSubject,
-                              style: GoogleFonts.openSans(
-                                fontSize: 18.0,
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   // color: Colors.transparent,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.transparent,
+                    //     borderRadius: BorderRadius.circular(20),
+                    //   ),
+                    //   child: Row(
+                    //     children: [
+                    //       Expanded(
+                    //         child: Text(
+                    //           '$InstructorsTS : ${instructor[index].courseSubject}',
+                    //           style: TextStyle(
+                    //             fontFamily: 'Arial',
+                    //             fontSize: 18.0,
+                    //             color: Color(0xFF555555),
+                    //             fontWeight: FontWeight.w700,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(height: 8),
                     Column(
-                      children: List.generate(instructor[index].coachData.length, (indexI) {
+                      children: List.generate(
+                          instructor[index].coachData.length, (indexI) {
                         final coachData = instructor[index].coachData[indexI];
                         return Card(
-                          color: Colors.white,
+                          color: Color(0xFFF5F5F5),
                           child: InkWell(
                             child: Container(
-                              padding: EdgeInsets.all(20),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                children: [
-                                  // Image.asset(
-                                  //   coachData.coach_image,
-                                  //   width: 90,
-                                  //   fit: BoxFit.cover,
-                                  // ),
-                                  Image.network(
-                                    coachData.coach_image,
-                                    // width: 110,
-                                    height: 100,
-                                    fit: BoxFit.fill,
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          coachData.coach_name,
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 18.0,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.work,
-                                              color: Colors.amber,
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(
-                                              coachData.coach_department,
-                                              style: GoogleFonts.openSans(
-                                                fontSize: 14.0,
-                                                color: Color(0xFF555555),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            FaIcon(
-                                              FontAwesomeIcons.building,
-                                              color: Colors.amber,
-                                              size: 20,
-                                            ),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(
-                                              coachData.coach_comapny,
-                                              style: GoogleFonts.openSans(
-                                                color: Color(0xFF555555),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: SingleChildScrollView(
-                                                scrollDirection: Axis.horizontal,
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.people_alt_outlined,
-                                                      color: Colors.amber,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 4,
-                                                    ),
-                                                    Text(
-                                                      '${coachData.count_trainee} Students',
-                                                      style: GoogleFonts.openSans(
-                                                        color: Color(0xFF555555),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: SingleChildScrollView(
-                                                scrollDirection: Axis.horizontal,
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.bookmark_border,
-                                                      color: Colors.amber,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 4,
-                                                    ),
-                                                    Text(
-                                                      '${coachData.coach_course} Courses',
-                                                      style: GoogleFonts.openSans(
-                                                        color: Color(0xFF555555),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 0,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 3), // x, y
                                   ),
                                 ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    // Image.asset(
+                                    //   coachData.coach_image,
+                                    //   width: 90,
+                                    //   fit: BoxFit.cover,
+                                    // ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Image.network(
+                                        coachData.coach_image,
+                                        width: double.infinity,
+                                        fit: BoxFit.contain,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Icon(Icons.info, size: 40);
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            coachData.coach_name,
+                                            style: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.0,
+                                              color: Color(0xFF555555),
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                            maxLines: 2,
+                                          ),
+                                          SizedBox(height: 8),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.work_outline,
+                                                color: Colors.amber,
+                                                size: 20,
+                                              ),
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  coachData.coach_department,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 14.0,
+                                                    color: Color(0xFF555555),
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  maxLines: 2,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 8),
+                                          Row(
+                                            children: [
+                                              FaIcon(
+                                                FontAwesomeIcons.building,
+                                                color: Colors.amber,
+                                                size: 20,
+                                              ),
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  coachData.coach_comapny,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    color: Color(0xFF555555),
+                                                  ),
+                                                  maxLines: 2,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 8),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons
+                                                            .people_alt_outlined,
+                                                        color: Colors.amber,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 4,
+                                                      ),
+                                                      Text(
+                                                        '${coachData.count_trainee} Students',
+                                                        style: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          color:
+                                                              Color(0xFF555555),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.bookmark_border,
+                                                        color: Colors.amber,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 4,
+                                                      ),
+                                                      Text(
+                                                        '${coachData.coach_course} Courses',
+                                                        style: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          color:
+                                                              Color(0xFF555555),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -305,14 +339,12 @@ class InstructorsData {
 
   factory InstructorsData.fromJson(Map<String, dynamic> json) {
     return InstructorsData(
-      count_trainee: json['count_trainee'],
-      coach_course: json['coach_course'],
-      coach_comapny: json['coach_comapny'],
-      coach_name: json['coach_name'],
-      coach_image: json['coach_image'],
-      coach_department: json['coach_department'],
+      count_trainee: json['count_trainee'] ?? '',
+      coach_course: json['coach_course'] ?? '',
+      coach_comapny: json['coach_comapny'] ?? '',
+      coach_name: json['coach_name'] ?? '',
+      coach_image: json['coach_image'] ?? '',
+      coach_department: json['coach_department'] ?? '',
     );
   }
 }
-
-

@@ -10,11 +10,12 @@ class ActivityEditNow extends StatefulWidget {
   const ActivityEditNow({
     Key? key,
     required this.employee,
-    required this.skoopDetail, required this.Authorization,
+    required this.skoopDetail, required this.Authorization, required this.activity_id,
   }) : super(key: key);
   final Employee employee;
   final GetSkoopDetail? skoopDetail;
   final String Authorization;
+  final String activity_id;
   @override
   _ActivityEditNowState createState() => _ActivityEditNowState();
 }
@@ -177,49 +178,49 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange.shade50,
+      // backgroundColor: Colors.orange.shade50,
       // backgroundColor: Color(0xFFF5F5F5),
-      // appBar: AppBar(
-      //   backgroundColor: Color(0xFFFF9900),
-      //   title: Align(
-      //     alignment: Alignment.centerLeft,
-      //     child: Text(
-      //       '',
-      //       style: GoogleFonts.openSans(
-      //         fontSize: 24,
-      //         color: Colors.white,
-      //         fontWeight: FontWeight.w500,
-      //       ),
-      //     ),
-      //   ),
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.arrow_back_ios,
-      //       color: Colors.white,
-      //     ),
-      //     onPressed: () => Navigator.pop(context),
-      //   ),
-      //   actions: [
-      //     InkWell(
-      //       onTap: () {
-      //         _fetchUpDateActivity();
-      //       },
-      //       child: Row(
-      //         children: [
-      //           Text(
-      //             'DONE',
-      //             style: GoogleFonts.openSans(
-      //               fontSize: 14,
-      //               color: Colors.white,
-      //               fontWeight: FontWeight.w500,
-      //             ),
-      //           ),
-      //           SizedBox(width: 16)
-      //         ],
-      //       ),
-      //     ),
-      //   ],
-      // ),
+      appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            '',
+            style: GoogleFonts.openSans(
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          InkWell(
+            onTap: () {
+              _fetchUpDateActivity();
+            },
+            child: Row(
+              children: [
+                Text(
+                  'DONE',
+                  style: GoogleFonts.openSans(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 16)
+              ],
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Container(
           color: Colors.white,
@@ -229,19 +230,19 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          Colors.grey,
-                          BlendMode
-                              .saturation, // ใช้ BlendMode.saturation สำหรับ Grayscale
-                        ),
-                        child: Image.asset(
-                          'assets/images/busienss1.jpg',
-                          fit: BoxFit.cover,
-                          height: 60,
-                          width: double.infinity,
-                        ),
-                      ),
+                      // ColorFiltered(
+                      //   colorFilter: ColorFilter.mode(
+                      //     Colors.grey,
+                      //     BlendMode
+                      //         .saturation, // ใช้ BlendMode.saturation สำหรับ Grayscale
+                      //   ),
+                      //   child: Image.asset(
+                      //     'assets/images/busienss1.jpg',
+                      //     fit: BoxFit.cover,
+                      //     height: 60,
+                      //     width: double.infinity,
+                      //   ),
+                      // ),
                       Container(
                         color: Colors.white,
                         child: Padding(
@@ -249,10 +250,30 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _DownType(widget.skoopDetail?.type_name ?? ''),
+                              _DownProject(
+                                  widget.skoopDetail?.project_name ?? ''),
+                              _DownContact(
+                                  widget.skoopDetail?.contact_first ?? ''),
+                              _DownAccount(
+                                  widget.skoopDetail?.account_th ?? ''),
+                              _DownStatus(widget.skoopDetail?.status ?? ''),
+                              _DownPriority(
+                                  widget.skoopDetail?.priority_name ?? ''),
                               _TextController('Subject', _subjectController),
                               _TextController(
                                   'Description', _descriptionController),
+                              Column(
+                                children: [
+                                  SizedBox(height: 18),
+                                  Container(
+                                    color: Colors.grey,
+                                    height: 2,
+                                    width: double.infinity,
+                                  ),
+                                  SizedBox(height: 18),
+                                ],
+                              ),
+                              _DownType(widget.skoopDetail?.type_name ?? ''),
                               Row(
                                 children: [
                                   Expanded(
@@ -278,27 +299,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                   ),
                                 ],
                               ),
-                              Column(
-                                children: [
-                                  SizedBox(height: 18),
-                                  Container(
-                                    color: Colors.grey,
-                                    height: 2,
-                                    width: double.infinity,
-                                  ),
-                                  SizedBox(height: 18),
-                                ],
-                              ),
-                              _DownProject(
-                                  widget.skoopDetail?.project_name ?? ''),
-                              _DownContact(
-                                  widget.skoopDetail?.contact_first ?? ''),
-                              _DownAccount(
-                                  widget.skoopDetail?.account_th ?? ''),
+
+                              SizedBox(height: 8),
                               _DownPlace('Place'),
-                              _DownStatus(widget.skoopDetail?.status ?? ''),
-                              _DownPriority(
-                                  widget.skoopDetail?.priority_name ?? ''),
                               _locationGM(),
                               Text(
                                 'Cost',
@@ -540,8 +543,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => SkoopScreen(
-                              employee: widget.employee,Authorization: widget.Authorization,
-                              skoopDetail: widget.skoopDetail,
+                              employee: widget.employee,
+                              Authorization: widget.Authorization, activity_id: widget.activity_id,
                             ),
                           ),
                         );
@@ -550,14 +553,14 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                           'Skoop', Icons.wifi_tethering, Color(0xFF00C789)),
                     ),
                   ),
-                  if (widget.skoopDetail?.skooped == '1')
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                          onTap: _showDialogClose,
-                          child: _gestureDetector(
-                              'Close', Icons.close, Color(0xFF53C507))),
-                    ),
+                  // if (widget.skoopDetail?.skooped == '1')
+                  //   Expanded(
+                  //     flex: 1,
+                  //     child: GestureDetector(
+                  //         onTap: _showDialogClose,
+                  //         child: _gestureDetector(
+                  //             'Close', Icons.close, Color(0xFF53C507))),
+                  //   ),
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
@@ -755,7 +758,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                               child: Image.network(
-                                                (contact.contact_image == null)
+                                                (contact.contact_image == null || contact.contact_image == '')
                                                     ? 'https://dev.origami.life/images/default.png'
                                                     : '$host//crm/${contact.contact_image}',
                                                 height: 100,
@@ -1087,7 +1090,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.status_name!
+                return item.value!.status_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
@@ -1258,7 +1261,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 .map((item) => DropdownMenuItem<ActivityType>(
                       value: item,
                       child: Text(
-                        item.type_name ?? '',
+                        item.type_name,
                         style: GoogleFonts.openSans(
                           fontSize: 14,
                         ),
@@ -1315,7 +1318,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.type_name!
+                return item.value!.type_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
@@ -1372,7 +1375,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 .map((item) => DropdownMenuItem<ActivityStatus>(
                       value: item,
                       child: Text(
-                        item.status_name ?? '',
+                        item.status_name,
                         style: GoogleFonts.openSans(
                           fontSize: 14,
                         ),
@@ -1429,7 +1432,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.status_name!
+                return item.value!.status_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
@@ -1486,7 +1489,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 .map((item) => DropdownMenuItem<ActivityPriority>(
                       value: item,
                       child: Text(
-                        item.priority_name ?? '',
+                        item.priority_name,
                         style: GoogleFonts.openSans(
                           fontSize: 14,
                         ),
@@ -1543,7 +1546,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.priority_name!
+                return item.value!.priority_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
@@ -1797,7 +1800,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Activity Lication',
+          'Location',
           maxLines: 1,
           style: GoogleFonts.openSans(
             fontSize: 14,

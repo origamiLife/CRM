@@ -271,7 +271,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 .map((item) => DropdownMenuItem<ContactData>(
                       value: item,
                       child: Text(
-                        item.contact_name ?? '',
+                        item.contact_name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.openSans(
@@ -331,7 +331,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.contact_name!
+                return item.value!.contact_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
@@ -502,7 +502,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             items: TypeList.map((item) => DropdownMenuItem<TypeData>(
                   value: item,
                   child: Text(
-                    item.type_name ?? '',
+                    item.type_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.openSans(
@@ -617,7 +617,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             items: SourceList.map((item) => DropdownMenuItem<SourceData>(
                   value: item,
                   child: Text(
-                    item.source_name ?? '',
+                    item.source_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.openSans(
@@ -814,7 +814,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             items: ProcessList.map((item) => DropdownMenuItem<ProcessData>(
                   value: item,
                   child: Text(
-                    item.process_name ?? '',
+                    item.process_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.openSans(
@@ -929,7 +929,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             items: PriorityList.map((item) => DropdownMenuItem<PriorityData>(
                   value: item,
                   child: Text(
-                    item.priority_name ?? '',
+                    item.priority_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.openSans(
@@ -1044,7 +1044,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             items: SubStatusList.map((item) => DropdownMenuItem<SubStatusData>(
                   value: item,
                   child: Text(
-                    item.sub_status_name ?? '',
+                    item.sub_status_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.openSans(
@@ -1787,8 +1787,8 @@ class ContactData {
 
   factory ContactData.fromJson(Map<String, dynamic> json) {
     return ContactData(
-      contact_id: json['contact_id'],
-      contact_name: json['contact_name'],
+      contact_id: json['contact_id']??'',
+      contact_name: json['contact_name']??'',
     );
   }
 }
@@ -1804,8 +1804,8 @@ class AccountData {
 
   factory AccountData.fromJson(Map<String, dynamic> json) {
     return AccountData(
-      account_id: json['account_id'],
-      account_name: json['account_name'],
+      account_id: json['account_id']??'',
+      account_name: json['account_name']??'',
     );
   }
 }
@@ -1821,8 +1821,8 @@ class SourceData {
 
   factory SourceData.fromJson(Map<String, dynamic> json) {
     return SourceData(
-      source_id: json['source_id'],
-      source_name: json['source_name'],
+      source_id: json['source_id']??'',
+      source_name: json['source_name']??'',
     );
   }
 }
@@ -1838,8 +1838,8 @@ class TypeData {
 
   factory TypeData.fromJson(Map<String, dynamic> json) {
     return TypeData(
-      type_id: json['type_id'],
-      type_name: json['type_name'],
+      type_id: json['type_id']??'',
+      type_name: json['type_name']??'',
     );
   }
 }
@@ -1855,8 +1855,8 @@ class CategoryData {
 
   factory CategoryData.fromJson(Map<String, dynamic> json) {
     return CategoryData(
-      categories_id: json['categories_id'],
-      categories_name: json['categories_name'],
+      categories_id: json['categories_id']??'',
+      categories_name: json['categories_name']??'',
     );
   }
 }
@@ -1872,8 +1872,8 @@ class ProcessData {
 
   factory ProcessData.fromJson(Map<String, dynamic> json) {
     return ProcessData(
-      process_id: json['process_id'],
-      process_name: json['process_name'],
+      process_id: json['process_id']??'',
+      process_name: json['process_name']??'',
     );
   }
 }
@@ -1889,8 +1889,8 @@ class PriorityData {
 
   factory PriorityData.fromJson(Map<String, dynamic> json) {
     return PriorityData(
-      priority_id: json['priority_id'],
-      priority_name: json['priority_name'],
+      priority_id: json['priority_id']??'',
+      priority_name: json['priority_name']??'',
     );
   }
 }
@@ -1906,8 +1906,8 @@ class SubStatusData {
 
   factory SubStatusData.fromJson(Map<String, dynamic> json) {
     return SubStatusData(
-      sub_status_id: json['sub_status_id'],
-      sub_status_name: json['sub_status_name'],
+      sub_status_id: json['sub_status_id']??'',
+      sub_status_name: json['sub_status_name']??'',
     );
   }
 }

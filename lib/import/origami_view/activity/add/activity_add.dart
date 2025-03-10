@@ -204,9 +204,25 @@ class _activityAddState extends State<activityAdd> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _DownType(),
+                _DownProject(),
+                _DownContact(),
+                _DownAccount(),
+                _DownStatus(),
+                _DownPriority(),
                 _TextController('Subject', _subjectController),
                 _TextController('Description', _descriptionController),
+                Column(
+                  children: [
+                    SizedBox(height: 18),
+                    Container(
+                      color: Colors.grey,
+                      height: 2,
+                      width: double.infinity,
+                    ),
+                    SizedBox(height: 18),
+                  ],
+                ),
+                _DownType(),
                 Row(
                   children: [
                     Expanded(
@@ -230,24 +246,12 @@ class _activityAddState extends State<activityAdd> {
                     ),
                   ],
                 ),
-                Column(
-                  children: [
-                    SizedBox(height: 18),
-                    Container(
-                      color: Colors.grey,
-                      height: 2,
-                      width: double.infinity,
-                    ),
-                    SizedBox(height: 18),
-                  ],
-                ),
-                _DownProject(),
-                _DownContact(),
-                _DownAccount(),
+                SizedBox(height: 8),
+
                 _DownPlace('Place'),
-                _DownStatus(),
-                _DownPriority(),
+
                 // _locationGM(),
+
                 Text(
                   'Cost',
                   maxLines: 1,
@@ -349,7 +353,7 @@ class _activityAddState extends State<activityAdd> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                           child: Image.network(
-                                            (contact.contact_image == null)
+                                            (contact.contact_image == null || contact.contact_image == '')
                                                 ? 'https://dev.origami.life/images/default.png'
                                                 : '$host//crm/${contact.contact_image}',
                                             height: 100,
@@ -575,7 +579,7 @@ class _activityAddState extends State<activityAdd> {
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                               child: Image.network(
-                                                (contact.contact_image == null)
+                                                (contact.contact_image == null || contact.contact_image == '')
                                                     ? 'https://dev.origami.life/images/default.png'
                                                     : '$host//crm/${contact.contact_image}',
                                                 height: 100,
@@ -901,7 +905,7 @@ class _activityAddState extends State<activityAdd> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.status_name!
+                return item.value!.status_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
@@ -1191,7 +1195,7 @@ class _activityAddState extends State<activityAdd> {
                 .map((item) => DropdownMenuItem<ActivityType>(
                       value: item,
                       child: Text(
-                        item.type_name ?? '',
+                        item.type_name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.openSans(
@@ -1251,7 +1255,7 @@ class _activityAddState extends State<activityAdd> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.type_name!
+                return item.value!.type_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
@@ -1308,7 +1312,7 @@ class _activityAddState extends State<activityAdd> {
                 .map((item) => DropdownMenuItem<ActivityStatus>(
                       value: item,
                       child: Text(
-                        item.status_name ?? '',
+                        item.status_name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.openSans(
@@ -1368,7 +1372,7 @@ class _activityAddState extends State<activityAdd> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.status_name!
+                return item.value!.status_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
@@ -1425,7 +1429,7 @@ class _activityAddState extends State<activityAdd> {
                 .map((item) => DropdownMenuItem<ActivityPriority>(
                       value: item,
                       child: Text(
-                        item.priority_name ?? '',
+                        item.priority_name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.openSans(
@@ -1485,7 +1489,7 @@ class _activityAddState extends State<activityAdd> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.priority_name!
+                return item.value!.priority_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
@@ -2015,61 +2019,61 @@ class TitleDown {
 }
 
 class ActivityType {
-  String? type_id;
-  String? type_name;
-  String? type_chage;
+  String type_id;
+  String type_name;
+  String type_chage;
 
   ActivityType({
-    this.type_id,
-    this.type_name,
-    this.type_chage,
+    required this.type_id,
+    required this.type_name,
+    required this.type_chage,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityType.fromJson(Map<String, dynamic> json) {
     return ActivityType(
-      type_id: json['type_id'],
-      type_name: json['type_name'],
-      type_chage: json['type_chage'],
+      type_id: json['type_id']??'',
+      type_name: json['type_name']??'',
+      type_chage: json['type_chage']??'',
     );
   }
 }
 
 class ActivityStatus {
-  String? status_id;
-  String? status_name;
+  String status_id;
+  String status_name;
 
   ActivityStatus({
-    this.status_id,
-    this.status_name,
+    required this.status_id,
+    required this.status_name,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityStatus.fromJson(Map<String, dynamic> json) {
     return ActivityStatus(
-      status_id: json['status_id'],
-      status_name: json['status_name'],
+      status_id: json['status_id']??'',
+      status_name: json['status_name']??'',
     );
   }
 }
 
 class ActivityPriority {
-  String? priority_id;
-  String? priority_name;
-  String? priority_value;
+  String priority_id;
+  String priority_name;
+  String priority_value;
 
   ActivityPriority({
-    this.priority_id,
-    this.priority_name,
-    this.priority_value,
+    required this.priority_id,
+    required this.priority_name,
+    required this.priority_value,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityPriority.fromJson(Map<String, dynamic> json) {
     return ActivityPriority(
-      priority_id: json['priority_id'],
-      priority_name: json['priority_name'],
-      priority_value: json['priority_value'],
+      priority_id: json['priority_id']??'',
+      priority_name: json['priority_name']??'',
+      priority_value: json['priority_value']??'',
     );
   }
 }

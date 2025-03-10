@@ -10,7 +10,8 @@ import '../need_view/need_detail.dart';
 class PettyCash extends StatefulWidget {
   PettyCash({
     super.key,
-    required this.employee, required this.Authorization,
+    required this.employee,
+    required this.Authorization,
   });
   final Employee employee;
   final String Authorization;
@@ -72,7 +73,7 @@ class _PettyCashState extends State<PettyCash> {
   int _currentIndex = 0;
   String startDate = '';
   void _startTime(CashData cashData) {
-    String cashStart = cashData.cash_start??'';
+    String cashStart = cashData.cash_start ?? '';
     if (cashStart == null || cashStart.isEmpty) {
       print('No date provided'); // หรือจัดการกับกรณีค่าว่างที่นี่
     } else {
@@ -96,7 +97,7 @@ class _PettyCashState extends State<PettyCash> {
 
   String endDate = '';
   void _endTime(CashData cashData) {
-    String cashEnd = cashData.cash_end??'';
+    String cashEnd = cashData.cash_end ?? '';
     if (cashEnd == null || cashEnd.isEmpty) {
       print('No date provided'); // หรือจัดการกับกรณีค่าว่างที่นี่
     } else {
@@ -122,8 +123,10 @@ class _PettyCashState extends State<PettyCash> {
   double longBalance = 0.0;
 
   void _sumLong(CashData cashData) {
-    double amount = double.parse(cashData.cash_amount?.replaceAll(',', '')??'');
-    double balance = double.parse(cashData.cash_balance?.replaceAll(',', '')??'');
+    double amount =
+        double.parse(cashData.cash_amount?.replaceAll(',', '') ?? '');
+    double balance =
+        double.parse(cashData.cash_balance?.replaceAll(',', '') ?? '');
     longAmount = (balance * 100) / amount;
     longBalance = longAmount / 100;
   }
@@ -132,36 +135,34 @@ class _PettyCashState extends State<PettyCash> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      floatingActionButton:
-      // (isSave != false)
-      //     ? FloatingActionButton(
-      //         onPressed: () {
-      //           setState(() {
-      //             used_id = '';
-      //             _detailyController.clear();
-      //             _quantityController.clear();
-      //             _priceController.clear();
-      //             _amountController.clear();
-      //             isSave = false;
-      //           });
-      //         },
-      //         child: Icon(
-      //           Icons.add,
-      //           color: Colors.white,
-      //         ),
-      //         shape: const RoundedRectangleBorder(
-      //           borderRadius: BorderRadius.only(
-      //             topRight: Radius.circular(100),
-      //             bottomLeft: Radius.circular(100),
-      //             bottomRight: Radius.circular(100),
-      //             topLeft: Radius.circular(100),
-      //           ),
-      //         ),
-      //         elevation: 0,
-      //         backgroundColor: Color(0xFFFF9900),
-      //       )
-      //     :
-      Container(),
+      floatingActionButton: (isSave == false)
+          ? Container()
+          : FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  used_id = '';
+                  _detailyController.clear();
+                  _quantityController.clear();
+                  _priceController.clear();
+                  _amountController.clear();
+                  isSave = false;
+                });
+              },
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(100),
+                  bottomLeft: Radius.circular(100),
+                  bottomRight: Radius.circular(100),
+                  topLeft: Radius.circular(100),
+                ),
+              ),
+              elevation: 0,
+              backgroundColor: Color(0xFFFF9900),
+            ),
       body: loading(),
     );
   }
@@ -197,7 +198,7 @@ class _PettyCashState extends State<PettyCash> {
           children: [
             Expanded(
               child: CarouselSlider.builder(
-                controller: _controller,
+                carouselController: _controller,
                 itemCount: cashData.length,
                 itemBuilder: (context, index, realIndex) {
                   return _mainPerryCash(cashData[index]);
@@ -220,7 +221,7 @@ class _PettyCashState extends State<PettyCash> {
                 ),
               ),
             ),
-            (isSave != false) ? Container() : _elevatedButton(),
+            if (isSave == false) _elevatedButton(),
           ],
         ),
       ),
@@ -284,7 +285,7 @@ class _PettyCashState extends State<PettyCash> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  cashData.cash_no??'',
+                                  cashData.cash_no ?? '',
                                   style: GoogleFonts.openSans(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -321,7 +322,7 @@ class _PettyCashState extends State<PettyCash> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  cashData.cash_name??'',
+                                  cashData.cash_name ?? '',
                                   style: GoogleFonts.openSans(
                                     color: Colors.white,
                                     fontSize: 14,
@@ -329,7 +330,7 @@ class _PettyCashState extends State<PettyCash> {
                                   ),
                                 ),
                                 Text(
-                                  cashData.cash_amount??'',
+                                  cashData.cash_amount ?? '',
                                   style: GoogleFonts.openSans(
                                     color: Colors.white,
                                     fontSize: 28,
@@ -357,7 +358,7 @@ class _PettyCashState extends State<PettyCash> {
                             ),
                           ),
                           Text(
-                            cashData.cash_balance??'',
+                            cashData.cash_balance ?? '',
                             style: GoogleFonts.openSans(
                               color: Colors.white,
                               fontSize: 28,
@@ -409,7 +410,7 @@ class _PettyCashState extends State<PettyCash> {
                   padding: EdgeInsets.only(left: 16, right: 16),
                   child: Row(
                     children: [
-                      (isSave != false && expense == false)
+                      (isSave == true && expense == false)
                           ? InkWell(
                               onTap: () {
                                 setState(() {
@@ -569,9 +570,9 @@ class _PettyCashState extends State<PettyCash> {
           ),
         ),
         Expanded(
-          child: (isSave != false && expense == false)
+          child: (isSave == true && expense == false)
               ? _tableExpense(cashData)
-              : (isSave != false && expense == true)
+              : (isSave == true && expense == true)
                   ? Container(
                       padding: EdgeInsets.only(
                           top: 8, bottom: 8, right: 16, left: 16),
@@ -617,13 +618,13 @@ class _PettyCashState extends State<PettyCash> {
           if (snapshot.hasError) {
             return Center(
                 child: Text(
-                  Empty,
-                  style: GoogleFonts.openSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF555555),
-                  ),
-                ));
+              Empty,
+              style: GoogleFonts.openSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF555555),
+              ),
+            ));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
                 child: Text(
@@ -686,9 +687,10 @@ class _PettyCashState extends State<PettyCash> {
                             Checkbox(
                               checkColor: Colors.white,
                               activeColor: Color(0xFFFF9900),
-                              value: selectedIds.contains(item.used_id??''),
+                              value: selectedIds.contains(item.used_id ?? ''),
                               onChanged: (bool? isChecked) {
-                                _onCheckboxChanged(item.used_id??'', isChecked);
+                                _onCheckboxChanged(
+                                    item.used_id ?? '', isChecked);
                                 print(selectedIds);
                               },
                             ),
@@ -700,7 +702,7 @@ class _PettyCashState extends State<PettyCash> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    item.item_name??'',
+                                    item.item_name ?? '',
                                     style: GoogleFonts.openSans(
                                       color: const Color(0xFF555555),
                                     ),
@@ -708,7 +710,7 @@ class _PettyCashState extends State<PettyCash> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    "(${item.used_date??''})",
+                                    "(${item.used_date ?? ''})",
                                     style: GoogleFonts.openSans(
                                       color: const Color(0xFF555555),
                                     ),
@@ -793,7 +795,9 @@ class _PettyCashState extends State<PettyCash> {
                                         color: const Color(0xFF555555),
                                       ),
                                       border: InputBorder.none,
-                                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 12),
                                       suffixIcon: IconButton(
                                         onPressed: () {
                                           _subjectController.clear();
@@ -806,7 +810,8 @@ class _PettyCashState extends State<PettyCash> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                _buildTextField(_descriptionController, '$Type_something...', (value) {
+                                _buildTextField(_descriptionController,
+                                    '$Type_something...', (value) {
                                   // _searchSubject = value;
                                 }),
                                 // Container(
@@ -908,11 +913,11 @@ class _PettyCashState extends State<PettyCash> {
     return Container(
       decoration: _inputDecoration(),
       child: TextFormField(
-        // minLines: (controller == _noteController)?5:null,
-        // maxLines: null,
+        minLines: (controller == _amountController) ? 5 : null,
+        maxLines: null,
         controller: controller,
         keyboardType:
-        hintText == '0' ? TextInputType.number : TextInputType.text,
+            hintText == '0' ? TextInputType.number : TextInputType.text,
         style: GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
         decoration: InputDecoration(
           isDense: true,
@@ -978,9 +983,9 @@ class _PettyCashState extends State<PettyCash> {
               child: Text(
             Empty,
             style: GoogleFonts.openSans(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF555555),
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF555555),
             ),
           ));
         } else {
@@ -1005,17 +1010,17 @@ class _PettyCashState extends State<PettyCash> {
           _index = index;
           // selectedUnit2 = usedData.uom_description as UnitData?;
           setState(() {
-            _detailyController.text = usedData.used_description??'';
-            _quantityController.text = usedData.used_quantity??'';
-            _priceController.text = usedData.used_price??'';
-            _amountController.text = usedData.used_amount??'';
+            _detailyController.text = usedData.used_description ?? '';
+            _quantityController.text = usedData.used_quantity ?? '';
+            _priceController.text = usedData.used_price ?? '';
+            _amountController.text = usedData.used_amount ?? '';
           });
-          cash_id = cashData.cash_id??'';
-          used_id = usedData.used_id??'';
+          cash_id = cashData.cash_id ?? '';
+          used_id = usedData.used_id ?? '';
           // item_id = usedData.item_id;
           fetchDetail();
-          unit_id = usedData.uom_code??'';
-          item_id = usedData.item_id??'';
+          unit_id = usedData.uom_code ?? '';
+          item_id = usedData.item_id ?? '';
           isSave = false;
         });
       },
@@ -1061,7 +1066,7 @@ class _PettyCashState extends State<PettyCash> {
                                 ),
                                 Flexible(
                                   child: Text(
-                                    usedData.used_date??'',
+                                    usedData.used_date ?? '',
                                     style: GoogleFonts.openSans(
                                         fontSize: 14, color: Color(0xFF555555)),
                                     overflow: TextOverflow.ellipsis,
@@ -1086,7 +1091,7 @@ class _PettyCashState extends State<PettyCash> {
                                 ),
                                 Flexible(
                                   child: Text(
-                                    usedData.item_name??'',
+                                    usedData.item_name ?? '',
                                     style: GoogleFonts.openSans(
                                         fontSize: 14, color: Color(0xFF555555)),
                                     overflow: TextOverflow.ellipsis,
@@ -1118,7 +1123,7 @@ class _PettyCashState extends State<PettyCash> {
                             child: Text(
                               (usedData.used_description == '')
                                   ? ' - '
-                                  : usedData.used_description??'',
+                                  : usedData.used_description ?? '',
                               style: GoogleFonts.openSans(
                                 fontSize: 14,
                                 color: Color(0xFF555555),
@@ -1149,7 +1154,7 @@ class _PettyCashState extends State<PettyCash> {
                                 ),
                                 Flexible(
                                   child: Text(
-                                    usedData.used_quantity??'',
+                                    usedData.used_quantity ?? '',
                                     style: GoogleFonts.openSans(
                                         fontSize: 14, color: Color(0xFF555555)),
                                     overflow: TextOverflow.ellipsis,
@@ -1206,7 +1211,7 @@ class _PettyCashState extends State<PettyCash> {
                           ),
                           Flexible(
                             child: Text(
-                              usedData.used_amount??'',
+                              usedData.used_amount ?? '',
                               style: GoogleFonts.openSans(
                                   fontSize: 14, color: Color(0xFF555555)),
                               overflow: TextOverflow.ellipsis,
@@ -1239,8 +1244,8 @@ class _PettyCashState extends State<PettyCash> {
                   ),
                   onPressed: () {
                     setState(() {
-                      cash_id = cashData.cash_id??'';
-                      used_id = usedData.used_id??'';
+                      cash_id = cashData.cash_id ?? '';
+                      used_id = usedData.used_id ?? '';
                       fetchDeleteCash();
                     });
                   },
@@ -1408,42 +1413,9 @@ class _PettyCashState extends State<PettyCash> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    border: Border.all(
-                      color: Color(0xFFFF9900),
-                      width: 1.0,
-                    ),
-                  ),
-                  child: TextFormField(
-                    minLines: 2,
-                    maxLines: null,
-                    keyboardType: TextInputType.text,
-                    controller: _detailyController,
-                    style: GoogleFonts.openSans(
-                        color: Color(0xFF555555), fontSize: 14),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: '',
-                      hintStyle: GoogleFonts.openSans(
-                        fontSize: 14,
-                        color: Color(0xFF555555),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(color: Color(0xFFFF9900)),
-                      ),
-                    ),
-                    onChanged: (value) {},
-                  ),
-                ),
+                child: _buildTextField(_amountController, '', (value) {
+                  setState(() {});
+                }),
               ),
             ],
           ),
@@ -1467,40 +1439,10 @@ class _PettyCashState extends State<PettyCash> {
                 height: 8,
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16),
-                child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    border: Border.all(
-                      color: Color(0xFFFF9900),
-                      width: 1.0,
-                    ),
-                  ),
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: _quantityController,
-                    style: GoogleFonts.openSans(
-                        color: Color(0xFF555555), fontSize: 14),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: '0',
-                      hintStyle: GoogleFonts.openSans(
-                          fontSize: 14, color: Color(0xFF555555)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(color: Color(0xFFFF9900)),
-                      ),
-                    ),
-                    onChanged: (value) {},
-                  ),
-                ),
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: _buildTextField(_quantityController, '0', (value) {
+                  setState(() {});
+                }),
               ),
             ],
           ),
@@ -1528,40 +1470,9 @@ class _PettyCashState extends State<PettyCash> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 16, right: 16),
-                      child: Container(
-                        height: 45,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          border: Border.all(
-                            color: Color(0xFFFF9900),
-                            width: 1.0,
-                          ),
-                        ),
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: _priceController,
-                          style: GoogleFonts.openSans(
-                              color: Color(0xFF555555), fontSize: 14),
-                          decoration: InputDecoration(
-                            isDense: true,
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintText: '0',
-                            hintStyle: GoogleFonts.openSans(
-                                fontSize: 14, color: Color(0xFF555555)),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: Color(0xFFFF9900)),
-                            ),
-                          ),
-                          onChanged: (value) {},
-                        ),
-                      ),
+                      child: _buildTextField(_priceController, '0', (value) {
+                        setState(() {});
+                      }),
                     ),
                   ],
                 ),
@@ -1583,7 +1494,8 @@ class _PettyCashState extends State<PettyCash> {
                     Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: Container(
-                        height: 45,
+                        height: 53,
+                        alignment: Alignment.center,
                         padding: EdgeInsets.only(left: 16, right: 16),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15.0),
@@ -1619,7 +1531,7 @@ class _PettyCashState extends State<PettyCash> {
                           value: selectedUnit2,
                           onChanged: (value) {
                             setState(() {
-                              selectedUnit2 = value as UnitData?;
+                              selectedUnit2 = value;
                               unit_id = value?.unit_id ?? '';
                             });
                           },
@@ -1894,10 +1806,10 @@ class _PettyCashState extends State<PettyCash> {
   }
 
   Future<List<CashData>> fetchCash() async {
-    final uri =
-        Uri.parse("$host/api/origami/pettyCash/cash.php");
+    final uri = Uri.parse("$host/api/origami/pettyCash/cash.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -1910,7 +1822,7 @@ class _PettyCashState extends State<PettyCash> {
       // เข้าถึงข้อมูลในคีย์ 'instructors'
       final List<dynamic> dataJson = jsonResponse['cash_data'];
       final dataCash = dataJson.map((json) => CashData.fromJson(json)).toList();
-      cash_id = dataCash[0].cash_id??'';
+      cash_id = dataCash[0].cash_id ?? '';
       print(cash_id);
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
       return dataJson.map((json) => CashData.fromJson(json)).toList();
@@ -1922,10 +1834,10 @@ class _PettyCashState extends State<PettyCash> {
   String cash_id = '';
   String status_id = '';
   Future<List<UsedData>> fetchUsed() async {
-    final uri =
-        Uri.parse("$host/api/origami/pettyCash/used.php");
+    final uri = Uri.parse("$host/api/origami/pettyCash/used.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -1947,10 +1859,10 @@ class _PettyCashState extends State<PettyCash> {
 
   DetailData? detailData;
   Future<void> fetchDetail() async {
-    final uri =
-        Uri.parse("$host/api/origami/pettyCash/detail.php");
+    final uri = Uri.parse("$host/api/origami/pettyCash/detail.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -1984,10 +1896,10 @@ class _PettyCashState extends State<PettyCash> {
   StatusCash? selectedStatus;
   List<StatusCash> statusList = [];
   Future<void> fetchStatus() async {
-    final uri =
-        Uri.parse("$host/api/origami/pettyCash/status.php");
+    final uri = Uri.parse("$host/api/origami/pettyCash/status.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -2030,13 +1942,13 @@ class _PettyCashState extends State<PettyCash> {
       });
     } else {
       if (unit_id == '') {
-        unit_id = _usedData[_index].uom_code??'';
+        unit_id = _usedData[_index].uom_code ?? '';
       } else if (item_id == '') {
-        item_id = _usedData[_index].item_id??'';
+        item_id = _usedData[_index].item_id ?? '';
       } else if (quantity == '') {
-        quantity = _usedData[_index].used_quantity??'';
+        quantity = _usedData[_index].used_quantity ?? '';
       } else if (price == '') {
-        price = _usedData[_index].used_price??'';
+        price = _usedData[_index].used_price ?? '';
       }
       setState(() {
         fetchSaveCash();
@@ -2045,10 +1957,10 @@ class _PettyCashState extends State<PettyCash> {
   }
 
   Future<void> fetchSaveCash() async {
-    final uri =
-        Uri.parse("$host/api/origami/pettyCash/save.php");
+    final uri = Uri.parse("$host/api/origami/pettyCash/save.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -2079,10 +1991,10 @@ class _PettyCashState extends State<PettyCash> {
 
   String used_id = '';
   Future<void> fetchDeleteCash() async {
-    final uri =
-        Uri.parse("$host/api/origami/pettyCash/delete.php");
+    final uri = Uri.parse("$host/api/origami/pettyCash/delete.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -2111,7 +2023,8 @@ class _PettyCashState extends State<PettyCash> {
     final uri = Uri.parse(
         "$host/api/origami/need/unit.php?page=$unitNumber&search=$unitName");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -2141,7 +2054,8 @@ class _PettyCashState extends State<PettyCash> {
         '$host/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=EP');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2168,10 +2082,10 @@ class _PettyCashState extends State<PettyCash> {
   String need_subject = '';
   String need_description = '';
   Future<void> fetchExpenseCash() async {
-    final uri =
-        Uri.parse("$host/api/origami/pettyCash/expense.php");
+    final uri = Uri.parse("$host/api/origami/pettyCash/expense.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,

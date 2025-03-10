@@ -1,22 +1,14 @@
-import 'package:http/http.dart' as http;
-import 'package:origamilift/import/login/origami_login.dart';
-import 'package:origamilift/import/origami_view/language/translate.dart';
+import '../../../../import.dart';
 import '../../academy.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:async';
-import 'package:origamilift/import/import.dart';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class Discussion extends StatefulWidget {
   Discussion({
     super.key,
     required this.employee,
-    required this.academy, required this.Authorization,
+    required this.academy,
+    required this.Authorization,
   });
   final Employee employee;
   final AcademyRespond academy;
@@ -26,11 +18,14 @@ class Discussion extends StatefulWidget {
 }
 
 class _DiscussionState extends State<Discussion> {
+  final TextEditingController _commentControllerA = TextEditingController();
+  final TextEditingController _commentControllerB = TextEditingController();
+
   Future<List<DiscussionData>> fetchDiscussion() async {
-    final uri = Uri.parse(
-        "$host/api/origami/academy/discussion.php");
+    final uri = Uri.parse("$host/api/origami/academy/discussion.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -55,17 +50,17 @@ class _DiscussionState extends State<Discussion> {
 
   String discussionId = "";
   Future<List<ReplyData>> fetchReply() async {
-    final uri = Uri.parse(
-        "$host/api/origami/academy/discussionReply.php");
+    final uri = Uri.parse("$host/api/origami/academy/discussionReply.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
         'Authorization': widget.Authorization,
         'academy_id': widget.academy.academy_id,
         'academy_type': widget.academy.academy_type,
-        'discussion_id':discussionId,
+        'discussion_id': discussionId,
       },
     );
 
@@ -97,28 +92,38 @@ class _DiscussionState extends State<Discussion> {
     // fetchDiscussion();
   }
 
-  Widget loading() {
+  @override
+  void dispose() {
+    _commentControllerA.dispose();
+    _commentControllerB.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return FutureBuilder<List<DiscussionData>>(
       future: fetchDiscussion(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('$Empty',style: GoogleFonts.openSans(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey,
-          ),));
+          return Center(
+              child: Text(
+            NotFoundDataTS,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.0,
+              color: const Color(0xFF555555),
+              fontWeight: FontWeight.w700,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ));
         } else {
           return _getContentWidget(snapshot.data!);
         }
       },
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return loading();
   }
 
   Widget _getContentWidget(List<DiscussionData> discussion) {
@@ -133,8 +138,7 @@ class _DiscussionState extends State<Discussion> {
               return Column(
                 children: [
                   Card(
-                    color: Colors.white,
-                    // elevation: 0,
+                    color: Color(0xFFF5F5F5),
                     child: InkWell(
                       onTap: () {
                         setState(() {
@@ -145,112 +149,130 @@ class _DiscussionState extends State<Discussion> {
                           backgroundColor: Colors.transparent,
                           context: context,
                           isScrollControlled: true,
-                          isDismissible: false,
-                          enableDrag: true,
+                          // isDismissible: false,
+                          // enableDrag: true,
                           builder: (BuildContext context) {
                             return _Reply(disc);
                           },
                         );
                       },
                       child: Container(
-                        padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          children: [
-                            Image.network(
-                              disc.disccusion_emp_image,
-                              height: 100,
-                              fit: BoxFit.fill,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    disc.discussion_subject,
-                                    style: GoogleFonts.openSans(
-                                      fontSize: 18.0,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.people_alt_outlined,
-                                        color: Colors.amber,
-                                        size: 22,
-                                      ),
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          disc.disccusion_emp_name,
-                                          style: GoogleFonts.openSans(
-                                            color: Color(0xFF555555),
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 4),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_month,
-                                        color: Colors.amber,
-                                        size: 22,
-                                      ),
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          disc.disccusion_date,
-                                          style: GoogleFonts.openSans(
-                                            color: Color(0xFF555555),
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    disc.discussion_description,
-                                    style: GoogleFonts.openSans(
-                                      fontSize: 16,
-                                      color: Color(0xFF555555),
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.comment_outlined,
-                                size: 30,
-                                color: Colors.amber,
-                              ),
-                              tooltip: '',
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 0,
+                              blurRadius: 2,
+                              offset: Offset(0, 3), // x, y
                             ),
                           ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Image.network(
+                                  disc.disccusion_emp_image,
+                                  width: double.infinity,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(Icons.info, size: 40);
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      disc.discussion_subject,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.0,
+                                        color: Color(0xFF555555),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                    SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.people_alt_outlined,
+                                          color: Colors.amber,
+                                          size: 20,
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            disc.disccusion_emp_name,
+                                            style: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.0,
+                                              color: Color(0xFF555555),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.amber,
+                                          size: 20,
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            disc.disccusion_date,
+                                            style: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.0,
+                                              color: Color(0xFF555555),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      disc.discussion_description,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14.0,
+                                        color: Color(0xFF555555),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      // overflow: TextOverflow.ellipsis,
+                                      // maxLines: 1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -271,289 +293,337 @@ class _DiscussionState extends State<Discussion> {
     );
   }
 
-  TextEditingController _commentControllerA = TextEditingController();
-  TextEditingController _commentControllerB = TextEditingController();
-
   Widget _Reply(DiscussionData disc) {
     return Container(
       color: Colors.white,
       child: FractionallySizedBox(
         heightFactor: 0.8,
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-              backgroundColor: Colors.grey.shade50,
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Comments',
-                      style: GoogleFonts.openSans(
-                        color: Color(0xFF555555),
-                      ),
+        child: Scaffold(
+          backgroundColor: Colors.grey.shade50,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '$ReplyThreadTS',
+                    style: const TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF555555),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 2.0,
-                              ),
-                            ),
-                            child: TextFormField(
-                              minLines: 5,
-                              maxLines: null,
-                              keyboardType: TextInputType.text,
-                              controller: _commentControllerA,
-                              style: GoogleFonts.openSans(
-                                  color: const Color(0xFF555555), fontSize: 14),
-                              decoration: InputDecoration(
-                                isDense: true,
-                                filled: true,
-                                fillColor: Colors.white,
-                                hintText: '$Type_something...',
-                                hintStyle: GoogleFonts.openSans(
-                                    fontSize: 14, color: const Color(0xFF555555)),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Color(0xFF555555)),
-                                ),
-                              ),
-                              onChanged: (value) {},
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 6,
-                            right: 6,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.amber,
-                                borderRadius:
-                                BorderRadius.circular(
-                                    10),
-                              ),
-                              child: InkWell(
-                                onTap: (){
-                                  setState(() {
-                                    if(_commentA != ""){
-                                      DiscussionSave(
-                                        discussionId,
-                                        "save",
-                                        "",
-                                        _commentA,
-                                      );
-                                    }
-                                    _commentControllerA.clear();
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8,right: 8,top: 4,bottom: 4),
-                                  child: Center(
-                                    child: Text("Post",style: GoogleFonts.openSans(
-                                      fontSize: 18.0,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.bold,
-                                    ),),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                //   child: Row(
+                //     children: [
+                //       const SizedBox(width: 8),
+                //       Text(
+                //         '$commentsTS',
+                //         style: const TextStyle(
+                //           fontFamily: 'Arial',
+                //           fontSize: 24,
+                //           color: Color(0xFF555555),
+                //         ),
+                //       ),
+                //       const Spacer(),
+                //       GestureDetector(
+                //         onTap: () => Navigator.pop(context),
+                //         child: const Icon(
+                //           Icons.close,
+                //           color: Colors.black,
+                //           size: 24,
+                //         ),
+                //       ),
+                //       const SizedBox(width: 16),
+                //     ],
+                //   ),
+                // ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      _buildTextField(_commentControllerA, '$ExplainTS...', (value) {
+                        setState(() {
+                          _commentA = value;
+                        });
+                      }),
+                      SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade300,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text("comment: ${disc.dissussion_reply_count}",style: GoogleFonts.openSans(
-                          fontSize: 18.0,
-                          color: Color(0xFF555555),
-                        ),),
-                      ),
-                    ),
-                    FutureBuilder<List<ReplyData>>(
-                      future: fetchReply(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(
-                                    color: Color(0xFFFF9900),
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Text(
-                                    '$Loading...',
-                                    style: GoogleFonts.openSans(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFF555555),
-                                    ),
-                                  ),
-                                ],
-                              ));
-                        } else if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
-                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          return Center(child: Text('$Empty',style: GoogleFonts.openSans(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
-                          ),));
-                        } else {
-                          return _bodyReply(snapshot.data!);
+                    child: TextButton(
+                      onPressed: () {
+                        if (_commentA.isNotEmpty) {
+                          DiscussionSave(
+                            discussionId,
+                            "save",
+                            "",
+                            _commentA,
+                          );
+                          _commentControllerA.clear();
+                          setState(() {
+                            _commentA = "";
+                          });
                         }
                       },
-                    ),
-                  ],
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      ),
+                      child: Text(
+                        "$postTS",
+                        style: const TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    )),
+                    ],
+                  ),
                 ),
-              ),),
+                const SizedBox(height: 8),
+                FutureBuilder<List<ReplyData>>(
+                  future: fetchReply(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                color: Color(0xFFFF9900),
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Text(
+                                '$loadingTS...',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF555555),
+                                ),
+                              ),
+                            ],
+                          ));
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(
+                          child: Text(
+                            NotFoundDataTS,
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 16.0,
+                              color: const Color(0xFF555555),
+                              fontWeight: FontWeight.w700,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ));
+                    } else {
+                      return _bodyReply(snapshot.data!);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _bodyReply(List<ReplyData> replyData,){
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: List.generate(replyData.length, (indexI) {
-          final reply = replyData[indexI];
-          return Card(
-            color: Colors.white,
-            child: Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+  BoxDecoration _inputDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(15.0),
+      border: Border.all(color: const Color(0xFFFF9900), width: 1.0),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      Function(String) onChanged) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: Color(0xFF555555),
+          width: 1.0,
+        ),
+      ),
+      child: TextFormField(
+        minLines: 6,
+        maxLines: null,
+        controller: controller,
+        keyboardType: TextInputType.text,
+        style: GoogleFonts.openSans(fontSize: 14, color: const Color(0xFF555555)),
+        decoration: InputDecoration(
+          isDense: true,
+          filled: true,
+          fillColor: Colors.white,
+          hintText: hintText,
+          hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.black38),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+        ),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _bodyReply(List<ReplyData> replyData) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "$commentsTS: ${replyData.length}",
+              style: const TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 18.0,
+                color: Color(0xFF555555),
               ),
-              child: Row(
-                children: [
-                  Image.network(
-                    reply.reply_emp_image,
-                    height: 100,
-                    fit: BoxFit.fill,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: List.generate(replyData.length, (indexI) {
+              final reply = replyData[indexI];
+              return Card(
+                color: Colors.white,
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          reply.reply_emp_name,
-                          style: GoogleFonts.openSans(
-                            fontSize: 18.0,
-                            color: Color(0xFF555555),
-                            fontWeight: FontWeight.bold,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        SizedBox(height: 8),
-                        Row(
+                  child: Row(
+                    children: [
+                      Image.network(
+                        reply.reply_emp_image,
+                        height: 100,
+                        fit: BoxFit.fill,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.calendar_month,
-                              color: Colors.amber,
-                              size: 22,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                              child: Text(
-                                reply.reply_date,
-                                style: GoogleFonts.openSans(
-                                  color: Color(0xFF555555),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
+                            Text(
+                              reply.reply_emp_name,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 18.0,
+                                color: Color(0xFF555555),
+                                fontWeight: FontWeight.w700,
                               ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.calendar_month,
+                                  color: Colors.amber,
+                                  size: 22,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    reply.reply_date,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      color: Color(0xFF555555),
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              reply.reply_desc,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
                           ],
                         ),
-                        SizedBox(height: 4),
-                        Text(
-                          reply.reply_desc,
-                          style: GoogleFonts.openSans(
-                            fontSize: 16,
-                            color: Color(0xFF555555),
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
-                    ),
+                      ),
+                      // SingleChildScrollView(
+                      //   scrollDirection: Axis.horizontal,
+                      //   child: Row(
+                      //     children: [
+                      //       IconButton(
+                      //         onPressed: () {
+                      //           if(reply.can_edit == "N") {
+                      //             return ;
+                      //           }else{
+                      //             setState(() {
+                      //               _showDialogB(reply);
+                      //             });
+                      //           }
+                      //         },
+                      //         icon: Icon(
+                      //           (reply.can_edit == "N")?null:Icons.edit_note_outlined,
+                      //           color: Colors.amber,
+                      //           size: 32,
+                      //         ),
+                      //         tooltip: '',
+                      //       ),
+                      //       IconButton(
+                      //         onPressed: () {
+                      //           if(reply.can_delete == "N") {
+                      //             return ;
+                      //           }else{
+                      //             setState(() {
+                      //               _showDialogC(reply);
+                      //             });
+                      //           }
+                      //         },
+                      //         icon: FaIcon(FontAwesomeIcons.trashAlt,
+                      //           color: (reply.can_delete == "N")?Colors.transparent:Colors.redAccent,
+                      //         ),
+                      //         tooltip: '',
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                    ],
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            if(reply.can_edit == "N") {
-                              return ;
-                            }else{
-                              setState(() {
-                                _showDialogB(reply);
-                              });
-                            }
-                          },
-                          icon: Icon(
-                            (reply.can_edit == "N")?null:Icons.edit_note_outlined,
-                            color: Colors.amber,
-                            size: 32,
-                          ),
-                          tooltip: '',
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            if(reply.can_delete == "N") {
-                              return ;
-                            }else{
-                              setState(() {
-                                _showDialogC(reply);
-                              });
-                            }
-                          },
-                          icon: FaIcon(FontAwesomeIcons.trashAlt,
-                            color: (reply.can_delete == "N")?Colors.transparent:Colors.redAccent,
-                          ),
-                          tooltip: '',
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }),
-      ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
     );
   }
 
@@ -569,14 +639,18 @@ class _DiscussionState extends State<Discussion> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.edit,color: Color(0xFF555555),),
+                  const Icon(
+                    Icons.edit,
+                    color: Color(0xFF555555),
+                  ),
                   const SizedBox(
                     width: 4,
                   ),
                   Text(
-                    'Edit Discussion',
-                    style: GoogleFonts.openSans(
-                      fontWeight: FontWeight.bold,
+                    '$editDiscussionTS',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontWeight: FontWeight.w700,
                       color: const Color(0xFF555555),
                     ),
                   ),
@@ -598,15 +672,19 @@ class _DiscussionState extends State<Discussion> {
                   maxLines: null,
                   keyboardType: TextInputType.text,
                   controller: _commentControllerB,
-                  style: GoogleFonts.openSans(
-                      color: const Color(0xFF555555), fontSize: 14),
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: const Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
                     fillColor: Colors.white,
-                    hintText: '$Type_something...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: const Color(0xFF555555)),
+                    hintText: '',
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: const Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                       borderSide: BorderSide.none,
@@ -623,8 +701,9 @@ class _DiscussionState extends State<Discussion> {
           actions: <Widget>[
             TextButton(
               child: Text(
-                '$Cancel',
-                style: GoogleFonts.openSans(
+                '$CancelTS',
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   color: const Color(0xFF555555),
                 ),
               ),
@@ -634,16 +713,17 @@ class _DiscussionState extends State<Discussion> {
             ),
             TextButton(
               child: Text(
-                'Edit',
-                style: GoogleFonts.openSans(
+                '$editTS',
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   color: const Color(0xFF555555),
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               onPressed: () {
-                if(_commentB == ""){
-                  return ;
-                }else{
+                if (_commentB == "") {
+                  return;
+                } else {
                   DiscussionSave(
                     discussionId,
                     "edit",
@@ -653,7 +733,6 @@ class _DiscussionState extends State<Discussion> {
                   Navigator.pop(dialogContext);
                   Navigator.pop(context);
                 }
-
               },
             ),
           ],
@@ -671,23 +750,26 @@ class _DiscussionState extends State<Discussion> {
           elevation: 0,
           backgroundColor: Colors.white,
           title: Text(
-            'Warning!',
-            style: GoogleFonts.openSans(
-              fontWeight: FontWeight.bold,
+            '$warningTS',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontWeight: FontWeight.w700,
               color: const Color(0xFF555555),
             ),
           ),
           content: Text(
-            'Are you sure you want to delete?',
-            style: GoogleFonts.openSans(
+            '$areYouDeleteTS',
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: const Color(0xFF555555),
             ),
           ),
           actions: <Widget>[
             TextButton(
               child: Text(
-                '$Cancel',
-                style: GoogleFonts.openSans(
+                '$CancelTS',
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   color: const Color(0xFF555555),
                 ),
               ),
@@ -697,10 +779,11 @@ class _DiscussionState extends State<Discussion> {
             ),
             TextButton(
               child: Text(
-                'Delete',
-                style: GoogleFonts.openSans(
+                '$deleteTS',
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   color: const Color(0xFF555555),
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               onPressed: () {
@@ -728,8 +811,7 @@ class _DiscussionState extends State<Discussion> {
   ) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            '$host/api/origami/academy/discussionSave.php'),
+        Uri.parse('$host/api/origami/academy/discussionSave.php'),
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -745,6 +827,15 @@ class _DiscussionState extends State<Discussion> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
+          if(method == 'save'){
+            _commentControllerA.clear();
+            setState(() {
+              _commentA = "";
+            });
+          }else if(method == 'edit'){
+
+          }
+
           print("message: true");
         } else {
           throw Exception(
@@ -781,13 +872,13 @@ class DiscussionData {
 
   factory DiscussionData.fromJson(Map<String, dynamic> json) {
     return DiscussionData(
-      discussion_id: json['discussion_id'],
-      discussion_subject: json['discussion_subject'],
-      discussion_description: json['discussion_description'],
-      disccusion_emp_name: json['disccusion_emp_name'],
-      disccusion_emp_image: json['disccusion_emp_image'],
-      disccusion_date: json['disccusion_date'],
-      dissussion_reply_count: json['dissussion_reply_count'],
+      discussion_id: json['discussion_id'] ?? '',
+      discussion_subject: json['discussion_subject'] ?? '',
+      discussion_description: json['discussion_description'] ?? '',
+      disccusion_emp_name: json['disccusion_emp_name'] ?? '',
+      disccusion_emp_image: json['disccusion_emp_image'] ?? '',
+      disccusion_date: json['disccusion_date'] ?? '',
+      dissussion_reply_count: json['dissussion_reply_count'] ?? '',
     );
   }
 }
@@ -815,14 +906,14 @@ class ReplyData {
 
   factory ReplyData.fromJson(Map<String, dynamic> json) {
     return ReplyData(
-      reply_id: json['reply_id'],
-      reply_type: json['reply_type'],
-      reply_desc: json['reply_desc'],
-      reply_emp_name: json['reply_emp_name'],
-      reply_emp_image: json['reply_emp_image'],
-      reply_date: json['reply_date'],
-      can_edit: json['can_edit'],
-      can_delete: json['can_delete'],
+      reply_id: json['reply_id'] ?? '',
+      reply_type: json['reply_type'] ?? '',
+      reply_desc: json['reply_desc'] ?? '',
+      reply_emp_name: json['reply_emp_name'] ?? '',
+      reply_emp_image: json['reply_emp_image'] ?? '',
+      reply_date: json['reply_date'] ?? '',
+      can_edit: json['can_edit'] ?? '',
+      can_delete: json['can_delete'] ?? '',
     );
   }
 }

@@ -102,8 +102,8 @@ class _ProjectEditState extends State<ProjectEdit> {
   void showDate() {
     DateFormat formatter = DateFormat('yyyy/MM/dd');
     showlastDay = formatter.format(_selectedDateEnd);
-    project_create = widget.project.project_create ?? '';
-    last_activity = widget.project.last_activity ?? '';
+    project_create = widget.project.project_create;
+    last_activity = widget.project.last_activity;
   }
 
   Future<void> _requestDateEnd(BuildContext context, int start_end) async {
@@ -308,7 +308,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                 .map((item) => DropdownMenuItem<ContactData>(
                       value: item,
                       child: Text(
-                        item.contact_name ?? '',
+                        item.contact_name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.openSans(
@@ -425,7 +425,7 @@ class _ProjectEditState extends State<ProjectEdit> {
           child: DropdownButton2<AccountData>(
             isExpanded: true,
             hint: Text(
-              widget.project.account_name ?? '',
+              widget.project.account_name,
               style: GoogleFonts.openSans(
                 color: Color(0xFF555555),
               ),
@@ -690,7 +690,7 @@ class _ProjectEditState extends State<ProjectEdit> {
             items: SourceList.map((item) => DropdownMenuItem<SourceData>(
                   value: item,
                   child: Text(
-                    item.source_name ?? '',
+                    item.source_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.openSans(
@@ -899,7 +899,7 @@ class _ProjectEditState extends State<ProjectEdit> {
             items: ProcessList.map((item) => DropdownMenuItem<ProcessData>(
                   value: item,
                   child: Text(
-                    item.process_name ?? '',
+                    item.process_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.openSans(
@@ -1026,7 +1026,7 @@ class _ProjectEditState extends State<ProjectEdit> {
             items: PriorityList.map((item) => DropdownMenuItem<PriorityData>(
                   value: item,
                   child: Text(
-                    item.priority_name ?? '',
+                    item.priority_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.openSans(
@@ -1141,7 +1141,7 @@ class _ProjectEditState extends State<ProjectEdit> {
             items: SubStatusList.map((item) => DropdownMenuItem<SubStatusData>(
                   value: item,
                   child: Text(
-                    item.sub_status_name ?? '',
+                    item.sub_status_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.openSans(

@@ -20,7 +20,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   String _oldPassword = '';
   String _newPassword = '';
   String _confirmPassword = '';
-  bool _showOld = true;
+  bool _showOld = false;
   bool _showNew = true;
   bool _showConfirm = true;
 
@@ -197,7 +197,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   }
 
   Widget _TextFormField(String title,bool showPass, controller) {
-    return Container(
+    return SizedBox(
       width: 350,
       child: TextFormField(
         controller: controller,

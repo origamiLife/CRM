@@ -14,7 +14,7 @@ import 'contact/contact.dart';
 import 'helpdesk/help_desk.dart';
 import 'language/translate_page.dart';
 import 'need/need_view/need.dart';
-import 'need/need_view/need_approve.dart';
+import 'need/need_view/need_request.dart';
 import 'need/petty_cash/petty_cash.dart';
 
 class OrigamiPage extends StatefulWidget {
@@ -23,10 +23,12 @@ class OrigamiPage extends StatefulWidget {
     required this.employee,
     required this.popPage,
     required this.Authorization,
+    this.page,
   });
   final Employee employee;
   final int popPage;
   final String Authorization;
+  final String? page;
   @override
   State<OrigamiPage> createState() => _OrigamiPageState();
 }
@@ -97,32 +99,49 @@ class _OrigamiPageState extends State<OrigamiPage> {
           title: Text(
             _listTitle[_index],
             style: GoogleFonts.openSans(
+              fontSize: 24,
               color: Color(0xFFFF9900),
               fontWeight: FontWeight.w700,
             ),
           ),
           actions: <Widget>[
-            InkWell(
-              onTap: () {
-                if (branchStr == 'Time') {
-                  _changeBranch();
-                } else {
-                  return;
-                }
-              },
-              child: Row(
+            if (branchStr != 'Time')
+              Container()
+            else
+              Row(
                 children: [
-                  SizedBox(width: 20),
-                  Container(
-                    width: 40,
-                    child: Image.network(
-                      widget.employee.comp_logo ?? '',
-                    ),
-                  ),
-                  SizedBox(width: 20),
+                  InkWell(
+                      onTap: () {
+                        if (branchStr == 'Time') {
+                          _changeBranch();
+                        } else {
+                          return;
+                        }
+                      },
+                      child: Icon(Icons.home,
+                          color: Colors.orange,
+                          size: (isAndroid || isIPhone) ? 24 : 32)),
+                  SizedBox(width: 16),
+                  InkWell(
+                      onTap: () {
+                        // if (branchStr == 'Time') {
+                        //   _changeBranch();
+                        // } else {
+                        //   return;
+                        // }
+                      },
+                      child: Icon(Icons.lan,
+                          color: Colors.orange,
+                          size: (isAndroid || isIPhone) ? 24 : 32)),
+                  // Container(
+                  //   width: 40,
+                  //   child: Image.network(
+                  //     widget.employee.comp_logo ?? '',
+                  //   ),
+                  // ),
+                  SizedBox(width: 16),
                 ],
               ),
-            ),
           ],
         ),
         drawer: Container(
@@ -159,6 +178,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
                               child: Image.network(
                                 widget.employee.emp_avatar ?? '',
                                 fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                    'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                    width: double.infinity, // ความกว้างเต็มจอ
+                                    fit: BoxFit.contain,
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -461,7 +487,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     "$request",
     "Academy",
     "Language",
-    "$logout",
+    "$logoutTS",
     "Time",
     "Profile",
     "TestChat",
@@ -488,6 +514,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
       2: AcademyPage(
         employee: widget.employee,
         Authorization: widget.Authorization,
+        page: widget.page ?? '',
       ),
       3: TranslatePage(
         employee: widget.employee,
@@ -498,7 +525,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
         employee: widget.employee,
         timeStamp: timeStampObject,
         Authorization: widget.Authorization,
-        fetchBranchCallback: () => fetchBranch(),
+        fetchBranchCallback: () => fetchBranch(), branch_name: branch_name,
       ),
       6: ProfilePage(
         employee: widget.employee,
@@ -667,13 +694,14 @@ class _OrigamiPageState extends State<OrigamiPage> {
                     ),
                     TextButton(
                       child: Text(
-                        '$logout',
+                        '$logoutTS',
                         style: GoogleFonts.openSans(
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       onPressed: () {
+                        Navigator.of(dialogContext).pop();
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -702,7 +730,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
       backgroundColor: Colors.transparent,
       context: context,
       isScrollControlled: true,
-      isDismissible: false,
+      // isDismissible: false,
       enableDrag: false,
       builder: (BuildContext context) {
         return _getBranch();
@@ -711,7 +739,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
   }
 
   int index_branch = 0;
-
+  String branch_name = '';
   Widget _getBranch() {
     return FutureBuilder<List<GetTimeStampSim>>(
       future: fetchBranch(),
@@ -788,6 +816,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                               InkWell(
                                 onTap: () {
                                   setState(() {
+                                    branch_name = branch?.branch_name??'';
                                     timeStampObject = snapshot.data?[index];
                                     onTimeSample = 'on';
                                   });

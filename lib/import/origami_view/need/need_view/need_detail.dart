@@ -1854,9 +1854,9 @@ class _NeedDetailState extends State<NeedDetail> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        onTap: () => _pickCameraImage(),
+                        onTap: () {},//=> _pickCameraImage(),
                         child: Icon(
-                          Icons.camera_alt_outlined,
+                          null,//Icons.camera_alt_outlined,
                           color: Color(0xFF555555),
                         ),
                       ),
@@ -1931,7 +1931,7 @@ class _NeedDetailState extends State<NeedDetail> {
                     height: 16,
                   ),
                   CarouselSlider.builder(
-                    controller: _controller,
+                    carouselController: _controller,
                     itemCount: selectedImages.length,
                     itemBuilder: (context, index, realIndex) {
                       return Column(

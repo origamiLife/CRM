@@ -1,184 +1,374 @@
-// import 'package:http/http.dart' as http;
-// import '../../../login/origami_login.dart';
-// import '../../academy.dart';
-// import 'package:chewie/chewie.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/widgets.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'dart:async';
-// import 'package:video_player/video_player.dart';
-//
-// class NetworkVideoPlayer extends StatefulWidget {
-//   final String videoUrl;
-//   final Employee employee;
-//   final AcademyRespond academy;
-//   final String Function(String) videoView;
-//   final String Authorization;
-//   const NetworkVideoPlayer({
-//     Key? key,
-//     required this.videoUrl,
-//     required this.employee,
-//     required this.academy,
-//     required this.videoView, required this.Authorization,
-//   }) : super(key: key);
-//
-//   @override
-//   _NetworkVideoPlayerState createState() => _NetworkVideoPlayerState();
-// }
-//
-// class _NetworkVideoPlayerState extends State<NetworkVideoPlayer> {
-//   late VideoPlayerController _videoPlayerController;
-//   ChewieController? _chewieController;
-//   bool _isLoading = true;
-//   String? _errorMessage;
-//   int? _pausedSeconds; // ตัวแปรสำหรับบันทึกเวลาหยุดเฉพาะค่าวินาที
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initializePlayer();
-//   }
-//
-//   Future<void> _initializePlayer() async {
-//     _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-//     _videoPlayerController.addListener(_videoPlayerListener); // เพิ่ม listener
-//     try {
-//       await _videoPlayerController.initialize();
-//       String strTime = "70";
-//       int? inTime = int.parse(strTime);
-//       await _videoPlayerController
-//           .seekTo(Duration(seconds: inTime)); // กำหนดให้เริ่มต้นที่วินาทีที่ 10
-//       setState(() {
-//         _chewieController = ChewieController(
-//           videoPlayerController: _videoPlayerController,
-//           autoPlay: false,
-//           looping: false,
-//           zoomAndPan: true,
-//           showControls: true, // แสดงปุ่มควบคุมพื้นฐาน
-//           // customControls: CustomControls(), // ใช้ CustomControls เพื่อควบคุมการแสดงปุ่ม
-//           aspectRatio: _videoPlayerController.value.aspectRatio,
-//           errorBuilder: (context, errorMessage) {
-//             return Center(
-//               child: Text(
-//                 errorMessage,
-//                 style: TextStyle(color: Colors.white),
-//               ),
-//             );
-//           },
-//         );
-//         _isLoading = false;
-//       });
-//     } catch (e) {
-//       setState(() {
-//         _errorMessage = 'Failed to load video: $e';
-//         _isLoading = false;
-//       });
-//     }
-//   }
-//
-//   void _videoPlayerListener() {
-//     if (_videoPlayerController.value.isPlaying == false) {
-//       // ตรวจสอบถ้าวิดีโอหยุดเล่น
-//       if (_videoPlayerController.value.isPlaying == false) {
-//         // ตรวจสอบถ้าวิดีโอหยุดเล่น
-//         setState(() {
-//           _pausedSeconds = _videoPlayerController
-//               .value.position.inSeconds; // บันทึกเฉพาะค่าวินาทีที่หยุด
-//         });
-//         widget.videoView(_pausedSeconds.toString());
-//         print(
-//             'Paused at second: $_pausedSeconds'); // แสดงค่าวินาทีที่หยุดใน console หรือเก็บค่านี้ไว้ใช้
-//       }
-//     }
-//   }
-//
-//   @override
-//   void dispose() {
-//     _videoPlayerController.removeListener(_videoPlayerListener); // ลบ listener
-//     _videoPlayerController.dispose();
-//     _chewieController?.dispose();
-//     super.dispose();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         backgroundColor: Colors.black,
-//         appBar: AppBar(
-//           backgroundColor: Colors.black,
-//           title: Text(
-//             'Network Video Player',
-//             style: GoogleFonts.openSans(
-//               color: Colors.white,
-//             ),
-//           ),
-//           leading: IconButton(
-//             icon: const Icon(
-//               Icons.arrow_back_ios_new_sharp,
-//               color: Colors.white,
-//             ),
-//             onPressed: () {
-//               Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้า
-//             },
-//           ),
-//         ),
-//         body: Center(
-//           child: _isLoading
-//               ? CircularProgressIndicator()
-//               : _errorMessage != null
-//                   ? Column(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       children: [
-//                         Text(
-//                           _errorMessage!,
-//                           style: TextStyle(color: Colors.white),
-//                         ),
-//                         SizedBox(height: 20),
-//                         ElevatedButton(
-//                           onPressed: _initializePlayer,
-//                           child: Text('Retry'),
-//                         ),
-//                       ],
-//                     )
-//                   : Chewie(
-//                       controller: _chewieController!,
-//                     ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// // สร้าง custom controls ที่ห้ามข้ามวิดีโอ
-// class CustomControls extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final chewieController = ChewieController.of(context);
-//     final videoPlayerController = chewieController!.videoPlayerController;
-//
-//     return Container(
-//       color: Colors.black54,
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           IconButton(
-//             icon: Icon(Icons.play_arrow, color: Colors.white),
-//             onPressed: () {
-//               videoPlayerController.value.isPlaying
-//                   ? videoPlayerController.pause()
-//                   : videoPlayerController.play();
-//             },
-//           ),
-//           Text(
-//             '${videoPlayerController.value.position.inSeconds} / ${videoPlayerController.value.duration.inSeconds} seconds',
-//             style: TextStyle(color: Colors.white),
-//           ),
-//           // ลบหรือไม่แสดงปุ่มข้าม/กรอ
-//           SizedBox(width: 48), // เพิ่มช่องว่างแทนปุ่ม rewind
-//           SizedBox(width: 48), // เพิ่มช่องว่างแทนปุ่ม forward
-//         ],
-//       ),
-//     );
-//   }
-// }
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import '../../../../import.dart';
+import '../../academy.dart';
+import '../curriculum/curriculum.dart';
+import '../evaluate_module.dart';
+
+class NetworkVideoPlayer extends StatefulWidget {
+  NetworkVideoPlayer({
+    super.key,
+    required this.videoUrl,
+    required this.employee,
+    required this.academy,
+    required this.Authorization,
+    required this.topic,
+    required this.learning_seq,
+    required this.courseId,
+  });
+  final String videoUrl;
+  final Employee employee;
+  final AcademyRespond academy;
+  final String Authorization;
+  final Topic topic;
+  final String learning_seq;
+  final String courseId;
+
+  @override
+  _NetworkVideoPlayerState createState() => _NetworkVideoPlayerState();
+}
+
+class _NetworkVideoPlayerState extends State<NetworkVideoPlayer> {
+  late VideoPlayerController _videoPlayerController;
+  Duration _startTime = const Duration(milliseconds: 5568);
+  Duration _currentPosition = Duration.zero;
+  bool _showControls = true;
+  Timer? _hideControlsTimer;
+  bool _isFullScreen = false;
+  bool iconStop = false;
+  double _playbackSpeed = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _begin(widget.topic.topicDuration);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.landscapeRight]);
+
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {
+          _videoPlayerController
+            ..seekTo(_startTime)
+            ..play();
+        });
+        _startHideControlsTimer();
+      });
+    _videoPlayerController.addListener(_videoListener);
+  }
+
+  void _videoListener() {
+    if (_videoPlayerController.value.isPlaying) {
+      setState(() {
+        _currentPosition = _videoPlayerController.value.position;
+        Timer(Duration(seconds: 5), () {
+          fetchStatus(_currentPosition.inMilliseconds);
+        });
+        print('start - stop : ${_currentPosition.inMilliseconds}');
+        iconStop = false;
+      });
+    } else {
+      iconStop = true;
+    }
+  }
+
+  void _toggleControls() {
+    setState(() => _showControls = !_showControls);
+    if (_showControls) {
+      _startHideControlsTimer();
+    } else {
+      _hideControlsTimer?.cancel();
+    }
+  }
+
+  void _startHideControlsTimer() {
+    _hideControlsTimer?.cancel();
+    _hideControlsTimer = Timer(const Duration(seconds: 3), () {
+      setState(() {
+        _showControls = false;
+        // stop = false;
+      });
+    });
+  }
+
+  void _toggleFullScreen() {
+    setState(() {
+      _isFullScreen = !_isFullScreen;
+      if (_isFullScreen) {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]);
+      } else {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+      }
+    });
+  }
+
+  void _changeSpeed(double speed) {
+    setState(() {
+      _playbackSpeed = speed;
+      _videoPlayerController.setPlaybackSpeed(speed);
+    });
+  }
+
+  void _begin(String topicDuration) {
+    String time = topicDuration;
+// ใช้ regex ดึงตัวเลขจาก h, m, s
+    final regex = RegExp(r'(\d+)h (\d+)m (\d+)s');
+    final match = regex.firstMatch(time);
+
+    if (match != null) {
+      int hours = int.parse(match.group(1)!);
+      int minutes = int.parse(match.group(2)!);
+      int seconds = int.parse(match.group(3)!);
+
+      // กำหนดค่า Duration
+      _startTime = Duration(
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+      );
+
+      print(_startTime); // ✅ แสดงค่า Duration
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String minutes = twoDigits(duration.inMinutes.remainder(60));
+    String seconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$minutes:$seconds";
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    _hideControlsTimer?.cancel();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    _videoPlayerController.removeListener(_videoListener);
+    fetchStatus(_currentPosition.inMilliseconds);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      onPopInvoked: (didPop) {
+        if (!didPop) fetchStatus(_currentPosition.inMilliseconds);
+      },
+      child: Scaffold(
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: GestureDetector(
+              onTap: _toggleControls,
+              child: Center(
+                child: _videoPlayerController.value.isInitialized
+                    ? Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AspectRatio(
+                            aspectRatio:
+                                _videoPlayerController.value.aspectRatio,
+                            child: Center(
+                                child: VideoPlayer(_videoPlayerController)),
+                          ),
+                          Container(
+                              color: (_showControls || iconStop == true)
+                                  ? Colors.black38
+                                  : Colors.transparent),
+                          if (_showControls || iconStop == true)
+                            Center(
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _videoPlayerController.value.isPlaying
+                                        ? _videoPlayerController.pause()
+                                        : _videoPlayerController.play();
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black54,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: Icon(
+                                    _videoPlayerController.value.isPlaying
+                                        ? Icons.pause
+                                        : Icons.play_arrow,
+                                    color: Colors.white,
+                                    size: 54,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (_showControls || iconStop == true)
+                            Positioned(
+                              top: 10,
+                              left: 20,
+                              right: 20,
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                      onTap: () => Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EvaluateModule(
+                                                    employee: widget.employee,
+                                                    academy: widget.academy,
+                                                    Authorization:
+                                                        widget.Authorization,
+                                                    selectedPage:1,
+                                                  ))),
+                                      child: Icon(Icons.keyboard_arrow_down,
+                                          color: Colors.white, size: 28)),
+                                  SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      '${widget.topic.topicName}',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          if (_showControls) _buildControls(),
+                        ],
+                      )
+                    : const CircularProgressIndicator(),
+              ),
+            ),
+          )),
+    );
+  }
+
+  Widget _buildControls() {
+    return Positioned(
+      bottom: 0,
+      left: 20,
+      right: 20,
+      child: Row(
+        children: [
+          Text(
+            '${_formatDuration(_videoPlayerController.value.position)}  ',
+            style: TextStyle(color: Colors.white, fontSize: 12),
+          ),
+          Flexible(
+              child: VideoProgressIndicator(_videoPlayerController,
+                  allowScrubbing: true)),
+          Text(
+            ' - ${_formatDuration(_videoPlayerController.value.duration)}',
+            style: TextStyle(color: Colors.white, fontSize: 12),
+          ),
+          PopupMenuButton<double>(
+            icon: Icon(Icons.speed, color: Colors.white, size: 18),
+            onSelected: _changeSpeed,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                  value: 0.25,
+                  child: Text(
+                    "0.25x",
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  )),
+              PopupMenuItem(
+                  value: 0.5,
+                  child: Text(
+                    "0.5x",
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  )),
+              PopupMenuItem(
+                  value: 0.75,
+                  child: Text(
+                    "0.75x",
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  )),
+              PopupMenuItem(
+                  value: 1.0,
+                  child: Text(
+                    "Normal",
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  )),
+              PopupMenuItem(
+                  value: 1.25,
+                  child: Text(
+                    "1.25x",
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  )),
+              PopupMenuItem(
+                  value: 1.5,
+                  child: Text(
+                    "1.5x",
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  )),
+              PopupMenuItem(
+                  value: 1.75,
+                  child: Text(
+                    "1.75x",
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  )),
+              PopupMenuItem(
+                  value: 2.0,
+                  child: Text(
+                    "2.0x",
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  )),
+            ],
+          ),
+          InkWell(
+            onTap: _toggleFullScreen,
+            child: Icon(
+              _isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+              color: Colors.white,
+              size: 18,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> fetchStatus(int videoViewedInMillisec) async {
+    final uri = Uri.parse("$host/api/origami/academy/save.php");
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'academy_id': widget.academy.academy_id,
+          'academy_type': widget.academy.academy_type,
+          'course_id': widget.courseId,
+          'topic_id': widget.topic.topicId,
+          'topic_no': widget.topic.topicNo,
+          'topic_option': widget.topic.topicOption,
+          'topic_item': widget.topic.topicItem,
+          'learning_seq': widget.learning_seq,
+          'video_viewed': '$videoViewedInMillisec',
+          'video_duration': widget.topic.topicDuration,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        print('Status Response: $jsonResponse');
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Network error: $e');
+    }
+  }
+}

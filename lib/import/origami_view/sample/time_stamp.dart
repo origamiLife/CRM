@@ -15,7 +15,8 @@ Future<void> checkPermissions() async {
   print('Camera permission status: $cameraStatus');
 
   // ใช้ loc.PermissionStatus สำหรับ location
-  loc.PermissionStatus locationPermissionStatus = await loc.Location().requestPermission();
+  loc.PermissionStatus locationPermissionStatus =
+      await loc.Location().requestPermission();
   print('Location permission status: $locationPermissionStatus');
 }
 
@@ -26,11 +27,13 @@ class TimeSample extends StatefulWidget {
     this.timeStamp,
     required this.Authorization,
     required this.fetchBranchCallback,
+    required this.branch_name,
   });
   final Employee employee;
   final GetTimeStampSim? timeStamp;
   final String Authorization;
   final Future<void> Function() fetchBranchCallback;
+  final String branch_name;
 
   @override
   _TimeSampleState createState() => _TimeSampleState();
@@ -312,17 +315,7 @@ class _TimeSampleState extends State<TimeSample> {
               ],
             ));
           } else {
-            final getBranch = snapshot.data!;
-            return _getContentWidget(getBranch);
-            //   Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     Text('Branch Name: ${branch.branchName}'),
-            //     Text('Latitude: ${branch.branchLat}'),
-            //     Text('Longitude: ${branch.branchLng}'),
-            //     Text('Radius: ${branch.branchRadius}'),
-            //   ],
-            // );
+            return _getContentWidget(snapshot.data!);
           }
         },
       ),
@@ -340,7 +333,7 @@ class _TimeSampleState extends State<TimeSample> {
                 child: Column(
                   children: [
                     Text(
-                      "${_currentTime.hour}:${_currentTime.minute}:${_currentTime.second.toString().padLeft(2, '0')}",
+                      "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}:${_currentTime.second.toString().padLeft(2, '0')}",
                       style: GoogleFonts.openSans(
                         fontSize: 70,
                         color: Colors.white,
@@ -353,7 +346,9 @@ class _TimeSampleState extends State<TimeSample> {
                         Icon(Icons.location_on, color: Colors.red),
                         SizedBox(width: 4),
                         Text(
-                          "$comp_description (${getBranch.branch_name})",
+                          (widget.branch_name == '')
+                              ? "$comp_description (${getBranch.branch_name})"
+                              : "$comp_description (${widget.branch_name})",
                           style: GoogleFonts.openSans(
                             fontSize: 14,
                             color: Colors.white,
@@ -421,8 +416,7 @@ class _TimeSampleState extends State<TimeSample> {
               markers: {
                 Marker(
                   markerId: MarkerId('target_marker'),
-                  position: LatLng(
-                      double.parse(getBranch.branch_lat ?? ''),
+                  position: LatLng(double.parse(getBranch.branch_lat ?? ''),
                       double.parse(getBranch.branch_lng ?? '')),
                   icon: BitmapDescriptor.defaultMarkerWithHue(
                       BitmapDescriptor.hueRed),
@@ -467,18 +461,6 @@ class _TimeSampleState extends State<TimeSample> {
     return Row(
       children: [
         Expanded(child: SizedBox()),
-        if (getBranch.stamp_in == '' || getBranch.stamp_in == null)
-          Center(
-            child: GestureDetector(
-              onTap: () => _pickImage(ImageSource.camera, getBranch),
-              child: CircleAvatar(
-                  radius: 50,
-                  child:
-                      Image.asset('assets/images/stamp/stamp_button_in.png')),
-            ),
-          ),
-        if (getBranch.stamp_in == '' || getBranch.stamp_in == null)
-          Expanded(flex: 2, child: SizedBox()),
         if (getBranch.stamp_out == '' || getBranch.stamp_out == null)
           Center(
             child: GestureDetector(
@@ -496,38 +478,19 @@ class _TimeSampleState extends State<TimeSample> {
                 backgroundImage:
                     AssetImage('assets/images/stamp/stamp_button_disable.png')),
           ),
+        if (getBranch.stamp_in == '' || getBranch.stamp_in == null)
+          Expanded(flex: 2, child: SizedBox()),
+        if (getBranch.stamp_in == '' || getBranch.stamp_in == null)
+          Center(
+            child: GestureDetector(
+              onTap: () => _pickImage(ImageSource.camera, getBranch),
+              child: CircleAvatar(
+                  radius: 50,
+                  child:
+                      Image.asset('assets/images/stamp/stamp_button_in.png')),
+            ),
+          ),
         Expanded(child: SizedBox()),
-      ],
-    );
-  }
-
-  Widget _stampImageOld() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (stamp_type == 'out' || _checkInOut == false)
-          GestureDetector(
-            child: const CircleAvatar(
-                radius: 50,
-                backgroundImage:
-                    AssetImage('assets/images/stamp/stamp_button_disable.png')),
-          )
-        else if (stamp_type == '' && _checkInOut == true)
-          GestureDetector(
-            // onTap: () => _pickImage(ImageSource.camera),
-            child: const CircleAvatar(
-                radius: 50,
-                backgroundImage:
-                    AssetImage('assets/images/stamp/stamp_button_in.png')),
-          )
-        else if (stamp_type == 'in' && _checkInOut == true)
-          GestureDetector(
-            // onTap: () => _pickImage(ImageSource.camera,),
-            child: const CircleAvatar(
-                radius: 50,
-                backgroundImage:
-                    AssetImage('assets/images/stamp/stamp_button_out.png')),
-          )
       ],
     );
   }
@@ -536,61 +499,86 @@ class _TimeSampleState extends State<TimeSample> {
   String _base64Image = '';
 
   Future<void> _pickImage(ImageSource source, GetTimeStampSim getBranch) async {
-    if (distanceT > radiusT) {
+    print(distanceT);
+    print(radiusT);
+    if (_checkInOut == true || getBranch.branch_fixed == 'N') {
       // ตรวจสอบสิทธิ์การเข้าถึงกล้อง
-      ph.PermissionStatus cameraStatus = await ph.Permission.camera.request(); // ใช้ ph สำหรับ permission_handler
-      if (cameraStatus.isGranted) {
-        try {
-          // เลือกรูปภาพจากแหล่งที่กำหนด
-          final XFile? image = await _picker.pickImage(source: source);
-          if (image != null) {
-            // เก็บไฟล์ใน directory ที่แอปสามารถเข้าถึงได้
-            final directory = await getApplicationDocumentsDirectory();
-            final filePath = path.join(
-              directory.path,
-              'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
-            );
-            print('Image path: $filePath');
+      // ph.PermissionStatus cameraStatus = await ph.Permission.camera
+      //     .request(); // ใช้ ph สำหรับ permission_handler
+      // if (cameraStatus.isGranted) {
+      try {
+        // เลือกรูปภาพจากแหล่งที่กำหนด
+        final XFile? image = await _picker.pickImage(source: source);
+        if (image != null) {
+          // เก็บไฟล์ใน directory ที่แอปสามารถเข้าถึงได้
+          final directory = await getApplicationDocumentsDirectory();
+          final filePath = path.join(
+            directory.path,
+            'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+          );
+          print('Image path: $filePath');
 
-            // แปลงไฟล์รูปภาพเป็น base64
-            File file = File(image.path);
-            List<int> imageBytes = await file.readAsBytes();
-            String base64String = base64Encode(imageBytes);
-            print('Base64 String: $base64String');
+          // แปลงไฟล์รูปภาพเป็น base64
+          File file = File(image.path);
+          List<int> imageBytes = await file.readAsBytes();
+          String base64String = base64Encode(imageBytes);
+          print('Base64 String: $base64String');
 
-            // เก็บข้อมูล base64 และพิกัดลงใน state
-            setState(() {
-              _base64Image = base64String;
-              latitude = '${_userLocation!.latitude}';
-              longitude = '${_userLocation!.longitude}';
-              // กำหนดประเภทการบันทึกเวลาขึ้นอยู่กับสภาพ
-              if (getBranch.stamp_in == '' || getBranch.stamp_in == null) {
-                stamp_type = 'in';
-              } else {
-                stamp_type = 'out';
-              }
-            });
+          // เก็บข้อมูล base64 และพิกัดลงใน state
+          setState(() {
+            _base64Image = base64String;
+            latitude = '${_userLocation!.latitude}';
+            longitude = '${_userLocation!.longitude}';
+            // กำหนดประเภทการบันทึกเวลาขึ้นอยู่กับสภาพ
+            if (getBranch.stamp_in == '' || getBranch.stamp_in == null) {
+              stamp_type = 'in';
+            } else {
+              stamp_type = 'out';
+            }
+          });
 
-            // เรียกใช้ callback จาก widget
-            await widget.fetchBranchCallback();
+          // เรียกใช้ callback จาก widget
+          await widget.fetchBranchCallback();
 
-            // พิมพ์ข้อมูลเพิ่มเติมใน console
-            print('Stamp Type: $stamp_type');
-            print('Branch ID: ${widget.timeStamp?.branch_id}');
-            print('Latitude: $latitude');
-            print('Longitude: $longitude');
-            print('Platform: $_checkPlatform');
-            print('Base64 Image: $_base64Image');
-          }
-        } catch (e) {
-          // จัดการกับข้อผิดพลาดที่อาจเกิดขึ้นในการเลือกภาพ
-          print('Error picking image: $e');
+          // พิมพ์ข้อมูลเพิ่มเติมใน console
+          print('Stamp Type: $stamp_type');
+          print('Branch ID: ${widget.timeStamp?.branch_id}');
+          print('Latitude: $latitude');
+          print('Longitude: $longitude');
+          print('Platform: $_checkPlatform');
+          print('Base64 Image: $_base64Image');
+          _fetchStamp();
         }
-      } else {
-        // ถ้าการอนุญาตกล้องถูกปฏิเสธ
-        print('Camera permission denied');
-        // อาจแสดงให้ผู้ใช้ทราบถึงเหตุผล
+      } catch (e) {
+        // จัดการกับข้อผิดพลาดที่อาจเกิดขึ้นในการเลือกภาพ
+        print('Error picking image: $e');
       }
+      // }
+      // else {
+      //   // ถ้าการอนุญาตกล้องถูกปฏิเสธ
+      //   print('Camera permission denied');
+      //   // อาจแสดงให้ผู้ใช้ทราบถึงเหตุผล
+      // }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 1),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'You are outside the specified radius area and cannot stamp.',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     }
   }
 
@@ -669,7 +657,17 @@ class _TimeSampleState extends State<TimeSample> {
                 ),
               ),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OrigamiPage(
+                      employee: widget.employee,
+                      Authorization: widget.Authorization,
+                      popPage: 5,
+                    ),
+                  ),
+                );
               },
             ),
           ],
@@ -728,11 +726,11 @@ class _TimeSampleState extends State<TimeSample> {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        _showDialog();
         setState(() {
           check_Stamp_In = jsonResponse['stamp_in'];
           check_Stamp_Out = jsonResponse['stamp_out'];
         });
+        _showDialog();
         print('$jsonResponse');
       } else {
         throw Exception('Failed to load status data');
@@ -744,39 +742,39 @@ class _TimeSampleState extends State<TimeSample> {
 }
 
 class GetTimeStampSim {
-  String? branch_id;
-  String? branch_lat;
-  String? branch_lng;
-  String? branch_name;
-  String? branch_radius;
-  String? branch_fixed;
-  String? branch_default;
-  String? stamp_in;
-  String? stamp_out;
+  String branch_id;
+  String branch_lat;
+  String branch_lng;
+  String branch_name;
+  String branch_radius;
+  String branch_fixed;
+  String branch_default;
+  String stamp_in;
+  String stamp_out;
 
   GetTimeStampSim({
-    this.branch_id,
-    this.branch_lat,
-    this.branch_lng,
-    this.branch_name,
-    this.branch_radius,
-    this.branch_fixed,
-    this.branch_default,
-    this.stamp_in,
-    this.stamp_out,
+    required this.branch_id,
+    required this.branch_lat,
+    required this.branch_lng,
+    required this.branch_name,
+    required this.branch_radius,
+    required this.branch_fixed,
+    required this.branch_default,
+    required this.stamp_in,
+    required this.stamp_out,
   });
 
   factory GetTimeStampSim.fromJson(Map<String, dynamic> json) {
     return GetTimeStampSim(
-      branch_id: json['branch_id'],
-      branch_lat: json['branch_lat'],
-      branch_lng: json['branch_lng'],
-      branch_name: json['branch_name'],
-      branch_radius: json['branch_radius'],
-      branch_fixed: json['branch_fixed'],
-      branch_default: json['branch_default'],
-      stamp_in: json['stamp_in'],
-      stamp_out: json['stamp_out'],
+      branch_id: json['branch_id'] ?? '',
+      branch_lat: json['branch_lat'] ?? '',
+      branch_lng: json['branch_lng'] ?? '',
+      branch_name: json['branch_name'] ?? '',
+      branch_radius: json['branch_radius'] ?? '',
+      branch_fixed: json['branch_fixed'] ?? '',
+      branch_default: json['branch_default'] ?? '',
+      stamp_in: json['stamp_in'] ?? '',
+      stamp_out: json['stamp_out'] ?? '',
     );
   }
 }

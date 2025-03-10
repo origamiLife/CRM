@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.1+1
+version: 1.0.2+4
 
 environment:
   sdk: ^3.5.4
@@ -56,7 +56,7 @@ dev_dependencies:
   flutter_speed_dial: ^7.0.0
   flutter_custom_clippers: ^2.1.0
   camera: ^0.11.0
-  carousel_slider_plus: ^7.0.0
+#  carousel_slider_plus: ^7.0.0
   dropdown_button2: ^2.3.9
   image_picker: ^1.1.2
   path: ^1.9.0
@@ -79,6 +79,9 @@ dev_dependencies:
   dash_chat_2: ^0.0.21
   chewie: ^1.8.5
   win32: ^5.6.0
+  carousel_slider: ^5.0.0
+  youtube_player_flutter: ^9.1.1
+  quickalert: ^1.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -134,6 +137,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Arial
+      fonts:
+        - asset: assets/fonts/arial.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

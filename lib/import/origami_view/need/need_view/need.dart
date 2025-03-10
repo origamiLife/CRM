@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-import 'package:origamilift/import/origami_view/need/need_view/need_approve_detail.dart';
+import 'package:origamilift/import/origami_view/need/need_view/need_request_detail.dart';
 import 'package:origamilift/import/origami_view/need/need_view/need_detail.dart';
 import 'package:origamilift/import/origami_view/need/widget_mini/mini_department.dart';
 import 'package:origamilift/import/origami_view/need/widget_mini/mini_employee.dart';
@@ -30,12 +30,12 @@ class _NeedsViewState extends State<NeedsView> {
 
   String searchText = '';
 
-  String? filter_Priority = '';
-  String? filter_Department = '';
-  String? filter_Project = '';
-  String? filter_Owner = '';
-  String? need_Type = 'All';
-  String? need_Status = 'All';
+  String filter_Priority = '';
+  String filter_Department = '';
+  String filter_Project = '';
+  String filter_Owner = '';
+  String need_Type = 'All';
+  String need_Status = 'All';
 
   String firstDay = '';
   String lastDay = '';
@@ -203,39 +203,90 @@ class _NeedsViewState extends State<NeedsView> {
   String status_id = '';
   int indexI = 0;
 
+  Widget _buildSearchField() {
+    return Padding(
+        padding: const EdgeInsets.all(8),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // สีเงา
+                blurRadius: 1, // ความฟุ้งของเงา
+                offset: Offset(0, 4), // การเยื้องของเงา (แนวแกน X, Y)
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: _searchController,
+            keyboardType: TextInputType.text,
+            style: const TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+              fontSize: 14,
+            ),
+            decoration: InputDecoration(
+              isDense: true,
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              hintText: '$SearchTS...',
+              hintStyle: const TextStyle(
+                  fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
+              border: InputBorder.none, // เอาขอบปกติออก
+              suffixIcon: const Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.search,
+                  size: 24,
+                  color: Colors.orange,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: Colors.orange,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: Colors.orange,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(50),
+              ),
+            ),
+          ),
+        ));
+  }
+
   NeedTypeItemRespond? NeedTypeItemRes;
+  int abstract = 0;
   @override
   Widget build(BuildContext context) {
+    // เรียงลำดับล่วงหน้าเพื่อลดการทำงานซ้ำ
+    NeedTypeItemOption.sort((a, b) => b.type_id.compareTo(a.type_id));
+    NeedTypeItemOption.sort((a, b) => b.type_color.compareTo(a.type_color));
+    NeedTypeItemOption.sort((a, b) => b.type_name.compareTo(a.type_name));
+    NeedTypeItemOption.sort((a, b) => b.type_image.compareTo(a.type_image));
+
     return Scaffold(
       backgroundColor: checkNeed == null ? Colors.grey.shade50 : Colors.white,
       floatingActionButton: SpeedDial(
         elevation: 0,
         icon: Icons.add,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(100),
-            bottomLeft: Radius.circular(100),
-            bottomRight: Radius.circular(100),
-            topLeft: Radius.circular(100),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(100)),
         ),
         animatedIcon: AnimatedIcons.add_event,
-        backgroundColor: Color(0xFFFF9900),
+        backgroundColor: const Color(0xFFFF9900),
         foregroundColor: Colors.white,
-        visible: true,
         curve: Curves.bounceIn,
         overlayColor: Colors.black,
-        // overlayOpacity: 0.5,
         children: List.generate(NeedTypeItemOption.length, (indexItem) {
-          indexI = indexItem;
-          NeedTypeItemOption.sort(
-              (a, b) => b.type_id.compareTo(a.type_id));
-          NeedTypeItemOption.sort(
-              (a, b) => b.type_color.compareTo(a.type_color));
-          NeedTypeItemOption.sort(
-              (a, b) => b.type_name.compareTo(a.type_name));
-          NeedTypeItemOption.sort(
-              (a, b) => b.type_image.compareTo(a.type_image));
           return SpeedDialChild(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
@@ -249,25 +300,24 @@ class _NeedsViewState extends State<NeedsView> {
             label: NeedTypeItemOption[indexItem].type_name,
             labelStyle: GoogleFonts.openSans(
               fontSize: 14.0,
-              color: Color(0xFF555555),
+              color: const Color(0xFF555555),
               fontWeight: FontWeight.bold,
             ),
-            labelBackgroundColor: Color(int.parse(
-                '0xFF${this.NeedTypeItemOption[indexItem].type_color}')),
+            labelBackgroundColor: Color(
+              int.parse('0xFF${NeedTypeItemOption[indexItem].type_color}'),
+            ),
             backgroundColor: Colors.transparent,
             elevation: 0,
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      NeedDetail(
-                        needTypeItem: NeedTypeItemOption[indexItem],
-                        Authorization: widget.Authorization,
-                        employee: widget.employee,
-                        request_id: '',
-                        // detailItem: ,
-                      ),
+                  builder: (context) => NeedDetail(
+                    needTypeItem: NeedTypeItemOption[indexItem],
+                    Authorization: widget.Authorization,
+                    employee: widget.employee,
+                    request_id: '',
+                  ),
                 ),
               );
             },
@@ -280,94 +330,11 @@ class _NeedsViewState extends State<NeedsView> {
             color: Colors.white,
             child: Column(
               children: [
-                Container(
-                  padding: EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 48,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            border: Border.all(
-                              color: Color(0xFFFF9900),
-                              width: 1.0,
-                            ),
-                          ),
-                          child: TextField(
-                            controller: _searchController,
-                            // focusNode: _focusNode,
-                            decoration: InputDecoration(
-                              hintText: '$Search...',
-                              hintStyle: GoogleFonts.openSans(
-                                color: Color(0xFF555555),
-                              ),
-                              labelStyle: GoogleFonts.openSans(
-                                color: Color(0xFF555555),
-                              ),
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Color(0xFFFF9900),
-                              ),
-                              border: InputBorder.none,
-                              suffixIcon: Container(
-                                alignment: Alignment.centerRight,
-                                width: 10,
-                                child: Center(
-                                  child: IconButton(
-                                      onPressed: () {
-                                        _searchController.clear();
-                                      },
-                                      icon: Icon(Icons.close),
-                                      color: Color(0xFFFF9900),
-                                      iconSize: 18),
-                                ),
-                              ),
-                            ),
-                            onChanged: (value) {},
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          showModalBottomSheet<void>(
-                            barrierColor: Colors.black87,
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (BuildContext context) {
-                              return Container(
-                                color: Colors.white,
-                                child: FractionallySizedBox(
-                                  heightFactor: 0.7,
-                                  child: MaterialApp(
-                                    debugShowCheckedModeBanner: false,
-                                    home: Scaffold(
-                                      backgroundColor: Colors.transparent,
-                                      body: _filter(),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: Icon(
-                          Icons.filter_alt_outlined,
-                          color: Color(0xFFFF9900),
-                          size: 30,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                _buildSearchField(),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Row(
                       children: List.generate(NeedTypeOption.length, (index) {
                         return Padding(
@@ -376,41 +343,30 @@ class _NeedsViewState extends State<NeedsView> {
                             onTap: () {
                               setState(() {
                                 _selectcolor = index;
+                                typeName = NeedTypeOption[index].typeId;
                               });
-                              typeName = NeedTypeOption[index].typeId;
                               fetchNeedResponse();
                             },
-                            child: Padding(
-                              padding: const EdgeInsets.all(1),
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: (index == _selectcolor)
+                                    ? const Color(0xFFFF9900)
+                                    : Colors.grey.shade100,
+                                border: Border.all(
                                   color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 0.5,
-                                  ),
+                                  width: 0.5,
                                 ),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: (index == _selectcolor)
-                                        ? Color(0xFFFF9900)
-                                        : Colors.grey.shade100,
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: 6, top: 6, left: 16, right: 16),
-                                    child: Text(
-                                      NeedTypeOption[index].typeName,
-                                      style: GoogleFonts.openSans(
-                                          color: (index == _selectcolor)
-                                              ? Colors.white
-                                              : Color(0xFF555555)),
-                                    ),
-                                  ),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 16),
+                              child: Text(
+                                NeedTypeOption[index].typeName,
+                                style: GoogleFonts.openSans(
+                                  color: (index == _selectcolor)
+                                      ? Colors.white
+                                      : const Color(0xFF555555),
                                 ),
                               ),
                             ),
@@ -424,60 +380,54 @@ class _NeedsViewState extends State<NeedsView> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: List.generate(
-                        NeedTypeOption[_selectcolor].typeStatus.length ,
-                        (index) {
-                      final typeStatus =
-                          NeedTypeOption[_selectcolor].typeStatus[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 8, top: 4),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              _indexcolor = index;
-                            });
-                            status_id = typeStatus.statusId;
-                            fetchNeedResponse();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                bottom: 4, top: 4, left: 2, right: 2),
+                      NeedTypeOption[_selectcolor].typeStatus?.length ?? 0,
+                          (index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8, top: 4),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _indexcolor = index;
+                                status_id = NeedTypeOption[_selectcolor]
+                                    .typeStatus?[index]
+                                    .statusId ??
+                                    '';
+                              });
+                              fetchNeedResponse();
+                            },
                             child: ClipPath(
                               clipper: ArrowClipper(15, 32, Edge.RIGHT),
                               child: Container(
-                                padding: EdgeInsets.all(8),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 16),
                                 height: 34,
-                                // width: 150,
                                 color: (index == _indexcolor)
-                                    ? Color(0xFFFF9900)
+                                    ? const Color(0xFFFF9900)
                                     : Colors.grey.shade100,
                                 child: Center(
-                                    child: Padding(
-                                  padding: EdgeInsets.only(left: 8, right: 16),
                                   child: Text(
-                                    "${typeStatus.statusName}",
+                                    NeedTypeOption[_selectcolor]
+                                        .typeStatus?[index]
+                                        .statusName ??
+                                        '',
                                     style: GoogleFonts.openSans(
                                       color: (index == _indexcolor)
                                           ? Colors.white
-                                          : Color(0xFF555555),
+                                          : const Color(0xFF555555),
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
-                                )),
+                                ),
                               ),
                             ),
-                            // Text(
-                            //   NeedTypeOption[index].typeName ?? '',
-                            //   style: GoogleFonts.openSans(
-                            //       fontSize: 12.0, color: (index == _selectcolor)?Colors.white:Color(0xFF555555)),
-                            // ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      },
+                    ),
                   ),
                 ),
-                Divider(),
+                const Divider(),
               ],
             ),
           ),
@@ -564,8 +514,7 @@ class _NeedsViewState extends State<NeedsView> {
                                             employee: widget.employee,
                                             Authorization: widget.Authorization,
                                             request_id: needList[indexNl]
-                                                    .mny_request_id ??
-                                                '',
+                                                    .mny_request_id,
                                             // approvelList:needList[indexNl],
                                           )
                                         : NeedDetail(
@@ -574,8 +523,7 @@ class _NeedsViewState extends State<NeedsView> {
                                             Authorization: widget.Authorization,
                                             employee: widget.employee,
                                             request_id: needList[indexNl]
-                                                    .mny_request_id ??
-                                                '',
+                                                    .mny_request_id
                                           ),
                                   ),
                                 ),
@@ -585,7 +533,7 @@ class _NeedsViewState extends State<NeedsView> {
                         },
                         child: ListTile(
                           title: Text(
-                            needList[indexNl].need_subject ?? '',
+                            needList[indexNl].need_subject,
                             style: GoogleFonts.openSans(
                               fontSize: 18,
                               color: Color(0xFFFF9900),
@@ -602,7 +550,7 @@ class _NeedsViewState extends State<NeedsView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${needList[indexNl].mny_type_name ?? ''} - ${needList[indexNl].mny_request_generate_code ?? ''}',
+                                      '${needList[indexNl].mny_type_name} - ${needList[indexNl].mny_request_generate_code}',
                                       style: GoogleFonts.openSans(
                                         fontSize: 14.0,
                                         color: Color(0xFF555555),
@@ -611,7 +559,7 @@ class _NeedsViewState extends State<NeedsView> {
                                     ),
                                     SizedBox(height: 8),
                                     Text(
-                                      "$Date : ${needList[indexNl].create_date ?? ''} ",
+                                      "$Date : ${needList[indexNl].create_date} ",
                                       style: GoogleFonts.openSans(
                                         fontSize: 14.0,
                                         color: Colors.grey,
@@ -620,7 +568,7 @@ class _NeedsViewState extends State<NeedsView> {
                                     ),
                                     SizedBox(height: 8),
                                     Text(
-                                      "$Amount : ${needList[indexNl].need_amount ?? ''} $Baht",
+                                      "$Amount : ${needList[indexNl].need_amount} $Baht",
                                       style: GoogleFonts.openSans(
                                         fontSize: 14.0,
                                         color: Colors.grey,
@@ -632,7 +580,7 @@ class _NeedsViewState extends State<NeedsView> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            "$Status1 : ${needList[indexNl].need_status ?? ''}",
+                                            "$Status1 : ${needList[indexNl].need_status}",
                                             style: GoogleFonts.openSans(
                                               fontSize: 14.0,
                                               color: Colors.grey,
@@ -684,8 +632,7 @@ class _NeedsViewState extends State<NeedsView> {
                                       // );
                                       setState(() {
                                         fetchDelete(
-                                            needList[indexNl].mny_request_id ??
-                                                '');
+                                            needList[indexNl].mny_request_id);
                                       });
                                       Navigator.pushReplacement(
                                         context,
@@ -1595,16 +1542,16 @@ class NeedTypeRespond {
   String typeName;
   String typeColor;
   String typeImage;
-  List<Status> typeStatus;
-  List<String> statusListString;
+  List<Status>? typeStatus;
+  List<String>? statusListString;
 
   NeedTypeRespond({
     required this.typeId,
     required this.typeName,
     required this.typeColor,
     required this.typeImage,
-    required this.typeStatus,
-    required this.statusListString,
+    this.typeStatus,
+    this.statusListString,
   });
 
   factory NeedTypeRespond.fromJson(Map<String, dynamic> json) {

@@ -1,17 +1,7 @@
 import 'package:http/http.dart' as http;
-import 'package:origamilift/import/login/origami_login.dart';
-import 'package:origamilift/import/origami_view/language/translate.dart';
+
+import '../../../../import.dart';
 import '../../academy.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:async';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:origamilift/import/import.dart';
 
 class AttachFile extends StatefulWidget {
   AttachFile({super.key, required this.employee, required this.academy, required this.Authorization, });
@@ -71,34 +61,29 @@ class _AttachFileState extends State<AttachFile> {
     });
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return RefreshIndicator(
-  //     color: Color(0xFFFF9900),
-  //       onRefresh: _refresh,child: loading());
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return loading();
-  }
-
-  Widget loading() {
     return FutureBuilder<List<AttachFileData>>(
       future: fetchAttach(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}',style: GoogleFonts.openSans(
+          return Center(child: Text('Error: ${snapshot.error}',style: TextStyle(fontFamily: 'Arial',
             fontSize: 16,
             fontWeight: FontWeight.w500,
             color: Color(0xFF555555),
           ),));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('$Empty',style: GoogleFonts.openSans(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey,
-          ),));
+          return Center(
+              child: Text(
+                NotFoundDataTS,
+                style: TextStyle(fontFamily: 'Arial',
+                  fontSize: 16.0,
+                  color: const Color(0xFF555555),
+                  fontWeight: FontWeight.w700,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ));
         } else {
           return _getContentWidget(snapshot.data!);
         }
@@ -113,59 +98,67 @@ class _AttachFileState extends State<AttachFile> {
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
-            children: List.generate(attachFile.length, (index) {
-              final _attachFile = attachFile[index];
-              return Column(
-                children: [
-                  Card(
-                    color: Colors.white,
-                    // elevation: 0,
+            children: [
+              Column(
+                children: List.generate(attachFile.length, (index) {
+                  final attach = attachFile[index];
+                  return Card(
+                    color: Color(0xFFF5F5F5),
                     child: InkWell(
-                      onTap: (){
-                        final Uri _url = Uri.parse(_attachFile.files_path);
-                        setState(() {
-                          _launchURL(_url);
-                        });
-
-                      },
                       child: Container(
-                        padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 0,
+                              blurRadius: 2,
+                              offset: Offset(0, 3), // x, y
+                            ),
+                          ],
                         ),
-                        child: Row(
-                          children: [
-                            // Image.asset(
-                            //   'assets/images/celebrity/bella6.jpg',
-                            //   width: 90,
-                            //   fit: BoxFit.fill,
-                            // ),
-                            Icon(
-                              Icons.file_present_outlined,
-                              size: 90,
-                              color: Colors.red.shade400,
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    _attachFile.files_name,
-                                    style: GoogleFonts.openSans(
-                                      fontSize: 18.0,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.bold,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              // Expanded(
+                              //   flex:2,
+                              //   child: Icon(
+                              //     Icons.file_present_outlined,
+                              //     size: 90,
+                              //     color: Colors.red.shade400,
+                              //   ),
+                              // ),
+                              Expanded(
+                                flex:2,
+                                child: Image.network(
+                                  _getCertificateImage(attach.files_ext),
+                                  width: double.infinity,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Expanded(
+                                flex:3,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      attach.files_name,
+                                      style: TextStyle(fontFamily: 'Arial',
+                                        fontSize: 16.0,
+                                        color: Color(0xFF555555),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      maxLines: 2,
                                     ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
+                                    SizedBox(height: 8),
+                                    Row(
                                       children: [
                                         FaIcon(
                                           FontAwesomeIcons.tags,
@@ -175,21 +168,21 @@ class _AttachFileState extends State<AttachFile> {
                                         SizedBox(
                                           width: 8,
                                         ),
-                                        Text(
-                                          _attachFile.course_name,
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 14.0,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.bold,
+                                        Flexible(
+                                          child: Text(
+                                            attach.course_name,
+                                            style: TextStyle(fontFamily: 'Arial',
+                                              fontSize: 14.0,
+                                              color: Color(0xFF555555),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            maxLines: 2,
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
+                                    SizedBox(height: 8),
+                                    Row(
                                       children: [
                                         Icon(
                                           Icons.calendar_month,
@@ -198,76 +191,102 @@ class _AttachFileState extends State<AttachFile> {
                                         SizedBox(
                                           width: 8,
                                         ),
-                                        Text(
-                                          _attachFile.files_date,
-                                          style: GoogleFonts.openSans(
-                                            color: Color(0xFF555555),
+                                        Flexible(
+                                          child: Text(
+                                            attach.files_date,
+                                            style: TextStyle(fontFamily: 'Arial',
+                                              color: Color(0xFF555555),
+                                            ),
+                                            maxLines: 2,
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.remove_red_eye_outlined,
-                                              color: Colors.amber,
+                                    SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.remove_red_eye_outlined,
+                                                  color: Colors.amber,
+                                                ),
+                                                SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Text(
+                                                  '${attach.count_down}',
+                                                  style: TextStyle(fontFamily: 'Arial',
+                                                    color: Color(0xFF555555),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            SizedBox(
-                                              width: 4,
-                                            ),
-                                            Text(
-                                              _attachFile.count_view,
-                                              style: GoogleFonts.openSans(
-                                                color: Color(0xFF555555),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.cloud_download,
-                                              color: Colors.amber,
+                                        Expanded(
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.cloud_download,
+                                                  color: Colors.amber,
+                                                ),
+                                                SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Text(
+                                                  '${attach.count_view}',
+                                                  style: TextStyle(fontFamily: 'Arial',
+                                                    color: Color(0xFF555555),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            SizedBox(
-                                              width: 4,
-                                            ),
-                                            Text(
-                                              _attachFile.count_down,
-                                              style: GoogleFonts.openSans(
-                                                color: Color(0xFF555555),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                ],
-              );
-            }),
-          ),
+                  );
+                }),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Divider(),
+              SizedBox(
+                height: 8,
+              ),
+            ],
+          )
         ),
       ),
     );
+  }
+
+  String _getCertificateImage(String certificationName) {
+    switch (certificationName) {
+      case 'png':
+        return 'https://icons.veryicon.com/png/o/file-type/system-icon/png-37.png';
+      case 'pdf':
+        return 'http://icons.veryicon.com/png/o/file-type/system-icon/pdf-45.png';
+      case 'jpg':
+        return 'https://icons.veryicon.com/png/o/file-type/system-icon/jpg-27.png';
+      default:
+        return 'https://icons.veryicon.com/png/o/file-type/system-icon/jpg-27.png';
+    }
   }
 
 }
@@ -297,15 +316,15 @@ class AttachFileData {
 
   factory AttachFileData.fromJson(Map<String, dynamic> json) {
     return AttachFileData(
-      files_id: json['files_id'],
-      files_name: json['files_name'],
-      course_name: json['course_name'],
-      course_id: json['course_id'],
-      files_date: json['files_date'],
-      files_path: json['files_path'],
-      files_ext: json['files_ext'],
-      count_view: json['count_view'],
-      count_down: json['count_down'],
+      files_id: json['files_id']??'',
+      files_name: json['files_name']??'',
+      course_name: json['course_name']??'',
+      course_id: json['course_id']??'',
+      files_date: json['files_date']??'',
+      files_path: json['files_path']??'',
+      files_ext: json['files_ext']??'',
+      count_view: json['count_view']??'',
+      count_down: json['count_down']??'',
     );
   }
 }

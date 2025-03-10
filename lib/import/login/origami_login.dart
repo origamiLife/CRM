@@ -199,6 +199,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SizedBox.expand(
             // กำหนดให้เต็มจอ
             child: Container(
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/logoOrigami/default_bg.png'),
@@ -207,7 +208,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
-                child: SingleChildScrollView(child: _forgot ? _forgotWidget() : _loginWidget()),
+                child: SingleChildScrollView(
+                  child: _forgot ? _forgotWidget() : _loginWidget(),
+                ),
               ),
             ),
           ),
@@ -222,11 +225,9 @@ class _LoginPageState extends State<LoginPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          height: MediaQuery.of(context).size.width * 0.7,
-          width: MediaQuery.of(context).size.width *
-              0.5, // ทำให้ขนาดภาพปรับตามหน้าจอ
-          constraints: const BoxConstraints(
-              maxWidth: 400), // จำกัดขนาดไม่ให้ใหญ่เกินไป
+          height: MediaQuery.of(context).size.width * ((isAndroid || isIPhone) ?0.5:0.3),
+          width: MediaQuery.of(context).size.width * ((isAndroid || isIPhone) ?0.6:0.3), // ทำให้ขนาดภาพปรับตามหน้าจอ
+          constraints: const BoxConstraints(maxWidth: 400), // จำกัดขนาดไม่ให้ใหญ่เกินไป
           padding: const EdgeInsets.all(8),
           child: Image.asset(
             'assets/images/logoOrigami/origami_logo.png',
@@ -235,40 +236,39 @@ class _LoginPageState extends State<LoginPage> {
         ),
         _isLoading
             ? Center(
-                child: LoadingAnimationWidget.horizontalRotatingDots(
-                  size: 75,
-                  color: Colors.white,
-                ),
-              )
+          child: LoadingAnimationWidget.horizontalRotatingDots(
+            size: 75,
+            color: Colors.white,
+          ),
+        )
             : Column(
-                children: [
-                  Text(
-                    'Origami',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 50,
-                    ),
-                  ),
-                  Text(
-                    'System',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 70,
-                    ),
-                  ),
-                ],
+          children: [
+            Text(
+              'Origami',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Colors.white70,
+                fontWeight: FontWeight.w500,
+                fontSize: 60,
               ),
+            ),
+            Text(
+              'System',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Colors.white70,
+                fontWeight: FontWeight.w700,
+                fontSize: 90,
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 24),
         Form(
           key: _formKey,
           child: Column(
             children: [
-              _buildTextField(
-                  _usernameController, 'Username', Icons.person),
+              _buildTextField(_usernameController, 'Username', Icons.person),
               const SizedBox(height: 18),
               _buildPasswordField(),
               const SizedBox(height: 8),
@@ -306,128 +306,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onForgotPasswordPressed() {
     setState(() => _forgot = true);
-  }
-
-  Widget _forgotWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          height: MediaQuery.of(context).size.width * 0.8,
-          width: MediaQuery.of(context).size.width *
-              0.5, // ทำให้ขนาดภาพปรับตามหน้าจอ
-          constraints: const BoxConstraints(
-              maxWidth: 600), // จำกัดขนาดไม่ให้ใหญ่เกินไป
-          padding: const EdgeInsets.all(8),
-          child: Image.asset(
-            'assets/images/logoOrigami/origami_logo.png',
-            fit: BoxFit.contain,
-          ),
-        ),
-        Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              SizedBox(height: 16),
-              Text(
-                'Forgot your password?',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: Colors.white,
-                  fontSize: (isIPad || isTablet) ? 40 : 20,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '    Please enter your email address to request a password reset.',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    color: Colors.orange.shade50,
-                    fontSize: (isIPad || isTablet) ? 24 : 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _forgotController,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                      RegExp(r'[a-zA-Z0-9@#%&*_!$^(),.?":;{}|<>-]')),
-                ],
-                style:
-                    TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: 'Email',
-                  hintStyle: TextStyle(
-                      fontFamily: 'Arial', color: Color(0xFF555555)),
-                  prefixIcon: Icon(Icons.email, color: Color(0xFF555555)),
-                ),
-              ),
-              SizedBox(height: 30.0),
-              Container(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(1),
-                    foregroundColor: Colors.red,
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () => _fetchForgetMail(),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 60, right: 60, bottom: 12, top: 12),
-                    child: Text(
-                      'SEND',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 8),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _forgot = false;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(Icons.chevron_left, color: Colors.white, size: 20),
-                      SizedBox(width: 8),
-                      Text(
-                        'Return to login.',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildTextField(
@@ -483,7 +361,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(12),
           backgroundColor: Colors.red,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: _login,
         child: Text(
@@ -520,6 +398,125 @@ class _LoginPageState extends State<LoginPage> {
       _fetchLogin(username, password);
     }
   }
+
+  Widget _forgotWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.width * ((isTablet || isIPad) ?0.3:0.5),
+          width: MediaQuery.of(context).size.width * ((isTablet || isIPad) ?0.3:0.6), // ทำให้ขนาดภาพปรับตามหน้าจอ
+          constraints: const BoxConstraints(maxWidth: 400), // จำกัดขนาดไม่ให้ใหญ่เกินไป
+          padding: const EdgeInsets.all(8),
+          child: Image.asset(
+            'assets/images/logoOrigami/origami_logo.png',
+            fit: BoxFit.contain,
+          ),
+        ),
+        Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              SizedBox(height: 16),
+              Text(
+                'Forgot your password?',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Colors.white,
+                  fontSize: (isTablet || isIPad) ? 50 : 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '    Please enter your email address to request a password reset.',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Colors.orange.shade50,
+                    fontSize: (isIPad || isTablet) ? 24 : 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _forgotController,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'[a-zA-Z0-9@#%&*_!$^(),.?":;{}|<>-]')),
+                ],
+                style: const TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Email',
+                  hintStyle: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
+                  prefixIcon: Icon(Icons.email, color: Color(0xFF555555)),
+                ),
+              ),
+              SizedBox(height: 30.0),
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(1),
+                    foregroundColor: Colors.red,
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () => _fetchForgetMail(),
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 60, right: 60, bottom: 12, top: 12),
+                    child: Text(
+                      'SEND',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _forgot = false;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.chevron_left, color: Colors.white, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        'Return to login.',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
 
   Future<void> _fetchLogin(String username, String password) async {
     final uri = Uri.parse('$host/api/origami/signin.php');

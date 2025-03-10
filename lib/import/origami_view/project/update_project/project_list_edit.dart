@@ -47,14 +47,14 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       icon: Icons.person_add_alt_1_rounded,
       title: 'JoinUser',
     ),
-    TabItem(
-      icon: Icons.accessibility_new,
-      title: 'Activity',
-    ),
-    TabItem(
-      icon: FontAwesomeIcons.podcast,
-      title: 'Skoop',
-    ),
+    // TabItem(
+    //   icon: Icons.accessibility_new,
+    //   title: 'Activity',
+    // ),
+    // TabItem(
+    //   icon: FontAwesomeIcons.podcast,
+    //   title: 'Skoop',
+    // ),
     // TabItem(
     //   icon: Icons.calendar_month,
     //   title: 'Calendar',
@@ -75,14 +75,14 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         page = "Detail";
       } else if (index == 1) {
         page = "JoinUser";
-      } else if (index == 2) {
-        page = "Activity";
-      } else if (index == 3) {
-        page = "Skoop";
-      } else if (index == 4) {
-        page = "Calendar";
-      } else if (index == 5) {
-        page = "Other";
+      // } else if (index == 2) {
+      //   page = "Activity";
+      // } else if (index == 3) {
+      //   page = "Skoop";
+      // } else if (index == 4) {
+      //   page = "Calendar";
+      // } else if (index == 5) {
+      //   page = "Other";
       }
     });
   }
@@ -143,7 +143,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
             ),
         ],
       ),
-      body: _getContentWidget(),
+      body: _getContentWidget(context),
       bottomNavigationBar: BottomBarDefault(
         items: items,
         iconSize: 18,
@@ -161,10 +161,10 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
 
   // List<GetSkoopDetail> getSkoopDetail = [];
   String skoopDetail = 'Close'; //'Close' or 'Plan'
-  Widget _getContentWidget() {
+  Widget _getContentWidget(BuildContext context) {
     switch (_selectedIndex) {
       case 0:
-        return _ProjectDetail();
+        return _ProjectDetail(context);
       case 1:
         return JoinUser(
           employee: widget.employee,
@@ -172,23 +172,23 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
           pageInput: widget.pageInput,
           project: widget.project,
         );
-      case 2:
-        return ActivityScreen(
-          employee: widget.employee,
-          Authorization: widget.Authorization,
-          pageInput: widget.pageInput,
-        ); //'Close' or 'Plan'
-      case 3:
-        return SkoopScreen(
-          employee: widget.employee,
-          Authorization: widget.Authorization,
-          skoopDetail: null,
-        );
-      case 4:
-        return CalendarScreen(
-            employee: widget.employee,
-            Authorization: widget.Authorization,
-            pageInput: widget.pageInput);
+      // case 2:
+      //   return ActivityScreen(
+      //     employee: widget.employee,
+      //     Authorization: widget.Authorization,
+      //     pageInput: widget.pageInput,
+      //   ); //'Close' or 'Plan'
+      // case 3:
+      //   return SkoopScreen(
+      //     employee: widget.employee,
+      //     Authorization: widget.Authorization,
+      //     activity_id: '',
+      //   );
+      // case 4:
+      //   return CalendarScreen(
+      //       employee: widget.employee,
+      //       Authorization: widget.Authorization,
+      //       pageInput: widget.pageInput);
       default:
         return ProjectOther(
             employee: widget.employee,
@@ -197,27 +197,23 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     }
   }
 
-  Widget _ProjectDetail() {
-    return (widget.project.can_edit != 'Y')
-        ? _Detail()
-        : InkWell(
-            onTap: () {
-              if (widget.project.can_edit == 'Y') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProjectEdit(
-                      employee: widget.employee,
-                      Authorization: widget.Authorization,
-                      pageInput: widget.pageInput,
-                      project: widget.project,
-                    ),
-                  ),
-                ).then((value) {});
-              }
-            },
-            child: _Detail(),
-          );
+  Widget _ProjectDetail(BuildContext context) {
+    return InkWell(
+      onTap: (widget.project.can_edit == 'Y')
+          ? () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProjectEdit(
+            employee: widget.employee,
+            Authorization: widget.Authorization,
+            pageInput: widget.pageInput,
+            project: widget.project,
+          ),
+        ),
+      )
+          : null,
+      child: _Detail(),
+    );
   }
 
   Widget _Detail() {
@@ -226,11 +222,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         Stack(
           children: [
             ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                Colors.white,
-                BlendMode
-                    .saturation, // ใช้ BlendMode.saturation สำหรับ Grayscale
-              ),
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.saturation),
               child: Image.asset(
                 'assets/images/busienss1.jpg',
                 fit: BoxFit.cover,
@@ -240,7 +232,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                padding: const EdgeInsets.only(top: 16),
                 child: CircleAvatar(
                   radius: 57,
                   backgroundColor: Colors.grey.shade400,
@@ -252,6 +244,14 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                       child: Image.network(
                         widget.project.owner_avatar,
                         fit: BoxFit.fill,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                            // height: 60,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            fit: BoxFit.fill,
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -262,244 +262,80 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         ),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.only(
-              left: 16,
-              right: 16,
-            ),
-            child: Stack(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ListView(
+              padding: EdgeInsets.zero,
               children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Container(
-                      // decoration: BoxDecoration(
-                      //   color: Colors.white,
-                      //   boxShadow: [
-                      //     BoxShadow(
-                      //       color: Colors.grey.withOpacity(0.2),
-                      //       spreadRadius: 0,
-                      //       blurRadius: 0,
-                      //       offset: Offset(0, 3), // x, y
-                      //     ),
-                      //   ],
-                      // ),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 8),
-                          Text(
-                            widget.project.project_name,
-                            maxLines: 1,
-                            style: GoogleFonts.openSans(
-                              fontSize: 20,
-                              color: Color(0xFF555555),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            " ${widget.project.project_code} ",
-                            maxLines: 1,
-                            style: GoogleFonts.openSans(
-                              fontSize: 16,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            " ${widget.project.project_create} - ${widget.project.last_activity} ",
-                            maxLines: 1,
-                            style: GoogleFonts.openSans(
-                              fontSize: 16,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-
-                          SizedBox(height: 8),
-                          _subData(
-                              'Main Owner', widget.project.owner_name),
-                          _subData(
-                              'Contact', widget.project.contact_name),
-                          _subData(
-                              'Account', widget.project.account_name),
-                          _subData(
-                              'Type', widget.project.project_type_name),
-                          _subData('Description',
-                              widget.project.project_description),
-                          _subData('Sale Status',
-                              widget.project.project_sale_nonsale_name),
-                          _subData('Source',
-                              widget.project.project_source_name),
-                          _subData('Process',
-                              widget.project.project_process_name),
-                          _subData('Sales',
-                              widget.project.project_status_name),
-                          _subData('Priority',
-                              widget.project.project_priority_name),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: Card(
-                              elevation: 0,
-                              color: Colors.transparent,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Opportunity : ',
-                                        maxLines: 1,
-                                        style: GoogleFonts.openSans(
-                                          fontSize: 16,
-                                          color: Color(0xFF555555),
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          widget
-                                              .project.opportunity_line1,
-                                          maxLines: 1,
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Opportunity : ',
-                                        maxLines: 1,
-                                        style: GoogleFonts.openSans(
-                                          fontSize: 16,
-                                          color: Colors.transparent,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          widget
-                                              .project.opportunity_line2,
-                                          maxLines: 1,
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Opportunity : ',
-                                        maxLines: 1,
-                                        style: GoogleFonts.openSans(
-                                          fontSize: 16,
-                                          color: Colors.transparent,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          widget
-                                              .project.opportunity_line3,
-                                          maxLines: 1,
-                                          style: GoogleFonts.openSans(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 16,
-                  right: 16,
-                  child: Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.pen,
-                        color: (widget.project.can_edit == 'Y')
-                            ? Colors.orange.shade300
-                            : Colors.grey,
-                        size: 20,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'EDIT',
-                        maxLines: 1,
-                        style: GoogleFonts.openSans(
-                          fontSize: 18,
-                          color: (widget.project.can_edit == 'Y')
-                              ? Colors.orange
-                              : Colors.grey,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                SizedBox(height: 8),
+                _buildText(widget.project.project_name, 20, Color(0xFF555555), FontWeight.w500),
+                _buildText('${widget.project.project_code}', 16, Colors.grey, FontWeight.w500),
+                SizedBox(height: 4),
+                _buildText("${widget.project.project_create} - ${widget.project.last_activity}", 16, Colors.grey, FontWeight.w500),
+                SizedBox(height: 8),
+                _subData('Main Owner', widget.project.owner_name),
+                _subData('Contact', widget.project.contact_name),
+                _subData('Account', widget.project.account_name),
+                _subData('Type', widget.project.project_type_name),
+                _subData('Description', widget.project.project_description),
+                _subData('Sale Status', widget.project.project_sale_nonsale_name),
+                _subData('Source', widget.project.project_source_name),
+                _subData('Process', widget.project.project_process_name),
+                _subData('Sales', widget.project.project_status_name),
+                _subData('Priority', widget.project.project_priority_name),
+                _OpportunitySection([
+                  widget.project.opportunity_line1,
+                  widget.project.opportunity_line2,
+                  widget.project.opportunity_line3,
+                ]),
               ],
             ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 16, bottom: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(FontAwesomeIcons.pen, color: _getEditColor(), size: 20),
+              SizedBox(width: 8),
+              _buildText('EDIT', 18, _getEditColor(), FontWeight.w700),
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _subData(String sub, String dataProject) {
+  Color _getEditColor() => (widget.project.can_edit == 'Y') ? Colors.orange : Colors.grey;
+
+  Color _getSubDataColor(String label) => (label == 'Date' || label == 'to') ? Colors.orange : Colors.grey;
+
+  Widget _buildText(String text, double size, Color color, FontWeight weight) {
+    return Text(
+      text,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: GoogleFonts.openSans(fontSize: size, color: color, fontWeight: weight),
+    );
+  }
+
+  Widget _subData(String label, String value) {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 5),
-          child: Card(
-            elevation: 0,
-            color: Colors.transparent,
-            child: Row(
-              children: [
-                Text(
-                  '$sub : ',
-                  maxLines: 1,
-                  style: GoogleFonts.openSans(
-                    fontSize: 18,
-                    color: Color(0xFF555555),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Flexible(
-                  child: Text(
-                    dataProject,
-                    maxLines: 1,
-                    style: GoogleFonts.openSans(
-                      fontSize: 16,
-                      color: (sub == 'Date' || sub == 'to')?Colors.orange:Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          padding: const EdgeInsets.only(top: 12 , bottom: 12),
+          child: Row(
+            children: [
+              _buildText('$label : ', 18, Color(0xFF555555), FontWeight.w700),
+              Flexible(child: _buildText(value, 16, _getSubDataColor(label), FontWeight.w500)),
+            ],
           ),
-        ),Divider()
+        ),
+        Divider(),
       ],
     );
   }
+
 
   Future<void> fetchDeleteProject() async {
     final uri = Uri.parse("$host/crm/delete_project.php");
@@ -521,5 +357,43 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     } else {
       throw Exception('Failed to load projects');
     }
+  }
+}
+
+class _OpportunitySection extends StatelessWidget {
+  final List<String> opportunities;
+  _OpportunitySection(this.opportunities);
+
+  Widget _buildText(String text, double size, Color color, FontWeight weight) {
+    return Text(
+      text,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: GoogleFonts.openSans(fontSize: size, color: color, fontWeight: weight),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      color: Colors.transparent,
+      child: Column(
+        children: List.generate(opportunities.length, (index) {
+          return Visibility(
+            visible: opportunities[index].isNotEmpty,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                children: [
+                  _buildText(index == 0 ? 'Opportunity : ' : '', 16, Color(0xFF555555), FontWeight.w700),
+                  Flexible(child: _buildText(opportunities[index], 14, Colors.grey, FontWeight.w500)),
+                ],
+              ),
+            ),
+          );
+        }),
+      ),
+    );
   }
 }
