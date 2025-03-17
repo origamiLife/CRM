@@ -48,7 +48,8 @@ class _ChatListState extends State<ChatList> {
                         ),
                         Text(
                           'Start chatting',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -59,7 +60,8 @@ class _ChatListState extends State<ChatList> {
                         ),
                         Text(
                           'Message privately with your 2 WhatApp contact, \nno matter what device they use.',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             color: Colors.grey,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -92,7 +94,8 @@ class _ChatListState extends State<ChatList> {
                                         ),
                                         Text(
                                           'Your Notes',
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             color: Color(0xFF555555),
                                           ),
                                           overflow: TextOverflow.ellipsis,
@@ -117,7 +120,8 @@ class _ChatListState extends State<ChatList> {
                                         ),
                                         Text(
                                           '.Earth.🌏..',
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             color: Color(0xFF555555),
                                           ),
                                           overflow: TextOverflow.ellipsis,
@@ -150,7 +154,8 @@ class _ChatListState extends State<ChatList> {
                               child: TextFormField(
                                   controller: _searchController,
                                   keyboardType: TextInputType.text,
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                       color: Color(0xFF555555), fontSize: 14),
                                   decoration: InputDecoration(
                                     isDense: true,
@@ -159,7 +164,8 @@ class _ChatListState extends State<ChatList> {
                                     contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 12),
                                     hintText: '$Search...',
-                                    hintStyle: GoogleFonts.openSans(
+                                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                                         fontSize: 14, color: Color(0xFF555555)),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
@@ -283,7 +289,8 @@ class _ChatListState extends State<ChatList> {
                                           alignment :Alignment.centerRight,
                                           child: Text(
                                             '16.15 น.',
-                                            style: GoogleFonts.openSans(
+                                            style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize:12,
                                               color: Colors.grey.shade400,
                                             ),
@@ -308,7 +315,8 @@ class _ChatListState extends State<ChatList> {
                                                   children: [
                                                     Text(
                                                       '.Earth.🌏..',
-                                                      style: GoogleFonts.openSans(
+                                                      style: TextStyle(
+                fontFamily: 'Arial',
                                                         color: Color(0xFF555555),
                                                       ),
                                                       overflow: TextOverflow.ellipsis,
@@ -319,7 +327,8 @@ class _ChatListState extends State<ChatList> {
                                                         Expanded(
                                                           child: Text(
                                                             'สำหรับข้อมูลเพิ่มเติมเกี่ยวกับสถานะการอัปเดตของรุ่น SDK แต่ละรุ่นที่เกี่ยวข้องกับข้างต้น โปรดดูที่หมายเหตุรุ่นSDK ของ LINE Messaging API',
-                                                            style: GoogleFonts.openSans(
+                                                            style: TextStyle(
+                fontFamily: 'Arial',
                                                               color: Colors.grey.shade400,
                                                             ),
                                                             overflow:

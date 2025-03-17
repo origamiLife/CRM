@@ -93,7 +93,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
         backgroundColor: Colors.white,
         title: Text(
           'Skoop',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 30,
             color: Color(0xFFFF9900),
             fontWeight: FontWeight.bold,
@@ -124,7 +125,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
               children: [
                 Text(
                   'DONE',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -139,16 +141,16 @@ class _SkoopScreenState extends State<SkoopScreen> {
       body: PopScope(
         canPop: true, // ป้องกันการออกจากหน้าก่อนเรียก fetchStatus()
         onPopInvoked: (didPop) async {
-          if (description == '') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('The Skoop is Required.'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          } else {
-            fetchSkoopActivity();
-          }
+          // if (description == '') {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     SnackBar(
+          //       content: Text('The Skoop is Required.'),
+          //       duration: Duration(seconds: 2),
+          //     ),
+          //   );
+          // } else {
+          //   fetchSkoopActivity();
+          // }
         },
         child: FutureBuilder<List<GetSkoopDetail>>(
             future: _fetchSkoopDetail(),
@@ -170,7 +172,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
                           Text(
                             'Description',
                             maxLines: 1,
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 14,
                               color: Color(0xFF555555),
                               fontWeight: FontWeight.bold,
@@ -182,7 +185,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
                             maxLines: null,
                             controller: _descriptionController,
                             keyboardType: TextInputType.text,
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                                 color: Color(0xFF555555), fontSize: 14),
                             decoration: InputDecoration(
                               isDense: true,
@@ -191,7 +195,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 12),
                               hintText: '',
-                              hintStyle: GoogleFonts.openSans(
+                              hintStyle: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 14, color: Color(0xFF555555)),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -309,7 +314,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
                 ),
                 Text(
                   'Tap here to select an image.',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -327,7 +333,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
                   child: Text(
                     'Images',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.bold,
@@ -351,7 +358,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
                 ),
                 Text(
                   'Tap here to select an image.',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -369,7 +377,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
         Text(
           'Activity Lication',
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -410,7 +419,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
                         ? ''
                         : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                     ),

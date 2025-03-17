@@ -50,7 +50,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Issue log',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -73,7 +74,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'DONE',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -102,7 +104,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'Project',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -118,7 +121,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'Priority',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -136,7 +140,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'Raised Date',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -152,7 +157,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'Status',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -168,7 +174,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'Module',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -186,7 +193,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'Phase',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -202,7 +210,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'Phase Ativity',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -218,7 +227,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'Category',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -234,7 +244,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'In-Charge (Lead on Top)',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -251,7 +262,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
               children: [
                 Text(
                   'Date Resolved',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -270,7 +282,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
                     Expanded(
                       child: Text(
                         'CR Manday',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16,
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w700,
@@ -280,7 +293,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
                     Expanded(
                       child: Text(
                         'Charge',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16,
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w700,
@@ -332,12 +346,14 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         isExpanded: true,
         hint: Text(
           value,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 16,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
           fontSize: 16,
         ),
@@ -346,7 +362,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
           value: type,
           child: Text(
             type.name,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
             ),
           ),
@@ -391,12 +408,14 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 16,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
           fontSize: 16,
         ),
@@ -405,7 +424,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
           value: type,
           child: Text(
             type.name,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
             ),
           ),
@@ -450,12 +470,14 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 16,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
           fontSize: 16,
         ),
@@ -464,7 +486,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
           value: type,
           child: Text(
             type.name,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
             ),
           ),
@@ -509,12 +532,14 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 16,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
           fontSize: 16,
         ),
@@ -523,7 +548,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
           value: type,
           child: Text(
             type.name,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
             ),
           ),
@@ -568,12 +594,14 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 16,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
           fontSize: 16,
         ),
@@ -582,7 +610,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
           value: type,
           child: Text(
             type.name,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
             ),
           ),
@@ -627,12 +656,14 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 16,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
           fontSize: 16,
         ),
@@ -641,7 +672,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
           value: type,
           child: Text(
             type.name,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
             ),
           ),
@@ -686,12 +718,14 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 16,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
           fontSize: 16,
         ),
@@ -700,7 +734,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
           value: type,
           child: Text(
             type.name,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
             ),
           ),
@@ -745,12 +780,14 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 16,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
           fontSize: 16,
         ),
@@ -759,7 +796,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
           value: type,
           child: Text(
             type.name,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
             ),
           ),
@@ -797,7 +835,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -817,7 +856,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -834,7 +874,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.text,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -845,7 +886,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -882,7 +924,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -893,7 +936,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -932,7 +976,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
       maxLines: null,
       controller: controller,
       keyboardType: TextInputType.text,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -943,7 +988,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -986,7 +1032,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
         child: TextFormField(
           enabled: false,
           keyboardType: TextInputType.number,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -997,7 +1044,8 @@ class _EditProjectIssueState extends State<EditProjectIssue> {
             contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: title,
-            hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),

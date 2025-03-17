@@ -40,7 +40,8 @@ class _ProjectIssueLogState extends State<ProjectIssueLog> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Issue log',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -72,7 +73,8 @@ class _ProjectIssueLogState extends State<ProjectIssueLog> {
                 TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     color: Color(0xFF555555),
                     fontSize: 14,
                   ),
@@ -83,7 +85,8 @@ class _ProjectIssueLogState extends State<ProjectIssueLog> {
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
                     hintText: 'Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(100),
@@ -170,7 +173,8 @@ class _ProjectIssueLogState extends State<ProjectIssueLog> {
                                       Text(
                                         'Title ${index + 1}',
                                         maxLines: 1,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 14,
                                           color: Color(0xFFFF9900),
                                           fontWeight: FontWeight.w500,
@@ -179,7 +183,8 @@ class _ProjectIssueLogState extends State<ProjectIssueLog> {
                                       Text(
                                         'Expense - EP-2024-01472',
                                         maxLines: 1,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 12,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w500,
@@ -191,7 +196,8 @@ class _ProjectIssueLogState extends State<ProjectIssueLog> {
                                       Text(
                                         'Amount : 2305.00 Bath',
                                         maxLines: 1,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 12,
                                           color: Colors.grey,
                                           fontWeight: FontWeight.w500,
@@ -203,7 +209,8 @@ class _ProjectIssueLogState extends State<ProjectIssueLog> {
                                       Text(
                                         'Type : Expense',
                                         maxLines: 1,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 12,
                                           color: Colors.grey,
                                           fontWeight: FontWeight.w500,
@@ -247,12 +254,14 @@ class _ProjectIssueLogState extends State<ProjectIssueLog> {
         isExpanded: true,
         hint: Text(
           'All',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize:16,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
           fontSize:16,
         ),
@@ -261,7 +270,8 @@ class _ProjectIssueLogState extends State<ProjectIssueLog> {
           value: type,
           child: Text(
             type.name,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
             ),
           ),

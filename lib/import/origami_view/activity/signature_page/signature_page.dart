@@ -41,7 +41,8 @@ class _SignaturePageState extends State<SignaturePage> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Signature',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -91,7 +92,8 @@ class _SignaturePageState extends State<SignaturePage> {
                       children: [
                         Text(
                           'Next',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 18.0,
                             color: Color(0xFFFF9900),
                             fontWeight: FontWeight.w500,

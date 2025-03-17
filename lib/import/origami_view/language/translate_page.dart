@@ -93,7 +93,8 @@ class _TranslatePageState extends State<TranslatePage> {
                               ),
                               Text(
                                 'ภาษาไทย',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 16, color: Color(0xFF555555)),
                               ),
                             ],
@@ -134,7 +135,8 @@ class _TranslatePageState extends State<TranslatePage> {
                               ),
                               Text(
                                 'English',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 16, color: Color(0xFF555555)),
                               ),
                             ],

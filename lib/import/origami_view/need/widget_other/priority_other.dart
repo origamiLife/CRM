@@ -66,14 +66,16 @@ class PriorityOtherState extends State<PriorityOther> {
                     (is_priority == true)?
                     editpriorityText:widget.priority[0].priority_name??'',
                     style:
-                    GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+                    TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
                   ),
                   // Spacer(),
                   // Icon(Icons.arrow_drop_down)
                 ],
               ),
               value: _selectedPriority,
-              style: GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+              style: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
               underline: Container(
                 height: 1,
                 color: Colors.transparent,
@@ -113,7 +115,8 @@ class PriorityOtherState extends State<PriorityOther> {
                           ),
                           Text(
                             priority.priority_name ?? '',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 14,
                               color: Color(0xFF555555),
                             ),

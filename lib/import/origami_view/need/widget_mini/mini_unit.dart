@@ -3,7 +3,13 @@ import 'package:origamilift/import/import.dart';
 import '../need_view/need_detail.dart';
 
 class MiniUnit extends StatefulWidget {
-  const MiniUnit({Key? key, required this.callbackName, required this.callbackId, required this.employee, required this.Authorization}) : super(key: key);
+  const MiniUnit(
+      {Key? key,
+      required this.callbackName,
+      required this.callbackId,
+      required this.employee,
+      required this.Authorization})
+      : super(key: key);
   final String Function(String) callbackName;
   final String Function(String) callbackId;
   final Employee employee;
@@ -41,13 +47,18 @@ class _MiniUnitState extends State<MiniUnit> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Card(color: Color(0xFFFF9900),child: Padding(padding: EdgeInsets.only(left: 40,right: 40,top: 8)),),
+                Card(
+                  color: Color(0xFFFF9900),
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40, top: 8)),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextFormField(
                     controller: _searchUnit,
                     keyboardType: TextInputType.text,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       color: Color(0xFF555555),
                       fontSize: 14,
                     ),
@@ -55,11 +66,13 @@ class _MiniUnitState extends State<MiniUnit> {
                       isDense: true,
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 14),
                       hintText: 'Search...',
-                      hintStyle: GoogleFonts.openSans(
-                          fontSize: 14, color: Color(0xFF555555)),
+                      hintStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
                       ),
@@ -94,62 +107,63 @@ class _MiniUnitState extends State<MiniUnit> {
                 ),
                 (_searchText == '')
                     ? Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '$SearchFor',
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Color(0xFF555555),
-                        ),
-                      ),
-                      SizedBox(height: 8,),
-                    ],
-                  ),
-                )
-                    : Expanded(
-                  child: ListView.builder(
-                    itemCount: UnitList.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                Unit_name =
-                                    UnitList[index].unit_name ?? '';
-                                widget.callbackName(Unit_name ?? '');
-                                Unit_id =
-                                    UnitList[index].unit_id ?? '';
-                                widget.callbackId(Unit_id ?? '');
-                                Navigator.pop(context);
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                "${UnitList[index].unit_name ?? ''}",
-                                style: GoogleFonts.openSans(
-                                  fontSize: 16,
-                                  color: Color(0xFF555555),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$SearchFor',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16, right: 16),
-                            child: Divider(),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: UnitList.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      Unit_name =
+                                          UnitList[index].unit_name ?? '';
+                                      widget.callbackName(Unit_name ?? '');
+                                      Unit_id = UnitList[index].unit_id ?? '';
+                                      widget.callbackId(Unit_id ?? '');
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      "${UnitList[index].unit_name ?? ''}",
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16,
+                                        color: Color(0xFF555555),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16),
+                                  child: Divider(),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -163,48 +177,20 @@ class _MiniUnitState extends State<MiniUnit> {
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.navigate_before,color: Color(0xFFFF9900),),
+                          Icon(
+                            Icons.navigate_before,
+                            color: Color(0xFFFF9900),
+                          ),
                           Text(
                             "$Back",
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: Color(0xFF555555),
                             ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
                           ),
                         ],
                       ),
                     ),
-                    // Text(
-                    //   '',
-                    //   style: GoogleFonts.openSans(
-                    //       fontSize: 24,
-                    //       color: Color(0xFF555555),
-                    //       fontWeight: FontWeight.bold),
-                    // ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       int_project = int_project++;
-                    //       fetchProject(int_project.toString(), "");
-                    //       // Navigator.pop(context);
-                    //     });
-                    //   },
-                    //   child: Row(
-                    //     children: [
-                    //       Text(
-                    //         "ถัดไป",
-                    //         style: GoogleFonts.openSans(
-                    //           fontSize: 16,
-                    //           color: Color(0xFF555555),
-                    //         ),
-                    //         overflow: TextOverflow.ellipsis,
-                    //         maxLines: 1,
-                    //       ),
-                    //       Icon(Icons.navigate_next,color: Color(0xFFFF9900),),
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               ],
@@ -226,7 +212,8 @@ class _MiniUnitState extends State<MiniUnit> {
         '$host/api/origami/need/unit.php?page=$Unit_number&search=$Unit_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -242,11 +229,9 @@ class _MiniUnitState extends State<MiniUnit> {
 
             int_Unit = unitRespond.next_page_number ?? 0;
             is_Unit = unitRespond.next_page ?? false;
-            UnitOption = UnitJson
-                .map(
-                  (json) => UnitData.fromJson(json),
-            )
-                .toList();
+            UnitOption = UnitJson.map(
+              (json) => UnitData.fromJson(json),
+            ).toList();
             UnitList = UnitOption;
           });
         } else {

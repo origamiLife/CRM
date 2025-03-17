@@ -66,7 +66,8 @@ class _ChatUiBasicState extends State<ChatUiBasic> {
         backgroundColor: Colors.white,
         title: Text(
           'HelpDesk',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
               fontWeight: FontWeight.bold, color: Color(0xFFFF9900)),
         ),
       ),
@@ -137,11 +138,13 @@ class _ChatUiBasicState extends State<ChatUiBasic> {
               filled: true,
               fillColor: Colors.white,
               // labelText: 'Message',
-              labelStyle: GoogleFonts.openSans(
+              labelStyle: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.grey,
               ),
               hintText: "Write a message...",
-              hintStyle: GoogleFonts.openSans(
+              hintStyle: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.grey,
               ),
               contentPadding:

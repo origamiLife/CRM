@@ -2,71 +2,74 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key>
-	<string>Origami Lift</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>origamilift</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>sms</string>
-		<string>tel</string>
-	</array>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
+    <key>CADisableMinimumFrameDurationOnPhone</key>
+    <true/>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleDisplayName</key>
+    <string>Origami Lift</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>origamilift</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(FLUTTER_BUILD_NAME)</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>$(FLUTTER_BUILD_NUMBER)</string>
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>sms</string>
+        <string>tel</string>
+    </array>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>UIApplicationSupportsIndirectInputEvents</key>
+    <true/>
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UIMainStoryboardFile</key>
+    <string>Main</string>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
 
     <key>NSCameraUsageDescription</key>
-    <string>ขอสิทธิ์การเข้าถึงกล้องเพื่อสแกนเอกสารโครงการหรือถ่ายภาพเพื่อระบุตัวตน</string>
+    <string>We request access to your camera for scanning project documents or capturing images for identification purposes. This is essential for completing certain tasks in the app.</string>
 
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>ขอสิทธิ์เข้าถึงคลังภาพของคุณเพื่อให้คุณอัปโหลดรูปภาพและเอกสารที่เกี่ยวข้องกับโครงการ</string>
+    <string>We request access to your photo library to upload images and documents related to your projects, ensuring smooth functionality within the app.</string>
+
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>We request permission to save images to your photo library for project-related features.</string>
 
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>ใช้ตำแหน่งของคุณเพื่อนำทางและระบุไซต์โครงการอย่างแม่นยำระหว่าง การใช้งาน</string>
+    <string>We use your location to navigate and accurately pinpoint project sites while the app is in use, ensuring a seamless experience.</string>
 
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>ต้องขอสิทธิ์เข้าถึงตำแหน่งของคุณตลอดเวลาเพื่อตรวจสอบการอัปเดตเวลารายงานที่ต่อเนื่องและแม่นยำ</string>
+    <string>We require access to your location at all times to monitor continuous and accurate report updates, even when the app is running in the background.</string>
 
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>ใช้ตำแหน่งของคุณเพื่อนำทางและอัปเดตโครงการ แม้ว่าแอปจะทำงานอยู่เบื้องหลังก็ตาม</string>
+    <string>We use your location to navigate and update project information even when the app is running in the background, ensuring continuous tracking and data accuracy.</string>
 
     <key>GMSApiKey</key>
     <string>AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siow</string>

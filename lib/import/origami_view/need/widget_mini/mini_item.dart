@@ -3,7 +3,14 @@ import 'package:origamilift/import/import.dart';
 import '../need_view/need_detail.dart';
 
 class MiniItem extends StatefulWidget {
-  const MiniItem({Key? key,required this.Item_type_id, required this.employee, required this.callbackID, required this.callbackNAME, required this.Authorization}) : super(key: key);
+  const MiniItem(
+      {Key? key,
+      required this.Item_type_id,
+      required this.employee,
+      required this.callbackID,
+      required this.callbackNAME,
+      required this.Authorization})
+      : super(key: key);
   final String Function(String) callbackID;
   final String Function(String) callbackNAME;
   final String Item_type_id;
@@ -24,7 +31,10 @@ class _MiniItemState extends State<MiniItem> {
     _searchItem.addListener(() {
       print("Current text: ${_searchItem.text}");
     });
-    fetchItem(Item_number, Item_name,);
+    fetchItem(
+      Item_number,
+      Item_name,
+    );
   }
 
   @override
@@ -42,13 +52,18 @@ class _MiniItemState extends State<MiniItem> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Card(color: Color(0xFFFF9900),child: Padding(padding: EdgeInsets.only(left: 40,right: 40,top: 8)),),
+                Card(
+                  color: Color(0xFFFF9900),
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40, top: 8)),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextFormField(
                     controller: _searchItem,
                     keyboardType: TextInputType.text,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       color: Color(0xFF555555),
                       fontSize: 14,
                     ),
@@ -56,11 +71,13 @@ class _MiniItemState extends State<MiniItem> {
                       isDense: true,
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 14),
                       hintText: 'Search...',
-                      hintStyle: GoogleFonts.openSans(
-                          fontSize: 14, color: Color(0xFF555555)),
+                      hintStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
                       ),
@@ -95,83 +112,88 @@ class _MiniItemState extends State<MiniItem> {
                 ),
                 (_searchText == '')
                     ? Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '$SearchFor',
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Color(0xFF555555),
-                        ),
-                      ),
-                      SizedBox(height: 8,),
-                      // InkWell(
-                      //   onTap: (){
-                      //     setState(() {
-                      //       _showDown = true;
-                      //     });
-                      //   },
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: [
-                      //       Text(
-                      //         'รายการทั้งหมด',
-                      //         style: GoogleFonts.openSans(
-                      //           fontSize: 18,
-                      //           decoration: TextDecoration.underline,
-                      //           // color: Color(0xFFFF9900),
-                      //         ),),
-                      //       SizedBox(width: 8,),
-                      //       Icon(Icons.arrow_drop_down,color:Color(0xFF555555),)
-                      //     ],
-                      //   ),
-                      // )
-                    ],
-                  ),
-                )
-                    : Expanded(
-                  child: ListView.builder(
-                    itemCount: ItemOption.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                Item_name =
-                                    ItemOption[index].item_name ?? '';
-                                Item_id =
-                                    ItemOption[index].item_id ?? '';
-                                widget.callbackNAME(Item_name ?? '',);
-                                widget.callbackID(Item_id ?? '',);
-                                Navigator.pop(context);
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                "${ItemOption[index].item_name ?? ''}",
-                                style: GoogleFonts.openSans(
-                                  fontSize: 16,
-                                  color: Color(0xFF555555),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$SearchFor',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16, right: 16),
-                            child: Divider(),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            // InkWell(
+                            //   onTap: (){
+                            //     setState(() {
+                            //       _showDown = true;
+                            //     });
+                            //   },
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: [
+                            //       Text(
+                            //         'รายการทั้งหมด',
+                            //         style: TextStyle(
+                            // fontFamily: 'Arial',
+                            //           fontSize: 18,
+                            //           decoration: TextDecoration.underline,
+                            //           // color: Color(0xFFFF9900),
+                            //         ),),
+                            //       SizedBox(width: 8,),
+                            //       Icon(Icons.arrow_drop_down,color:Color(0xFF555555),)
+                            //     ],
+                            //   ),
+                            // )
+                          ],
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: ItemOption.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      Item_name =
+                                          ItemOption[index].item_name ?? '';
+                                      Item_id = ItemOption[index].item_id ?? '';
+                                      widget.callbackNAME(
+                                        Item_name ?? '',
+                                      );
+                                      widget.callbackID(
+                                        Item_id ?? '',
+                                      );
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      "${ItemOption[index].item_name ?? ''}",
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16,
+                                        color: Color(0xFF555555),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 16, right: 16),
+                                  child: Divider(),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -185,48 +207,20 @@ class _MiniItemState extends State<MiniItem> {
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.navigate_before,color: Color(0xFFFF9900),),
+                          Icon(
+                            Icons.navigate_before,
+                            color: Color(0xFFFF9900),
+                          ),
                           Text(
                             "$Back",
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: Color(0xFF555555),
                             ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
                           ),
                         ],
                       ),
                     ),
-                    // Text(
-                    //   '',
-                    //   style: GoogleFonts.openSans(
-                    //       fontSize: 24,
-                    //       color: Color(0xFF555555),
-                    //       fontWeight: FontWeight.bold),
-                    // ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       int_project = int_project++;
-                    //       fetchProject(int_project.toString(), "");
-                    //       // Navigator.pop(context);
-                    //     });
-                    //   },
-                    //   child: Row(
-                    //     children: [
-                    //       Text(
-                    //         "ถัดไป",
-                    //         style: GoogleFonts.openSans(
-                    //           fontSize: 16,
-                    //           color: Color(0xFF555555),
-                    //         ),
-                    //         overflow: TextOverflow.ellipsis,
-                    //         maxLines: 1,
-                    //       ),
-                    //       Icon(Icons.navigate_next,color: Color(0xFFFF9900),),
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               ],
@@ -249,7 +243,8 @@ class _MiniItemState extends State<MiniItem> {
         '$host/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=${widget.Item_type_id}');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -265,11 +260,9 @@ class _MiniItemState extends State<MiniItem> {
 
             int_Item = itemRespond.next_page_number ?? 0;
             is_Item = itemRespond.next_page ?? false;
-            ItemOption = ItemtJson
-                .map(
-                  (json) => ItemData.fromJson(json),
-            )
-                .toList();
+            ItemOption = ItemtJson.map(
+              (json) => ItemData.fromJson(json),
+            ).toList();
             ItemList = ItemOption;
           });
         } else {

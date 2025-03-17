@@ -465,13 +465,15 @@ class _DiscussionState extends State<Discussion> {
         maxLines: null,
         controller: controller,
         keyboardType: TextInputType.text,
-        style: GoogleFonts.openSans(fontSize: 14, color: const Color(0xFF555555)),
+        style: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: const Color(0xFF555555)),
         decoration: InputDecoration(
           isDense: true,
           filled: true,
           fillColor: Colors.white,
           hintText: hintText,
-          hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.black38),
+          hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.black38),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide.none,

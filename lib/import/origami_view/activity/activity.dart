@@ -266,7 +266,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               Text(
                                 activity.activity_project_name ?? '',
                                 maxLines: 1,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 14,
                                   color: Color(0xFFFF9900),
                                   fontWeight: FontWeight.w500,
@@ -275,7 +276,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               Text(
                                 activity.activity_location ?? '',
                                 maxLines: 1,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 12,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w500,
@@ -287,7 +289,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               Text(
                                 '${widget.employee.emp_name ?? ''} - ${activity.projectname ?? ''}',
                                 maxLines: 1,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 12,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w500,
@@ -299,7 +302,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                               Text(
                                 '${activity.activity_start_date ?? ''} ${activity.time_start ?? ''} - ${activity.activity_end_date ?? ''} ${activity.time_end ?? ''}',
                                 maxLines: 1,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 12,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w500,
@@ -314,7 +318,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                     child: Text(
                                       'Type : Website & Application',
                                       maxLines: 1,
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                fontFamily: 'Arial',
                                         fontSize: 12,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w500,
@@ -343,7 +348,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                         (activity.activity_status == '')
                                             ? 'plan'
                                             : activity.activity_status ?? '',
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 12,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500),

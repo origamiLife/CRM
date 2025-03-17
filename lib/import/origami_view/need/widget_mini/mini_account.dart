@@ -3,7 +3,13 @@ import 'package:origamilift/import/import.dart';
 import '../need_view/need_detail.dart';
 
 class MiniAccount extends StatefulWidget {
-  const MiniAccount({Key? key, required this.callback, required this.employee, required this.callbackId, required this.Authorization}) : super(key: key);
+  const MiniAccount(
+      {Key? key,
+      required this.callback,
+      required this.employee,
+      required this.callbackId,
+      required this.Authorization})
+      : super(key: key);
   final String Function(String) callback;
   final String Function(String) callbackId;
   final Employee employee;
@@ -42,13 +48,18 @@ class _MiniAccountState extends State<MiniAccount> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Card(color: Color(0xFFFF9900),child: Padding(padding: EdgeInsets.only(left: 40,right: 40,top: 8)),),
+                Card(
+                  color: Color(0xFFFF9900),
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40, top: 8)),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextFormField(
                     controller: _searchAccount,
                     keyboardType: TextInputType.text,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       color: Color(0xFF555555),
                       fontSize: 14,
                     ),
@@ -56,11 +67,13 @@ class _MiniAccountState extends State<MiniAccount> {
                       isDense: true,
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 14),
                       hintText: 'Search...',
-                      hintStyle: GoogleFonts.openSans(
-                          fontSize: 14, color: Color(0xFF555555)),
+                      hintStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
                       ),
@@ -95,82 +108,64 @@ class _MiniAccountState extends State<MiniAccount> {
                 ),
                 (_searchText == '')
                     ? Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'กรอกข้อมูลที่ต้องการค้าหา.......?',
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Color(0xFF555555),
-                        ),
-                      ),
-                      SizedBox(height: 8,),
-                      // InkWell(
-                      //   onTap: (){
-                      //     setState(() {
-                      //       _showDown = true;
-                      //     });
-                      //   },
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: [
-                      //       Text(
-                      //         'ลูกค้าทั้งหมด',
-                      //         style: GoogleFonts.openSans(
-                      //           fontSize: 18,
-                      //           decoration: TextDecoration.underline,
-                      //           // color: Color(0xFFFF9900),
-                      //         ),),
-                      //       SizedBox(width: 8,),
-                      //       Icon(Icons.arrow_drop_down,color:Color(0xFF555555),)
-                      //     ],
-                      //   ),
-                      // )
-                    ],
-                  ),
-                )
-                    : Expanded(
-                  child: ListView.builder(
-                    itemCount: AccountList.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                Account_name =
-                                    AccountList[index].account_name ?? '';
-                                widget.callback(Account_name ?? '');
-                                data_Id = AccountList[index].account_id ?? '';
-                                widget.callbackId(data_Id ?? '');
-                                Navigator.pop(context, Account_name);
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                "${AccountList[index].account_name ?? ''}",
-                                style: GoogleFonts.openSans(
-                                  fontSize: 16,
-                                  color: Color(0xFF555555),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'กรอกข้อมูลที่ต้องการค้าหา.......?',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16, right: 16),
-                            child: Divider(),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: AccountList.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      Account_name =
+                                          AccountList[index].account_name ?? '';
+                                      widget.callback(Account_name ?? '');
+                                      data_Id =
+                                          AccountList[index].account_id ?? '';
+                                      widget.callbackId(data_Id ?? '');
+                                      Navigator.pop(context, Account_name);
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      "${AccountList[index].account_name ?? ''}",
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16,
+                                        color: Color(0xFF555555),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16),
+                                  child: Divider(),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -184,48 +179,20 @@ class _MiniAccountState extends State<MiniAccount> {
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.navigate_before,color: Color(0xFFFF9900),),
+                          Icon(
+                            Icons.navigate_before,
+                            color: Color(0xFFFF9900),
+                          ),
                           Text(
                             "$Back",
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: Color(0xFF555555),
                             ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
                           ),
                         ],
                       ),
                     ),
-                    // Text(
-                    //   '',
-                    //   style: GoogleFonts.openSans(
-                    //       fontSize: 24,
-                    //       color: Color(0xFF555555),
-                    //       fontWeight: FontWeight.bold),
-                    // ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       int_project = int_project++;
-                    //       fetchProject(int_project.toString(), "");
-                    //       // Navigator.pop(context);
-                    //     });
-                    //   },
-                    //   child: Row(
-                    //     children: [
-                    //       Text(
-                    //         "ถัดไป",
-                    //         style: GoogleFonts.openSans(
-                    //           fontSize: 16,
-                    //           color: Color(0xFF555555),
-                    //         ),
-                    //         overflow: TextOverflow.ellipsis,
-                    //         maxLines: 1,
-                    //       ),
-                    //       Icon(Icons.navigate_next,color: Color(0xFFFF9900),),
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               ],
@@ -247,7 +214,8 @@ class _MiniAccountState extends State<MiniAccount> {
         '$host/api/origami/need/account.php?page=$Account_number&search=$Account_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -263,11 +231,9 @@ class _MiniAccountState extends State<MiniAccount> {
 
             int_Account = accountRespond.next_page_number ?? 0;
             is_Account = accountRespond.next_page ?? false;
-            AccountOption = AccountJson
-                .map(
-                  (json) => AccountData.fromJson(json),
-            )
-                .toList();
+            AccountOption = AccountJson.map(
+              (json) => AccountData.fromJson(json),
+            ).toList();
             AccountList = AccountOption;
           });
         } else {

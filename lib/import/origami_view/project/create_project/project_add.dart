@@ -9,7 +9,8 @@ class ProjectAdd extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization, required this.nonSale,
+    required this.Authorization,
+    required this.nonSale,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
@@ -142,7 +143,8 @@ class _ProjectAddState extends State<ProjectAdd> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Detail',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -163,7 +165,8 @@ class _ProjectAddState extends State<ProjectAdd> {
               children: [
                 Text(
                   'DONE',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -188,8 +191,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                 _DropdownSale(
                     'Sale/Non Sale'), //0,1 => Sale Project , Non Sale Project
                 _DropdownModel('Project Model'), //0,1 => internal , external
-                if(widget.nonSale == '0')
-                _DropdownApprove('Approve Quotation'),
+                if (widget.nonSale == '0')
+                  _DropdownApprove('Approve Quotation'),
                 _textBody('Cost Value', _projectController, true),
                 _DropdownSource('Source'),
                 _textBody('Description', _descriptionController, true),
@@ -240,7 +243,8 @@ class _ProjectAddState extends State<ProjectAdd> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -260,11 +264,13 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'Select $title',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: contactList
@@ -274,7 +280,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                         item.contact_name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -296,9 +303,15 @@ class _ProjectAddState extends State<ProjectAdd> {
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -311,8 +324,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -322,8 +337,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -357,7 +374,8 @@ class _ProjectAddState extends State<ProjectAdd> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -377,11 +395,13 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'Select $title',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: AccountList.map((item) => DropdownMenuItem<AccountData>(
@@ -390,7 +410,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                     item.account_name ?? '',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -411,9 +432,15 @@ class _ProjectAddState extends State<ProjectAdd> {
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -426,8 +453,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -437,8 +466,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -472,7 +503,8 @@ class _ProjectAddState extends State<ProjectAdd> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -492,11 +524,13 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'Select $title',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: TypeList.map((item) => DropdownMenuItem<TypeData>(
@@ -505,7 +539,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                     item.type_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -526,9 +561,15 @@ class _ProjectAddState extends State<ProjectAdd> {
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -541,8 +582,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -552,8 +595,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -579,7 +624,9 @@ class _ProjectAddState extends State<ProjectAdd> {
     );
   }
 
-  Widget _DropdownSource(String title) {
+  Widget _priority(String title) {
+    SourceList.sort((a, b) =>
+        a.source_name.toLowerCase().compareTo(b.source_name.toLowerCase()));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -587,7 +634,99 @@ class _ProjectAddState extends State<ProjectAdd> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 14,
+            color: Color(0xFF555555),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        SizedBox(height: 8),
+        Container(
+          height: 48,
+          // width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.white,
+            border: Border.all(
+              color: Color(0xFFFF9900),
+              width: 1.0,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton2<SourceData>(
+                  isExpanded: true,
+                  hint: Text(
+                    'Select $title',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Color(0xFF555555),
+                  ),
+                  items: SourceList.map((item) => DropdownMenuItem<SourceData>(
+                        value: item,
+                        child: Text(
+                          item.source_name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                          ),
+                        ),
+                      )).toList(),
+                  value: selectedSource,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedSource = value;
+                      // account_id = value?.account_id ?? '';
+                    });
+                  },
+                  iconStyleData: IconStyleData(
+                    icon: Icon(Icons.arrow_drop_down),
+                    iconEnabledColor: Color(0xFF555555),
+                    iconDisabledColor: Color(0xFF555555),
+                    iconSize: 24,
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    elevation: 1,
+                    decoration: BoxDecoration(
+                      color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _DropdownSource(String title) {
+    SourceList.sort((a, b) =>
+        a.source_name.toLowerCase().compareTo(b.source_name.toLowerCase()));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -607,11 +746,13 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'Select $title',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: SourceList.map((item) => DropdownMenuItem<SourceData>(
@@ -620,7 +761,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                     item.source_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -638,15 +780,21 @@ class _ProjectAddState extends State<ProjectAdd> {
                   color: Color(0xFF555555), size: 24),
               iconSize: 24,
             ),
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
+            ),
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
             menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
+              height: 40,
             ),
             dropdownSearchData: DropdownSearchData(
               searchController: _searchController,
@@ -656,8 +804,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -667,8 +817,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -683,8 +835,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             ),
             onMenuStateChange: (isOpen) {
               if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
+                _searchController.clear();
               }
             },
           ),
@@ -702,7 +853,8 @@ class _ProjectAddState extends State<ProjectAdd> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -710,13 +862,13 @@ class _ProjectAddState extends State<ProjectAdd> {
         ),
         SizedBox(height: 8),
         MultiSelectDialogField(
-          items: CategoryList.map((category) =>
-              MultiSelectItem<CategoryData>(
+          items: CategoryList.map((category) => MultiSelectItem<CategoryData>(
               category, category.categories_name)).toList(),
           title: Text(
             maxLines: 1,
             "Select Categories", // แสดงข้อความที่เลือก
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
               fontSize: 14,
             ),
@@ -740,8 +892,10 @@ class _ProjectAddState extends State<ProjectAdd> {
             maxLines: 1,
             CategoryList.length != 0
                 ? "Select Categories" // ข้อความแสดงตอนยังไม่ได้เลือก
-                : CategoryList.map((e) => e.categories_name).join(", "), // แสดงข้อความที่เลือก
-            style: GoogleFonts.openSans(
+                : CategoryList.map((e) => e.categories_name)
+                    .join(", "), // แสดงข้อความที่เลือก
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
               fontSize: 14,
             ),
@@ -763,7 +917,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                 });
               }
             },
-            textStyle: GoogleFonts.openSans(
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
           ),
@@ -784,7 +939,8 @@ class _ProjectAddState extends State<ProjectAdd> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -804,11 +960,13 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'Select $title',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: ProcessList.map((item) => DropdownMenuItem<ProcessData>(
@@ -817,7 +975,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                     item.process_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -832,15 +991,21 @@ class _ProjectAddState extends State<ProjectAdd> {
             underline: SizedBox.shrink(),
             iconStyleData: IconStyleData(
               icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 2),
+                  color: Color(0xFF555555), size: 24),
               iconSize: 24,
             ),
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -853,8 +1018,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -864,8 +1031,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -881,7 +1050,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             onMenuStateChange: (isOpen) {
               if (!isOpen) {
                 _searchController
-                    .clear(); // Clear the search field when the menu closes
+                    .clear();
               }
             },
           ),
@@ -899,7 +1068,8 @@ class _ProjectAddState extends State<ProjectAdd> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -919,11 +1089,13 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'Select $title',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: PriorityList.map((item) => DropdownMenuItem<PriorityData>(
@@ -932,7 +1104,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                     item.priority_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -953,9 +1126,15 @@ class _ProjectAddState extends State<ProjectAdd> {
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -968,8 +1147,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -979,8 +1160,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -996,7 +1179,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             onMenuStateChange: (isOpen) {
               if (!isOpen) {
                 _searchController
-                    .clear(); // Clear the search field when the menu closes
+                    .clear();
               }
             },
           ),
@@ -1014,7 +1197,8 @@ class _ProjectAddState extends State<ProjectAdd> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -1034,11 +1218,13 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'Select $title',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: SubStatusList.map((item) => DropdownMenuItem<SubStatusData>(
@@ -1047,7 +1233,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                     item.sub_status_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1068,9 +1255,15 @@ class _ProjectAddState extends State<ProjectAdd> {
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -1083,8 +1276,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1094,8 +1289,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1128,7 +1325,8 @@ class _ProjectAddState extends State<ProjectAdd> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1148,18 +1346,21 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'Sale Project',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: SaleDataList.map((item) => DropdownMenuItem<SaleData>(
                   value: item,
                   child: Text(
                     item.sale_name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1179,9 +1380,15 @@ class _ProjectAddState extends State<ProjectAdd> {
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -1200,7 +1407,8 @@ class _ProjectAddState extends State<ProjectAdd> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1220,11 +1428,13 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'Internal',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: ProjectModelList.map(
@@ -1232,7 +1442,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                       value: item,
                       child: Text(
                         item.project_model_name,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1252,9 +1463,15 @@ class _ProjectAddState extends State<ProjectAdd> {
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -1273,7 +1490,8 @@ class _ProjectAddState extends State<ProjectAdd> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1293,19 +1511,21 @@ class _ProjectAddState extends State<ProjectAdd> {
             isExpanded: true,
             hint: Text(
               'No',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
-            items: ApproveList.map(
-                    (item) => DropdownMenuItem<ApproveQuotation>(
+            items: ApproveList.map((item) => DropdownMenuItem<ApproveQuotation>(
                   value: item,
                   child: Text(
                     item.approve_quotation,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1325,9 +1545,15 @@ class _ProjectAddState extends State<ProjectAdd> {
             buttonStyleData: ButtonStyleData(
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
+            dropdownStyleData: const DropdownStyleData(
+              maxHeight: 200,
+              decoration: BoxDecoration(
+                color: Colors.white, // สีพื้นหลังของเมนู dropdown
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -1341,10 +1567,8 @@ class _ProjectAddState extends State<ProjectAdd> {
 
   ProjectModelData? selectedProjectModel;
   List<ProjectModelData> ProjectModelList = [
-    ProjectModelData(
-        project_model_id: '0', project_model_name: 'Internal'),
-    ProjectModelData(
-        project_model_id: '1', project_model_name: 'External'),
+    ProjectModelData(project_model_id: '0', project_model_name: 'Internal'),
+    ProjectModelData(project_model_id: '1', project_model_name: 'External'),
   ];
 
   SaleData? selectedSaleData;
@@ -1367,7 +1591,8 @@ class _ProjectAddState extends State<ProjectAdd> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1375,12 +1600,13 @@ class _ProjectAddState extends State<ProjectAdd> {
         ),
         SizedBox(height: 8),
         TextFormField(
-          minLines: (textController == _descriptionController) ? 3 : 1,
+          minLines: (textController == _descriptionController) ? 4 : 1,
           maxLines: null,
           enabled: (_isTrue == true) ? true : false,
           controller: textController,
           keyboardType: TextInputType.text,
-          style: GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+          style: TextStyle(
+              fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -1390,8 +1616,8 @@ class _ProjectAddState extends State<ProjectAdd> {
             hintText: (_selectedLocation == null || _isTrue == true)
                 ? ''
                 : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
-            hintStyle:
-                GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
             suffixIcon: Container(
               alignment: Alignment.centerRight,
               width: 10,
@@ -1446,7 +1672,8 @@ class _ProjectAddState extends State<ProjectAdd> {
         Text(
           _nemedate,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1473,8 +1700,10 @@ class _ProjectAddState extends State<ProjectAdd> {
                 children: [
                   Text(
                     (start_end == 0) ? project_create : last_activity,
-                    style: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                   ),
                   Spacer(),
                   Icon(
@@ -1501,7 +1730,7 @@ class _ProjectAddState extends State<ProjectAdd> {
     _fetchSubStatus();
   }
 
-  void _addDetail(){
+  void _addDetail() {
     Navigator.pop(context);
   }
 
@@ -1787,8 +2016,8 @@ class ContactData {
 
   factory ContactData.fromJson(Map<String, dynamic> json) {
     return ContactData(
-      contact_id: json['contact_id']??'',
-      contact_name: json['contact_name']??'',
+      contact_id: json['contact_id'] ?? '',
+      contact_name: json['contact_name'] ?? '',
     );
   }
 }
@@ -1804,8 +2033,8 @@ class AccountData {
 
   factory AccountData.fromJson(Map<String, dynamic> json) {
     return AccountData(
-      account_id: json['account_id']??'',
-      account_name: json['account_name']??'',
+      account_id: json['account_id'] ?? '',
+      account_name: json['account_name'] ?? '',
     );
   }
 }
@@ -1821,8 +2050,8 @@ class SourceData {
 
   factory SourceData.fromJson(Map<String, dynamic> json) {
     return SourceData(
-      source_id: json['source_id']??'',
-      source_name: json['source_name']??'',
+      source_id: json['source_id'] ?? '',
+      source_name: json['source_name'] ?? '',
     );
   }
 }
@@ -1838,8 +2067,8 @@ class TypeData {
 
   factory TypeData.fromJson(Map<String, dynamic> json) {
     return TypeData(
-      type_id: json['type_id']??'',
-      type_name: json['type_name']??'',
+      type_id: json['type_id'] ?? '',
+      type_name: json['type_name'] ?? '',
     );
   }
 }
@@ -1855,8 +2084,8 @@ class CategoryData {
 
   factory CategoryData.fromJson(Map<String, dynamic> json) {
     return CategoryData(
-      categories_id: json['categories_id']??'',
-      categories_name: json['categories_name']??'',
+      categories_id: json['categories_id'] ?? '',
+      categories_name: json['categories_name'] ?? '',
     );
   }
 }
@@ -1872,8 +2101,8 @@ class ProcessData {
 
   factory ProcessData.fromJson(Map<String, dynamic> json) {
     return ProcessData(
-      process_id: json['process_id']??'',
-      process_name: json['process_name']??'',
+      process_id: json['process_id'] ?? '',
+      process_name: json['process_name'] ?? '',
     );
   }
 }
@@ -1889,8 +2118,8 @@ class PriorityData {
 
   factory PriorityData.fromJson(Map<String, dynamic> json) {
     return PriorityData(
-      priority_id: json['priority_id']??'',
-      priority_name: json['priority_name']??'',
+      priority_id: json['priority_id'] ?? '',
+      priority_name: json['priority_name'] ?? '',
     );
   }
 }
@@ -1906,8 +2135,8 @@ class SubStatusData {
 
   factory SubStatusData.fromJson(Map<String, dynamic> json) {
     return SubStatusData(
-      sub_status_id: json['sub_status_id']??'',
-      sub_status_name: json['sub_status_name']??'',
+      sub_status_id: json['sub_status_id'] ?? '',
+      sub_status_name: json['sub_status_name'] ?? '',
     );
   }
 }
@@ -1935,7 +2164,7 @@ class ProjectModelData {
 class ApproveQuotation {
   final String approve_quotation;
 
-ApproveQuotation({
+  ApproveQuotation({
     required this.approve_quotation,
   });
 }

@@ -3,7 +3,13 @@ import 'package:origamilift/import/import.dart';
 import '../need_view/need_detail.dart';
 
 class MiniEmployee extends StatefulWidget {
-  const MiniEmployee({Key? key, required this.callback, required this.employee, required this.callbackId, required this.Authorization}) : super(key: key);
+  const MiniEmployee(
+      {Key? key,
+      required this.callback,
+      required this.employee,
+      required this.callbackId,
+      required this.Authorization})
+      : super(key: key);
   final String Function(String) callback;
   final String Function(String) callbackId;
   final Employee employee;
@@ -41,13 +47,18 @@ class _MiniEmployeeState extends State<MiniEmployee> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Card(color: Color(0xFFFF9900),child: Padding(padding: EdgeInsets.only(left: 40,right: 40,top: 8)),),
+                Card(
+                  color: Color(0xFFFF9900),
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40, top: 8)),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextFormField(
                     controller: _searchEmployee,
                     keyboardType: TextInputType.text,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       color: Color(0xFF555555),
                       fontSize: 14,
                     ),
@@ -55,11 +66,13 @@ class _MiniEmployeeState extends State<MiniEmployee> {
                       isDense: true,
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 14),
                       hintText: 'Search...',
-                      hintStyle: GoogleFonts.openSans(
-                          fontSize: 14, color: Color(0xFF555555)),
+                      hintStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
                       ),
@@ -94,82 +107,87 @@ class _MiniEmployeeState extends State<MiniEmployee> {
                 ),
                 (_searchText == '')
                     ? Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '$SearchFor',
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          color: Color(0xFF555555),
-                        ),
-                      ),
-                      SizedBox(height: 8,),
-                      // InkWell(
-                      //   onTap: (){
-                      //     setState(() {
-                      //       _showDown = true;
-                      //     });
-                      //   },
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: [
-                      //       Text(
-                      //         'แผนกทั้งหมด',
-                      //         style: GoogleFonts.openSans(
-                      //           fontSize: 18,
-                      //           decoration: TextDecoration.underline,
-                      //           // color: Color(0xFFFF9900),
-                      //         ),),
-                      //       SizedBox(width: 8,),
-                      //       Icon(Icons.arrow_drop_down,color:Color(0xFF555555),)
-                      //     ],
-                      //   ),
-                      // )
-                    ],
-                  ),
-                )
-                    : Expanded(
-                  child: ListView.builder(
-                    itemCount: EmployeeList.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                Employee_name =
-                                    EmployeeList[index].employee_name ?? '';
-                                widget.callback(Employee_name ?? '');
-                                data_Id = EmployeeList[index].employee_id ?? '';
-                                widget.callbackId(data_Id ?? '');
-                                Navigator.pop(context, Employee_name);
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                "${EmployeeList[index].employee_name ?? ''}",
-                                style: GoogleFonts.openSans(
-                                  fontSize: 16,
-                                  color: Color(0xFF555555),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$SearchFor',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16, right: 16),
-                            child: Divider(),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            // InkWell(
+                            //   onTap: (){
+                            //     setState(() {
+                            //       _showDown = true;
+                            //     });
+                            //   },
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: [
+                            //       Text(
+                            //         'แผนกทั้งหมด',
+                            //         style: TextStyle(
+                            // fontFamily: 'Arial',
+                            //           fontSize: 18,
+                            //           decoration: TextDecoration.underline,
+                            //           // color: Color(0xFFFF9900),
+                            //         ),),
+                            //       SizedBox(width: 8,),
+                            //       Icon(Icons.arrow_drop_down,color:Color(0xFF555555),)
+                            //     ],
+                            //   ),
+                            // )
+                          ],
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: EmployeeList.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      Employee_name =
+                                          EmployeeList[index].employee_name ??
+                                              '';
+                                      widget.callback(Employee_name ?? '');
+                                      data_Id =
+                                          EmployeeList[index].employee_id ?? '';
+                                      widget.callbackId(data_Id ?? '');
+                                      Navigator.pop(context, Employee_name);
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      "${EmployeeList[index].employee_name ?? ''}",
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16,
+                                        color: Color(0xFF555555),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16),
+                                  child: Divider(),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -183,48 +201,20 @@ class _MiniEmployeeState extends State<MiniEmployee> {
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.navigate_before,color: Color(0xFFFF9900),),
+                          Icon(
+                            Icons.navigate_before,
+                            color: Color(0xFFFF9900),
+                          ),
                           Text(
                             "$Back",
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: Color(0xFF555555),
                             ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
                           ),
                         ],
                       ),
                     ),
-                    // Text(
-                    //   '',
-                    //   style: GoogleFonts.openSans(
-                    //       fontSize: 24,
-                    //       color: Color(0xFF555555),
-                    //       fontWeight: FontWeight.bold),
-                    // ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       int_project = int_project++;
-                    //       fetchProject(int_project.toString(), "");
-                    //       // Navigator.pop(context);
-                    //     });
-                    //   },
-                    //   child: Row(
-                    //     children: [
-                    //       Text(
-                    //         "ถัดไป",
-                    //         style: GoogleFonts.openSans(
-                    //           fontSize: 16,
-                    //           color: Color(0xFF555555),
-                    //         ),
-                    //         overflow: TextOverflow.ellipsis,
-                    //         maxLines: 1,
-                    //       ),
-                    //       Icon(Icons.navigate_next,color: Color(0xFFFF9900),),
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               ],
@@ -246,7 +236,8 @@ class _MiniEmployeeState extends State<MiniEmployee> {
         '$host/api/origami/need/employee.php?page=$Employee_number&search=$Employee_name');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -262,11 +253,9 @@ class _MiniEmployeeState extends State<MiniEmployee> {
 
             int_Employee = employeeRespond.next_page_number ?? 0;
             is_Employee = employeeRespond.next_page ?? false;
-            EmployeeOption = EmployeeJson
-                .map(
-                  (json) => EmployeeData.fromJson(json),
-            )
-                .toList();
+            EmployeeOption = EmployeeJson.map(
+              (json) => EmployeeData.fromJson(json),
+            ).toList();
             EmployeeList = EmployeeOption;
           });
         } else {

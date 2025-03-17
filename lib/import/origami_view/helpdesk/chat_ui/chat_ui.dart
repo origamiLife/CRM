@@ -39,7 +39,8 @@ class _ChatBubblesState extends State<ChatBubbles> {
         backgroundColor: Colors.white,
         title: Text(
           'HelpDesk',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
               fontWeight: FontWeight.bold, color: Color(0xFFFF9900)),
         ),
       ),
@@ -95,7 +96,8 @@ class _ChatBubblesState extends State<ChatBubbles> {
                       child: TextFormField(
                         controller: _messageController,
                         keyboardType: TextInputType.text,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           color: Color(0xFF555555),
                           fontSize: 14,
                         ),
@@ -106,7 +108,8 @@ class _ChatBubblesState extends State<ChatBubbles> {
                           contentPadding:
                           const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                           hintText: 'Write a message...',
-                          hintStyle: GoogleFonts.openSans(
+                          hintStyle: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 14, color: Color(0xFF555555)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100),
@@ -199,7 +202,8 @@ class _ChatBubblesState extends State<ChatBubbles> {
                     children: [
                       Text(
                         'This trailing comma makes auto-formatting nicer for build methods.',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -210,7 +214,8 @@ class _ChatBubblesState extends State<ChatBubbles> {
                         alignment: Alignment.centerRight,
                         child: Text(
                           DateFormat('HH:mm').format(DateTime.now()),
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 12,
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
@@ -292,7 +297,8 @@ class _ChatBubblesState extends State<ChatBubbles> {
                             children: [
                               Text(
                                 'Perform crisis management and save practical checklists as canned responses so agents can go step-by-step, find the root of the issue, and resolve tickets quicker.',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 14,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w500,
@@ -303,7 +309,8 @@ class _ChatBubblesState extends State<ChatBubbles> {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   DateFormat('HH:mm').format(DateTime.now()),
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 12,
                                     color: Color(0xFF555554),
                                     fontWeight: FontWeight.w500,

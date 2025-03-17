@@ -102,7 +102,8 @@ class _AcademyPageState extends State<AcademyPage> {
         items: items,
         iconSize: 18,
         animated: true,
-        titleStyle: GoogleFonts.openSans(),
+        titleStyle: TextStyle(
+                fontFamily: 'Arial',),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),

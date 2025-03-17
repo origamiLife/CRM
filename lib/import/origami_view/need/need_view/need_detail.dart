@@ -41,8 +41,11 @@ class _NeedDetailState extends State<NeedDetail> {
   TextEditingController _amountController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
 
-  static var optionStyle = GoogleFonts.openSans(
-      fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF555555));
+  static var optionStyle = TextStyle(
+      fontFamily: 'Arial',
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Color(0xFF555555));
 
   DateTime _selectedEffective = DateTime.now();
   DateTime _selectedReturn = DateTime.now();
@@ -112,8 +115,10 @@ class _NeedDetailState extends State<NeedDetail> {
                 TextButton(
                   child: Text(
                     '$Close',
-                    style: GoogleFonts.openSans(
-                        fontWeight: FontWeight.bold, color: Colors.teal),
+                    style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -164,8 +169,10 @@ class _NeedDetailState extends State<NeedDetail> {
                 TextButton(
                   child: Text(
                     '$Close',
-                    style: GoogleFonts.openSans(
-                        fontWeight: FontWeight.bold, color: Colors.teal),
+                    style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -290,61 +297,34 @@ class _NeedDetailState extends State<NeedDetail> {
                 (widget.request_id == '')
                     ? widget.needTypeItem!.type_name ?? ''
                     : detailItem?.need_type_name ?? '',
-                style: GoogleFonts.openSans(
-                    fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ),
             Spacer(),
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    showModalBottomSheet<void>(
-                      barrierColor: Colors.black12,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      enableDrag: false,
-                      builder: (BuildContext context) {
-                        return _bill();
-                      },
-                    );
+            InkWell(
+              onTap: () {
+                showModalBottomSheet<void>(
+                  barrierColor: Colors.black87,
+                  backgroundColor: Colors.transparent,
+                  context: context,
+                  isScrollControlled: true,
+                  isDismissible: false,
+                  enableDrag: false,
+                  builder: (BuildContext context) {
+                    return _item();
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.photo_album_outlined,
-                      color: Colors.white,
-                    ),
-                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.file_present,
+                  color: Colors.white,
                 ),
-                SizedBox(
-                  width: 8,
-                ),
-                InkWell(
-                  onTap: () {
-                    showModalBottomSheet<void>(
-                      barrierColor: Colors.black87,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      enableDrag: false,
-                      builder: (BuildContext context) {
-                        return _item();
-                      },
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.file_present,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             )
           ],
         ),
@@ -369,8 +349,10 @@ class _NeedDetailState extends State<NeedDetail> {
                       ),
                       Text(
                         '$Loading...',
-                        style: GoogleFonts.openSans(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ));
@@ -403,7 +385,8 @@ class _NeedDetailState extends State<NeedDetail> {
                         _buildSectionTitle('$Subject'),
                         Text(
                           '*',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                              fontFamily: 'Arial',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Colors.red),
@@ -423,7 +406,8 @@ class _NeedDetailState extends State<NeedDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildSectionTitle('$Reason'),
-                  _buildTextField(_noteController, '$Type_something...', (value) {
+                  _buildTextField(_noteController, '$Type_something...',
+                      (value) {
                     _reson = value;
                   }),
                 ],
@@ -473,8 +457,10 @@ class _NeedDetailState extends State<NeedDetail> {
                                     (_effective == '')
                                         ? detailItem?.effectiveDate ?? ''
                                         : _effective,
-                                    style: GoogleFonts.openSans(
-                                        fontSize: 14, color: Color(0xFF555555)),
+                                    style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFF555555)),
                                   ),
                                   Spacer(),
                                   Icon(
@@ -521,7 +507,8 @@ class _NeedDetailState extends State<NeedDetail> {
                                           (_return == '')
                                               ? detailItem?.returnDate ?? ''
                                               : _return,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                                              fontFamily: 'Arial',
                                               fontSize: 14,
                                               color: Color(0xFF555555)),
                                         ),
@@ -643,7 +630,8 @@ class _NeedDetailState extends State<NeedDetail> {
                               Expanded(
                                 child: Text(
                                   '$Error_Detail',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                      fontFamily: 'Arial',
                                       fontSize: 16,
                                       // fontWeight: FontWeight.bold,
                                       color: Color(0xFF555555)),
@@ -657,7 +645,8 @@ class _NeedDetailState extends State<NeedDetail> {
                             TextButton(
                               child: Text(
                                 '$Close',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
                                   color: Color(0xFF555555),
                                 ),
                               ),
@@ -707,7 +696,8 @@ class _NeedDetailState extends State<NeedDetail> {
                     padding: const EdgeInsets.all(16),
                     child: Text(
                       '$Save',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 16.0,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -759,16 +749,18 @@ class _NeedDetailState extends State<NeedDetail> {
                     (widget.request_id == '')
                         ? detailItem?.priorityName ?? ''
                         : editpriorityText,
-                    style: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                   ),
                   // Spacer(),
                   // Icon(Icons.arrow_drop_down)
                 ],
               ),
               value: _selectedPriority,
-              style:
-                  GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+              style: TextStyle(
+                  fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
               underline: Container(
                 height: 1,
                 color: Colors.transparent,
@@ -807,7 +799,8 @@ class _NeedDetailState extends State<NeedDetail> {
                           ),
                           Text(
                             priority.priority_name ?? '',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               fontSize: 14,
                               color: Color(0xFF555555),
                             ),
@@ -842,106 +835,11 @@ class _NeedDetailState extends State<NeedDetail> {
                   ),
                 ),
               ),
-              // buttonStyleData: ButtonStyleData(
-              //   height: 50,
-              //   decoration: BoxDecoration(
-              //     color: Colors.white, // สีพื้นหลังของปุ่ม
-              //     borderRadius: BorderRadius.circular(15),
-              //   ),
-              //   padding: EdgeInsets.symmetric(horizontal: 16),
-              // ),
             ),
           ),
         ),
       ),
     );
-    // DropdownButton<PriorityData>(
-    //   value: _selectedPriority,
-    //   hint: Padding(
-    //     padding: const EdgeInsets.only(left: 16),
-    //     child: Row(
-    //       children: [
-    //         Padding(
-    //           padding: const EdgeInsets.only(top: 6, bottom: 6),
-    //           child: Container(
-    //             color: Colors.green,
-    //             // color: Color(int.parse(
-    //             //     '0xFF${this.detailItem?.priorityColor??''}')),
-    //             padding: EdgeInsets.all(2),
-    //             decoration: BoxDecoration(
-    //               borderRadius: BorderRadius.circular(25),
-    //             ),
-    //           ),
-    //         ),
-    //         SizedBox(
-    //           width: 8,
-    //         ),
-    //         Text(
-    //           detailItem?.priorityName ?? '',
-    //           style: GoogleFonts.openSans(fontSize: 14, color: Colors.black),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    //   onChanged: (PriorityData? newPriority) {
-    //     setState(() {
-    //       _selectedPriority = newPriority;
-    //       editpriorityText = newPriority?.priority_name ?? '';
-    //     });
-    //   },
-    //   items: _priority
-    //       .map<DropdownMenuItem<PriorityData>>((PriorityData priority) {
-    //     return DropdownMenuItem<PriorityData>(
-    //       value: priority,
-    //       child: Padding(
-    //         padding: const EdgeInsets.only(left: 16),
-    //         child: Column(
-    //           children: [
-    //             Row(
-    //               children: [
-    //                 Padding(
-    //                   padding: const EdgeInsets.only(top: 6, bottom: 6),
-    //                   child: Container(
-    //                     color: Colors.green,
-    //                     // color: Color(int.parse(
-    //                     //     '0xFF${this.detailItem?.priorityColor??''}')),
-    //                     padding: EdgeInsets.all(2),
-    //                     decoration: BoxDecoration(
-    //                       borderRadius: BorderRadius.circular(25),
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 SizedBox(
-    //                   width: 8,
-    //                 ),
-    //                 Text(
-    //                   priority.priority_name ?? '',
-    //                   style: GoogleFonts.openSans(
-    //                     fontSize: 14,
-    //                     color: Colors.black,
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //             Divider()
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //   }).toList(),
-    //   icon: Icon(Icons.arrow_drop_down_outlined),
-    //   iconSize: 24,
-    //   elevation: 0,
-    //   style: GoogleFonts.openSans(fontSize: 14, color: Colors.black),
-    //   underline: Container(
-    //     height: 2,
-    //     color: Colors.transparent,
-    //   ),
-    //   dropdownColor: Color(0xFFFF9900).shade50,
-    //   borderRadius: BorderRadius.circular(15),
-    //   padding: EdgeInsets.only(top: 4, bottom: 4, right: 8),
-    //   isExpanded: true,
-    // ),
   }
 
   String editprojectText = '';
@@ -1236,7 +1134,8 @@ class _NeedDetailState extends State<NeedDetail> {
                     child: Center(
                       child: Text(
                         '$Item',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           color: Color(0xFF555555),
                         ),
                       ),
@@ -1249,6 +1148,8 @@ class _NeedDetailState extends State<NeedDetail> {
                         backgroundColor: Colors.transparent,
                         context: context,
                         isScrollControlled: true,
+                        isDismissible: false,
+                        enableDrag: false,
                         builder: (BuildContext context) {
                           return _listItem();
                         },
@@ -1265,66 +1166,73 @@ class _NeedDetailState extends State<NeedDetail> {
                 ],
               ),
             ),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  _iT(),
-                  SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
+            body: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Color(0xFFFF9900),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                            onPressed: () => _handleAddItem(context),
-                            child: Container(
-                              padding: EdgeInsets.all(14),
-                              width: double.infinity,
-                              child: Center(
-                                child: Text(
-                                  '+ $Add_Item',
-                                  style: GoogleFonts.openSans(fontSize: 16.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Color(0xFFFF9900),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                            onPressed: () => _handleCloseItem(context),
-                            child: Container(
-                              padding: EdgeInsets.all(14),
-                              width: double.infinity,
-                              child: Center(
-                                child: Text(
-                                  '$Close_Item',
-                                  style: GoogleFonts.openSans(fontSize: 16.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        _iT(),
+                        SizedBox(height: 16),
                       ],
                     ),
                   ),
-                  SizedBox(height: 18),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8,left:8 ,right: 8,bottom: 24),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Color(0xFFFF9900),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          onPressed: () => _handleAddItem(context),
+                          child: Container(
+                            padding: EdgeInsets.all(14),
+                            width: double.infinity,
+                            child: Center(
+                              child: Text(
+                                '$SaveTS',
+                                style: TextStyle(
+                                    fontFamily: 'Arial', fontSize: 16.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Color(0xFFFF9900),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          onPressed: () => _handleCloseItem(context),
+                          child: Container(
+                            padding: EdgeInsets.all(14),
+                            width: double.infinity,
+                            child: Center(
+                              child: Text(
+                                '$Close_Item',
+                                style: TextStyle(
+                                    fontFamily: 'Arial', fontSize: 16.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -1398,7 +1306,7 @@ class _NeedDetailState extends State<NeedDetail> {
           title: Icon(Icons.info_outline, size: 64, color: Colors.red),
           content: Text(
             message,
-            style: GoogleFonts.openSans(color: Color(0xFF555555)),
+            style: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -1406,7 +1314,7 @@ class _NeedDetailState extends State<NeedDetail> {
             TextButton(
               child: Text(
                 '$Close',
-                style: GoogleFonts.openSans(color: Color(0xFF555555)),
+                style: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
               ),
               onPressed: () => Navigator.pop(dialogContext),
             ),
@@ -1455,6 +1363,7 @@ class _NeedDetailState extends State<NeedDetail> {
                   ],
                 ),
               ),
+              SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1490,18 +1399,20 @@ class _NeedDetailState extends State<NeedDetail> {
     return Container(
       decoration: _inputDecoration(),
       child: TextFormField(
-        minLines: (controller == _noteController)?5:null,
+        minLines: (controller == _noteController) ? 5 : null,
         maxLines: null,
         controller: controller,
         keyboardType:
             hintText == '0' ? TextInputType.number : TextInputType.text,
-        style: GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+        style: TextStyle(
+            fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
         decoration: InputDecoration(
           isDense: true,
           filled: true,
           fillColor: Colors.white,
           hintText: hintText,
-          hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.black38),
+          hintStyle: TextStyle(
+              fontFamily: 'Arial', fontSize: 14, color: Colors.black38),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide.none),
@@ -1530,7 +1441,8 @@ class _NeedDetailState extends State<NeedDetail> {
           (_amountController.text.isEmpty || _priceController.text.isEmpty)
               ? '0'
               : '${quantity * price}',
-          style: GoogleFonts.openSans(fontSize: 16, color: Color(0xFF555555)),
+          style: TextStyle(
+              fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
         ),
       ),
     );
@@ -1587,7 +1499,8 @@ class _NeedDetailState extends State<NeedDetail> {
           children: [
             Icon(Icons.add, color: Color(0xFFFF9900)),
             Text('$Add_Image',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFFFF9900))),
@@ -1614,7 +1527,7 @@ class _NeedDetailState extends State<NeedDetail> {
               backgroundColor: Colors.white,
               title: Text(
                 '',
-                style: GoogleFonts.openSans(color: Color(0xFF555555)),
+                style: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
               ),
               leading: IconButton(
                   onPressed: () => Navigator.pop(context),
@@ -1624,7 +1537,8 @@ class _NeedDetailState extends State<NeedDetail> {
                 ? Center(
                     child: Text(
                       '$Empty',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
@@ -1652,7 +1566,8 @@ class _NeedDetailState extends State<NeedDetail> {
                                         padding: const EdgeInsets.only(top: 8),
                                         child: Text(
                                           item.itemName,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                                              fontFamily: 'Arial',
                                               fontSize: 18.0,
                                               color: Color(0xFFFF9900),
                                               fontWeight: FontWeight.bold),
@@ -1664,7 +1579,8 @@ class _NeedDetailState extends State<NeedDetail> {
                                     if (item.itemDate.isNotEmpty)
                                       Text(
                                         '$Date : ${item.itemDate}',
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                                            fontFamily: 'Arial',
                                             fontSize: 14.0,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.bold),
@@ -1672,7 +1588,8 @@ class _NeedDetailState extends State<NeedDetail> {
                                     SizedBox(height: 8),
                                     Text(
                                       "$Detail : ${item.itemNote.isEmpty ? '-' : item.itemNote}",
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 14.0,
                                           color: Color(0xFF555555)),
                                       overflow: TextOverflow.ellipsis,
@@ -1683,14 +1600,16 @@ class _NeedDetailState extends State<NeedDetail> {
                                       children: [
                                         Text(
                                           "$Quantity : ${item.itemQuantity.isEmpty ? '0' : item.itemQuantity}",
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                                              fontFamily: 'Arial',
                                               fontSize: 14.0,
                                               color: Color(0xFF555555)),
                                         ),
                                         SizedBox(width: 8),
                                         Text(
                                           "$Price : ${item.itemPrice.isEmpty ? '0' : item.itemPrice} $Baht",
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                                              fontFamily: 'Arial',
                                               fontSize: 14.0,
                                               color: Color(0xFF555555)),
                                         ),
@@ -1700,7 +1619,8 @@ class _NeedDetailState extends State<NeedDetail> {
                                     Text(
                                       "$Total_price : ${(item.itemPrice.isEmpty || item.itemQuantity.isEmpty) ? '0' : "${double.parse(item.itemPrice) * double.parse(item.itemQuantity)}"} "
                                       "${item.unitCode.isEmpty ? '$Baht/$Unit' : " $Baht/${item.unitDesc}"}",
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 14.0,
                                           color: Color(0xFF555555)),
                                     ),
@@ -1809,7 +1729,8 @@ class _NeedDetailState extends State<NeedDetail> {
                 elevation: 0,
                 title: Text(
                   '$Exit$Bill',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 16,
                     color: Color(0xFF555555),
                   ),
@@ -1827,7 +1748,8 @@ class _NeedDetailState extends State<NeedDetail> {
                     },
                     child: Text(
                       '$Ok',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.bold,
                       ),
@@ -1854,22 +1776,23 @@ class _NeedDetailState extends State<NeedDetail> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        onTap: () {},//=> _pickCameraImage(),
+                        onTap: () {}, //=> _pickCameraImage(),
                         child: Icon(
-                          null,//Icons.camera_alt_outlined,
+                          null, //Icons.camera_alt_outlined,
                           color: Color(0xFF555555),
                         ),
                       ),
                       Text(
                         '$Bill',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           color: Color(0xFF555555),
                         ),
                       ),
                       InkWell(
                         onTap: () => getImages(),
                         child: Icon(
-                          Icons.photo_album_outlined,
+                          Icons.photo,
                           color: Color(0xFF555555),
                         ),
                       ),
@@ -2046,7 +1969,8 @@ class _NeedDetailState extends State<NeedDetail> {
                       padding: EdgeInsets.all(16),
                       child: Text(
                         '$Add_Image',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 16.0,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -2064,6 +1988,16 @@ class _NeedDetailState extends State<NeedDetail> {
                   myList = [];
                   imageItem = [];
                   Navigator.pop(context);
+                  showModalBottomSheet<void>(
+                      barrierColor: Colors.black87,
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      isScrollControlled: true,
+                      isDismissible: false,
+                      enableDrag: false,
+                      builder: (BuildContext context) {
+                        return _item();
+                      });
                 },
                 child: Padding(
                   padding: EdgeInsets.only(left: 16, right: 16),
@@ -2076,7 +2010,8 @@ class _NeedDetailState extends State<NeedDetail> {
                       padding: EdgeInsets.all(16),
                       child: Text(
                         '$Close',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 16.0,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -2167,7 +2102,8 @@ class _NeedDetailState extends State<NeedDetail> {
             SnackBar(
               content: Text(
                 'Nothing is selected',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   color: Color(0xFF555555),
                 ),
               ),

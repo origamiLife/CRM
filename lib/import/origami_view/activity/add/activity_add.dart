@@ -158,7 +158,8 @@ class _activityAddState extends State<activityAdd> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Add Activity',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -185,7 +186,8 @@ class _activityAddState extends State<activityAdd> {
               children: [
                 Text(
                   'DONE',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -210,7 +212,7 @@ class _activityAddState extends State<activityAdd> {
                 _DownStatus(),
                 _DownPriority(),
                 _TextController('Subject', _subjectController),
-                _TextController('Description', _descriptionController),
+                _TextController('Owner Activity Description', _descriptionController),
                 Column(
                   children: [
                     SizedBox(height: 18),
@@ -250,13 +252,14 @@ class _activityAddState extends State<activityAdd> {
 
                 _DownPlace('Place'),
 
-                // _locationGM(),
+                _locationGM(),
 
                 Text(
                   'Cost',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.bold,
@@ -266,7 +269,8 @@ class _activityAddState extends State<activityAdd> {
                 TextFormField(
                   controller: _costController,
                   keyboardType: TextInputType.number,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -275,7 +279,8 @@ class _activityAddState extends State<activityAdd> {
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 12),
                     hintText: '0.00',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(100),
@@ -311,7 +316,8 @@ class _activityAddState extends State<activityAdd> {
                   'Other Contact',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.bold,
@@ -376,7 +382,8 @@ class _activityAddState extends State<activityAdd> {
                                           '${contact.contact_first} ${contact.contact_last}',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFFFF9900),
                                             fontWeight: FontWeight.w700,
@@ -386,7 +393,8 @@ class _activityAddState extends State<activityAdd> {
                                           '${contact.customer_en} (${contact.customer_th})',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -411,7 +419,8 @@ class _activityAddState extends State<activityAdd> {
                     'Add Other Contact',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.bold,
@@ -450,7 +459,8 @@ class _activityAddState extends State<activityAdd> {
           return Center(
               child: Text(
             '$Empty',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
@@ -482,7 +492,8 @@ class _activityAddState extends State<activityAdd> {
                     child: TextFormField(
                       controller: _searchfilterController,
                       keyboardType: TextInputType.text,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           color: Color(0xFF555555), fontSize: 14),
                       decoration: InputDecoration(
                         isDense: true,
@@ -491,7 +502,8 @@ class _activityAddState extends State<activityAdd> {
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 12),
                         hintText: 'Search',
-                        hintStyle: GoogleFonts.openSans(
+                        hintStyle: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 14, color: Color(0xFF555555)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(100),
@@ -602,7 +614,8 @@ class _activityAddState extends State<activityAdd> {
                                               '${contact.contact_first} ${contact.contact_last}',
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.openSans(
+                                              style: TextStyle(
+                fontFamily: 'Arial',
                                                 fontSize: 16,
                                                 color: Color(0xFFFF9900),
                                                 fontWeight: FontWeight.w700,
@@ -612,7 +625,8 @@ class _activityAddState extends State<activityAdd> {
                                               '${contact.customer_en} (${contact.customer_th})',
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.openSans(
+                                              style: TextStyle(
+                fontFamily: 'Arial',
                                                 fontSize: 14,
                                                 color: Color(0xFF555555),
                                                 fontWeight: FontWeight.w500,
@@ -646,15 +660,29 @@ class _activityAddState extends State<activityAdd> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          children: [
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         TextFormField(
@@ -662,7 +690,8 @@ class _activityAddState extends State<activityAdd> {
           maxLines: null,
           controller: textController,
           keyboardType: TextInputType.text,
-          style: GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+          style: TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -671,7 +700,8 @@ class _activityAddState extends State<activityAdd> {
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             hintText: '',
             hintStyle:
-                GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+                TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
             ),
@@ -696,246 +726,33 @@ class _activityAddState extends State<activityAdd> {
     );
   }
 
-  Widget _DateBody(String _nemedate, bool ontap) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _nemedate,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.openSans(
-              fontSize: 14,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 8),
-          Container(
-            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: (ontap == true) ? Colors.white : Colors.grey.shade300,
-              border: Border.all(
-                color: (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
-                width: 1.0,
-              ),
-            ),
-            child: InkWell(
-              onTap: () {
-                if (ontap == true) {
-                  _requestDateEnd(context);
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Text(
-                      showlastDay,
-                      style: GoogleFonts.openSans(
-                          fontSize: 14, color: Color(0xFF555555)),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.calendar_month,
-                      color: Color(0xFF555555),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _TimeBody(String _nemeTime, String inOut) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _nemeTime,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.openSans(
-              fontSize: 14,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 8),
-          Container(
-            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              border: Border.all(
-                color: Color(0xFFFF9900),
-                width: 1.0,
-              ),
-            ),
-            child: InkWell(
-              onTap: () => _selectTime(context, inOut),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Text(
-                      inOut == 'start'
-                          ? start_time
-                          : end_time,
-                      style: GoogleFonts.openSans(
-                          fontSize: 14, color: Color(0xFF555555)),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.access_time_outlined,
-                      color: Color(0xFF555555),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _DownPlace(String title) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white ,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<TitleDown>(
-            isExpanded: true,
-            hint: Text(
-              placeDown[0].status_name,
-              style: GoogleFonts.openSans(
-                color: Color(0xFF555555),
-              ),
-            ),
-            style: GoogleFonts.openSans(
-              color: Color(0xFF555555),
-            ),
-            items: placeDown
-                .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-                      value: item,
-                      child: Text(
-                        item.status_name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.openSans(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedItem,
-            onChanged: (value) {
-                    setState(() {
-                      selectedItem = value;
-                      place_id = value?.status_id??'';
-                    });
-                  },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.status_name
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
   Widget _DownProject() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Project',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          children: [
+            Text(
+              'Project',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -951,11 +768,13 @@ class _activityAddState extends State<activityAdd> {
             isExpanded: true,
             hint: Text(
               'Select Status',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: projectList
@@ -965,7 +784,8 @@ class _activityAddState extends State<activityAdd> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         item.project_name ?? '',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1001,7 +821,8 @@ class _activityAddState extends State<activityAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1012,7 +833,8 @@ class _activityAddState extends State<activityAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1039,6 +861,142 @@ class _activityAddState extends State<activityAdd> {
     );
   }
 
+  Widget _DownContact() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Contact',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
+        ),
+        SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            border: Border.all(
+              color: Color(0xFFFF9900),
+              width: 1.0,
+            ),
+          ),
+          child: DropdownButton2<ActivityContact>(
+            isExpanded: true,
+            hint: Text(
+              'Select Status',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Color(0xFF555555),
+              ),
+            ),
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+            ),
+            items: contactList
+                .map((item) => DropdownMenuItem<ActivityContact>(
+              value: item,
+              child: Text(
+                item.contact_first ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                ),
+              ),
+            ))
+                .toList(),
+            value: selectedContact,
+            onChanged: (value) {
+              setState(() {
+                selectedContact = value;
+                contact_id = value?.contact_id??'';
+              });
+            },
+            underline: SizedBox.shrink(),
+            iconStyleData: IconStyleData(
+              icon: Icon(Icons.arrow_drop_down,
+                  color: Color(0xFF555555), size: 30),
+              iconSize: 30,
+            ),
+            buttonStyleData: ButtonStyleData(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+            ),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight:
+              200, // Height for displaying up to 5 lines (adjust as needed)
+            ),
+            menuItemStyleData: MenuItemStyleData(
+              height: 40, // Height for each menu item
+            ),
+            dropdownSearchData: DropdownSearchData(
+              searchController: _searchController,
+              searchInnerWidgetHeight: 50,
+              searchInnerWidget: Padding(
+                padding: const EdgeInsets.all(8),
+                child: TextFormField(
+                  controller: _searchController,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555), fontSize: 14),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
+                    hintText: '$Search...',
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14, color: Color(0xFF555555)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+              searchMatchFn: (item, searchValue) {
+                return item.value!.contact_first!
+                    .toLowerCase()
+                    .contains(searchValue.toLowerCase());
+              },
+            ),
+            onMenuStateChange: (isOpen) {
+              if (!isOpen) {
+                _searchController
+                    .clear(); // Clear the search field when the menu closes
+              }
+            },
+          ),
+        ),
+        SizedBox(height: 8),
+      ],
+    );
+  }
+
   Widget _DownAccount() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1047,7 +1005,8 @@ class _activityAddState extends State<activityAdd> {
           'Account',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1067,11 +1026,13 @@ class _activityAddState extends State<activityAdd> {
             isExpanded: true,
             hint: Text(
               'Select Status',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: accountList
@@ -1081,7 +1042,8 @@ class _activityAddState extends State<activityAdd> {
                         item.account_name ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1118,7 +1080,8 @@ class _activityAddState extends State<activityAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1129,7 +1092,8 @@ class _activityAddState extends State<activityAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1156,19 +1120,305 @@ class _activityAddState extends State<activityAdd> {
     );
   }
 
+  Widget _DownStatus() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Status',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
+        ),
+        SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            border: Border.all(
+              color: Color(0xFFFF9900),
+              width: 1.0,
+            ),
+          ),
+          child: DropdownButton2<ActivityStatus>(
+            isExpanded: true,
+            hint: Text(
+              'Select Status',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Color(0xFF555555),
+              ),
+            ),
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+            ),
+            items: statusList
+                .map((item) => DropdownMenuItem<ActivityStatus>(
+              value: item,
+              child: Text(
+                item.status_name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                ),
+              ),
+            ))
+                .toList(),
+            value: selectedStatus,
+            onChanged: (value) {
+              setState(() {
+                selectedStatus = value;
+                status_id = value?.status_id??'';
+              });
+            },
+            underline: SizedBox.shrink(),
+            iconStyleData: IconStyleData(
+              icon: Icon(Icons.arrow_drop_down,
+                  color: Color(0xFF555555), size: 30),
+              iconSize: 30,
+            ),
+            buttonStyleData: ButtonStyleData(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+            ),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight:
+              200, // Height for displaying up to 5 lines (adjust as needed)
+            ),
+            menuItemStyleData: MenuItemStyleData(
+              height: 40, // Height for each menu item
+            ),
+            dropdownSearchData: DropdownSearchData(
+              searchController: _searchController,
+              searchInnerWidgetHeight: 50,
+              searchInnerWidget: Padding(
+                padding: const EdgeInsets.all(8),
+                child: TextFormField(
+                  controller: _searchController,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555), fontSize: 14),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
+                    hintText: '$Search...',
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14, color: Color(0xFF555555)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+              searchMatchFn: (item, searchValue) {
+                return item.value!.status_name
+                    .toLowerCase()
+                    .contains(searchValue.toLowerCase());
+              },
+            ),
+            onMenuStateChange: (isOpen) {
+              if (!isOpen) {
+                _searchController
+                    .clear(); // Clear the search field when the menu closes
+              }
+            },
+          ),
+        ),
+        SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Widget _DownPriority() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Priority',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
+        ),
+        SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            border: Border.all(
+              color: Color(0xFFFF9900),
+              width: 1.0,
+            ),
+          ),
+          child: DropdownButton2<ActivityPriority>(
+            isExpanded: true,
+            hint: Text(
+              'Select Status',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Color(0xFF555555),
+              ),
+            ),
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+            ),
+            items: priorityList
+                .map((item) => DropdownMenuItem<ActivityPriority>(
+              value: item,
+              child: Text(
+                item.priority_name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                ),
+              ),
+            ))
+                .toList(),
+            value: selectedPriority,
+            onChanged: (value) {
+              setState(() {
+                selectedPriority = value;
+                priority_id = value?.priority_id??'';
+              });
+            },
+            underline: SizedBox.shrink(),
+            iconStyleData: IconStyleData(
+              icon: Icon(Icons.arrow_drop_down,
+                  color: Color(0xFF555555), size: 30),
+              iconSize: 30,
+            ),
+            buttonStyleData: ButtonStyleData(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+            ),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight:
+              200, // Height for displaying up to 5 lines (adjust as needed)
+            ),
+            menuItemStyleData: MenuItemStyleData(
+              height: 40, // Height for each menu item
+            ),
+            dropdownSearchData: DropdownSearchData(
+              searchController: _searchController,
+              searchInnerWidgetHeight: 50,
+              searchInnerWidget: Padding(
+                padding: const EdgeInsets.all(8),
+                child: TextFormField(
+                  controller: _searchController,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555), fontSize: 14),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
+                    hintText: '$Search...',
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14, color: Color(0xFF555555)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+              searchMatchFn: (item, searchValue) {
+                return item.value!.priority_name
+                    .toLowerCase()
+                    .contains(searchValue.toLowerCase());
+              },
+            ),
+            onMenuStateChange: (isOpen) {
+              if (!isOpen) {
+                _searchController
+                    .clear(); // Clear the search field when the menu closes
+              }
+            },
+          ),
+        ),
+        SizedBox(height: 8),
+      ],
+    );
+  }
+
   Widget _DownType() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Type',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          children: [
+            Text(
+              'Type',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -1184,11 +1434,13 @@ class _activityAddState extends State<activityAdd> {
             isExpanded: true,
             hint: Text(
               'Select Status',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: typeList
@@ -1198,7 +1450,8 @@ class _activityAddState extends State<activityAdd> {
                         item.type_name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1235,7 +1488,8 @@ class _activityAddState extends State<activityAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1246,7 +1500,8 @@ class _activityAddState extends State<activityAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1273,59 +1528,217 @@ class _activityAddState extends State<activityAdd> {
     );
   }
 
-  Widget _DownStatus() {
+
+  Widget _DateBody(String _nemedate, bool ontap) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                _nemedate,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                  color: Color(0xFF555555),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(width: 8),
+              Text(
+                '*',
+                style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: (ontap == true) ? Colors.white : Colors.grey.shade300,
+              border: Border.all(
+                color: (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
+                width: 1.0,
+              ),
+            ),
+            child: InkWell(
+              onTap: () {
+                if (ontap == true) {
+                  _requestDateEnd(context);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      showlastDay,
+                      style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14, color: Color(0xFF555555)),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.calendar_month,
+                      color: Color(0xFF555555),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _TimeBody(String _nemeTime, String inOut) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                _nemeTime,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                  color: Color(0xFF555555),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(width: 8),
+              Text(
+                '*',
+                style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              border: Border.all(
+                color: Color(0xFFFF9900),
+                width: 1.0,
+              ),
+            ),
+            child: InkWell(
+              onTap: () => _selectTime(context, inOut),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      inOut == 'start'
+                          ? start_time
+                          : end_time,
+                      style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14, color: Color(0xFF555555)),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.access_time_outlined,
+                      color: Color(0xFF555555),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _DownPlace(String title) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Status',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          children: [
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
+            color: Colors.white ,
             border: Border.all(
               color: Color(0xFFFF9900),
               width: 1.0,
             ),
           ),
-          child: DropdownButton2<ActivityStatus>(
+          child: DropdownButton2<TitleDown>(
             isExpanded: true,
             hint: Text(
-              'Select Status',
-              style: GoogleFonts.openSans(
+              placeDown[0].status_name,
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
-            items: statusList
-                .map((item) => DropdownMenuItem<ActivityStatus>(
-                      value: item,
-                      child: Text(
-                        item.status_name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.openSans(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
+            items: placeDown
+                .map((TitleDown item) => DropdownMenuItem<TitleDown>(
+              value: item,
+              child: Text(
+                item.status_name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                ),
+              ),
+            ))
                 .toList(),
-            value: selectedStatus,
+            value: selectedItem,
             onChanged: (value) {
               setState(() {
-                selectedStatus = value;
-                status_id = value?.status_id??'';
+                selectedItem = value;
+                place_id = value?.status_id??'';
               });
             },
             underline: SizedBox.shrink(),
@@ -1339,7 +1752,7 @@ class _activityAddState extends State<activityAdd> {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+              200, // Height for displaying up to 5 lines (adjust as needed)
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -1352,7 +1765,8 @@ class _activityAddState extends State<activityAdd> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                      fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1363,7 +1777,8 @@ class _activityAddState extends State<activityAdd> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1390,249 +1805,16 @@ class _activityAddState extends State<activityAdd> {
     );
   }
 
-  Widget _DownPriority() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Priority',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<ActivityPriority>(
-            isExpanded: true,
-            hint: Text(
-              'Select Status',
-              style: GoogleFonts.openSans(
-                color: Color(0xFF555555),
-              ),
-            ),
-            style: GoogleFonts.openSans(
-              color: Color(0xFF555555),
-            ),
-            items: priorityList
-                .map((item) => DropdownMenuItem<ActivityPriority>(
-                      value: item,
-                      child: Text(
-                        item.priority_name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.openSans(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedPriority,
-            onChanged: (value) {
-              setState(() {
-                selectedPriority = value;
-                priority_id = value?.priority_id??'';
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.priority_name
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _DownContact() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Contact',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<ActivityContact>(
-            isExpanded: true,
-            hint: Text(
-              'Select Status',
-              style: GoogleFonts.openSans(
-                color: Color(0xFF555555),
-              ),
-            ),
-            style: GoogleFonts.openSans(
-              color: Color(0xFF555555),
-            ),
-            items: contactList
-                .map((item) => DropdownMenuItem<ActivityContact>(
-                      value: item,
-                      child: Text(
-                        item.contact_first ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.openSans(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedContact,
-            onChanged: (value) {
-              setState(() {
-                selectedContact = value;
-                contact_id = value?.contact_id??'';
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.contact_first!
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
   Widget _locationGM() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Activity Lication',
+          'Lication',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1641,27 +1823,27 @@ class _activityAddState extends State<activityAdd> {
         SizedBox(height: 8),
         InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LocationGoogleMap(
-                  latLng: (LatLng? value) {
-                    setState(() {
-                      _selectedLocation = value;
-                    });
-                  },
-                ),
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => LocationGoogleMap(
+            //       latLng: (LatLng? value) {
+            //         setState(() {
+            //           _selectedLocation = value;
+            //         });
+            //       },
+            //     ),
+            //   ),
+            // );
           },
           child: Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
+              color: Colors.grey.shade300,
               border: Border.all(
-                color: Color(0xFFFF9900),
+                color: Colors.grey.shade400,
                 width: 1.0,
               ),
             ),
@@ -1674,7 +1856,8 @@ class _activityAddState extends State<activityAdd> {
                         : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                     ),

@@ -39,7 +39,8 @@ class DropdownNeedState extends State<DropdownNeed> {
                       (widget.title == "")
                           ? widget.textTitle
                           : widget.title,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           color: (widget.textTitle == "")?Colors.black38:Color(0xFF555555)),
                       overflow: TextOverflow.ellipsis,

@@ -8,7 +8,8 @@ class IdocScreen extends StatefulWidget {
   const IdocScreen({
     Key? key,
     required this.employee,
-    required this.pageInput, required this.Authorization,
+    required this.pageInput,
+    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
@@ -47,7 +48,8 @@ class _IdocScreenState extends State<IdocScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'IDOC',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 24,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -80,7 +82,8 @@ class _IdocScreenState extends State<IdocScreen> {
             child: TextFormField(
               controller: _searchController,
               keyboardType: TextInputType.text,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
                 fontSize: 14,
               ),
@@ -91,8 +94,10 @@ class _IdocScreenState extends State<IdocScreen> {
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                 hintText: 'Search...',
-                hintStyle: GoogleFonts.openSans(
-                    fontSize: 14, color: Color(0xFF555555)),
+                hintStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(100),
                 ),
@@ -135,10 +140,9 @@ class _IdocScreenState extends State<IdocScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => IdocEdit(
-                                  employee: widget.employee,
-                                  pageInput: widget.pageInput,
-                                    Authorization: widget.Authorization
-                                ),
+                                    employee: widget.employee,
+                                    pageInput: widget.pageInput,
+                                    Authorization: widget.Authorization),
                               ),
                             );
                           },
@@ -174,7 +178,8 @@ class _IdocScreenState extends State<IdocScreen> {
                                       Text(
                                         'SUBJECT ${index + 1}',
                                         maxLines: 1,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 14,
                                           color: Color(0xFFFF9900),
                                           fontWeight: FontWeight.w500,
@@ -183,7 +188,8 @@ class _IdocScreenState extends State<IdocScreen> {
                                       Text(
                                         'SubTitile ${index + 1} (2024/10/25 16:17)',
                                         maxLines: 1,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 12,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w500,
@@ -195,7 +201,8 @@ class _IdocScreenState extends State<IdocScreen> {
                                       Text(
                                         'เอซีอาร์ เมเนจเมนท์ จำกัด(ACRM)',
                                         maxLines: 1,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 12,
                                           color: Colors.grey,
                                           fontWeight: FontWeight.w500,
@@ -207,7 +214,8 @@ class _IdocScreenState extends State<IdocScreen> {
                                       Text(
                                         'Category : Dev',
                                         maxLines: 1,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 12,
                                           color: Colors.grey,
                                           fontWeight: FontWeight.w500,

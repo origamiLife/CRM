@@ -175,7 +175,8 @@ class _PettyCashState extends State<PettyCash> {
           return Center(
               child: Text(
             Empty,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: const Color(0xFF555555),
@@ -286,17 +287,19 @@ class _PettyCashState extends State<PettyCash> {
                               children: [
                                 Text(
                                   cashData.cash_no ?? '',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
                                     color: Colors.white,
                                     fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
                                 Row(
                                   children: [
                                     Text(
                                       'Start ${startDate}',
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
                                         color: Colors.white,
                                         fontSize: 14,
                                       ),
@@ -307,7 +310,8 @@ class _PettyCashState extends State<PettyCash> {
                                     if (endDate != '')
                                       Text(
                                         'End ${endDate}',
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           color: Colors.white,
                                           fontSize: 14,
                                         ),
@@ -323,18 +327,20 @@ class _PettyCashState extends State<PettyCash> {
                               children: [
                                 Text(
                                   cashData.cash_name ?? '',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
                                     color: Colors.white,
                                     fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
                                 Text(
                                   cashData.cash_amount ?? '',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
                                     color: Colors.white,
                                     fontSize: 28,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
                               ],
@@ -351,18 +357,20 @@ class _PettyCashState extends State<PettyCash> {
                         children: [
                           Text(
                             'Balance',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: Colors.white,
                               fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
                             cashData.cash_balance ?? '',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: Colors.white,
                               fontSize: 28,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
@@ -430,7 +438,8 @@ class _PettyCashState extends State<PettyCash> {
                                 ),
                                 child: Text(
                                   'Expense',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Color(0xFF555555),
                                   ),
@@ -460,11 +469,13 @@ class _PettyCashState extends State<PettyCash> {
                           isExpanded: true,
                           hint: Text(
                             'Select Status',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: Color(0xFF555555),
                             ),
                           ),
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                            fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                           items: statusList
@@ -473,7 +484,8 @@ class _PettyCashState extends State<PettyCash> {
                                     child: Container(
                                       child: Text(
                                         status.status_name,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 14,
                                         ),
                                       ),
@@ -514,8 +526,10 @@ class _PettyCashState extends State<PettyCash> {
                               child: TextFormField(
                                 controller: _searchController,
                                 keyboardType: TextInputType.text,
-                                style: GoogleFonts.openSans(
-                                    color: Color(0xFF555555), fontSize: 14),
+                                style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontSize: 14),
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
@@ -525,8 +539,10 @@ class _PettyCashState extends State<PettyCash> {
                                     vertical: 8,
                                   ),
                                   hintText: '$Search...',
-                                  hintStyle: GoogleFonts.openSans(
-                                      fontSize: 14, color: Color(0xFF555555)),
+                                  hintStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555)),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -619,7 +635,8 @@ class _PettyCashState extends State<PettyCash> {
             return Center(
                 child: Text(
               Empty,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Color(0xFF555555),
@@ -629,7 +646,8 @@ class _PettyCashState extends State<PettyCash> {
             return Center(
                 child: Text(
               Empty,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF555555),
@@ -646,9 +664,10 @@ class _PettyCashState extends State<PettyCash> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             'Select',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: const Color(0xFF555555),
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
@@ -657,9 +676,10 @@ class _PettyCashState extends State<PettyCash> {
                         label: Flexible(
                           child: Text(
                             'Item Name',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: const Color(0xFF555555),
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
@@ -669,9 +689,10 @@ class _PettyCashState extends State<PettyCash> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             'Amount',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: const Color(0xFF555555),
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
@@ -703,7 +724,8 @@ class _PettyCashState extends State<PettyCash> {
                                 Expanded(
                                   child: Text(
                                     item.item_name ?? '',
-                                    style: GoogleFonts.openSans(
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
                                       color: const Color(0xFF555555),
                                     ),
                                   ),
@@ -711,7 +733,8 @@ class _PettyCashState extends State<PettyCash> {
                                 Expanded(
                                   child: Text(
                                     "(${item.used_date ?? ''})",
-                                    style: GoogleFonts.openSans(
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
                                       color: const Color(0xFF555555),
                                     ),
                                   ),
@@ -724,7 +747,8 @@ class _PettyCashState extends State<PettyCash> {
                               alignment: Alignment.centerRight,
                               child: Text(
                                 '${item.used_amount}฿',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
                                   color: const Color(0xFF555555),
                                 ),
                               ),
@@ -763,8 +787,9 @@ class _PettyCashState extends State<PettyCash> {
                                     Flexible(
                                       child: Text(
                                         'Expense request',
-                                        style: GoogleFonts.openSans(
-                                          fontWeight: FontWeight.bold,
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontWeight: FontWeight.w700,
                                           fontSize: 16,
                                           color: Color(0xFF555555),
                                         ),
@@ -773,7 +798,6 @@ class _PettyCashState extends State<PettyCash> {
                                   ],
                                 ),
                                 const SizedBox(height: 8),
-
                                 Container(
                                   height: 48,
                                   padding: const EdgeInsets.only(left: 16),
@@ -791,7 +815,8 @@ class _PettyCashState extends State<PettyCash> {
                                       filled: true,
                                       fillColor: Colors.white,
                                       hintText: 'Subject',
-                                      hintStyle: GoogleFonts.openSans(
+                                      hintStyle: TextStyle(
+                                        fontFamily: 'Arial',
                                         color: const Color(0xFF555555),
                                       ),
                                       border: InputBorder.none,
@@ -814,52 +839,14 @@ class _PettyCashState extends State<PettyCash> {
                                     '$Type_something...', (value) {
                                   // _searchSubject = value;
                                 }),
-                                // Container(
-                                //   decoration: BoxDecoration(
-                                //     borderRadius: BorderRadius.circular(15),
-                                //     border: Border.all(
-                                //       color: const Color(0xFF555555),
-                                //       width: 1.0,
-                                //     ),
-                                //   ),
-                                //   child: TextFormField(
-                                //     minLines: 3,
-                                //     maxLines: null,
-                                //     keyboardType: TextInputType.text,
-                                //     controller: _descriptionController,
-                                //     style: GoogleFonts.openSans(
-                                //       color: const Color(0xFF555555),
-                                //       fontSize: 14,
-                                //     ),
-                                //     decoration: InputDecoration(
-                                //       isDense: true,
-                                //       filled: true,
-                                //       fillColor: Colors.white,
-                                //       hintText: '$Type_something...',
-                                //       hintStyle: GoogleFonts.openSans(
-                                //         fontSize: 14,
-                                //         color: const Color(0xFF555555),
-                                //       ),
-                                //       contentPadding: const EdgeInsets.all(12),
-                                //       border: OutlineInputBorder(
-                                //         borderRadius: BorderRadius.circular(15),
-                                //         borderSide: BorderSide.none,
-                                //       ),
-                                //       focusedBorder: OutlineInputBorder(
-                                //         borderRadius: BorderRadius.circular(15),
-                                //         borderSide: const BorderSide(color: Color(0xFF555555)),
-                                //       ),
-                                //     ),
-                                //     cursorColor: const Color(0xFF555555),
-                                //   ),
-                                // ),
                               ],
                             ),
                             actions: <Widget>[
                               TextButton(
                                 child: Text(
                                   '$Cancel',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
                                     color: const Color(0xFF555555),
                                   ),
                                 ),
@@ -871,8 +858,9 @@ class _PettyCashState extends State<PettyCash> {
                               TextButton(
                                 child: Text(
                                   'Confirme',
-                                  style: GoogleFonts.openSans(
-                                    fontWeight: FontWeight.bold,
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontWeight: FontWeight.w700,
                                     color: Colors.green,
                                   ),
                                 ),
@@ -894,10 +882,11 @@ class _PettyCashState extends State<PettyCash> {
                   child: Center(
                     child: Text(
                       'Expense Request',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         color: Colors.white,
                         fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
@@ -918,13 +907,15 @@ class _PettyCashState extends State<PettyCash> {
         controller: controller,
         keyboardType:
             hintText == '0' ? TextInputType.number : TextInputType.text,
-        style: GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+        style: TextStyle(
+            fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
         decoration: InputDecoration(
           isDense: true,
           filled: true,
           fillColor: Colors.white,
           hintText: hintText,
-          hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.black38),
+          hintStyle: TextStyle(
+              fontFamily: 'Arial', fontSize: 14, color: Colors.black38),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide.none),
@@ -960,9 +951,10 @@ class _PettyCashState extends State<PettyCash> {
               ),
               Text(
                 '$Loading...',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                   color: Color(0xFF555555),
                 ),
               ),
@@ -972,7 +964,8 @@ class _PettyCashState extends State<PettyCash> {
           return Center(
               child: Text(
             Empty,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: const Color(0xFF555555),
@@ -982,7 +975,8 @@ class _PettyCashState extends State<PettyCash> {
           return Center(
               child: Text(
             Empty,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: Color(0xFF555555),
@@ -1056,9 +1050,10 @@ class _PettyCashState extends State<PettyCash> {
                               children: [
                                 Text(
                                   'Date: ',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                      fontFamily: 'Arial',
                                       fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w700,
                                       color: Color(0xFF555555)),
                                 ),
                                 SizedBox(
@@ -1067,8 +1062,10 @@ class _PettyCashState extends State<PettyCash> {
                                 Flexible(
                                   child: Text(
                                     usedData.used_date ?? '',
-                                    style: GoogleFonts.openSans(
-                                        fontSize: 14, color: Color(0xFF555555)),
+                                    style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFF555555)),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -1081,9 +1078,10 @@ class _PettyCashState extends State<PettyCash> {
                               children: [
                                 Text(
                                   'Item: ',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                      fontFamily: 'Arial',
                                       fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w700,
                                       color: Color(0xFF555555)),
                                 ),
                                 SizedBox(
@@ -1092,8 +1090,10 @@ class _PettyCashState extends State<PettyCash> {
                                 Flexible(
                                   child: Text(
                                     usedData.item_name ?? '',
-                                    style: GoogleFonts.openSans(
-                                        fontSize: 14, color: Color(0xFF555555)),
+                                    style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFF555555)),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -1110,9 +1110,10 @@ class _PettyCashState extends State<PettyCash> {
                         children: [
                           Text(
                             'Detail: ',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                               color: Color(0xFF555555),
                             ),
                           ),
@@ -1124,7 +1125,8 @@ class _PettyCashState extends State<PettyCash> {
                               (usedData.used_description == '')
                                   ? ' - '
                                   : usedData.used_description ?? '',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                                fontFamily: 'Arial',
                                 fontSize: 14,
                                 color: Color(0xFF555555),
                               ),
@@ -1144,9 +1146,10 @@ class _PettyCashState extends State<PettyCash> {
                               children: [
                                 Text(
                                   'Quantity: ',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                      fontFamily: 'Arial',
                                       fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w700,
                                       color: Color(0xFF555555)),
                                 ),
                                 SizedBox(
@@ -1155,8 +1158,10 @@ class _PettyCashState extends State<PettyCash> {
                                 Flexible(
                                   child: Text(
                                     usedData.used_quantity ?? '',
-                                    style: GoogleFonts.openSans(
-                                        fontSize: 14, color: Color(0xFF555555)),
+                                    style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFF555555)),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -1172,9 +1177,10 @@ class _PettyCashState extends State<PettyCash> {
                               children: [
                                 Text(
                                   'Price: ',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                      fontFamily: 'Arial',
                                       fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w700,
                                       color: Color(0xFF555555)),
                                 ),
                                 SizedBox(
@@ -1183,8 +1189,10 @@ class _PettyCashState extends State<PettyCash> {
                                 Flexible(
                                   child: Text(
                                     '${usedData.used_price} ${usedData.uom_description}',
-                                    style: GoogleFonts.openSans(
-                                        fontSize: 14, color: Color(0xFF555555)),
+                                    style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFF555555)),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -1201,9 +1209,10 @@ class _PettyCashState extends State<PettyCash> {
                         children: [
                           Text(
                             'Amount: ',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                                fontFamily: 'Arial',
                                 fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w700,
                                 color: Color(0xFF555555)),
                           ),
                           SizedBox(
@@ -1212,8 +1221,10 @@ class _PettyCashState extends State<PettyCash> {
                           Flexible(
                             child: Text(
                               usedData.used_amount ?? '',
-                              style: GoogleFonts.openSans(
-                                  fontSize: 14, color: Color(0xFF555555)),
+                              style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  color: Color(0xFF555555)),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
@@ -1283,9 +1294,10 @@ class _PettyCashState extends State<PettyCash> {
                 Container(
                   child: Text(
                     '$Item : ',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                         color: Color(0xFF555555)),
                   ),
                 ),
@@ -1293,7 +1305,8 @@ class _PettyCashState extends State<PettyCash> {
                   height: 8,
                 ),
                 Container(
-                  height: 45,
+                  height: 50,
+                  alignment: Alignment.center,
                   padding: EdgeInsets.only(left: 16, right: 16),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
@@ -1306,11 +1319,13 @@ class _PettyCashState extends State<PettyCash> {
                     isExpanded: true,
                     hint: Text(
                       'Select Item',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         color: Color(0xFF555555),
                       ),
                     ),
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       color: Color(0xFF555555),
                     ),
                     items: itemList
@@ -1318,7 +1333,8 @@ class _PettyCashState extends State<PettyCash> {
                               value: item,
                               child: Text(
                                 item.item_name!,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
                                   fontSize: 14,
                                 ),
                               ),
@@ -1356,8 +1372,10 @@ class _PettyCashState extends State<PettyCash> {
                         child: TextFormField(
                           controller: _searchController,
                           keyboardType: TextInputType.text,
-                          style: GoogleFonts.openSans(
-                              color: Color(0xFF555555), fontSize: 14),
+                          style: TextStyle(
+                              fontFamily: 'Arial',
+                              color: Color(0xFF555555),
+                              fontSize: 14),
                           decoration: InputDecoration(
                             isDense: true,
                             filled: true,
@@ -1367,8 +1385,10 @@ class _PettyCashState extends State<PettyCash> {
                               vertical: 12,
                             ),
                             hintText: '$Search...',
-                            hintStyle: GoogleFonts.openSans(
-                                fontSize: 14, color: Color(0xFF555555)),
+                            hintStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14,
+                                color: Color(0xFF555555)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -1402,9 +1422,10 @@ class _PettyCashState extends State<PettyCash> {
                 padding: EdgeInsets.only(left: 16, right: 16),
                 child: Text(
                   '$Detail : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: Color(0xFF555555)),
                 ),
               ),
@@ -1429,9 +1450,10 @@ class _PettyCashState extends State<PettyCash> {
                 padding: EdgeInsets.only(left: 16, right: 16),
                 child: Text(
                   '$Quantity : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: Color(0xFF555555)),
                 ),
               ),
@@ -1459,9 +1481,10 @@ class _PettyCashState extends State<PettyCash> {
                       padding: EdgeInsets.only(left: 16, right: 16),
                       child: Text(
                         '$Price : ',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                            fontFamily: 'Arial',
                             fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w700,
                             color: Color(0xFF555555)),
                       ),
                     ),
@@ -1483,9 +1506,10 @@ class _PettyCashState extends State<PettyCash> {
                   children: [
                     Text(
                       '$Unit : ',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           color: Color(0xFF555555)),
                     ),
                     SizedBox(
@@ -1508,11 +1532,13 @@ class _PettyCashState extends State<PettyCash> {
                           isExpanded: true,
                           hint: Text(
                             'Select Unit',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: Color(0xFF555555),
                             ),
                           ),
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                            fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                           items: unitList2
@@ -1521,7 +1547,8 @@ class _PettyCashState extends State<PettyCash> {
                                     child: Container(
                                       child: Text(
                                         unit.unit_name!,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 14,
                                         ),
                                       ),
@@ -1561,8 +1588,10 @@ class _PettyCashState extends State<PettyCash> {
                               child: TextFormField(
                                 controller: _searchController,
                                 keyboardType: TextInputType.text,
-                                style: GoogleFonts.openSans(
-                                    color: Color(0xFF555555), fontSize: 14),
+                                style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontSize: 14),
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
@@ -1572,8 +1601,10 @@ class _PettyCashState extends State<PettyCash> {
                                     vertical: 12,
                                   ),
                                   hintText: '$Search...',
-                                  hintStyle: GoogleFonts.openSans(
-                                      fontSize: 14, color: Color(0xFF555555)),
+                                  hintStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555)),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -1611,9 +1642,10 @@ class _PettyCashState extends State<PettyCash> {
                   Container(
                     child: Text(
                       'Amount :',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           color: Color(0xFF555555)),
                     ),
                   ),
@@ -1635,8 +1667,10 @@ class _PettyCashState extends State<PettyCash> {
                       padding: const EdgeInsets.only(left: 8),
                       child: Text(
                         _amountController.text,
-                        style: GoogleFonts.openSans(
-                            fontSize: 14, color: Color(0xFF555555)),
+                        style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Color(0xFF555555)),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
@@ -1656,9 +1690,10 @@ class _PettyCashState extends State<PettyCash> {
                 Container(
                   child: Text(
                     'File :',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                         color: Color(0xFF555555)),
                   ),
                 ),
@@ -1690,6 +1725,12 @@ class _PettyCashState extends State<PettyCash> {
         ],
       ),
     );
+  }
+
+  void _clearImage() {
+    setState(() {
+      _image = null; // ล้างค่ารูป
+    });
   }
 
   XFile? _image; // XFile ที่เก็บภาพที่เลือก
@@ -1737,12 +1778,16 @@ class _PettyCashState extends State<PettyCash> {
               });
             },
             child: Center(
-              child: Text(
-                (used_id != '') ? 'Update Cash' : 'Create Cash',
-                style: GoogleFonts.openSans(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  (used_id != '') ? 'Update Cash' : 'Create Cash',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
@@ -1764,17 +1809,22 @@ class _PettyCashState extends State<PettyCash> {
             onPressed: () {
               setState(() {
                 isSave = true;
-                clear();
+                _clearData();
+                _clearImage();
                 // Update
               });
             },
             child: Center(
-              child: Text(
-                'Close',
-                style: GoogleFonts.openSans(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  'Close',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
@@ -1784,7 +1834,7 @@ class _PettyCashState extends State<PettyCash> {
     );
   }
 
-  void clear() {
+  void _clearData() {
     use_detail = '';
     quantity = '';
     price = '';
@@ -1979,7 +2029,7 @@ class _PettyCashState extends State<PettyCash> {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['status'] == true) {
-        clear();
+        _clearData();
       } else {
         throw Exception(
             'Failed to load personal data: ${jsonResponse['message']}');

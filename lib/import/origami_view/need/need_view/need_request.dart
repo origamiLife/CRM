@@ -80,7 +80,8 @@ class _NeedRequestState extends State<NeedRequest> {
                 SizedBox(width: 12,),
                 Text(
                   '$Loading...',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16, fontWeight: FontWeight.bold,color: Color(0xFF555555),),
                 ),
               ],
@@ -133,7 +134,8 @@ class _NeedRequestState extends State<NeedRequest> {
                     child: ListTile(
                       title: Text(
                         ApprovelList[indexA].need_subject ?? '',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 18,
                           color: Color(0xFFFF9900),
                           fontWeight: FontWeight.bold,
@@ -150,7 +152,8 @@ class _NeedRequestState extends State<NeedRequest> {
                               children: [
                                 Text(
                                   '${ApprovelList[indexA].mny_type_name ?? ''} - ${ApprovelList?[indexA].mny_request_generate_code ?? ''}',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14.0,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.bold,
@@ -159,7 +162,8 @@ class _NeedRequestState extends State<NeedRequest> {
                                 SizedBox(height: 8),
                                 Text(
                                   "$Date : ${ApprovelList[indexA].create_date_display ?? ''} ",
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14.0,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold,
@@ -168,7 +172,8 @@ class _NeedRequestState extends State<NeedRequest> {
                                 SizedBox(height: 8),
                                 Text(
                                   "$Amount : ${ApprovelList[indexA].need_amount ?? ''} $Baht",
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14.0,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold,
@@ -180,7 +185,8 @@ class _NeedRequestState extends State<NeedRequest> {
                                     Expanded(
                                       child: Text(
                                         "$Status1 : ${ApprovelList?[indexA].need_status ?? ''}",
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 14.0,
                                           color: Colors.grey,
                                           fontWeight: FontWeight.bold,
@@ -213,7 +219,8 @@ class _NeedRequestState extends State<NeedRequest> {
         child: Container(
           child: Text(
             '$Empty',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
@@ -247,7 +254,8 @@ class _NeedRequestState extends State<NeedRequest> {
                         elevation: 0,
                         title: Text(
                           '$Exit Approve',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                         ),
@@ -256,7 +264,8 @@ class _NeedRequestState extends State<NeedRequest> {
                             onPressed: () => Navigator.of(context).pop(false),
                             child: Text(
                               '$NotNow',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 color: Color(0xFF555555),
                               ),
                             ),
@@ -271,7 +280,8 @@ class _NeedRequestState extends State<NeedRequest> {
                             },
                             child: Text(
                               '$Ok',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -287,7 +297,8 @@ class _NeedRequestState extends State<NeedRequest> {
                     backgroundColor: Colors.white,
                     title: Text(
                       'Approve',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontWeight: FontWeight.bold,
                         color: Color(0xFF555555),),
                       maxLines: 2,
@@ -306,14 +317,16 @@ class _NeedRequestState extends State<NeedRequest> {
                         maxLines: null,
                         keyboardType: TextInputType.text,
                         controller: _commentAController,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555), fontSize: 14),
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
                           fillColor: Colors.white,
                           hintText: '$Type_something...',
-                          hintStyle: GoogleFonts.openSans(
+                          hintStyle: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 14, color: Color(0xFF555555)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -332,7 +345,8 @@ class _NeedRequestState extends State<NeedRequest> {
                       TextButton(
                         child: Text(
                           '$Cancel',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                         ),
@@ -346,7 +360,8 @@ class _NeedRequestState extends State<NeedRequest> {
                       TextButton(
                         child: Text(
                           '$Ok',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF555555),
                           ),
@@ -387,7 +402,8 @@ class _NeedRequestState extends State<NeedRequest> {
                         elevation: 0,
                         title: Text(
                           '$Exit Information',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                         ),
@@ -396,7 +412,8 @@ class _NeedRequestState extends State<NeedRequest> {
                             onPressed: () => Navigator.of(context).pop(false),
                             child: Text(
                               '$NotNow',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 color: Color(0xFF555555),
                               ),
                             ),
@@ -411,7 +428,8 @@ class _NeedRequestState extends State<NeedRequest> {
                             },
                             child: Text(
                               '$Ok',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -427,7 +445,8 @@ class _NeedRequestState extends State<NeedRequest> {
                     backgroundColor: Colors.white,
                     title: Text(
                       'Information',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF555555),),
                       maxLines: 2,
@@ -446,14 +465,16 @@ class _NeedRequestState extends State<NeedRequest> {
                         maxLines: null,
                         keyboardType: TextInputType.text,
                         controller: _commentBController,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555), fontSize: 14),
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
                           fillColor: Colors.white,
                           hintText: '$Type_something...',
-                          hintStyle: GoogleFonts.openSans(
+                          hintStyle: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 14, color: Color(0xFF555555)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -472,7 +493,8 @@ class _NeedRequestState extends State<NeedRequest> {
                       TextButton(
                         child: Text(
                           '$Cancel',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                         ),
@@ -486,7 +508,8 @@ class _NeedRequestState extends State<NeedRequest> {
                       TextButton(
                         child: Text(
                           '$Ok',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF555555),
                           ),
@@ -527,7 +550,8 @@ class _NeedRequestState extends State<NeedRequest> {
                         elevation: 0,
                         title: Text(
                           '$Exit Not Approve',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                         ),
@@ -536,7 +560,8 @@ class _NeedRequestState extends State<NeedRequest> {
                             onPressed: () => Navigator.of(context).pop(false),
                             child: Text(
                               '$NotNow',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -552,7 +577,8 @@ class _NeedRequestState extends State<NeedRequest> {
                             },
                             child: Text(
                               '$Ok',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 color: Color(0xFF555555),
                               ),
                             ),
@@ -567,7 +593,8 @@ class _NeedRequestState extends State<NeedRequest> {
                     backgroundColor: Colors.white,
                     title: Text(
                       'Not Approve',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontWeight: FontWeight.bold,
                         color: Color(0xFF555555),),
                       maxLines: 2,
@@ -586,14 +613,16 @@ class _NeedRequestState extends State<NeedRequest> {
                         maxLines: null,
                         keyboardType: TextInputType.text,
                         controller: _commentCController,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555), fontSize: 14),
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
                           fillColor: Colors.white,
                           hintText: '$Type_something...',
-                          hintStyle: GoogleFonts.openSans(
+                          hintStyle: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 14, color: Color(0xFF555555)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -612,7 +641,8 @@ class _NeedRequestState extends State<NeedRequest> {
                       TextButton(
                         child: Text(
                           '$Cancel',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                         ),
@@ -626,7 +656,8 @@ class _NeedRequestState extends State<NeedRequest> {
                       TextButton(
                         child: Text(
                           '$Ok',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF555555),
                           ),

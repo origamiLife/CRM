@@ -111,10 +111,12 @@ class _ChatWhatsState extends State<ChatWhats> {
                         filled: true,
                         fillColor: Colors.white,
                         hintText: 'Enter your message',
-                        hintStyle: GoogleFonts.openSans(
+                        hintStyle: TextStyle(
+                fontFamily: 'Arial',
                           color: const Color(0xFF555555),
                         ),
-                        labelStyle: GoogleFonts.openSans(
+                        labelStyle: TextStyle(
+                fontFamily: 'Arial',
                           color: const Color(0xFF555555),
                         ),
                         enabledBorder:  OutlineInputBorder(
@@ -190,7 +192,8 @@ class ChatBubble extends StatelessWidget {
               ),
               child: Text(
                 message.text,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   color: message.isMe ? Colors.white : Color(0xFF555555),
                 ),
                 // overflow: TextOverflow.ellipsis,

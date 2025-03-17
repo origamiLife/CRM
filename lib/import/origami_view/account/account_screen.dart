@@ -100,7 +100,8 @@ class _AccountListState extends State<AccountList> {
               child: TextFormField(
                 controller: _searchController,
                 keyboardType: TextInputType.text,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   color: Color(0xFF555555),
                   fontSize: 14,
                 ),
@@ -111,7 +112,8 @@ class _AccountListState extends State<AccountList> {
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                   hintText: 'Search...',
-                  hintStyle: GoogleFonts.openSans(
+                  hintStyle: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14, color: Color(0xFF555555)),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(100),
@@ -154,7 +156,8 @@ class _AccountListState extends State<AccountList> {
                       SizedBox(width: 12),
                       Text(
                         '$Loading...',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF555555),
@@ -167,7 +170,8 @@ class _AccountListState extends State<AccountList> {
                 return Center(
                   child: Text(
                     '$Empty',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey,
@@ -231,7 +235,8 @@ class _AccountListState extends State<AccountList> {
                   account.activity_project_name ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 18,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -256,7 +261,8 @@ class _AccountListState extends State<AccountList> {
                             child: Text(
                               account.activity_project_name?.substring(0, 1) ??
                                   '',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 24,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
@@ -278,7 +284,8 @@ class _AccountListState extends State<AccountList> {
                                 'Group : ',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w700,
@@ -290,7 +297,8 @@ class _AccountListState extends State<AccountList> {
                                   account?.projectname ?? '',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w500,
@@ -305,7 +313,8 @@ class _AccountListState extends State<AccountList> {
                                 'Tel : ',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w700,
@@ -317,7 +326,8 @@ class _AccountListState extends State<AccountList> {
                                   '+6622048512',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w500,
@@ -332,7 +342,8 @@ class _AccountListState extends State<AccountList> {
                                 'Email : ',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w700,
@@ -344,7 +355,8 @@ class _AccountListState extends State<AccountList> {
                                   'info@trandar.com',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w500,

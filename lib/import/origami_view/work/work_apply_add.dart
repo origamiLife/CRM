@@ -175,7 +175,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           alignment: Alignment.centerLeft,
           child: Text(
             '',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -198,7 +199,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           //     children: [
           //       Text(
           //         'DONE',
-          //         style: GoogleFonts.openSans(
+          //         style: TextStyle(
+          //       fontFamily: 'Arial',
           //           fontSize: 14,
           //           color: Colors.white,
           //           fontWeight: FontWeight.w500,
@@ -244,7 +246,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                           children: [
                             Text(
                               'Date: ',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.w700,
@@ -252,7 +255,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             ),
                             Text(
                               startDate,
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 14,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -266,7 +270,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                           children: [
                             Text(
                               'Status: ',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.w700,
@@ -274,7 +279,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             ),
                             Text(
                               'วันทำงาน',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 14,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -286,7 +292,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                         // Text(
                         //   '$startDate ${selectedStartTime?.format(context)??'00:00'} - '
                         //       '$endDate ${selectedEndTime?.format(context)??'00:00'}',
-                        //   style: GoogleFonts.openSans(
+                        //   style: TextStyle(
+                // fontFamily: 'Arial',
                         //     fontSize: 14,
                         //     color: Colors.grey,
                         //     fontWeight: FontWeight.w500,
@@ -301,7 +308,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             children: [
                               Text(
                                 'Types of leave',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -319,7 +327,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             children: [
                               Text(
                                 'Start Date',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -345,7 +354,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                       children: [
                                         Text(
                                           '$startDate ${selectedStartTime?.format(context)??'00:00'}',
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 14,
                                               color: Color(0xFF555555)),
                                         ),
@@ -370,7 +380,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             children: [
                               Text(
                                 'End Date',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -396,7 +407,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                       children: [
                                         Text(
                                           '$endDate ${selectedEndTime?.format(context)??'00:00'}',
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 14,
                                               color: Color(0xFF555555)),
                                         ),
@@ -421,7 +433,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             children: [
                               Text(
                                 'Details',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -439,7 +452,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             children: [
                               Text(
                                 'Insert Images',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -477,7 +491,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               child: Center(
                                 child: Text(
                                   'CLOSE ',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w700,
@@ -508,7 +523,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               child: Center(
                                 child: Text(
                                   'SAVE ',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w700,
@@ -620,7 +636,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                   ),
                   Text(
                     'Tap here to select an image.',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w500,
@@ -651,7 +668,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                       Icon(Icons.cloud_upload, color: Colors.grey, size: 45),
                       Text(
                         'upload account image',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16,
                           color: Colors.grey,
                           fontWeight: FontWeight.w500,
@@ -675,7 +693,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           maxLines: null,
           controller: textController,
           keyboardType: TextInputType.text,
-          style: GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+          style: TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -684,7 +703,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             hintText: '',
             hintStyle:
-                GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+                TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
             ),
@@ -727,11 +747,13 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
             isExpanded: true,
             hint: Text(
               titleDown[0].status_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: titleDown
@@ -739,7 +761,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                       value: item,
                       child: Text(
                         item.status_name,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),

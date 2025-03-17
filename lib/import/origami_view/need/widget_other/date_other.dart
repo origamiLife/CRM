@@ -61,7 +61,8 @@ class DateOtherState extends State<DateOther> {
                 ),
                 // TextButton(
                 //   child: Text('Close',
-                //     style: GoogleFonts.openSans(
+                //     style: TextStyle(
+                // fontFamily: 'Arial',
                 //         fontSize: 18,
                 //         fontWeight: FontWeight.bold,
                 //         color: Colors.teal),
@@ -114,7 +115,8 @@ class DateOtherState extends State<DateOther> {
                 ),
                 // TextButton(
                 //   child: Text('Close',
-                //     style: GoogleFonts.openSans(
+                //     style: TextStyle(
+                // fontFamily: 'Arial',
                 //         fontSize: 18,
                 //         fontWeight: FontWeight.bold,
                 //         color: Colors.teal),
@@ -139,7 +141,8 @@ class DateOtherState extends State<DateOther> {
       children: [
         Text(
           '$Date : ',
-          style: GoogleFonts.openSans(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+                fontFamily: 'Arial',fontSize: 16, fontWeight: FontWeight.bold),
         ),
         Expanded(
           child: Padding(
@@ -167,7 +170,8 @@ class DateOtherState extends State<DateOther> {
                     children: [
                       Text(
                         showfirstDay,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 14,
                             color: Colors.black),
                       ),
@@ -206,7 +210,8 @@ class DateOtherState extends State<DateOther> {
                     children: [
                       Text(
                         showlastDay,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 14,
                             color: Colors.black),
                       ),

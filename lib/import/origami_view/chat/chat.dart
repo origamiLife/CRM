@@ -41,7 +41,8 @@ class _ChatViewState extends State<ChatView> {
           alignment: Alignment.center,
           child: Text(
             'ERROR!',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 18.0,
               color: Colors.white,
               fontWeight: FontWeight.bold,

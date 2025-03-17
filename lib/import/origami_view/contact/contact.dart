@@ -93,7 +93,8 @@ class _ContactScreenState extends State<ContactScreen> {
               ? Center(
               child: Text(
                 '$Empty',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
@@ -111,7 +112,8 @@ class _ContactScreenState extends State<ContactScreen> {
                   ),
                   Text(
                     '$Loading...',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF555555),
@@ -138,7 +140,8 @@ class _ContactScreenState extends State<ContactScreen> {
                     child: TextFormField(
                       controller: _searchController,
                       keyboardType: TextInputType.text,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         color: Color(0xFF555555),
                         fontSize: 14,
                       ),
@@ -149,7 +152,8 @@ class _ContactScreenState extends State<ContactScreen> {
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 14),
                         hintText: 'Search...',
-                        hintStyle: GoogleFonts.openSans(
+                        hintStyle: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 14, color: Color(0xFF555555)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(100),
@@ -248,7 +252,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                 //     ? Text(
                                 //   contact.contact_first!.substring(0, 1),
                                 //   style:
-                                //   GoogleFonts.openSans(
+                                //   TextStyle(
+                // fontFamily: 'Arial',
                                 //     fontSize: 24,
                                 //     color: Colors.white,
                                 //     fontWeight:
@@ -280,7 +285,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                   '${contact.contact_first} ${contact.contact_last}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 18,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w700,
@@ -290,7 +296,8 @@ class _ContactScreenState extends State<ContactScreen> {
                                   '${contact.customer_en} (${contact.customer_th})',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w500,

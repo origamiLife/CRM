@@ -57,7 +57,8 @@ class _HelpDeskState extends State<HelpDesk> {
             child: TextFormField(
               controller: _searchController,
               keyboardType: TextInputType.text,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
                 fontSize: 14,
               ),
@@ -68,7 +69,8 @@ class _HelpDeskState extends State<HelpDesk> {
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                 hintText: 'Search...',
-                hintStyle: GoogleFonts.openSans(
+                hintStyle: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14, color: Color(0xFF555555)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(100),
@@ -154,7 +156,8 @@ class _HelpDeskState extends State<HelpDesk> {
                                   'TKT-53${index + 1} Thailand Text Error',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 18,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w700,
@@ -177,7 +180,8 @@ class _HelpDeskState extends State<HelpDesk> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
                                             'TA',
-                                            style: GoogleFonts.openSans(
+                                            style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 18,
                                               color: Colors.white,
                                               fontWeight: FontWeight.w500,
@@ -198,7 +202,8 @@ class _HelpDeskState extends State<HelpDesk> {
                                               '5 days ago',
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.openSans(
+                                              style: TextStyle(
+                fontFamily: 'Arial',
                                                 fontSize: 14,
                                                 color: Colors.grey,
                                                 fontWeight: FontWeight.w500,
@@ -210,7 +215,8 @@ class _HelpDeskState extends State<HelpDesk> {
                                             'AI Workdlow - SuggestednAnswer assigner.',
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.openSans(
+                                            style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 14,
                                               color: Colors.grey,
                                               fontWeight: FontWeight.w700,
@@ -248,12 +254,14 @@ class _HelpDeskState extends State<HelpDesk> {
               isExpanded: true,
               hint: Text(
                 'Select',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   color: Colors.grey,
                   fontSize: 14,
                 ),
               ),
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.grey,
                 fontSize: 14,
               ),
@@ -262,7 +270,8 @@ class _HelpDeskState extends State<HelpDesk> {
                 value: type,
                 child: Text(
                   type.name,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                   ),
                 ),
@@ -299,7 +308,8 @@ class _HelpDeskState extends State<HelpDesk> {
                     controller: _searchDownController,
                     keyboardType: TextInputType.text,
                     style:
-                    GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+                    TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
                     decoration: InputDecoration(
                       isDense: true,
                       contentPadding: const EdgeInsets.symmetric(
@@ -307,7 +317,8 @@ class _HelpDeskState extends State<HelpDesk> {
                         vertical: 8,
                       ),
                       hintText: '$Search...',
-                      hintStyle: GoogleFonts.openSans(
+                      hintStyle: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14, color: Color(0xFF555555)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),

@@ -91,7 +91,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               return AlertDialog(
                                 title: Text(
                                   'เหตุการณ์ในวันที่ : \n${selectedDate.toLocal()}',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w500,
@@ -99,7 +100,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 ),
                                 content: Text(
                                   events.join('\n'),
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w500,
@@ -111,7 +113,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                         Navigator.of(context).pop(),
                                     child: Text(
                                       'ปิด',
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                fontFamily: 'Arial',
                                         fontSize: 16,
                                         color: Color(0xFF555555),
                                         fontWeight: FontWeight.w500,
@@ -143,7 +146,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         appointmentDisplayMode: MonthAppointmentDisplayMode
                             .appointment, // แสดงเหตุการณ์ในเดือน
                       ),
-                      appointmentTextStyle: GoogleFonts.openSans(
+                      appointmentTextStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 16,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w500,
@@ -165,7 +169,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 return AlertDialog(
                                   title: Text(
                                     'เหตุการณ์ในวันที่ ${selectedDate.toLocal()}',
-                                    style: GoogleFonts.openSans(
+                                    style: TextStyle(
+                fontFamily: 'Arial',
                                       fontSize: 16,
                                       color: Color(0xFF555555),
                                       fontWeight: FontWeight.w500,
@@ -177,7 +182,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       onPressed: () => Navigator.of(context).pop(),
                                       child: Text(
                                         'ปิด',
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 16,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w500,

@@ -41,7 +41,8 @@ class _ProjectPhotoFileState extends State<ProjectPhotoFile> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Photo/File',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -69,7 +70,8 @@ class _ProjectPhotoFileState extends State<ProjectPhotoFile> {
             alignment: Alignment.centerLeft,
             child: Text(
               'PHOTO',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 18,
                 color: Colors.grey,
                 fontWeight: FontWeight.w700,
@@ -196,7 +198,8 @@ class _ProjectPhotoFileState extends State<ProjectPhotoFile> {
                   ),
                   Text(
                     'Tap here to select an file/image.',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.w500,
@@ -227,7 +230,8 @@ class _ProjectPhotoFileState extends State<ProjectPhotoFile> {
                       child: Center(
                         child: Text(
                           'Drag & drop files here \n(or click to select files)',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 24,
                             color: Colors.grey.shade300,
                             fontWeight: FontWeight.w700,
@@ -241,7 +245,8 @@ class _ProjectPhotoFileState extends State<ProjectPhotoFile> {
                   ),
                   Text(
                     'Tap here to select an image.',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.w500,
@@ -300,7 +305,8 @@ class _ProjectPhotoFileState extends State<ProjectPhotoFile> {
                   ),
                   Text(
                     'Tap here for signature.',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.w500,

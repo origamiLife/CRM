@@ -74,7 +74,8 @@ class _WorkPageState extends State<WorkPage> {
                 indicatorColor: Colors.transparent,
                 labelColor: Color(0xFFFF9900),
                 unselectedLabelColor: Colors.orange.shade300,
-                labelStyle: GoogleFonts.openSans(
+                labelStyle: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -105,7 +106,8 @@ class _WorkPageState extends State<WorkPage> {
                                 ),
                                 Text(
                                   '$Loading...',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF555555),
@@ -117,7 +119,8 @@ class _WorkPageState extends State<WorkPage> {
                             return Center(
                                 child: Text(
                               'Error: ${snapshot.error}',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                                fontFamily: 'Arial',
                                 color: const Color(0xFF555555),
                               ),
                             ));
@@ -126,7 +129,8 @@ class _WorkPageState extends State<WorkPage> {
                             return Center(
                                 child: Text(
                               '$Empty',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                                fontFamily: 'Arial',
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.grey,
@@ -144,7 +148,8 @@ class _WorkPageState extends State<WorkPage> {
                           return Center(
                               child: Text(
                             'Error: ${snapshot.error}',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               color: const Color(0xFF555555),
                             ),
                           ));
@@ -153,7 +158,8 @@ class _WorkPageState extends State<WorkPage> {
                           return Center(
                               child: Text(
                             '$Empty',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                              fontFamily: 'Arial',
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey,
@@ -199,7 +205,8 @@ class _WorkPageState extends State<WorkPage> {
                       alignment: Alignment.centerRight,
                       child: Text(
                         '[ ${approve?.leave_name} ]',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 16,
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w700,
@@ -211,7 +218,8 @@ class _WorkPageState extends State<WorkPage> {
                     Divider(),
                     Text(
                       'Reason : ${approve?.reason}',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 16,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w700,
@@ -223,7 +231,8 @@ class _WorkPageState extends State<WorkPage> {
                       (approve?.approve_comment != null)
                           ? approve?.approve_comment ?? ''
                           : '[Waiting Approve]',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         color: (approve?.approve_comment != null)
                             ? Colors.green
@@ -239,7 +248,8 @@ class _WorkPageState extends State<WorkPage> {
                         Text(
                           'Start : ${approve?.from_date} ${approve?.from_time}  '
                           '\nEnd : ${approve?.to_date} ${approve?.to_time}',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                            fontFamily: 'Arial',
                             fontSize: 16,
                             color: Colors.grey,
                             fontWeight: FontWeight.w500,
@@ -283,7 +293,8 @@ class _WorkPageState extends State<WorkPage> {
                 children: [
                   Text(
                     '[ ${work?.leave_type_name_en ?? ''} ]',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -300,7 +311,8 @@ class _WorkPageState extends State<WorkPage> {
                   ),
                   Text(
                     'Used : ${(work?.used == null) ? ' - ' : work?.used ?? ''} Hour',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
@@ -311,7 +323,8 @@ class _WorkPageState extends State<WorkPage> {
                   SizedBox(height: 8),
                   Text(
                     'Available : ${(work?.available == null) ? ' - ' : work?.available ?? ''} Hour',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
@@ -322,7 +335,8 @@ class _WorkPageState extends State<WorkPage> {
                   SizedBox(height: 8),
                   Text(
                     'Total : ${work?.total ?? ''} Hour',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
@@ -353,7 +367,8 @@ class _WorkPageState extends State<WorkPage> {
                   '[${approve?.leave_name_th ?? ''}] ${approve?.reason ?? ''}',
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: const Color(0xFF555555),
@@ -367,7 +382,8 @@ class _WorkPageState extends State<WorkPage> {
                       flex: 1,
                       child: Text(
                         'From Date :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -379,7 +395,8 @@ class _WorkPageState extends State<WorkPage> {
                       flex: 2,
                       child: Text(
                         '${approve?.from_date ?? ''} ${approve?.from_time ?? ''}',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -396,7 +413,8 @@ class _WorkPageState extends State<WorkPage> {
                       flex: 1,
                       child: Text(
                         'To Date :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -408,7 +426,8 @@ class _WorkPageState extends State<WorkPage> {
                       flex: 2,
                       child: Text(
                         '${approve?.to_date ?? ''} ${approve?.to_time ?? ''}',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -425,7 +444,8 @@ class _WorkPageState extends State<WorkPage> {
                       flex: 1,
                       child: Text(
                         'Note :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -437,7 +457,8 @@ class _WorkPageState extends State<WorkPage> {
                       flex: 2,
                       child: Text(
                         '${approve?.note ?? ''}',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -454,7 +475,8 @@ class _WorkPageState extends State<WorkPage> {
                       flex: 1,
                       child: Text(
                         'Hour Total :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -466,7 +488,8 @@ class _WorkPageState extends State<WorkPage> {
                       flex: 2,
                       child: Text(
                         '${approve?.total_time ?? ''}',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -483,7 +506,8 @@ class _WorkPageState extends State<WorkPage> {
                       flex: 1,
                       child: Text(
                         'Approve :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -498,7 +522,8 @@ class _WorkPageState extends State<WorkPage> {
                           children: [
                             TextSpan(
                               text: '${approve?.name_approve ?? ''} ',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                                fontFamily: 'Arial',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF555555),
@@ -507,7 +532,8 @@ class _WorkPageState extends State<WorkPage> {
                             TextSpan(
                               text:
                                   '${(approve?.approve_comment != null) ? approve?.approve_comment ?? '' : '[Waiting Approve]'}',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                                fontFamily: 'Arial',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: (approve?.approve_comment != null)
@@ -529,7 +555,8 @@ class _WorkPageState extends State<WorkPage> {
               onPressed: () => Navigator.of(context).pop(), // Cancel
               child: Text(
                 'Close',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 16,
                   color: Color(0xFFFF9900),
                   fontWeight: FontWeight.w700,
@@ -545,7 +572,8 @@ class _WorkPageState extends State<WorkPage> {
   Future<List<ModelWorkList>> fetchModelWorkList() async {
     final uri = Uri.parse("$host/api/get_list_work.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -555,7 +583,7 @@ class _WorkPageState extends State<WorkPage> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       // เข้าถึงข้อมูลในคีย์ 'instructors'
-      final List<dynamic> dataJson = jsonResponse['data']??[];
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
       return dataJson.map((json) => ModelWorkList.fromJson(json)).toList();
     } else {
@@ -566,7 +594,8 @@ class _WorkPageState extends State<WorkPage> {
   Future<List<ModelWork>> fetchModelWork() async {
     final uri = Uri.parse("$host/api/get_work.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -633,26 +662,26 @@ class ModelWorkList {
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ModelWorkList.fromJson(Map<String, dynamic> json) {
     return ModelWorkList(
-      see_id: json['see_id']??''??'',
-      TYPE: json['TYPE']??'',
-      from_date: json['from_date']??'',
-      from_time: json['from_time']??'',
-      to_date: json['to_date']??'',
-      to_time: json['to_time']??'',
-      total_date: json['total_date']??'',
-      total_date_hour: json['total_date_hour']??'',
-      total_time: json['total_time']??'',
-      reason: json['reason']??'',
-      dt: json['dt']??'',
-      note: json['note']??'',
-      leave_name: json['leave_name']??'',
-      leave_name_th: json['leave_name_th']??'',
-      state_approve: json['state_approve']??'',
-      leave_color: json['leave_color']??'',
-      name_approve: json['name_approve']??'',
-      approve_comment: json['approve_comment']??'',
-      approve_del: json['approve_del']??'',
-      del_status: json['del_status']??'',
+      see_id: json['see_id'] ?? '' ?? '',
+      TYPE: json['TYPE'] ?? '',
+      from_date: json['from_date'] ?? '',
+      from_time: json['from_time'] ?? '',
+      to_date: json['to_date'] ?? '',
+      to_time: json['to_time'] ?? '',
+      total_date: json['total_date'] ?? '',
+      total_date_hour: json['total_date_hour'] ?? '',
+      total_time: json['total_time'] ?? '',
+      reason: json['reason'] ?? '',
+      dt: json['dt'] ?? '',
+      note: json['note'] ?? '',
+      leave_name: json['leave_name'] ?? '',
+      leave_name_th: json['leave_name_th'] ?? '',
+      state_approve: json['state_approve'] ?? '',
+      leave_color: json['leave_color'] ?? '',
+      name_approve: json['name_approve'] ?? '',
+      approve_comment: json['approve_comment'] ?? '',
+      approve_del: json['approve_del'] ?? '',
+      del_status: json['del_status'] ?? '',
     );
   }
 }
@@ -683,15 +712,15 @@ class ModelWork {
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ModelWork.fromJson(Map<String, dynamic> json) {
     return ModelWork(
-      leave_type_id: json['leave_type_id']??'',
-      leave_type_color: json['leave_type_color']??'',
-      leave_type_name_en: json['leave_type_name_en']??'',
-      leave_type_name_th: json['leave_type_name_th']??'',
-      before_day: json['before_day']??'',
-      hours_day: json['hours_day']??'',
-      total: json['total']??'',
-      used: json['used']??'',
-      available: json['Available']??'',
+      leave_type_id: json['leave_type_id'] ?? '',
+      leave_type_color: json['leave_type_color'] ?? '',
+      leave_type_name_en: json['leave_type_name_en'] ?? '',
+      leave_type_name_th: json['leave_type_name_th'] ?? '',
+      before_day: json['before_day'] ?? '',
+      hours_day: json['hours_day'] ?? '',
+      total: json['total'] ?? '',
+      used: json['used'] ?? '',
+      available: json['Available'] ?? '',
     );
   }
 }

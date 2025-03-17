@@ -18,9 +18,13 @@ class _LocationGoogleMapState extends State<LocationGoogleMap> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
-        title: Text('Select location',style: GoogleFonts.openSans(
-          color: Colors.white,
-        ),),
+        title: Text(
+          'Select location',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
       ),
       body: Stack(
         children: [
@@ -41,11 +45,11 @@ class _LocationGoogleMapState extends State<LocationGoogleMap> {
             ),
             markers: _selectedLocation != null
                 ? {
-              Marker(
-                markerId: MarkerId('selected-location'),
-                position: _selectedLocation!,
-              ),
-            }
+                    Marker(
+                      markerId: MarkerId('selected-location'),
+                      position: _selectedLocation!,
+                    ),
+                  }
                 : {},
           ),
           if (_selectedLocation != null)

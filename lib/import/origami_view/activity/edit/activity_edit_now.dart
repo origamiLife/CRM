@@ -186,7 +186,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           alignment: Alignment.centerLeft,
           child: Text(
             '',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -209,7 +210,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               children: [
                 Text(
                   'DONE',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -306,7 +308,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               Text(
                                 'Cost',
                                 maxLines: 1,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 14,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -316,7 +319,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               TextFormField(
                                 controller: _costController,
                                 keyboardType: TextInputType.number,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                     color: Color(0xFF555555), fontSize: 14),
                                 decoration: InputDecoration(
                                   isDense: true,
@@ -325,7 +329,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                   contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 12),
                                   hintText: '0.00',
-                                  hintStyle: GoogleFonts.openSans(
+                                  hintStyle: TextStyle(
+                fontFamily: 'Arial',
                                       fontSize: 14, color: Color(0xFF555555)),
                                   border: OutlineInputBorder(
                                     borderSide: BorderSide(
@@ -375,7 +380,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                 'Other Contact',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 14,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -444,7 +450,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style:
-                                                          GoogleFonts.openSans(
+                                                          TextStyle(
+                fontFamily: 'Arial',
                                                         fontSize: 16,
                                                         color: Color(0xFFFF9900),
                                                         fontWeight:
@@ -457,7 +464,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style:
-                                                          GoogleFonts.openSans(
+                                                          TextStyle(
+                fontFamily: 'Arial',
                                                         fontSize: 14,
                                                         color:
                                                             Color(0xFF555555),
@@ -485,7 +493,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                   'Add Other Contact',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Color(0xFFFF9900),
                                     fontWeight: FontWeight.w700,
@@ -516,7 +525,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                             child: Center(
                               child: Text(
                                 '$Save',
-                                style: GoogleFonts.openSans(fontSize: 16.0),
+                                style: TextStyle(
+                fontFamily: 'Arial',fontSize: 16.0),
                               ),
                             ),
                           ),
@@ -596,7 +606,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         Text(
           text,
           maxLines: 2,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 16,
             color: color,
             fontWeight: FontWeight.w700,
@@ -630,7 +641,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           return Center(
               child: Text(
             '$Empty',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
@@ -662,7 +674,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     child: TextFormField(
                       controller: _searchfilterController,
                       keyboardType: TextInputType.text,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           color: Color(0xFF555555), fontSize: 14),
                       decoration: InputDecoration(
                         isDense: true,
@@ -671,7 +684,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 12),
                         hintText: 'Search',
-                        hintStyle: GoogleFonts.openSans(
+                        hintStyle: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 14, color: Color(0xFF555555)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(100),
@@ -781,7 +795,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                               '${contact.contact_first} ${contact.contact_last}',
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.openSans(
+                                              style: TextStyle(
+                fontFamily: 'Arial',
                                                 fontSize: 16,
                                                 color: Color(0xFFFF9900),
                                                 fontWeight: FontWeight.w700,
@@ -791,7 +806,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                               '${contact.customer_en} (${contact.customer_th})',
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.openSans(
+                                              style: TextStyle(
+                fontFamily: 'Arial',
                                                 fontSize: 14,
                                                 color: Color(0xFF555555),
                                                 fontWeight: FontWeight.w500,
@@ -825,15 +841,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
-          ),
+        Row(
+          children: [
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         TextFormField(
@@ -841,7 +871,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           maxLines: null,
           controller: textController,
           keyboardType: TextInputType.text,
-          style: GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+          style: TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -850,7 +881,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             hintText: '',
             hintStyle:
-                GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+                TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),
@@ -891,15 +923,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            _namedate,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.openSans(
-              fontSize: 14,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.w700,
-            ),
+          Row(
+            children: [
+              Text(
+                _namedate,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontFamily: 'Arial',
+                  fontSize: 14,
+                  color: Color(0xFF555555),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(width: 8),
+              Text(
+                '*',
+                style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
+              ),
+            ],
           ),
           SizedBox(height: 8),
           Container(
@@ -924,7 +970,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   children: [
                     Text(
                       showlastDay,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14, color: Color(0xFF555555)),
                     ),
                     Spacer(),
@@ -947,15 +994,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            _nameTime,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.openSans(
-              fontSize: 14,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.w700,
-            ),
+          Row(
+            children: [
+              Text(
+                _nameTime,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontFamily: 'Arial',
+                  fontSize: 14,
+                  color: Color(0xFF555555),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(width: 8),
+              Text(
+                '*',
+                style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
+              ),
+            ],
           ),
           SizedBox(height: 8),
           Container(
@@ -976,7 +1037,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   children: [
                     Text(
                       close == 'bodyOn' ? start_time :(close == 'bodyOff')? end_time:(close == 'closeOn')?start_time_close:end_time_close,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14, color: Color(0xFF555555)),
                     ),
                     Spacer(),
@@ -998,15 +1060,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
-          ),
+        Row(
+          children: [
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -1022,11 +1098,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             isExpanded: true,
             hint: Text(
               placeDown[0].status_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: placeDown
@@ -1034,7 +1112,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       value: item,
                       child: Text(
                         item.status_name,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1070,7 +1149,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1081,7 +1161,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1112,15 +1193,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Project',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
-          ),
+        Row(
+          children: [
+            Text(
+              'Project',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -1136,11 +1231,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             isExpanded: true,
             hint: Text(
               'Select Status',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: projectList
@@ -1148,7 +1245,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       value: item,
                       child: Text(
                         item.project_name ?? '',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1184,7 +1282,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1195,7 +1294,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1226,15 +1326,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Type',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
-          ),
+        Row(
+          children: [
+            Text(
+              'Type',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -1250,11 +1364,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             isExpanded: true,
             hint: Text(
               'Select Status',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: typeList
@@ -1262,7 +1378,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       value: item,
                       child: Text(
                         item.type_name,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1298,7 +1415,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1309,7 +1427,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1340,15 +1459,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Status',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
-          ),
+        Row(
+          children: [
+            Text(
+              'Status',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -1364,11 +1497,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             isExpanded: true,
             hint: Text(
               'Select Status',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: statusList
@@ -1376,7 +1511,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       value: item,
                       child: Text(
                         item.status_name,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1412,7 +1548,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1423,7 +1560,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1454,15 +1592,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Priority',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
-          ),
+        Row(
+          children: [
+            Text(
+              'Priority',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -1478,11 +1630,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             isExpanded: true,
             hint: Text(
               'Select Status',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: priorityList
@@ -1490,7 +1644,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       value: item,
                       child: Text(
                         item.priority_name,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1526,7 +1681,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1537,7 +1693,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1572,7 +1729,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           'Account',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -1592,11 +1750,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             isExpanded: true,
             hint: Text(
               'Select Status',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: accountList
@@ -1606,7 +1766,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                         item.account_name ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1643,7 +1804,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1654,7 +1816,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1685,15 +1848,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Contact',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
-          ),
+        Row(
+          children: [
+            Text(
+              'Contact',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                    fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '*',
+              style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red),
+            ),
+          ],
         ),
         SizedBox(height: 8),
         Container(
@@ -1709,11 +1886,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             isExpanded: true,
             hint: Text(
               title,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: contactList
@@ -1721,7 +1900,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       value: item,
                       child: Text(
                         item.contact_first ?? '',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1757,7 +1937,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1768,7 +1949,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1802,7 +1984,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         Text(
           'Location',
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -1843,7 +2026,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                         ? ''
                         : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                     ),
@@ -1871,7 +2055,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             children: [
               Text(
                 'Actual Activity',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 18,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w700,
@@ -1907,7 +2092,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             TextButton(
               child: Text(
                 '$Cancel',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w700,

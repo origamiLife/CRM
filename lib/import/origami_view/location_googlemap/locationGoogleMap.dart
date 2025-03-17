@@ -18,7 +18,8 @@ class _LocationGoogleMapState extends State<LocationGoogleMap> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
-        title: Text('Select location',style: GoogleFonts.openSans(
+        title: Text('Select location',style: TextStyle(
+                fontFamily: 'Arial',
           color: Colors.white,
         ),),
       ),

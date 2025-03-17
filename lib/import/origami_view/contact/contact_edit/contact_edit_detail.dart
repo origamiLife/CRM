@@ -67,7 +67,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Information',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 22,
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -88,7 +89,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Name Card',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 22,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w700,
@@ -105,7 +107,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                                       SizedBox(height: 8),
                                       Text(
                                         'Front Name card',
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 14,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w700,
@@ -122,7 +125,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                                       SizedBox(height: 8),
                                       Text(
                                         'Back Name card',
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 14,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w700,
@@ -139,7 +143,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Owner contact',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 22,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w700,
@@ -235,7 +240,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                                 color: Colors.grey, size: 45),
                             Text(
                               comment,
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -266,7 +272,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             Text(
               'Birthday',
               maxLines: 1,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -298,7 +305,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                   Text(
                     '',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -325,7 +333,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                   Text(
                     '',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -389,7 +398,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Next >>',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.w700,
@@ -413,7 +423,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         '<< Back',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16,
                           color: Color(0xFFFF9900),
                           fontWeight: FontWeight.w700,
@@ -431,7 +442,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         'Next >>',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16,
                           color: Color(0xFFFF9900),
                           fontWeight: FontWeight.w700,
@@ -454,7 +466,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         '<< Back',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16,
                           color: Color(0xFFFF9900),
                           fontWeight: FontWeight.w700,
@@ -476,7 +489,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                           SizedBox(width: 4),
                           Text(
                             'SAVE',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 16,
                               color: Color(0xFFFF9900),
                               fontWeight: FontWeight.w700,
@@ -496,7 +510,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       children: [
         Text(
           value,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -516,12 +531,14 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             isExpanded: true,
             hint: Text(
               value,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.grey,
                 fontSize: 14,
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Colors.grey,
               fontSize: 14,
             ),
@@ -530,7 +547,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                       value: type,
                       child: Text(
                         type.name,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -572,7 +590,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -589,7 +608,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.text,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -600,7 +620,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -637,7 +658,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -648,7 +670,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -688,7 +711,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Text(
           'Description',
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -700,7 +724,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           maxLines: null,
           controller: controller,
           keyboardType: TextInputType.text,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -711,7 +736,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: title,
-            hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),
@@ -760,7 +786,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         child: TextFormField(
           enabled: false,
           keyboardType: TextInputType.number,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -771,7 +798,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: (ifTime == true) ? '${title} $currentTime' : title,
-            hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),
@@ -825,7 +853,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Emotion',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14,
               color: Color(0xFF555555),
               fontWeight: FontWeight.w700,
@@ -846,12 +875,14 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             isExpanded: true,
             hint: Text(
               value,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.grey,
                 fontSize: 14,
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Colors.grey,
               fontSize: 14,
             ),
@@ -860,7 +891,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               value: emotions,
               child: Text(
                 emotions,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 24,
                 ),
               ),

@@ -102,7 +102,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Register Address',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 22,
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -119,7 +120,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Map Location',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 22,
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -134,7 +136,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Ship To',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 22,
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -148,7 +151,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Document Address',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 22,
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -175,7 +179,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Next >>',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFFFF9900),
                             fontWeight: FontWeight.w700,
@@ -198,7 +203,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           '<< Back',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFFFF9900),
                             fontWeight: FontWeight.w700,
@@ -221,7 +227,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                             SizedBox(width: 4),
                             Text(
                               'SAVE',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFFFF9900),
                                 fontWeight: FontWeight.w700,
@@ -338,7 +345,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                                         color: Colors.grey, size: 45),
                                     Text(
                                       'Tap here to select an image.',
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                fontFamily: 'Arial',
                                         fontSize: 16,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w500,
@@ -405,7 +413,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
             Text(
               titleMap,
               maxLines: 1,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -451,7 +460,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
       children: [
         Text(
           value,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -471,12 +481,14 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
             isExpanded: true,
             hint: Text(
               value,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.grey,
                 fontSize: 14,
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Colors.grey,
               fontSize: 14,
             ),
@@ -485,7 +497,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                       value: type,
                       child: Text(
                         type.name,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -527,7 +540,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -544,7 +558,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.text,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -555,7 +570,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -593,7 +609,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
       enabled: true,
       controller: controller,
       keyboardType: TextInputType.text,
-      style: GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+      style: TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
       decoration: InputDecoration(
         isDense: true,
         filled: true,
@@ -603,7 +620,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
         hintText: (_selectedLocation == null)
             ? ''
             : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -646,7 +664,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
               child: Text(
                 title,
                 maxLines: 1,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w700,
@@ -671,7 +690,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                       textCheckBox,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w500,
@@ -689,7 +709,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
           maxLines: null,
           controller: controller,
           keyboardType: TextInputType.text,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -700,7 +721,8 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: title,
-            hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),

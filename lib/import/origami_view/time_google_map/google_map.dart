@@ -190,7 +190,8 @@
 //                         children: [
 //                           Text(
 //                             '$currentTime น.',
-//                             style: GoogleFonts.openSans(
+//                             style: TextStyle(
+//                 fontFamily: 'Arial',
 //                               fontSize: 70,
 //                               color: Colors.white,
 //                               fontWeight: FontWeight.w500,
@@ -203,7 +204,8 @@
 //                               SizedBox(width: 4),
 //                               Text(
 //                                 "${widget.timeStamp?.comp_name ?? ''} (${widget.timeStamp?.branch_name ?? ''})",
-//                                 style: GoogleFonts.openSans(
+//                                 style: TextStyle(
+//                 fontFamily: 'Arial',
 //                                   fontSize: 14,
 //                                   color: Colors.white,
 //                                   fontWeight: FontWeight.w500,
@@ -217,7 +219,8 @@
 //                               Expanded(
 //                                 child: Text(
 //                                   'Input : ',
-//                                   style: GoogleFonts.openSans(
+//                                   style: TextStyle(
+//                 fontFamily: 'Arial',
 //                                     fontSize: 14,
 //                                     color: Colors.white,
 //                                     fontWeight: FontWeight.w700,
@@ -227,7 +230,8 @@
 //                               Expanded(
 //                                 child: Text(
 //                                   (_addInTime == '') ? '-' : _addInTime,
-//                                   style: GoogleFonts.openSans(
+//                                   style: TextStyle(
+//                 fontFamily: 'Arial',
 //                                     fontSize: 14,
 //                                     color: Colors.white,
 //                                     fontWeight: FontWeight.w700,
@@ -237,7 +241,8 @@
 //                               Expanded(
 //                                 child: Text(
 //                                   'Output : ',
-//                                   style: GoogleFonts.openSans(
+//                                   style: TextStyle(
+//                 fontFamily: 'Arial',
 //                                     fontSize: 14,
 //                                     color: Colors.white,
 //                                     fontWeight: FontWeight.w700,
@@ -247,7 +252,8 @@
 //                               Expanded(
 //                                 child: Text(
 //                                   (_addOutTime == '') ? '-' : _addOutTime,
-//                                   style: GoogleFonts.openSans(
+//                                   style: TextStyle(
+//                 fontFamily: 'Arial',
 //                                     fontSize: 14,
 //                                     color: Colors.white,
 //                                     fontWeight: FontWeight.w700,

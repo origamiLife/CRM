@@ -98,7 +98,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                   children: [
                     Text(
                       'Sale Project',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14, color: Color(0xFFFF9900)),
                     ),
                     SizedBox(height: 4),
@@ -117,7 +118,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                 },
                                 child: Text(
                                   'Sale Project',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFFFF9900),
@@ -139,7 +141,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                 },
                                 child: Text(
                                   'Non Sale Project',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF555555),
@@ -325,7 +328,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
   //                             Text(
   //                               activity.activity_project_name ?? '',
   //                               maxLines: 1,
-  //                               style: GoogleFonts.openSans(
+  //                               style: TextStyle(
+  //               fontFamily: 'Arial',
   //                                 fontSize: 14,
   //                                 color: Color(0xFFFF9900),
   //                                 fontWeight: FontWeight.w500,
@@ -334,7 +338,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
   //                             Text(
   //                               activity.activity_location ?? '',
   //                               maxLines: 1,
-  //                               style: GoogleFonts.openSans(
+  //                               style: TextStyle(
+  //               fontFamily: 'Arial',
   //                                 fontSize: 12,
   //                                 color: Color(0xFF555555),
   //                                 fontWeight: FontWeight.w500,
@@ -346,7 +351,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
   //                             Text(
   //                               '${widget.employee.emp_name ?? ''} - ${activity.projectname ?? ''}',
   //                               maxLines: 1,
-  //                               style: GoogleFonts.openSans(
+  //                               style: TextStyle(
+  //               fontFamily: 'Arial',
   //                                 fontSize: 12,
   //                                 color: Colors.grey,
   //                                 fontWeight: FontWeight.w500,
@@ -358,7 +364,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
   //                             Text(
   //                               '${activity.activity_start_date ?? ''} ${activity.time_start ?? ''} - ${activity.activity_end_date ?? ''} ${activity.time_end ?? ''}',
   //                               maxLines: 1,
-  //                               style: GoogleFonts.openSans(
+  //                               style: TextStyle(
+  //               fontFamily: 'Arial',
   //                                 fontSize: 12,
   //                                 color: Colors.grey,
   //                                 fontWeight: FontWeight.w500,
@@ -373,7 +380,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
   //                                   child: Text(
   //                                     'Type : Website & Application',
   //                                     maxLines: 1,
-  //                                     style: GoogleFonts.openSans(
+  //                                     style: TextStyle(
+  //               fontFamily: 'Arial',
   //                                       fontSize: 12,
   //                                       color: Colors.grey,
   //                                       fontWeight: FontWeight.w500,
@@ -402,7 +410,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
   //                                       (activity.activity_status == null)
   //                                           ? 'plan'
   //                                           : activity.activity_status ?? '',
-  //                                       style: GoogleFonts.openSans(
+  //                                       style: TextStyle(
+  //               fontFamily: 'Arial',
   //                                           fontSize: 12,
   //                                           color: Colors.white,
   //                                           fontWeight: FontWeight.w500),
@@ -486,7 +495,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                       project
                                           .project_name
                                           .substring(0, 1),
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                fontFamily: 'Arial',
                                         fontSize: 24,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,
@@ -508,7 +518,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                     project.project_name ?? '',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.openSans(
+                                    style: TextStyle(
+                fontFamily: 'Arial',
                                       fontSize: 18,
                                       color: Color(0xFF555555),
                                       fontWeight: FontWeight.w700,
@@ -518,7 +529,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                     project.project_name ?? '',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.openSans(
+                                    style: TextStyle(
+                fontFamily: 'Arial',
                                       fontSize: 14,
                                       color: Colors.grey,
                                       fontWeight: FontWeight.w500,

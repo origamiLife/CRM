@@ -50,7 +50,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
           alignment: Alignment.centerLeft,
           child: Text(
             '',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -95,7 +96,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   padding: const EdgeInsets.all(4),
                   child: Text(
                     'TKT-535',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Colors.orange,
                       fontWeight: FontWeight.w700,
@@ -107,7 +109,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Thailand Tax Rate',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 22,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -148,7 +151,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                               SizedBox(width: 4),
                               Text(
                                 'Status',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -173,7 +177,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                               SizedBox(width: 4),
                               Text(
                                 'Sub Status',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -196,7 +201,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   children: [
                     Text(
                       'Thailand Tax Rate',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 18,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w700,
@@ -205,7 +211,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     SizedBox(height: 8),
                     Text(
                       'What is Thailand Text Rate? How Much is my estimated payable tax in Thailand............',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w500,
@@ -222,7 +229,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   children: [
                     Text(
                       'Attachments',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 18,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w700,
@@ -231,7 +239,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     SizedBox(height: 8),
                     Text(
                       'No attachments uploaded. Tap "Upload" below to attach necessary files or media.',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w500,
@@ -263,7 +272,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                 SizedBox(width: 4),
                                 Text(
                                   'Add attachment',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Colors.blueAccent,
                                     fontWeight: FontWeight.w700,
@@ -284,7 +294,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   children: [
                     Text(
                       'Linked',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 18,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w700,
@@ -330,7 +341,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                         children: [
                                           Text(
                                             'Issues',
-                                            style: GoogleFonts.openSans(
+                                            style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 14,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -343,7 +355,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                       SizedBox(height: 8),
                                       Text(
                                         '0',
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 20,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w700,
@@ -433,7 +446,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                 Expanded(
                   child: Text(
                     startText,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w500,
@@ -456,7 +470,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               'FEAT-1',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 12,
                                 color: Colors.blueAccent,
                                 fontWeight: FontWeight.w500,
@@ -481,7 +496,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'TA',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 12,
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
@@ -495,7 +511,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                 if (next == true)
                   Text(
                     endText,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16,
                       color:
                           (endText == 'Add') ? Colors.grey : Color(0xFF555555),
@@ -596,7 +613,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   SizedBox(width: 8),
                   Text(
                     text,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -631,7 +649,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                 child: TextFormField(
                   controller: _searchfilterController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -640,7 +659,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 12),
                     hintText: 'Search',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(100),
@@ -731,7 +751,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                         overflow:
                                         TextOverflow.ellipsis,
                                         style:
-                                        GoogleFonts.openSans(
+                                        TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 16,
                                           color:
                                           Color(0xFFFF9900),
@@ -746,7 +767,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                         overflow:
                                         TextOverflow.ellipsis,
                                         style:
-                                        GoogleFonts.openSans(
+                                        TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 14,
                                           color:
                                           Color(0xFF555555),
@@ -786,12 +808,14 @@ class _HelpDescriptionState extends State<HelpDescription> {
               isExpanded: true,
               hint: Text(
                 'Select',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   color: Colors.grey,
                   fontSize: 14,
                 ),
               ),
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.grey,
                 fontSize: 14,
               ),
@@ -800,7 +824,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                 value: type,
                 child: Text(
                   type.name,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                   ),
                 ),
@@ -837,7 +862,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     controller: _searchDownController,
                     keyboardType: TextInputType.text,
                     style:
-                    GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+                    TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
                     decoration: InputDecoration(
                       isDense: true,
                       contentPadding: const EdgeInsets.symmetric(
@@ -845,7 +871,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                         vertical: 8,
                       ),
                       hintText: '$Search...',
-                      hintStyle: GoogleFonts.openSans(
+                      hintStyle: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14, color: Color(0xFF555555)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),

@@ -85,7 +85,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Information',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 22,
                   color: Colors.grey,
                   fontWeight: FontWeight.w700,
@@ -98,7 +99,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
               children: [
                 Text(
                   'Logo',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -188,7 +190,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             ),
             Text(
               'Tap here to select an image.',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFFFF9900),
                 fontWeight: FontWeight.w500,
@@ -219,7 +222,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                 Icon(Icons.cloud_upload, color: Colors.grey, size: 45),
                 Text(
                   'upload accoount logo',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 16,
                     color: Colors.grey,
                     fontWeight: FontWeight.w500,
@@ -250,7 +254,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   Text(
                     '',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -276,7 +281,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   Text(
                     '',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -302,7 +308,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   Text(
                     '',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -332,7 +339,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                 },
                 child: Text(
                   'Next >>',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 16,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w700,
@@ -360,7 +368,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   Text(
                     '',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -405,7 +414,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                 },
                 child: Text(
                   '<< Back',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 16,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w700,
@@ -424,7 +434,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                     SizedBox(width: 4),
                     Text(
                       'SAVE',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 16,
                         color: Color(0xFFFF9900),
                         fontWeight: FontWeight.w700,
@@ -446,7 +457,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       children: [
         Text(
           value,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -466,12 +478,14 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             isExpanded: true,
             hint: Text(
               value,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.grey,
                 fontSize: 14,
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Colors.grey,
               fontSize: 14,
             ),
@@ -480,7 +494,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
               value: type,
               child: Text(
                 type.name,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                 ),
               ),
@@ -522,7 +537,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -539,7 +555,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.text,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -550,7 +567,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -587,7 +605,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -598,7 +617,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -638,7 +658,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         Text(
           'Description',
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -650,7 +671,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
           maxLines: null,
           controller: controller,
           keyboardType: TextInputType.text,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -661,7 +683,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: title,
-            hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),
@@ -710,7 +733,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         child: TextFormField(
           enabled: false,
           keyboardType: TextInputType.number,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -721,7 +745,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: (ifTime == true) ? '${title} $currentTime' : title,
-            hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),

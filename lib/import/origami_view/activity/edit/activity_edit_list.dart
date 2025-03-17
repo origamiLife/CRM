@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
+import '../../project/update_project/join_user/join_user.dart';
 import '../activity.dart';
 import '../signature_page/signature_page.dart';
 import '../skoop/skoop.dart';
@@ -34,6 +35,7 @@ class _ActivityEditListState extends State<ActivityEditList> {
   @override
   void initState() {
     super.initState();
+    fetchModelEmployee();
     activity = widget.activity;
     showDate();
     _fetchSkoopDetail();
@@ -87,7 +89,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
           alignment: Alignment.center,
           child: Text(
             'ERROR!',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 18.0,
               color: Colors.white,
               fontWeight: FontWeight.w700,
@@ -133,7 +136,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
           alignment: Alignment.centerLeft,
           child: Text(
             '',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -173,7 +177,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                     children: [
                       Text(
                         'EDIT',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 16,
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -189,7 +194,9 @@ class _ActivityEditListState extends State<ActivityEditList> {
         items: tabItems,
         iconSize: 18,
         animated: true,
-        titleStyle: GoogleFonts.openSans(),
+        titleStyle: TextStyle(
+          fontFamily: 'Arial',
+        ),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
@@ -255,7 +262,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                   ),
                   Text(
                     '$Loading...',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFF555555),
@@ -285,7 +293,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 16,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500,
@@ -296,7 +305,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 _dataObject,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFFFF9900),
                 ),
@@ -327,7 +337,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 16,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500,
@@ -338,7 +349,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 _dataObject,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                 ),
@@ -359,7 +371,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
             Text(
               '${skoopDetail?.first_en ?? ''} ${skoopDetail?.last_en ?? ''}',
               maxLines: 1,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 16,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w500,
@@ -369,7 +382,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
             Text(
               '${skoopDetail?.start_date ?? ''} ${skoopDetail?.time_start ?? ''} - ${skoopDetail?.end_date ?? ''} ${skoopDetail?.time_end ?? ''}',
               maxLines: 1,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFFFF9900),
                 fontWeight: FontWeight.w500,
@@ -382,7 +396,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 Text(
                   'Status : ',
                   maxLines: 1,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.grey,
                     fontWeight: FontWeight.w700,
@@ -391,7 +406,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 Text(
                   skoopDetail?.status ?? '',
                   maxLines: 1,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: (skoopDetail?.status == 'Close')
                         ? Color(0xFFFF9900)
@@ -471,7 +487,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
               Text(
                 '${skoopDetail?.first_en ?? ''} ${skoopDetail?.last_en ?? ''}',
                 maxLines: 1,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 16,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w500,
@@ -481,7 +498,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
               Text(
                 '${skoopDetail?.start_date ?? ''} ${skoopDetail?.time_start ?? ''} - ${skoopDetail?.end_date ?? ''} ${skoopDetail?.time_end ?? ''}',
                 maxLines: 1,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFFFF9900),
                   fontWeight: FontWeight.w500,
@@ -505,7 +523,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
         children: [
           Text(
             '$currentTime น.',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 55,
               color: Color(0xFF555555),
               // fontWeight: FontWeight.w500,
@@ -534,7 +553,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                       'In',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 16,
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
@@ -545,7 +565,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                       (_addInTime == '') ? '-' : _addInTime,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 16,
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
@@ -566,7 +587,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                       'Out',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 16,
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
@@ -577,7 +599,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                       (_addOutTime == '') ? '-' : _addOutTime,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 16,
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
@@ -589,7 +612,7 @@ class _ActivityEditListState extends State<ActivityEditList> {
             ),
           ),
           SizedBox(height: 32),
-          if (skoopDetail?.status != 'Close')
+          if (widget.activity.activity_place_type == 'out')
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -611,7 +634,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Stamp',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                        fontFamily: 'Arial',
                         fontSize: 24,
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -638,7 +662,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
               Text(
                 '${skoopDetail?.first_en ?? ''} ${skoopDetail?.last_en ?? ''}',
                 maxLines: 1,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 16,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w500,
@@ -714,7 +739,11 @@ class _ActivityEditListState extends State<ActivityEditList> {
                                   top: 4,
                                   right: 4,
                                   child: InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      setState(() {
+                                        _addImage.removeAt(index); // ลบรูปออกจากรายการ
+                                      });
+                                    },
                                     child: Stack(
                                       children: [
                                         Icon(
@@ -741,7 +770,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                   ),
                   Text(
                     'Tap here to select an image.',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.w500,
@@ -773,7 +803,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                   ),
                   Text(
                     'Tap here to select an image.',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.w500,
@@ -789,164 +820,74 @@ class _ActivityEditListState extends State<ActivityEditList> {
     return Column(
       children: [
         Column(
-            children: List.generate(1, (index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 1.0,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 0,
-                    blurRadius: 0,
-                    offset: Offset(1, 3), // x, y
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(16),
+            children: List.generate(modelEmployee.length, (index) {
+              final join_user = modelEmployee[index];
+              return Padding(
+                padding: const EdgeInsets.all(4),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 22,
-                          backgroundColor: Colors.grey.shade400,
-                          child: CircleAvatar(
-                            radius: 21,
-                            backgroundColor: Colors.white,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: Image.network(
-                                widget.employee.emp_avatar,
-                                fit: BoxFit.fill,
-                              ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 0,
+                            blurRadius: 0,
+                            offset: Offset(1, 3), // x, y
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.grey.shade400,
+                                  child: CircleAvatar(
+                                    radius: 31,
+                                    backgroundColor: Colors.white,
+                                    child: ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(50),
+                                      child: Image.network(
+                                        join_user.emp_pic,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                _switch(join_user),
+                              ],
                             ),
-                          ),
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: _checkBox(
+                                        'Owner', join_user.is_owner)),
+                                Expanded(
+                                    child: _checkBox('Approve Activity',
+                                        join_user.is_owner)),
+                              ],
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      'Jirapat Jangsawang',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.openSans(
-                                        fontSize: 14,
-                                        color: Color(0xFF555555),
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Flexible(
-                                    child: Text(
-                                      '(Mobile Application)',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.openSans(
-                                        fontSize: 14,
-                                        color: Color(0xFF555555),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Owner : ',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.openSans(
-                                      fontSize: 14,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  AdvancedSwitch(
-                                    activeChild: Text(
-                                      'ON',
-                                      style: GoogleFonts.openSans(),
-                                    ),
-                                    inactiveChild: Text(
-                                      'OFF',
-                                      style: GoogleFonts.openSans(),
-                                    ),
-                                    borderRadius: BorderRadius.circular(100),
-                                    height: 25,
-                                    controller: _controllerOwner,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Flexible(
-                                    child: Text(
-                                      'Approve Activity : ',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.openSans(
-                                        fontSize: 14,
-                                        color: Color(0xFF555555),
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ),
-                                  AdvancedSwitch(
-                                    activeChild: Text(
-                                      'ON',
-                                      style: GoogleFonts.openSans(),
-                                    ),
-                                    inactiveChild: Text(
-                                      'OFF',
-                                      style: GoogleFonts.openSans(),
-                                    ),
-                                    borderRadius: BorderRadius.circular(100),
-                                    height: 25,
-                                    controller: _controllerActivity,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Text(
-                          'Role : ',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.openSans(
-                            fontSize: 16,
-                            color: Color(0xFF555555),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Expanded(child: _DropdownUser()),
-                      ],
-                    ),
+                    Divider(),
                   ],
                 ),
-              ),
-            ),
-          );
-        })),
+              );
+            })),
         SizedBox(
           height: 8,
         ),
@@ -956,7 +897,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
             onPressed: _addJoinUser,
             child: Text(
               'Tap here to select an Join User.',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFFFF9900),
                 fontWeight: FontWeight.w500,
@@ -965,6 +907,61 @@ class _ActivityEditListState extends State<ActivityEditList> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _switch(ModelEmployee join_user) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            join_user.emp_name,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w700,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          _description(Icons.apartment, '${join_user.posi_description}'),
+          _description(Icons.work, '${join_user.dept_description}'),
+          SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+
+  Widget _description(IconData icon, String join_user) {
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.grey, size: 16),
+          SizedBox(width: 8),
+          Text(
+            '${join_user}',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _checkBox(String title, String is_owner) {
+    return CheckBoxWidget(
+      title: title,
+      isOwner: is_owner,
+      onChanged: (value) {
+        print("ค่าใหม่: $value"); // Y , N
+      },
     );
   }
 
@@ -978,7 +975,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
               Text(
                 '${skoopDetail?.first_en ?? ''} ${skoopDetail?.last_en ?? ''}',
                 maxLines: 1,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 16,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w500,
@@ -988,7 +986,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
               Text(
                 '${skoopDetail?.start_date ?? ''} ${skoopDetail?.time_start ?? ''} - ${skoopDetail?.end_date ?? ''} ${skoopDetail?.time_end ?? ''}',
                 maxLines: 1,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFFFF9900),
                   fontWeight: FontWeight.w500,
@@ -1004,7 +1003,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
               children: [
                 Text(
                   'Name',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 16,
                     color: Colors.grey,
                     fontWeight: FontWeight.w500,
@@ -1013,15 +1013,19 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 TextFormField(
                   controller: _nameController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
-                      color: Color(0xFF555555), fontSize: 14),
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 12),
                     hintText: '',
-                    hintStyle: GoogleFonts.openSans(
-                        fontSize: 14, color: Color(0xFF555555)),
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -1046,7 +1050,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 SizedBox(height: 16),
                 Text(
                   'Tel',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 16,
                     color: Colors.grey,
                     fontWeight: FontWeight.w500,
@@ -1061,15 +1066,19 @@ class _ActivityEditListState extends State<ActivityEditList> {
                       child: TextFormField(
                         controller: _telController,
                         keyboardType: TextInputType.number,
-                        style: GoogleFonts.openSans(
-                            color: Color(0xFF555555), fontSize: 14),
+                        style: TextStyle(
+                            fontFamily: 'Arial',
+                            color: Color(0xFF555555),
+                            fontSize: 14),
                         decoration: InputDecoration(
                           isDense: true,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 12),
                           hintText: '',
-                          hintStyle: GoogleFonts.openSans(
-                              fontSize: 14, color: Color(0xFF555555)),
+                          hintStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFF555555)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -1097,7 +1106,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 SizedBox(height: 16),
                 Text(
                   'Signature',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 16,
                     color: Colors.grey,
                     fontWeight: FontWeight.w500,
@@ -1159,7 +1169,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                   ),
                   Text(
                     'Tap here for edit.',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.w500,
@@ -1203,7 +1214,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                       child: Center(
                         child: Text(
                           'Tap here for signature.',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                            fontFamily: 'Arial',
                             fontSize: 24,
                             color: Colors.grey.shade300,
                             fontWeight: FontWeight.w700,
@@ -1217,7 +1229,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                   ),
                   Text(
                     'Tap here for signature.',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.w500,
@@ -1243,11 +1256,13 @@ class _ActivityEditListState extends State<ActivityEditList> {
         isExpanded: true,
         hint: Text(
           '+66',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+          fontFamily: 'Arial',
           color: Color(0xFF555555),
         ),
         items: signatures
@@ -1255,7 +1270,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                   value: item,
                   child: Text(
                     item.status_name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1282,43 +1298,6 @@ class _ActivityEditListState extends State<ActivityEditList> {
         menuItemStyleData: MenuItemStyleData(
           height: 40, // Height for each menu item
         ),
-        // dropdownSearchData: DropdownSearchData(
-        //   searchController: _searchController,
-        //   searchInnerWidgetHeight: 50,
-        //   searchInnerWidget: Padding(
-        //     padding: const EdgeInsets.all(8),
-        //     child: TextFormField(
-        //       controller: _searchController,
-        //       keyboardType: TextInputType.text,
-        //       style: GoogleFonts.openSans(
-        //           color: Color(0xFF555555), fontSize: 14),
-        //       decoration: InputDecoration(
-        //         isDense: true,
-        //         contentPadding: const EdgeInsets.symmetric(
-        //           horizontal: 10,
-        //           vertical: 8,
-        //         ),
-        //         hintText: '$Search...',
-        //         hintStyle: GoogleFonts.openSans(
-        //             fontSize: 14, color: Color(0xFF555555)),
-        //         border: OutlineInputBorder(
-        //           borderRadius: BorderRadius.circular(8),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        //   searchMatchFn: (item, searchValue) {
-        //     return item.value!.item_name!
-        //         .toLowerCase()
-        //         .contains(searchValue.toLowerCase());
-        //   },
-        // ),
-        // onMenuStateChange: (isOpen) {
-        //   if (!isOpen) {
-        //     _searchController
-        //         .clear(); // Clear the search field when the menu closes
-        //   }
-        // },
       ),
     );
   }
@@ -1331,45 +1310,13 @@ class _ActivityEditListState extends State<ActivityEditList> {
     TitleDown(status_id: '004', status_name: 'AI +1'),
   ];
 
-  void _addJoinUser() {
-    showModalBottomSheet<void>(
-      barrierColor: Colors.black87,
-      backgroundColor: Colors.transparent,
-      context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (BuildContext context) {
-        return _getJoinUser();
-      },
-    );
-  }
-
   Widget _getJoinUser() {
     return FutureBuilder<List<Object>>(
       future: null,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        // else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-        //   return Center(
-        //       child: Text(
-        //         '$Empty',
-        //         style: GoogleFonts.openSans(
-        //           color: Color(0xFF555555),
-        //         ),
-        //       ));
-        // }
-        else {
-          // กรองข้อมูลตามคำค้นหา
-          // List<ActivityContact> filteredContacts =
-          // snapshot.data!.where((contact) {
-          //   String searchTerm = _searchfilterController.text.toLowerCase();
-          //   String fullName = '${contact.contact_first} ${contact.contact_last}'
-          //       .toLowerCase();
-          //   return fullName.contains(searchTerm);
-          // }).toList();
+        } else {
           return Column(
             children: [
               Expanded(child: SizedBox()),
@@ -1377,7 +1324,7 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 16),
+                    const EdgeInsets.only(left: 16, right: 16, top: 16),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.7,
                       decoration: BoxDecoration(
@@ -1395,8 +1342,10 @@ class _ActivityEditListState extends State<ActivityEditList> {
                               child: TextFormField(
                                 controller: _searchfilterController,
                                 keyboardType: TextInputType.text,
-                                style: GoogleFonts.openSans(
-                                    color: Color(0xFF555555), fontSize: 14),
+                                style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontSize: 14),
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
@@ -1404,8 +1353,10 @@ class _ActivityEditListState extends State<ActivityEditList> {
                                   contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 12),
                                   hintText: 'Search',
-                                  hintStyle: GoogleFonts.openSans(
-                                      fontSize: 14, color: Color(0xFF555555)),
+                                  hintStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555)),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(100),
                                   ),
@@ -1434,127 +1385,105 @@ class _ActivityEditListState extends State<ActivityEditList> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: ListView.builder(
-                                  itemCount: titleDown.length,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        // bool isAlreadyAdded = addNewContactList.any(
-                                        //         (existingContact) =>
-                                        //     existingContact.contact_first ==
-                                        //         contact.contact_first &&
-                                        //         existingContact.contact_last ==
-                                        //             contact.contact_last);
-                                        //
-                                        // if (!isAlreadyAdded) {
-                                        //   setState(() {
-                                        //     addNewContactList.add(
-                                        //         contact); // เพิ่มรายการที่เลือกลงใน list
-                                        //   });
-                                        // } else {
-                                        //   // แจ้งเตือนว่ามีชื่ออยู่แล้ว
-                                        //   ScaffoldMessenger.of(context).showSnackBar(
-                                        //     SnackBar(
-                                        //       content: Text(
-                                        //           'This name has already joined the list!'),
-                                        //       duration: Duration(seconds: 2),
-                                        //     ),
-                                        //   );
-                                        // }
-                                        Navigator.pop(context);
-                                      },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 4, right: 8),
-                                                child: CircleAvatar(
-                                                  radius: 22,
-                                                  backgroundColor: Colors.grey,
-                                                  child: CircleAvatar(
-                                                    radius: 21,
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                      child: Image.network(
-                                                        'https://dev.origami.life/images/default.png',
-                                                        height: 100,
-                                                        width: 100,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Jirapat Jangsawang',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                        fontSize: 16,
-                                                        color:
-                                                            Color(0xFFFF9900),
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 8),
-                                                    Text(
-                                                      'Development (Mobile Application)',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF555555),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    Divider(
-                                                        color: Colors
-                                                            .grey.shade300),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
+                            // Expanded(
+                            //   child: Padding(
+                            //     padding:
+                            //     const EdgeInsets.symmetric(horizontal: 15),
+                            //     child: ListView.builder(
+                            //       itemCount: titleDown.length,
+                            //       itemBuilder: (context, index) {
+                            //         return InkWell(
+                            //           onTap: () {
+                            //             Navigator.pop(context);
+                            //           },
+                            //           child: Column(
+                            //             mainAxisAlignment:
+                            //             MainAxisAlignment.center,
+                            //             crossAxisAlignment:
+                            //             CrossAxisAlignment.start,
+                            //             children: [
+                            //               Row(
+                            //                 mainAxisAlignment:
+                            //                 MainAxisAlignment.start,
+                            //                 crossAxisAlignment:
+                            //                 CrossAxisAlignment.center,
+                            //                 children: [
+                            //                   Padding(
+                            //                     padding: const EdgeInsets.only(
+                            //                         bottom: 4, right: 8),
+                            //                     child: CircleAvatar(
+                            //                       radius: 22,
+                            //                       backgroundColor: Colors.grey,
+                            //                       child: CircleAvatar(
+                            //                         radius: 21,
+                            //                         backgroundColor:
+                            //                         Colors.white,
+                            //                         child: ClipRRect(
+                            //                           borderRadius:
+                            //                           BorderRadius.circular(
+                            //                               100),
+                            //                           child: Image.network(
+                            //                             'https://dev.origami.life/images/default.png',
+                            //                             height: 100,
+                            //                             width: 100,
+                            //                             fit: BoxFit.cover,
+                            //                           ),
+                            //                         ),
+                            //                       ),
+                            //                     ),
+                            //                   ),
+                            //                   const SizedBox(width: 10),
+                            //                   Expanded(
+                            //                     child: Column(
+                            //                       mainAxisAlignment:
+                            //                       MainAxisAlignment.start,
+                            //                       crossAxisAlignment:
+                            //                       CrossAxisAlignment.start,
+                            //                       children: [
+                            //                         Text(
+                            //                           'Jirapat Jangsawang',
+                            //                           maxLines: 1,
+                            //                           overflow:
+                            //                           TextOverflow.ellipsis,
+                            //                           style: TextStyle(
+                            //                             fontFamily: 'Arial',
+                            //                             fontSize: 16,
+                            //                             color:
+                            //                             Color(0xFFFF9900),
+                            //                             fontWeight:
+                            //                             FontWeight.w700,
+                            //                           ),
+                            //                         ),
+                            //                         SizedBox(height: 8),
+                            //                         Text(
+                            //                           'Development (Mobile Application)',
+                            //                           maxLines: 1,
+                            //                           overflow:
+                            //                           TextOverflow.ellipsis,
+                            //                           style: TextStyle(
+                            //                             fontFamily: 'Arial',
+                            //                             fontSize: 14,
+                            //                             color:
+                            //                             Color(0xFF555555),
+                            //                             fontWeight:
+                            //                             FontWeight.w500,
+                            //                           ),
+                            //                         ),
+                            //                         Divider(
+                            //                             color: Colors
+                            //                                 .grey.shade300),
+                            //                       ],
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         );
+                            //       },
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -1577,115 +1506,19 @@ class _ActivityEditListState extends State<ActivityEditList> {
     );
   }
 
-  Widget _DropdownUser() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.grey,
-          width: 1.0,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 0,
-            blurRadius: 0,
-            offset: Offset(1, 3), // x, y
-          ),
-        ],
-      ),
-      child: DropdownButton2<TitleDown>(
-        isExpanded: true,
-        hint: Text(
-          'DEV',
-          style: GoogleFonts.openSans(
-            color: Color(0xFF555555),
-          ),
-        ),
-        style: GoogleFonts.openSans(
-          color: Color(0xFF555555),
-        ),
-        items: titleDown
-            .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-                  value: item,
-                  child: Text(
-                    item.status_name,
-                    style: GoogleFonts.openSans(
-                      fontSize: 14,
-                    ),
-                  ),
-                ))
-            .toList(),
-        value: selectedItem,
-        onChanged: (value) {
-          setState(() {
-            selectedItem = value;
-          });
-        },
-        underline: SizedBox.shrink(),
-        iconStyleData: IconStyleData(
-          icon: Icon(Icons.arrow_drop_down, color: Colors.black, size: 30),
-          iconSize: 30,
-        ),
-        buttonStyleData: ButtonStyleData(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-        ),
-        dropdownStyleData: DropdownStyleData(
-          maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          height: 40, // Height for each menu item
-        ),
-        dropdownSearchData: DropdownSearchData(
-          searchController: _searchController,
-          searchInnerWidgetHeight: 50,
-          searchInnerWidget: Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _searchController,
-              keyboardType: TextInputType.text,
-              style:
-                  GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                hintText: '$Search...',
-                hintStyle: GoogleFonts.openSans(
-                    fontSize: 14, color: Color(0xFF555555)),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          ),
-          searchMatchFn: (item, searchValue) {
-            return item.value!.status_name
-                .toLowerCase()
-                .contains(searchValue.toLowerCase());
-          },
-        ),
-        onMenuStateChange: (isOpen) {
-          if (!isOpen) {
-            _searchController
-                .clear(); // Clear the search field when the menu closes
-          }
-        },
-      ),
+  void _addJoinUser() {
+    showModalBottomSheet<void>(
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (BuildContext context) {
+        return _getJoinUser();
+      },
     );
   }
-
-  TitleDown? selectedItem;
-  List<TitleDown> titleDown = [
-    TitleDown(status_id: '001', status_name: 'DEV'),
-    TitleDown(status_id: '002', status_name: 'SEAL'),
-    TitleDown(status_id: '003', status_name: 'CAL'),
-    TitleDown(status_id: '004', status_name: 'DES'),
-  ];
 
   GetSkoopDetail? skoopDetail;
   List<GetSkoopDetail> getSkoopDetail = [];
@@ -1742,6 +1575,39 @@ class _ActivityEditListState extends State<ActivityEditList> {
 //     throw Exception('Failed to load personal data: $e');
 //   }
 // }
+
+  ///////////////////////////////////////////////////////////////////////
+  List<ModelEmployee> modelEmployee = [];
+  Future<void> fetchModelEmployee() async {
+    final uri = Uri.parse(
+        "$host/api/origami/crm/project/component/employee.php?search");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'project_id': '20774',
+        'index': '',
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      if (jsonResponse['status'] == true) {
+        final List<dynamic> dataJson = jsonResponse['employee_data'];
+        int limit = jsonResponse['limit'];
+        setState(() {
+          modelEmployee =
+              dataJson.map((json) => ModelEmployee.fromJson(json)).toList();
+        });
+      } else {
+        throw Exception(
+            'Failed to load personal data: ${jsonResponse['message']}');
+      }
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
 }
 
 class TitleDown {

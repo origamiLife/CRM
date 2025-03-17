@@ -5,6 +5,7 @@ import 'package:origamilift/import/origami_view/project/project.dart';
 import 'package:origamilift/import/origami_view/sample/time_stamp.dart';
 import 'package:origamilift/import/origami_view/work/work_page.dart';
 
+import 'IDOC/idoc_view.dart';
 import 'about-profile/profile.dart';
 import 'academy/academy.dart';
 import 'account/account_screen.dart';
@@ -35,15 +36,18 @@ class OrigamiPage extends StatefulWidget {
 
 class _OrigamiPageState extends State<OrigamiPage> {
   int _index = 12;
-  TextStyle optionStyle = GoogleFonts.openSans(
+  TextStyle optionStyle = TextStyle(
+    fontFamily: 'Arial',
     fontSize: 24,
     fontWeight: FontWeight.bold,
     color: Color(0xFF555555),
   );
-  TextStyle styleOrange = GoogleFonts.openSans(
+  TextStyle styleOrange = TextStyle(
+    fontFamily: 'Arial',
     color: Color(0xFFFF9900),
   );
-  TextStyle styleGrey = GoogleFonts.openSans(
+  TextStyle styleGrey = TextStyle(
+    fontFamily: 'Arial',
     color: Color(0xFF555555),
   );
 
@@ -78,7 +82,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
             SnackBar(
               content: Text(
                 'Press back again to exit the origami application.',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   color: Colors.white,
                 ),
               ),
@@ -98,26 +103,19 @@ class _OrigamiPageState extends State<OrigamiPage> {
           backgroundColor: Colors.white,
           title: Text(
             _listTitle[_index],
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Color(0xFFFF9900),
               fontWeight: FontWeight.w700,
             ),
           ),
           actions: <Widget>[
-            if (branchStr != 'Time')
-              Container()
-            else
+            if (branchStr == 'Time')
               Row(
                 children: [
                   InkWell(
-                      onTap: () {
-                        if (branchStr == 'Time') {
-                          _changeBranch();
-                        } else {
-                          return;
-                        }
-                      },
+                      onTap: () => _changeBranch(timeStampList),
                       child: Icon(Icons.home,
                           color: Colors.orange,
                           size: (isAndroid || isIPhone) ? 24 : 32)),
@@ -130,15 +128,9 @@ class _OrigamiPageState extends State<OrigamiPage> {
                         //   return;
                         // }
                       },
-                      child: Icon(Icons.lan,
+                      child: Icon(Icons.call_missed_outgoing,
                           color: Colors.orange,
                           size: (isAndroid || isIPhone) ? 24 : 32)),
-                  // Container(
-                  //   width: 40,
-                  //   child: Image.network(
-                  //     widget.employee.comp_logo ?? '',
-                  //   ),
-                  // ),
                   SizedBox(width: 16),
                 ],
               ),
@@ -195,7 +187,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                             children: [
                               Text(
                                 '$Name: ',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -206,7 +199,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                               Expanded(
                                 child: Text(
                                   '${widget.employee.emp_name}',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Colors.white,
                                   ),
@@ -223,7 +217,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                             children: [
                               Text(
                                 '$Position1: ',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                                    fontFamily: 'Arial',
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
@@ -231,7 +226,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                               Expanded(
                                 child: Text(
                                   '${widget.employee.dept_description}',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Colors.white,
                                   ),
@@ -308,7 +304,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                           ),
                           Text(
                             '$need',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                                fontFamily: 'Arial',
                                 color: (_index == 0 || _index == 1)
                                     ? Color(0xFFFF9900)
                                     : Color(0xFF555555)),
@@ -345,7 +342,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                                         : Color(0xFF555555)),
                                 title: Text(
                                   '$need',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                      fontFamily: 'Arial',
                                       color: (_index == 0)
                                           ? Color(0xFFFF9900)
                                           : Color(0xFF555555)),
@@ -376,7 +374,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                                         : Color(0xFF555555)),
                                 title: Text(
                                   '$request',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                      fontFamily: 'Arial',
                                       color: (_index == 1)
                                           ? Color(0xFFFF9900)
                                           : Color(0xFF555555)),
@@ -407,7 +406,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                                         : Color(0xFF555555)),
                                 title: Text(
                                   'Petty Cash',
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                                      fontFamily: 'Arial',
                                       color: (_index == 8)
                                           ? Color(0xFFFF9900)
                                           : Color(0xFF555555)),
@@ -478,6 +478,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
           child: _viewMenu(
               6, 'About', Icons.keyboard_arrow_right, FontAwesomeIcons.user),
         ),
+        Container(
+          child: _viewMenu(
+              16, 'IDOC', Icons.keyboard_arrow_right, Icons.edit_document,),
+        ),
       ],
     );
   }
@@ -498,7 +502,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
     "Contact",
     "Account",
     "Calendar",
-    "HelpDesk"
+    "HelpDesk",
+    "IDOC"
   ];
 
   Widget _buildPage() {
@@ -523,9 +528,11 @@ class _OrigamiPageState extends State<OrigamiPage> {
       4: Text('Index 6: LogOut', style: optionStyle),
       5: TimeSample(
         employee: widget.employee,
-        timeStamp: timeStampObject,
+        timestamp: timeStampObject,
         Authorization: widget.Authorization,
-        fetchBranchCallback: () => fetchBranch(), branch_name: branch_name,
+        fetchBranchCallback: () => fetchBranch(),
+        branch_name: branch_name,
+        branch_id: branch_id,
       ),
       6: ProfilePage(
         employee: widget.employee,
@@ -570,6 +577,11 @@ class _OrigamiPageState extends State<OrigamiPage> {
       15: HelpDesk(
         employee: widget.employee,
         pageInput: 'helpdesk',
+        Authorization: widget.Authorization,
+      ),
+      16: IdocScreen(
+        employee: widget.employee,
+        pageInput: '',
         Authorization: widget.Authorization,
       ),
     };
@@ -661,7 +673,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
               ),
               Text(
                 '$logout',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
                 ),
@@ -695,7 +708,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                     TextButton(
                       child: Text(
                         '$logoutTS',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.bold,
                         ),
@@ -724,7 +738,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
-  void _changeBranch() {
+  void _changeBranch(List<GetTimeStampSim> data) {
     showModalBottomSheet<void>(
       barrierColor: Colors.black87,
       backgroundColor: Colors.transparent,
@@ -733,144 +747,105 @@ class _OrigamiPageState extends State<OrigamiPage> {
       // isDismissible: false,
       enableDrag: false,
       builder: (BuildContext context) {
-        return _getBranch();
+        return _getBranch(data);
       },
     );
   }
 
   int index_branch = 0;
   String branch_name = '';
-  Widget _getBranch() {
-    return FutureBuilder<List<GetTimeStampSim>>(
-      future: fetchBranch(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+  Widget _getBranch(List<GetTimeStampSim> branchList) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.3,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(10),
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
             children: [
-              CircularProgressIndicator(
-                color: Colors.white,
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Text(
-                '$Loading...',
-                style: GoogleFonts.openSans(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              SizedBox(height: 16),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Branch',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 22,
+                    color: Color(0xFFFF9900),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-            ],
-          ));
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-              child: Text(
-            '$Empty',
-            style: GoogleFonts.openSans(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
-            ),
-          ));
-        } else {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.3,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(10),
-              ),
-            ),
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
-                  children: [
-                    SizedBox(height: 16),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Branch',
-                        style: GoogleFonts.openSans(
-                          fontSize: 22,
-                          color: Color(0xFFFF9900),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: snapshot.data?.length,
-                        itemBuilder: (context, index) {
-                          final branch = snapshot.data?[index];
-                          index_branch = index;
-                          return Column(
+              SizedBox(height: 8),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: branchList.length,
+                  itemBuilder: (context, index) {
+                    final branch = branchList[index];
+                    index_branch = index;
+                    return Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              branch_name = branch.branch_name ?? '';
+                              timeStampObject = branch;
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    branch_name = branch?.branch_name??'';
-                                    timeStampObject = snapshot.data?[index];
-                                    onTimeSample = 'on';
-                                  });
-                                  Navigator.pop(context);
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.location_on,
-                                            color: Color(0xFF555555),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Flexible(
-                                            child: Text(
-                                              '${branch?.branch_name ?? ''}',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: styleGrey,
-                                            ),
-                                          ),
-                                        ],
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Color(0xFF555555),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Flexible(
+                                      child: Text(
+                                        '${branch?.branch_name ?? ''}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: styleGrey,
                                       ),
                                     ),
-                                    // Divider(),
                                   ],
                                 ),
                               ),
-                              Divider(),
+                              // Divider(),
                             ],
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                          ),
+                        ),
+                        Divider(),
+                      ],
+                    );
+                  },
                 ),
               ),
-            ),
-          );
-        }
-      },
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   String descriptionTime = '';
+  String branch_id = '';
+  int indexBranch = 0;
+  bool isBranch_id = false;
   Future<List<GetTimeStampSim>> fetchBranch() async {
     final uri = Uri.parse("$host/api/origami/time/default.php");
     final response = await http.post(
@@ -889,7 +864,15 @@ class _OrigamiPageState extends State<OrigamiPage> {
         timeStampList =
             dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
         timeStampObject = timeStampList[index_branch];
+        dataJson
+            .map((json) => GetTimeStampSim.fromJson(json))
+            .forEach((item) {
+              if(item.branch_default == '1'){
+                branch_id = item.branch_id;
+              }
+        });
       });
+      print('branch_id : $branch_id');
       return dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load contacts');

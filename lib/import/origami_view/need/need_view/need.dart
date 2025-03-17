@@ -67,7 +67,8 @@ class _NeedsViewState extends State<NeedsView> {
                     padding: EdgeInsets.only(top: 16),
                     child: Text(
                       '$Priority : ',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -81,7 +82,8 @@ class _NeedsViewState extends State<NeedsView> {
                     padding: EdgeInsets.only(top: 16),
                     child: Text(
                       '$Department : ',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -92,7 +94,8 @@ class _NeedsViewState extends State<NeedsView> {
                     padding: EdgeInsets.only(top: 16),
                     child: Text(
                       '$Project : ',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -103,7 +106,8 @@ class _NeedsViewState extends State<NeedsView> {
                     padding: EdgeInsets.only(top: 16),
                     child: Text(
                       '$Owner : ',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -142,7 +146,8 @@ class _NeedsViewState extends State<NeedsView> {
                   child: Center(
                     child: Text(
                       '$Save',
-                      style: GoogleFonts.openSans(fontSize: 16.0),
+                      style: TextStyle(
+                fontFamily: 'Arial',fontSize: 16.0),
                     ),
                   ),
                 ),
@@ -298,7 +303,8 @@ class _NeedsViewState extends State<NeedsView> {
               ),
             ),
             label: NeedTypeItemOption[indexItem].type_name,
-            labelStyle: GoogleFonts.openSans(
+            labelStyle: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 14.0,
               color: const Color(0xFF555555),
               fontWeight: FontWeight.bold,
@@ -363,7 +369,8 @@ class _NeedsViewState extends State<NeedsView> {
                                   vertical: 6, horizontal: 16),
                               child: Text(
                                 NeedTypeOption[index].typeName,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   color: (index == _selectcolor)
                                       ? Colors.white
                                       : const Color(0xFF555555),
@@ -410,7 +417,8 @@ class _NeedsViewState extends State<NeedsView> {
                                         .typeStatus?[index]
                                         .statusName ??
                                         '',
-                                    style: GoogleFonts.openSans(
+                                    style: TextStyle(
+                fontFamily: 'Arial',
                                       color: (index == _indexcolor)
                                           ? Colors.white
                                           : const Color(0xFF555555),
@@ -454,7 +462,8 @@ class _NeedsViewState extends State<NeedsView> {
               ),
               Text(
                 '$Loading...',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF555555),
@@ -534,7 +543,8 @@ class _NeedsViewState extends State<NeedsView> {
                         child: ListTile(
                           title: Text(
                             needList[indexNl].need_subject,
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 18,
                               color: Color(0xFFFF9900),
                               fontWeight: FontWeight.bold,
@@ -551,7 +561,8 @@ class _NeedsViewState extends State<NeedsView> {
                                   children: [
                                     Text(
                                       '${needList[indexNl].mny_type_name} - ${needList[indexNl].mny_request_generate_code}',
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                fontFamily: 'Arial',
                                         fontSize: 14.0,
                                         color: Color(0xFF555555),
                                         fontWeight: FontWeight.bold,
@@ -560,7 +571,8 @@ class _NeedsViewState extends State<NeedsView> {
                                     SizedBox(height: 8),
                                     Text(
                                       "$Date : ${needList[indexNl].create_date} ",
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                fontFamily: 'Arial',
                                         fontSize: 14.0,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.bold,
@@ -569,7 +581,8 @@ class _NeedsViewState extends State<NeedsView> {
                                     SizedBox(height: 8),
                                     Text(
                                       "$Amount : ${needList[indexNl].need_amount} $Baht",
-                                      style: GoogleFonts.openSans(
+                                      style: TextStyle(
+                fontFamily: 'Arial',
                                         fontSize: 14.0,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.bold,
@@ -581,7 +594,8 @@ class _NeedsViewState extends State<NeedsView> {
                                         Expanded(
                                           child: Text(
                                             "$Status1 : ${needList[indexNl].need_status}",
-                                            style: GoogleFonts.openSans(
+                                            style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 14.0,
                                               color: Colors.grey,
                                               fontWeight: FontWeight.bold,
@@ -667,7 +681,8 @@ class _NeedsViewState extends State<NeedsView> {
             child: Container(
               child: Text(
                 '$Empty',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
@@ -721,7 +736,8 @@ class _NeedsViewState extends State<NeedsView> {
                       : (editEmployeeText != '')
                           ? editEmployeeText
                           : 'null',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: (editEmployeeText == '')
                           ? Colors.black38
@@ -778,7 +794,8 @@ class _NeedsViewState extends State<NeedsView> {
                       : (editprojectText != '')
                           ? editprojectText
                           : 'null',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: (editprojectText == '')
                           ? Colors.black38
@@ -837,7 +854,8 @@ class _NeedsViewState extends State<NeedsView> {
                       : (editDepartmentText != '')
                           ? editDepartmentText
                           : 'null',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       color: (editDepartmentText == '')
                           ? Colors.black38

@@ -35,7 +35,6 @@ export 'package:flutter_speed_dial/flutter_speed_dial.dart';
 export 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 export 'package:origamilift/import/origami_view/language/translate.dart';
 export 'package:origamilift/import/origami_view/origami.dart';
-export 'package:origamilift/import/login/origami_login.dart';
 export 'package:quickalert/quickalert.dart';
 export 'package:carousel_slider/carousel_slider.dart';
 

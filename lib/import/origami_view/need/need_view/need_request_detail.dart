@@ -23,7 +23,8 @@ class NeedDetailApprove extends StatefulWidget {
 
 class _NeedDetailApproveState extends State<NeedDetailApprove> {
 
-  static var optionStyle = GoogleFonts.openSans(
+  static var optionStyle = TextStyle(
+                fontFamily: 'Arial',
       fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF555555));
   String _effective = '';
 
@@ -79,7 +80,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
             Container(
               child: Text(
                 detailItem?.need_type_name ?? '',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                     fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
@@ -131,7 +133,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                 SizedBox(width: 12,),
                 Text(
                   '$Loading...',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16, fontWeight: FontWeight.bold,color: Color(0xFF555555),),
                 ),
               ],
@@ -183,7 +186,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
                           '$_searchSubject',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 14,
                             color: Color(0xFF555555),
                           ),
@@ -222,7 +226,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                       padding: const EdgeInsets.only(left: 8.0, top: 8),
                       child: Text(
                         (_reson == '') ? '' : _reson,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           color: Color(0xFF555555),
                         ),
@@ -291,7 +296,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                     (_effective == '')
                                         ? detailItem?.effectiveDate ?? ''
                                         : _effective,
-                                    style: GoogleFonts.openSans(
+                                    style: TextStyle(
+                fontFamily: 'Arial',
                                         fontSize: 14, color: Color(0xFF555555)),
                                   ),
                                   Spacer(),
@@ -465,7 +471,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
           (widget.request_id == '')
               ? detailItem?.priorityName ?? ''
               : editpriorityText,
-          style: GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+          style: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
         ),
       ),
     );
@@ -654,7 +661,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
               backgroundColor: Colors.white,
               title: Text(
                 '',
-                style: GoogleFonts.openSans(color: Color(0xFF555555),),
+                style: TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555),),
               ),
             ),
             body: (saveItemList.length == 0)
@@ -662,7 +670,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                     child: Container(
                       child: Text(
                         '$Empty',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey,
@@ -690,7 +699,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                   child: ListTile(
                                     // title: Text(
                                     //   saveItem[index].itemItem ?? '',
-                                    //   style: GoogleFonts.openSans(
+                                    //   style: TextStyle(
+                // fontFamily: 'Arial',
                                     //     fontSize: 18.0,
                                     //     color: Color(0xFFFF9900),
                                     //     fontWeight: FontWeight.bold,
@@ -753,7 +763,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                                     ),
                                               Text(
                                                 "$Detail : ${(saveItemList[index].itemNote == '') ? '-' : saveItemList[index].itemNote ?? ''}",
-                                                style: GoogleFonts.openSans(
+                                                style: TextStyle(
+                fontFamily: 'Arial',
                                                   fontSize: 14.0,
                                                   color: Color(0xFF555555),
                                                 ),
@@ -765,7 +776,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                                 children: [
                                                   Text(
                                                     "$Quantity : ${(saveItemList[index].itemQuantity == '') ? '0' : saveItemList[index].itemQuantity} ",
-                                                    style: GoogleFonts.openSans(
+                                                    style: TextStyle(
+                fontFamily: 'Arial',
                                                       fontSize: 14.0,
                                                       color: Color(0xFF555555),
                                                     ),
@@ -775,7 +787,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                                   ),
                                                   Text(
                                                     "$Price : ${(saveItemList[index].itemPrice == '') ? '0' : saveItemList[index].itemPrice} $Baht",
-                                                    style: GoogleFonts.openSans(
+                                                    style: TextStyle(
+                fontFamily: 'Arial',
                                                       fontSize: 14.0,
                                                       color: Color(0xFF555555),
                                                     ),
@@ -786,7 +799,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                               Text(
                                                 "$Total_price : ${(saveItemList[index].itemPrice == '' || saveItemList[index].itemQuantity == '') ? '0' : "${double.parse(saveItemList[index].itemPrice ?? '') * double.parse(saveItemList[index].itemQuantity ?? '')}"} "
                                                 "${(saveItemList[index].unitCode == '') ? '$Baht/$Unit' : " $Baht/${saveItemList[index].unitDesc ?? ''}"}",
-                                                style: GoogleFonts.openSans(
+                                                style: TextStyle(
+                fontFamily: 'Arial',
                                                   fontSize: 14.0,
                                                   color: Color(0xFF555555),
                                                 ),

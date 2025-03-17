@@ -63,7 +63,8 @@ class _ContactAddViewState extends State<ContactAddView> {
           alignment: Alignment.centerLeft,
           child: Text(
             '${page}',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -84,7 +85,8 @@ class _ContactAddViewState extends State<ContactAddView> {
         items: items,
         iconSize: 18,
         animated: true,
-        titleStyle: GoogleFonts.openSans(),
+        titleStyle: TextStyle(
+                fontFamily: 'Arial',),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),

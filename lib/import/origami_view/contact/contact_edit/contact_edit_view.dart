@@ -84,7 +84,8 @@ class _ContactEditViewState extends State<ContactEditView> {
           alignment: Alignment.centerLeft,
           child: Text(
             '${page}',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -105,7 +106,8 @@ class _ContactEditViewState extends State<ContactEditView> {
         items: items,
         iconSize: 18,
         animated: true,
-        titleStyle: GoogleFonts.openSans(),
+        titleStyle: TextStyle(
+                fontFamily: 'Arial',),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
@@ -126,7 +128,8 @@ class _ContactEditViewState extends State<ContactEditView> {
         return Center(
           child: Text(
             'Setup',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: const Color(0xFF555555),

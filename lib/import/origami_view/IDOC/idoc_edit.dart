@@ -1,12 +1,16 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../activity/add/activity_add.dart';
+import '../project/update_project/join_user/join_user.dart';
 import '../project/update_project/project_other_view/project_budgeting.dart';
 import 'package:origamilift/import/import.dart';
 
 class IdocEdit extends StatefulWidget {
   const IdocEdit({
-    Key? key, required this.employee, required this.pageInput, required this.Authorization,
+    Key? key,
+    required this.employee,
+    required this.pageInput,
+    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
@@ -22,6 +26,13 @@ class _IdocEditState extends State<IdocEdit> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _nameIdocController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
+  TextEditingController _addNameUrlController = TextEditingController();
+  TextEditingController _addLinkUrlController = TextEditingController();
+  TextEditingController _addLinkDescriptionController = TextEditingController();
+  TextEditingController _editNameUrlController = TextEditingController();
+  TextEditingController _editLinkUrlController = TextEditingController();
+  TextEditingController _editLinkDescriptionController =
+      TextEditingController();
 
   final _controllerOwner = ValueNotifier<bool>(false);
   final _controllerActivity = ValueNotifier<bool>(false);
@@ -85,7 +96,8 @@ class _IdocEditState extends State<IdocEdit> {
           alignment: Alignment.center,
           child: Text(
             'ERROR!',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 18.0,
               color: Colors.white,
               fontWeight: FontWeight.w700,
@@ -122,7 +134,8 @@ class _IdocEditState extends State<IdocEdit> {
           alignment: Alignment.centerLeft,
           child: Text(
             'IDOC',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -145,7 +158,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'DONE',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -162,7 +176,9 @@ class _IdocEditState extends State<IdocEdit> {
         items: tabItems,
         iconSize: 18,
         animated: true,
-        titleStyle: GoogleFonts.openSans(),
+        titleStyle: TextStyle(
+          fontFamily: 'Arial',
+        ),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
@@ -183,14 +199,14 @@ class _IdocEditState extends State<IdocEdit> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Information',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 22,
                   color: Colors.grey,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-
             SizedBox(height: 16),
             Row(
               children: [
@@ -199,7 +215,8 @@ class _IdocEditState extends State<IdocEdit> {
                     children: [
                       Text(
                         'Rcv. No.',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w700,
@@ -208,7 +225,8 @@ class _IdocEditState extends State<IdocEdit> {
                       SizedBox(width: 8),
                       Text(
                         '306',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w500,
@@ -219,21 +237,20 @@ class _IdocEditState extends State<IdocEdit> {
                 ),
                 Expanded(
                     child: Row(
-                      children: [
-                        Text(
-                          'Doc. No.',
-                          style: GoogleFonts.openSans(
-                            fontSize: 14,
-                            color: Color(0xFF555555),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                            child: _IdocText(
-                                '1234', _IdocNoController)),
-                      ],
-                    )),
+                  children: [
+                    Text(
+                      'Doc. No.',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(child: _IdocText('1234', _IdocNoController)),
+                  ],
+                )),
               ],
             ),
             SizedBox(height: 8),
@@ -243,7 +260,8 @@ class _IdocEditState extends State<IdocEdit> {
                 Expanded(
                   child: Text(
                     'Doc. Date : ',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -254,7 +272,8 @@ class _IdocEditState extends State<IdocEdit> {
                 Expanded(
                   child: Text(
                     'Rcv. Date : ',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -268,12 +287,9 @@ class _IdocEditState extends State<IdocEdit> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                    child: _IdocCalendar(
-                        '$startDate', 'startDate', false)),
+                    child: _IdocCalendar('$startDate', 'startDate', false)),
                 SizedBox(width: 16),
-                Expanded(
-                    child: _IdocCalendar(
-                        '$startDate', 'startDate', true)),
+                Expanded(child: _IdocCalendar('$startDate', 'startDate', true)),
               ],
             ),
             _IdocTextColumn('Name', _nameIdocController),
@@ -283,7 +299,8 @@ class _IdocEditState extends State<IdocEdit> {
                 Text(
                   'Description',
                   maxLines: 1,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.bold,
@@ -299,7 +316,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Project',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -315,7 +333,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Hashtag',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -331,7 +350,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Type : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -347,7 +367,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Speed : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -363,7 +384,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Secrets : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -379,7 +401,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Priority : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -395,7 +418,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Category : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -411,7 +435,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Doc. Rcv. ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -427,7 +452,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Status : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -443,7 +469,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Doc. Date : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -459,7 +486,8 @@ class _IdocEditState extends State<IdocEdit> {
               children: [
                 Text(
                   'Owner : ',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -484,13 +512,22 @@ class _IdocEditState extends State<IdocEdit> {
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'File/Image',
-                style: GoogleFonts.openSans(
-                  fontSize: 18,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w700,
-                ),
+              child: Row(
+                children: [
+                  Icon(Icons.cloud_upload, color: Color(0xFF555555), size: 18),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Attach File',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 18,
+                        color: Color(0xFF555555),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 8),
@@ -500,96 +537,83 @@ class _IdocEditState extends State<IdocEdit> {
                       onTap: () => pickFile(),
                       child: Padding(
                         padding: const EdgeInsets.only(top: 8),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 1.0,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Wrap(
-                                  spacing: 8.0, // ระยะห่างระหว่างไอเท็มในแนวนอน
-                                  runSpacing: 8.0, // ระยะห่างระหว่างไอเท็มในแนวตั้ง (บรรทัดใหม่)
-                                  children: List.generate(_addFile.length, (index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: (fileExtension == 'pdf')
-                                                ? Icon(Icons.picture_as_pdf,
-                                                    color: Colors.red, size: 200)
-                                                : (fileExtension == 'doc' ||
-                                                        fileExtension == 'docx')
-                                                    ? Icon(Icons.description,
-                                                        color: Colors.blue, size: 200)
-                                                    : (fileExtension == 'xls' ||
-                                                            fileExtension == 'xlsx')
-                                                        ? Icon(Icons.grid_on,
-                                                            color: Colors.green,
-                                                            size: 40.0)
-                                                        : (fileExtension == 'jpg' ||
-                                                                fileExtension ==
-                                                                    'png' ||
-                                                                fileExtension ==
-                                                                    'jpeg')
-                                                            ? Image.network(
-                                                                'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg',
-                                                                width: 200,
-                                                                height: 200,
-                                                              )
-                                                            : Icon(
-                                                                Icons
-                                                                    .insert_drive_file,
-                                                                color: Colors.grey,
-                                                                size: 200),
-                                          ),
-                                          Positioned(
-                                            top: 4,
-                                            right: 4,
-                                            child: InkWell(
-                                              onTap: () {},
-                                              child: Stack(
-                                                children: [
-                                                  Icon(
-                                                    Icons.cancel_outlined,
-                                                    color: Colors.white,
-                                                  ),
-                                                  Icon(
-                                                    Icons.cancel,
-                                                    color: Colors.red,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Wrap(
+                              spacing: 8.0, // ระยะห่างระหว่างไอเท็มในแนวนอน
+                              runSpacing:
+                                  8.0, // ระยะห่างระหว่างไอเท็มในแนวตั้ง (บรรทัดใหม่)
+                              children: List.generate(_addFile.length, (index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: (fileExtension == 'pdf')
+                                            ? Icon(Icons.picture_as_pdf,
+                                                color: Colors.red, size: 200)
+                                            : (fileExtension == 'doc' ||
+                                                    fileExtension == 'docx')
+                                                ? Icon(Icons.description,
+                                                    color: Colors.blue,
+                                                    size: 200)
+                                                : (fileExtension == 'xls' ||
+                                                        fileExtension == 'xlsx')
+                                                    ? Icon(Icons.grid_on,
+                                                        color: Colors.green,
+                                                        size: 40.0)
+                                                    : (fileExtension == 'jpg' ||
+                                                            fileExtension ==
+                                                                'png' ||
+                                                            fileExtension ==
+                                                                'jpeg')
+                                                        ? Image.network(
+                                                            'https://statusneo.com/wp-content/uploads/2023/02/MicrosoftTeams-image551ad57e01403f080a9df51975ac40b6efba82553c323a742b42b1c71c1e45f1.jpg',
+                                                            width: 200,
+                                                            height: 200,
+                                                          )
+                                                        : Icon(
+                                                            Icons
+                                                                .insert_drive_file,
+                                                            color: Colors.grey,
+                                                            size: 200),
                                       ),
-                                    );
-                                  }),
-                                ),
-                              ),
+                                      Positioned(
+                                        top: 4,
+                                        right: 4,
+                                        child: InkWell(
+                                          onTap: () {},
+                                          child: Stack(
+                                            children: [
+                                              Icon(
+                                                Icons.cancel_outlined,
+                                                color: Colors.white,
+                                              ),
+                                              Icon(
+                                                Icons.cancel,
+                                                color: Colors.red,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
                             ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'Tap here to select an File/Image.',
-                              style: GoogleFonts.openSans(
-                                fontSize: 14,
-                                color: Color(0xFFFF9900),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     )
@@ -614,7 +638,8 @@ class _IdocEditState extends State<IdocEdit> {
                                 child: Center(
                                   child: Text(
                                     'Drag & drop files here \n(or click to select files)',
-                                    style: GoogleFonts.openSans(
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
                                       fontSize: 24,
                                       color: Colors.grey.shade300,
                                       fontWeight: FontWeight.w700,
@@ -626,21 +651,212 @@ class _IdocEditState extends State<IdocEdit> {
                             SizedBox(
                               height: 8,
                             ),
-                            Text(
-                              'Tap here to select an image.',
-                              style: GoogleFonts.openSans(
-                                fontSize: 14,
-                                color: Color(0xFFFF9900),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
                           ],
                         ),
                       ),
                     ),
             ),
+            Divider(),
+            SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  Icon(Icons.share, color: Color(0xFF555555), size: 18),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Link',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 18,
+                        color: Color(0xFF555555),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    'File Name : ',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                _TextController(
+                    'Past Name Of Url', _addNameUrlController, true),
+                _TextController('Paste Link Url', _addLinkUrlController, true),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    'Description : ',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                _TextController(
+                    'Description', _addLinkDescriptionController, true),
+              ],
+            ),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                Text(
+                  'No.',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    'File Name',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Divider(),
+            Column(
+                children: List.generate(2, (index) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              '${index + 1}',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            _TextController('Past Name Of Url',
+                                _editNameUrlController, false),
+                            _TextController('Paste Link Url',
+                                _editLinkUrlController, false),
+                            _TextController('Description',
+                                _editLinkDescriptionController, false),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          CheckBoxWidget(
+                            title: '',
+                            isOwner: "N",
+                            onChanged: (value) {
+                              print("ค่าใหม่: $value"); // Y , N
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          Icon(Icons.delete,color: Colors.red,size: 28),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Divider(),
+                ],
+              );
+            })),
+            SizedBox(height: 8),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _TextController(
+      String hintText, TextEditingController textController, bool status) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            minLines: (textController == _addLinkDescriptionController) ? 3 : 1,
+            maxLines: null,
+            readOnly: (status == false) ? true : false,
+            controller: textController,
+            keyboardType: TextInputType.text,
+            style: TextStyle(
+                fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
+            decoration: InputDecoration(
+              isDense: true,
+              filled: true,
+              fillColor:
+                  (status == false) ? Colors.grey.shade300 : Colors.white,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              hintText: hintText,
+              hintStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                  color: (status == false)
+                      ? Color(0xFF555555)
+                      : Colors.grey.shade400),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(100),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: (status == false)
+                      ? Colors.grey.shade400
+                      : Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: (status == false)
+                      ? Colors.grey.shade400
+                      : Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+        ],
       ),
     );
   }
@@ -655,7 +871,8 @@ class _IdocEditState extends State<IdocEdit> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Join User',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                  fontFamily: 'Arial',
                   fontSize: 18,
                   color: Colors.grey,
                   fontWeight: FontWeight.w700,
@@ -717,7 +934,8 @@ class _IdocEditState extends State<IdocEdit> {
                                           'Jirapat Jangsawang',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w700,
@@ -730,7 +948,8 @@ class _IdocEditState extends State<IdocEdit> {
                                           '(Mobile Application)',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -747,7 +966,8 @@ class _IdocEditState extends State<IdocEdit> {
                                         'Owner : ',
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 14,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w700,
@@ -756,13 +976,18 @@ class _IdocEditState extends State<IdocEdit> {
                                       AdvancedSwitch(
                                         activeChild: Text(
                                           'ON',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
                                         inactiveChild: Text(
                                           'OFF',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
-                                        borderRadius: BorderRadius.circular(100),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
                                         height: 25,
                                         controller: _controllerOwner,
                                         enabled: true,
@@ -773,7 +998,8 @@ class _IdocEditState extends State<IdocEdit> {
                                           'Approve Activity : ',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w700,
@@ -783,13 +1009,18 @@ class _IdocEditState extends State<IdocEdit> {
                                       AdvancedSwitch(
                                         activeChild: Text(
                                           'ON',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
                                         inactiveChild: Text(
                                           'OFF',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
-                                        borderRadius: BorderRadius.circular(100),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
                                         height: 25,
                                         controller: _controllerActivity,
                                       ),
@@ -808,7 +1039,8 @@ class _IdocEditState extends State<IdocEdit> {
                               'Role : ',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.w700,
@@ -832,7 +1064,8 @@ class _IdocEditState extends State<IdocEdit> {
                 onPressed: _addJoinUser,
                 child: Text(
                   'Tap here to select an Join User.',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -871,222 +1104,224 @@ class _IdocEditState extends State<IdocEdit> {
         //   return Center(
         //       child: Text(
         //         '$Empty',
-        //         style: GoogleFonts.openSans(
+        //         style: TextStyle(
+        //         fontFamily: 'Arial',
         //           color: Color(0xFF555555),
         //         ),
         //       ));
         // }
-        else {
-          // กรองข้อมูลตามคำค้นหา
-          // List<ActivityContact> filteredContacts =
-          // snapshot.data!.where((contact) {
-          //   String searchTerm = _searchfilterController.text.toLowerCase();
-          //   String fullName = '${contact.contact_first} ${contact.contact_last}'
-          //       .toLowerCase();
-          //   return fullName.contains(searchTerm);
-          // }).toList();
-          return Column(
-            children: [
-              Expanded(child: SizedBox()),
-              Stack(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 16),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(10),
-                        ),
+        // else {
+        // กรองข้อมูลตามคำค้นหา
+        // List<ActivityContact> filteredContacts =
+        // snapshot.data!.where((contact) {
+        //   String searchTerm = _searchfilterController.text.toLowerCase();
+        //   String fullName = '${contact.contact_first} ${contact.contact_last}'
+        //       .toLowerCase();
+        //   return fullName.contains(searchTerm);
+        // }).toList();
+        return Column(
+          children: [
+            Expanded(child: SizedBox()),
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10),
                       ),
-                      child: Scaffold(
-                        backgroundColor: Colors.transparent,
-                        body: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                controller: _searchfilterController,
-                                keyboardType: TextInputType.text,
-                                style: GoogleFonts.openSans(
-                                    color: Color(0xFF555555), fontSize: 14),
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 12),
-                                  hintText: 'Search',
-                                  hintStyle: GoogleFonts.openSans(
-                                      fontSize: 14, color: Color(0xFF555555)),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Color(0xFFFF9900),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFFF9900),
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFFF9900),
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                    ),
+                    child: Scaffold(
+                      backgroundColor: Colors.transparent,
+                      body: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: _searchfilterController,
+                              keyboardType: TextInputType.text,
+                              style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  color: Color(0xFF555555),
+                                  fontSize: 14),
+                              decoration: InputDecoration(
+                                isDense: true,
+                                filled: true,
+                                fillColor: Colors.white,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 12),
+                                hintText: 'Search',
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14,
+                                    color: Color(0xFF555555)),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
                                 ),
-                                onChanged: (value) {
-                                  setState(() {}); // รีเฟรช UI เมื่อค้นหา
-                                },
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Color(0xFFFF9900),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFFF9900),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFFF9900),
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
+                              onChanged: (value) {
+                                setState(() {}); // รีเฟรช UI เมื่อค้นหา
+                              },
                             ),
-                            SizedBox(height: 8),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: ListView.builder(
-                                  itemCount: titleDownJoin.length,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        // bool isAlreadyAdded = addNewContactList.any(
-                                        //         (existingContact) =>
-                                        //     existingContact.contact_first ==
-                                        //         contact.contact_first &&
-                                        //         existingContact.contact_last ==
-                                        //             contact.contact_last);
-                                        //
-                                        // if (!isAlreadyAdded) {
-                                        //   setState(() {
-                                        //     addNewContactList.add(
-                                        //         contact); // เพิ่มรายการที่เลือกลงใน list
-                                        //   });
-                                        // } else {
-                                        //   // แจ้งเตือนว่ามีชื่ออยู่แล้ว
-                                        //   ScaffoldMessenger.of(context).showSnackBar(
-                                        //     SnackBar(
-                                        //       content: Text(
-                                        //           'This name has already joined the list!'),
-                                        //       duration: Duration(seconds: 2),
-                                        //     ),
-                                        //   );
-                                        // }
-                                        Navigator.pop(context);
-                                      },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 4, right: 8),
+                          ),
+                          SizedBox(height: 8),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: ListView.builder(
+                                itemCount: titleDownJoin.length,
+                                itemBuilder: (context, index) {
+                                  return InkWell(
+                                    onTap: () {
+                                      // bool isAlreadyAdded = addNewContactList.any(
+                                      //         (existingContact) =>
+                                      //     existingContact.contact_first ==
+                                      //         contact.contact_first &&
+                                      //         existingContact.contact_last ==
+                                      //             contact.contact_last);
+                                      //
+                                      // if (!isAlreadyAdded) {
+                                      //   setState(() {
+                                      //     addNewContactList.add(
+                                      //         contact); // เพิ่มรายการที่เลือกลงใน list
+                                      //   });
+                                      // } else {
+                                      //   // แจ้งเตือนว่ามีชื่ออยู่แล้ว
+                                      //   ScaffoldMessenger.of(context).showSnackBar(
+                                      //     SnackBar(
+                                      //       content: Text(
+                                      //           'This name has already joined the list!'),
+                                      //       duration: Duration(seconds: 2),
+                                      //     ),
+                                      //   );
+                                      // }
+                                      Navigator.pop(context);
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 4, right: 8),
+                                              child: CircleAvatar(
+                                                radius: 22,
+                                                backgroundColor: Colors.grey,
                                                 child: CircleAvatar(
-                                                  radius: 22,
-                                                  backgroundColor: Colors.grey,
-                                                  child: CircleAvatar(
-                                                    radius: 21,
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                      child: Image.network(
-                                                        'https://dev.origami.life/images/default.png',
-                                                        height: 100,
-                                                        width: 100,
-                                                        fit: BoxFit.cover,
-                                                      ),
+                                                  radius: 21,
+                                                  backgroundColor: Colors.white,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                    child: Image.network(
+                                                      'https://dev.origami.life/images/default.png',
+                                                      height: 100,
+                                                      width: 100,
+                                                      fit: BoxFit.cover,
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Jirapat Jangsawang',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                        fontSize: 16,
-                                                        color: Color(0xFFFF9900),
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Jirapat Jangsawang',
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 16,
+                                                      color: Color(0xFFFF9900),
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                     ),
-                                                    SizedBox(height: 8),
-                                                    Text(
-                                                      'Development (Mobile Application)',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF555555),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    'Development (Mobile Application)',
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 14,
+                                                      color: Color(0xFF555555),
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                     ),
-                                                    Divider(
-                                                        color: Colors
-                                                            .grey.shade300),
-                                                  ],
-                                                ),
+                                                  ),
+                                                  Divider(
+                                                      color:
+                                                          Colors.grey.shade300),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(child: Container()),
-                      IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: Icon(Icons.cancel, color: Colors.red)),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          );
-        }
+                ),
+                Row(
+                  children: [
+                    Expanded(child: Container()),
+                    IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(Icons.cancel, color: Colors.red)),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        );
+        // }
       },
     );
   }
@@ -1113,11 +1348,13 @@ class _IdocEditState extends State<IdocEdit> {
         isExpanded: true,
         hint: Text(
           'DEV',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+          fontFamily: 'Arial',
           color: Color(0xFF555555),
         ),
         items: titleDownJoin
@@ -1125,7 +1362,8 @@ class _IdocEditState extends State<IdocEdit> {
                   value: item,
                   child: Text(
                     item.status_name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1160,8 +1398,8 @@ class _IdocEditState extends State<IdocEdit> {
             child: TextFormField(
               controller: _searchController,
               keyboardType: TextInputType.text,
-              style:
-                  GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+              style: TextStyle(
+                  fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(
@@ -1169,8 +1407,10 @@ class _IdocEditState extends State<IdocEdit> {
                   vertical: 8,
                 ),
                 hintText: '$Search...',
-                hintStyle: GoogleFonts.openSans(
-                    fontSize: 14, color: Color(0xFF555555)),
+                hintStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -1207,12 +1447,14 @@ class _IdocEditState extends State<IdocEdit> {
         isExpanded: true,
         hint: Text(
           value,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             color: Colors.grey,
             fontSize: 14,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+          fontFamily: 'Arial',
           color: Colors.grey,
           fontSize: 14,
         ),
@@ -1221,7 +1463,8 @@ class _IdocEditState extends State<IdocEdit> {
                   value: type,
                   child: Text(
                     type.name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1266,12 +1509,14 @@ class _IdocEditState extends State<IdocEdit> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             color: Colors.grey,
             fontSize: 14,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+          fontFamily: 'Arial',
           color: Colors.grey,
           fontSize: 14,
         ),
@@ -1280,7 +1525,8 @@ class _IdocEditState extends State<IdocEdit> {
                   value: type,
                   child: Text(
                     type.name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1325,12 +1571,14 @@ class _IdocEditState extends State<IdocEdit> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             color: Colors.grey,
             fontSize: 14,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+          fontFamily: 'Arial',
           color: Colors.grey,
           fontSize: 14,
         ),
@@ -1339,7 +1587,8 @@ class _IdocEditState extends State<IdocEdit> {
                   value: type,
                   child: Text(
                     type.name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1384,12 +1633,14 @@ class _IdocEditState extends State<IdocEdit> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             color: Colors.grey,
             fontSize: 14,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+          fontFamily: 'Arial',
           color: Colors.grey,
           fontSize: 14,
         ),
@@ -1398,7 +1649,8 @@ class _IdocEditState extends State<IdocEdit> {
                   value: type,
                   child: Text(
                     type.name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1443,12 +1695,14 @@ class _IdocEditState extends State<IdocEdit> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             color: Colors.grey,
             fontSize: 14,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+          fontFamily: 'Arial',
           color: Colors.grey,
           fontSize: 14,
         ),
@@ -1457,7 +1711,8 @@ class _IdocEditState extends State<IdocEdit> {
                   value: type,
                   child: Text(
                     type.name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1502,12 +1757,14 @@ class _IdocEditState extends State<IdocEdit> {
         isExpanded: true,
         hint: Text(
           '',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             color: Colors.grey,
             fontSize: 14,
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+          fontFamily: 'Arial',
           color: Colors.grey,
           fontSize: 14,
         ),
@@ -1516,7 +1773,8 @@ class _IdocEditState extends State<IdocEdit> {
                   value: type,
                   child: Text(
                     type.name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1554,7 +1812,8 @@ class _IdocEditState extends State<IdocEdit> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1571,7 +1830,8 @@ class _IdocEditState extends State<IdocEdit> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.text,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -1582,7 +1842,8 @@ class _IdocEditState extends State<IdocEdit> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -1621,7 +1882,8 @@ class _IdocEditState extends State<IdocEdit> {
       maxLines: null,
       controller: controller,
       keyboardType: TextInputType.text,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -1632,7 +1894,8 @@ class _IdocEditState extends State<IdocEdit> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -1678,7 +1941,8 @@ class _IdocEditState extends State<IdocEdit> {
         child: TextFormField(
           enabled: false,
           keyboardType: TextInputType.number,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -1689,7 +1953,8 @@ class _IdocEditState extends State<IdocEdit> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: (ifTime == true) ? '${title} $currentTime' : title,
-            hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),

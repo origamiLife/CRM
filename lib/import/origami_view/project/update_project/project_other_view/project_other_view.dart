@@ -105,7 +105,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                               'Jirapat Jangsawang',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
@@ -116,7 +117,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                               'Company: Allable Co.,Ltd.',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 14,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -126,7 +128,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                               'Position: Mobile Application',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 14,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -152,7 +155,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                       padding: EdgeInsets.only(left: 8, top: 8),
                       child: Text(
                         'Other',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 18,
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w700,
@@ -267,7 +271,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           otherItems[index].name,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -293,7 +298,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                         children: [
                           Text(
                             'Sutup Helpdesk',
-                            style: GoogleFonts.openSans(
+                            style: TextStyle(
+                fontFamily: 'Arial',
                               fontSize: 18,
                               color: Color(0xFF555555),
                               fontWeight: FontWeight.w700,
@@ -310,7 +316,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                       Expanded(
                                         child: Text(
                                           '1. Service level',
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 18,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w700,
@@ -320,11 +327,13 @@ class _ProjectOtherState extends State<ProjectOther> {
                                       AdvancedSwitch(
                                         activeChild: Text(
                                           'ON',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                fontFamily: 'Arial',),
                                         ),
                                         inactiveChild: Text(
                                           'OFF',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                fontFamily: 'Arial',),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(100),
@@ -345,7 +354,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           SizedBox(width: 4),
                                           Text(
                                             'Service level',
-                                            style: GoogleFonts.openSans(
+                                            style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 16,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -362,7 +372,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           SizedBox(width: 4),
                                           Text(
                                             'Height',
-                                            style: GoogleFonts.openSans(
+                                            style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 16,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -378,7 +389,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           SizedBox(width: 4),
                                           Text(
                                             'Medium',
-                                            style: GoogleFonts.openSans(
+                                            style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 16,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -394,7 +406,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           SizedBox(width: 4),
                                           Text(
                                             'Low',
-                                            style: GoogleFonts.openSans(
+                                            style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 16,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -423,7 +436,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                       Expanded(
                                         child: Text(
                                           'Auto complete (Day) : ',
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -441,7 +455,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                       Expanded(
                                         child: Text(
                                           'Auto complete qouta (Day) : ',
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -459,7 +474,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                       Expanded(
                                         child: Text(
                                           'Helpdesk Start date : ',
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -477,7 +493,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                                       Expanded(
                                         child: Text(
                                           'Helpdesk End date : ',
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -537,7 +554,8 @@ class _ProjectOtherState extends State<ProjectOther> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Colors.green,
         fontSize: 14,
       ),
@@ -548,7 +566,8 @@ class _ProjectOtherState extends State<ProjectOther> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
         ),
@@ -580,7 +599,8 @@ class _ProjectOtherState extends State<ProjectOther> {
         child: TextFormField(
           enabled: false,
           keyboardType: TextInputType.number,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -591,7 +611,8 @@ class _ProjectOtherState extends State<ProjectOther> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: title,
-            hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: Colors.grey, width: 1),
@@ -711,11 +732,13 @@ class _ProjectOtherState extends State<ProjectOther> {
         isExpanded: true,
         hint: Text(
           'Unit',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
         ),
         items: unitOther
@@ -723,7 +746,8 @@ class _ProjectOtherState extends State<ProjectOther> {
                   value: unit,
                   child: Text(
                     unit.name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),

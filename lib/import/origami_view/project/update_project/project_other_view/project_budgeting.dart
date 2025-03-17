@@ -39,7 +39,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Budgeting',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -78,7 +79,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
             child: TextFormField(
               controller: _searchController,
               keyboardType: TextInputType.text,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
                 fontSize: 14,
               ),
@@ -89,7 +91,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                 hintText: 'Search...',
-                hintStyle: GoogleFonts.openSans(
+                hintStyle: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14, color: Color(0xFF555555)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(100),
@@ -153,7 +156,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                                 child: Text(
                                   modelBubget.mny_category_name ?? '',
                                   maxLines: 1,
-                                  style: GoogleFonts.openSans(
+                                  style: TextStyle(
+                fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w700,
@@ -163,7 +167,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                               Text(
                                 '${modelBubget.budgeting_balance ?? ''}',
                                 maxLines: 1,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 14,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w500,
@@ -190,7 +195,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                   child: Text(
                     'Total',
                     maxLines: 1,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
@@ -200,7 +206,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                 Text(
                   '${total}',
                   maxLines: 1,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -228,7 +235,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                   modelBubget?.mny_category_name??'',
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: const Color(0xFF555555),
@@ -241,7 +249,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     Expanded(
                       child: Text(
                         'Balance :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -251,7 +260,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     SizedBox(width: 8),
                     Text(
                       '${modelBubget?.budgeting_balance??''}',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -266,7 +276,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     Expanded(
                       child: Text(
                         'New :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -276,7 +287,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     SizedBox(width: 8),
                     Text(
                       modelBubget?.budgeting_new??'',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -291,7 +303,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     Expanded(
                       child: Text(
                         'In Progress :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -301,7 +314,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     SizedBox(width: 8),
                     Text(
                       modelBubget?.budgeting_progress??'',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -316,7 +330,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     Expanded(
                       child: Text(
                         'Approve :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -326,7 +341,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     SizedBox(width: 8),
                     Text(
                       modelBubget?.budgeting_approve??'',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -341,7 +357,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     Expanded(
                       child: Text(
                         'Process :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -351,7 +368,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     SizedBox(width: 8),
                     Text(
                       modelBubget?.budgeting_process??'',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -366,7 +384,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     Expanded(
                       child: Text(
                         'Paid :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -376,7 +395,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     SizedBox(width: 8),
                     Text(
                       modelBubget?.budgeting_paid??'',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -391,7 +411,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     Expanded(
                       child: Text(
                         'Not Approve :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -401,7 +422,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     SizedBox(width: 8),
                     Text(
                       modelBubget?.budgeting_notapprove??'',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -416,7 +438,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     Expanded(
                       child: Text(
                         'Reject :',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -426,7 +449,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     SizedBox(width: 8),
                     Text(
                       modelBubget?.budgeting_reject??'',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -443,7 +467,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
               onPressed: () => Navigator.of(context).pop(), // Cancel
               child: Text(
                 'Close',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 16,
                   color: Color(0xFFFF9900),
                   fontWeight: FontWeight.w700,

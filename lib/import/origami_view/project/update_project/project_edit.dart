@@ -160,7 +160,8 @@ class _ProjectEditState extends State<ProjectEdit> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Detail',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -183,7 +184,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               children: [
                 Text(
                   'DONE',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -266,7 +268,8 @@ class _ProjectEditState extends State<ProjectEdit> {
             children: [
               TextSpan(
                 text: title,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.bold,
@@ -274,7 +277,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               ),
               TextSpan(
                 text: ' *',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -297,11 +301,13 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               widget.project.contact_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: contactList
@@ -311,7 +317,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                         item.contact_name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -348,7 +355,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -359,7 +367,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -395,7 +404,8 @@ class _ProjectEditState extends State<ProjectEdit> {
             children: [
               TextSpan(
                 text: title,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.bold,
@@ -403,7 +413,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               ),
               TextSpan(
                 text: ' *',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -426,11 +437,13 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               widget.project.account_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: AccountList.map((item) => DropdownMenuItem<AccountData>(
@@ -439,7 +452,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                     item.account_name ?? 'Unknown',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -475,7 +489,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -486,7 +501,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -522,7 +538,8 @@ class _ProjectEditState extends State<ProjectEdit> {
             children: [
               TextSpan(
                 text: title,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.bold,
@@ -530,7 +547,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               ),
               TextSpan(
                 text: ' *',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -553,11 +571,13 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               widget.project.project_type_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: TypeList.map((item) => DropdownMenuItem<TypeData>(
@@ -566,7 +586,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                     item.type_name ?? '',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -602,7 +623,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -613,7 +635,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -649,7 +672,8 @@ class _ProjectEditState extends State<ProjectEdit> {
             children: [
               TextSpan(
                 text: title,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.bold,
@@ -657,7 +681,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               ),
               TextSpan(
                 text: ' *',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -680,11 +705,13 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               widget.project.project_source_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: SourceList.map((item) => DropdownMenuItem<SourceData>(
@@ -693,7 +720,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                     item.source_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -729,7 +757,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -740,7 +769,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -775,7 +805,8 @@ class _ProjectEditState extends State<ProjectEdit> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -814,7 +845,8 @@ class _ProjectEditState extends State<ProjectEdit> {
             //     : (widget.project.category_data.length != 0)
             //         ? widget.project.category_data
             //         : CategoryList.map((e) => e.categories_name).join(", "),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
               fontSize: 14,
             ),
@@ -836,7 +868,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 });
               }
             },
-            textStyle: GoogleFonts.openSans(
+            textStyle: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
           ),
@@ -858,7 +891,8 @@ class _ProjectEditState extends State<ProjectEdit> {
             children: [
               TextSpan(
                 text: title,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.bold,
@@ -866,7 +900,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               ),
               TextSpan(
                 text: ' *',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -889,11 +924,13 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               widget.project.project_process_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: ProcessList.map((item) => DropdownMenuItem<ProcessData>(
@@ -902,7 +939,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                     item.process_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -938,7 +976,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -949,7 +988,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -985,7 +1025,8 @@ class _ProjectEditState extends State<ProjectEdit> {
             children: [
               TextSpan(
                 text: title,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.bold,
@@ -993,7 +1034,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               ),
               TextSpan(
                 text: ' *',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -1016,11 +1058,13 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               widget.project.project_priority_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: PriorityList.map((item) => DropdownMenuItem<PriorityData>(
@@ -1029,7 +1073,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                     item.priority_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1065,7 +1110,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1076,7 +1122,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1111,7 +1158,8 @@ class _ProjectEditState extends State<ProjectEdit> {
           title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -1131,11 +1179,13 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               'Select $title',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: SubStatusList.map((item) => DropdownMenuItem<SubStatusData>(
@@ -1144,7 +1194,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                     item.sub_status_name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1180,7 +1231,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -1191,7 +1243,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1227,7 +1280,8 @@ class _ProjectEditState extends State<ProjectEdit> {
             children: [
               TextSpan(
                 text: title,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.bold,
@@ -1235,7 +1289,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               ),
               TextSpan(
                 text: ' *',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -1258,18 +1313,21 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               widget.project.project_sale_nonsale_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: SaleDataList.map((item) => DropdownMenuItem<SaleData>(
                   value: item,
                   child: Text(
                     item.sale_name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1310,7 +1368,8 @@ class _ProjectEditState extends State<ProjectEdit> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1330,11 +1389,13 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               widget.project.project_model_name,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: ProjectModelList.map(
@@ -1342,7 +1403,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                       value: item,
                       child: Text(
                         item.project_model_name,
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1383,7 +1445,8 @@ class _ProjectEditState extends State<ProjectEdit> {
         Text(
           title,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1403,11 +1466,13 @@ class _ProjectEditState extends State<ProjectEdit> {
             isExpanded: true,
             hint: Text(
               widget.project.approve_quotation,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: ApproveList.map(
@@ -1415,7 +1480,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                   value: item,
                   child: Text(
                     item.approve_quotation,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -1479,7 +1545,8 @@ class _ProjectEditState extends State<ProjectEdit> {
             children: [
               TextSpan(
                 text: title,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.bold,
@@ -1487,7 +1554,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               ),
               TextSpan(
                 text: ' *',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                   color: Colors.red,
                   fontWeight: FontWeight.bold,
@@ -1504,7 +1572,8 @@ class _ProjectEditState extends State<ProjectEdit> {
           enabled: (_isTrue == true) ? true : false,
           controller: textController,
           keyboardType: TextInputType.text,
-          style: GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+          style: TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -1515,7 +1584,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 ? getData
                 : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
             hintStyle:
-                GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+                TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
             suffixIcon: Container(
               alignment: Alignment.centerRight,
               width: 10,
@@ -1570,7 +1640,8 @@ class _ProjectEditState extends State<ProjectEdit> {
         Text(
           _nemedate,
           maxLines: 1,
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1597,7 +1668,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 children: [
                   Text(
                     date,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                   ),
                   Spacer(),

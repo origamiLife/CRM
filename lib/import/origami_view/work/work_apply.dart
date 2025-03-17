@@ -104,7 +104,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Me',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -127,7 +128,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
               children: [
                 Text(
                   'DONE',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -170,7 +172,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                       children: [
                         Text(
                           'Work Type',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFF555555),
                             fontWeight: FontWeight.w700,
@@ -210,7 +213,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                       children: [
                         Text(
                           'Select DateTime',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFF555555),
                             fontWeight: FontWeight.w700,
@@ -240,7 +244,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                                       children: [
                                         Text(
                                           showlastDay,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 14, color: Color(0xFF555555)),
                                         ),
                                         Spacer(),
@@ -276,7 +281,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                                       children: [
                                         Text(
                                           showlastDay,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                               fontSize: 14, color: Color(0xFF555555)),
                                         ),
                                         Spacer(),
@@ -308,7 +314,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                             SizedBox(width: 4),
                             Text(
                               'Leave Without Pay',
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.w700,
@@ -349,7 +356,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                       children: [
                         Text(
                           'Reason : ',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFF555555),
                             fontWeight: FontWeight.w700,
@@ -359,7 +367,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                         // Divider(),
                         Text(
                           'Note : ',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFF555555),
                             fontWeight: FontWeight.w700,
@@ -387,7 +396,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
         TextFormField(
           controller: textController,
           keyboardType: TextInputType.text,
-          style: GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+          style: TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -396,7 +406,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
             const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             hintText: '',
             hintStyle:
-            GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+            TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
             ),
@@ -439,11 +450,13 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
             isExpanded: true,
             hint: Text(
               title,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Color(0xFF555555),
               ),
             ),
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: titleDown
@@ -451,7 +464,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
               value: item,
               child: Text(
                 item.status_name,
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 14,
                 ),
               ),
@@ -486,7 +500,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                 child: TextFormField(
                   controller: _searchController,
                   keyboardType: TextInputType.text,
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                       color: Color(0xFF555555), fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
@@ -497,7 +512,8 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                       vertical: 8,
                     ),
                     hintText: '$Search...',
-                    hintStyle: GoogleFonts.openSans(
+                    hintStyle: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 14, color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),

@@ -97,7 +97,8 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
           alignment: Alignment.centerLeft,
           child: Text(
             '${page}',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -128,7 +129,8 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                         // SizedBox(width: 8),
                         Text(
                           'DELETE',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             fontSize: 18,
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
@@ -148,7 +150,8 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         items: items,
         iconSize: 18,
         animated: true,
-        titleStyle: GoogleFonts.openSans(),
+        titleStyle: TextStyle(
+                fontFamily: 'Arial',),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
@@ -315,7 +318,8 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       text,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: GoogleFonts.openSans(fontSize: size, color: color, fontWeight: weight),
+      style: TextStyle(
+                fontFamily: 'Arial',fontSize: size, color: color, fontWeight: weight),
     );
   }
 
@@ -369,7 +373,8 @@ class _OpportunitySection extends StatelessWidget {
       text,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: GoogleFonts.openSans(fontSize: size, color: color, fontWeight: weight),
+      style: TextStyle(
+                fontFamily: 'Arial',fontSize: size, color: color, fontWeight: weight),
     );
   }
 

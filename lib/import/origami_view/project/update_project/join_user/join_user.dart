@@ -44,17 +44,12 @@ class _JoinUserState extends State<JoinUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.orange.shade50,
-      body: JoinUser(),
-    );
-  }
-
-  Widget JoinUser() {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: SingleChildScrollView(
-        child: (modelEmployee == [])
-            ? Center(
-                child: Row(
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: SingleChildScrollView(
+          child: (modelEmployee == [])
+              ? Center(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
@@ -65,7 +60,8 @@ class _JoinUserState extends State<JoinUser> {
                   ),
                   Text(
                     '$Loading...',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF555555),
@@ -73,333 +69,157 @@ class _JoinUserState extends State<JoinUser> {
                   ),
                 ],
               ))
-            : Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Join User',
-                      style: GoogleFonts.openSans(
-                        fontSize: 18,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Column(
-                      children: List.generate(modelEmployee.length, (index) {
-                    final join_user = modelEmployee[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 1.0,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 0,
-                                  blurRadius: 0,
-                                  offset: Offset(1, 3), // x, y
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(12),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 22,
-                                        backgroundColor: Colors.grey.shade400,
-                                        child: CircleAvatar(
-                                          radius: 21,
-                                          backgroundColor: Colors.white,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            child: Image.network(
-                                              join_user.emp_pic,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 8),
-                                      _switch(join_user),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Role : ',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.openSans(
-                                          fontSize: 16,
-                                          color: Color(0xFF555555),
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      Expanded(child: _DropdownUser()),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+              : JoinUser(),
+        ),
+      ),
+    );
+  }
+
+  Widget JoinUser() {
+    return Column(
+      children: [
+        Column(
+            children: List.generate(modelEmployee.length, (index) {
+              final join_user = modelEmployee[index];
+              return Padding(
+                padding: const EdgeInsets.all(4),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 0,
+                            blurRadius: 0,
+                            offset: Offset(1, 3), // x, y
                           ),
-                          Divider(),
                         ],
                       ),
-                    );
-                  })),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: _addJoinUser,
-                      child: Text(
-                        'Tap here to select an Join User.',
-                        style: GoogleFonts.openSans(
-                          fontSize: 14,
-                          color: Color(0xFFFF9900),
-                          fontWeight: FontWeight.w500,
+                      child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.grey.shade400,
+                                  child: CircleAvatar(
+                                    radius: 31,
+                                    backgroundColor: Colors.white,
+                                    child: ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(50),
+                                      child: Image.network(
+                                        join_user.emp_pic,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                _switch(join_user),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: _checkBox(
+                                        'Owner', join_user.is_owner)),
+                                Expanded(
+                                    child: _checkBox('Approve Activity',
+                                        join_user.is_owner)),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    Divider(),
+                  ],
+                ),
+              );
+            })),
+        SizedBox(
+          height: 8,
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            onPressed: _addJoinUser,
+            child: Text(
+              'Tap here to select an Join User.',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFFFF9900),
+                fontWeight: FontWeight.w500,
               ),
-      ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _switch(ModelEmployee join_user) {
     return Expanded(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Flexible(
-                child: Text(
-                  join_user.emp_name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.openSans(
-                    fontSize: 14,
-                    color: Color(0xFF555555),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  '(${join_user.posi_description})',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.openSans(
-                    fontSize: 14,
-                    color: Color(0xFF555555),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
+          Text(
+            join_user.emp_name,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w700,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                'Owner : ',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.openSans(
-                  fontSize: 14,
-                  color: Color(0xFF555555),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              FlutterSwitch(
-                showOnOff: true,
-                activeTextColor: Colors.white,
-                inactiveTextColor: Colors.white,
-                height: 30,
-                width: 60,
-                toggleSize: 20,
-                activeColor: Colors.green,
-                // inactiveColor: Colors.red,
-                value: _switchOwner = join_user.is_owner == 'Y',
-                onToggle: (val) {
-                  setState(() {
-                    join_user.is_owner = val ? 'Y' : 'N';
-                    // _switchOwner = val;
-                  });
-                },
-              ),
-              SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  'Approve Activity : ',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.openSans(
-                    fontSize: 14,
-                    color: Color(0xFF555555),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              FlutterSwitch(
-                showOnOff: true,
-                activeTextColor: Colors.white,
-                inactiveTextColor: Colors.white,
-                height: 30,
-                width: 60,
-                toggleSize: 20,
-                activeColor: Colors.green,
-                value: _switchActivity = join_user.approve_activity == '0',
-                onToggle: (val) {
-                  setState(() {
-                    join_user.approve_activity = val ? '0' : '1';
-                    print(join_user.approve_activity);
-                    // _switchActivity = val;
-                  });
-                },
-              ),
-            ],
-          ),
+          _description(Icons.apartment, '${join_user.posi_description}'),
+          _description(Icons.work, '${join_user.dept_description}'),
           SizedBox(height: 8),
         ],
       ),
     );
   }
 
-  Widget _DropdownUser() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.grey,
-          width: 1.0,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 0,
-            blurRadius: 0,
-            offset: Offset(1, 3), // x, y
-          ),
-        ],
-      ),
-      child: DropdownButton2<TitleDown>(
-        isExpanded: true,
-        hint: Text(
-          'DEV',
-          style: GoogleFonts.openSans(
-            color: Color(0xFF555555),
-          ),
-        ),
-        style: GoogleFonts.openSans(
-          color: Color(0xFF555555),
-        ),
-        items: titleDownJoin
-            .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-                  value: item,
-                  child: Text(
-                    item.status_name,
-                    style: GoogleFonts.openSans(
-                      fontSize: 14,
-                    ),
-                  ),
-                ))
-            .toList(),
-        value: selectedItemJoin,
-        onChanged: (value) {
-          setState(() {
-            selectedItemJoin = value;
-          });
-        },
-        underline: SizedBox.shrink(),
-        iconStyleData: IconStyleData(
-          icon: Icon(Icons.arrow_drop_down, color: Colors.black, size: 30),
-          iconSize: 30,
-        ),
-        buttonStyleData: ButtonStyleData(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-        ),
-        dropdownStyleData: DropdownStyleData(
-          maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          height: 40, // Height for each menu item
-        ),
-        dropdownSearchData: DropdownSearchData(
-          searchController: _searchController,
-          searchInnerWidgetHeight: 50,
-          searchInnerWidget: Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _searchController,
-              keyboardType: TextInputType.text,
-              style:
-                  GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                hintText: '$Search...',
-                hintStyle: GoogleFonts.openSans(
-                    fontSize: 14, color: Color(0xFF555555)),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
+  Widget _description(IconData icon, String join_user) {
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.grey, size: 16),
+          SizedBox(width: 8),
+          Text(
+            '${join_user}',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
             ),
           ),
-          searchMatchFn: (item, searchValue) {
-            return item.value!.status_name
-                .toLowerCase()
-                .contains(searchValue.toLowerCase());
-          },
-        ),
-        onMenuStateChange: (isOpen) {
-          if (!isOpen) {
-            _searchController
-                .clear(); // Clear the search field when the menu closes
-          }
-        },
+        ],
       ),
     );
   }
 
-  void _addJoinUser() {
-    showModalBottomSheet<void>(
-      barrierColor: Colors.black87,
-      backgroundColor: Colors.transparent,
-      context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (BuildContext context) {
-        return _getJoinUser();
+  Widget _checkBox(String title, String is_owner) {
+    return CheckBoxWidget(
+      title: title,
+      isOwner: is_owner,
+      onChanged: (value) {
+        print("ค่าใหม่: $value"); // Y , N
       },
     );
   }
@@ -410,25 +230,7 @@ class _JoinUserState extends State<JoinUser> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        // else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-        //   return Center(
-        //       child: Text(
-        //         '$Empty',
-        //         style: GoogleFonts.openSans(
-        //           color: Color(0xFF555555),
-        //         ),
-        //       ));
-        // }
-        else {
-          // กรองข้อมูลตามคำค้นหา
-          // List<ActivityContact> filteredContacts =
-          // snapshot.data!.where((contact) {
-          //   String searchTerm = _searchfilterController.text.toLowerCase();
-          //   String fullName = '${contact.contact_first} ${contact.contact_last}'
-          //       .toLowerCase();
-          //   return fullName.contains(searchTerm);
-          // }).toList();
+        } else {
           return Column(
             children: [
               Expanded(child: SizedBox()),
@@ -436,7 +238,7 @@ class _JoinUserState extends State<JoinUser> {
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 16),
+                    const EdgeInsets.only(left: 16, right: 16, top: 16),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.7,
                       decoration: BoxDecoration(
@@ -454,8 +256,10 @@ class _JoinUserState extends State<JoinUser> {
                               child: TextFormField(
                                 controller: _searchfilterController,
                                 keyboardType: TextInputType.text,
-                                style: GoogleFonts.openSans(
-                                    color: Color(0xFF555555), fontSize: 14),
+                                style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontSize: 14),
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
@@ -463,8 +267,10 @@ class _JoinUserState extends State<JoinUser> {
                                   contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 12),
                                   hintText: 'Search',
-                                  hintStyle: GoogleFonts.openSans(
-                                      fontSize: 14, color: Color(0xFF555555)),
+                                  hintStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555)),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(100),
                                   ),
@@ -493,127 +299,105 @@ class _JoinUserState extends State<JoinUser> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: ListView.builder(
-                                  itemCount: titleDownJoin.length,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        // bool isAlreadyAdded = addNewContactList.any(
-                                        //         (existingContact) =>
-                                        //     existingContact.contact_first ==
-                                        //         contact.contact_first &&
-                                        //         existingContact.contact_last ==
-                                        //             contact.contact_last);
-                                        //
-                                        // if (!isAlreadyAdded) {
-                                        //   setState(() {
-                                        //     addNewContactList.add(
-                                        //         contact); // เพิ่มรายการที่เลือกลงใน list
-                                        //   });
-                                        // } else {
-                                        //   // แจ้งเตือนว่ามีชื่ออยู่แล้ว
-                                        //   ScaffoldMessenger.of(context).showSnackBar(
-                                        //     SnackBar(
-                                        //       content: Text(
-                                        //           'This name has already joined the list!'),
-                                        //       duration: Duration(seconds: 2),
-                                        //     ),
-                                        //   );
-                                        // }
-                                        Navigator.pop(context);
-                                      },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 4, right: 8),
-                                                child: CircleAvatar(
-                                                  radius: 22,
-                                                  backgroundColor: Colors.grey,
-                                                  child: CircleAvatar(
-                                                    radius: 21,
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                      child: Image.network(
-                                                        'https://dev.origami.life/images/default.png',
-                                                        height: 100,
-                                                        width: 100,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Jirapat Jangsawang',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                        fontSize: 16,
-                                                        color:
-                                                            Color(0xFFFF9900),
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 8),
-                                                    Text(
-                                                      'Development (Mobile Application)',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style:
-                                                          GoogleFonts.openSans(
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF555555),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    Divider(
-                                                        color: Colors
-                                                            .grey.shade300),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
+                            // Expanded(
+                            //   child: Padding(
+                            //     padding:
+                            //     const EdgeInsets.symmetric(horizontal: 15),
+                            //     child: ListView.builder(
+                            //       itemCount: titleDown.length,
+                            //       itemBuilder: (context, index) {
+                            //         return InkWell(
+                            //           onTap: () {
+                            //             Navigator.pop(context);
+                            //           },
+                            //           child: Column(
+                            //             mainAxisAlignment:
+                            //             MainAxisAlignment.center,
+                            //             crossAxisAlignment:
+                            //             CrossAxisAlignment.start,
+                            //             children: [
+                            //               Row(
+                            //                 mainAxisAlignment:
+                            //                 MainAxisAlignment.start,
+                            //                 crossAxisAlignment:
+                            //                 CrossAxisAlignment.center,
+                            //                 children: [
+                            //                   Padding(
+                            //                     padding: const EdgeInsets.only(
+                            //                         bottom: 4, right: 8),
+                            //                     child: CircleAvatar(
+                            //                       radius: 22,
+                            //                       backgroundColor: Colors.grey,
+                            //                       child: CircleAvatar(
+                            //                         radius: 21,
+                            //                         backgroundColor:
+                            //                         Colors.white,
+                            //                         child: ClipRRect(
+                            //                           borderRadius:
+                            //                           BorderRadius.circular(
+                            //                               100),
+                            //                           child: Image.network(
+                            //                             'https://dev.origami.life/images/default.png',
+                            //                             height: 100,
+                            //                             width: 100,
+                            //                             fit: BoxFit.cover,
+                            //                           ),
+                            //                         ),
+                            //                       ),
+                            //                     ),
+                            //                   ),
+                            //                   const SizedBox(width: 10),
+                            //                   Expanded(
+                            //                     child: Column(
+                            //                       mainAxisAlignment:
+                            //                       MainAxisAlignment.start,
+                            //                       crossAxisAlignment:
+                            //                       CrossAxisAlignment.start,
+                            //                       children: [
+                            //                         Text(
+                            //                           'Jirapat Jangsawang',
+                            //                           maxLines: 1,
+                            //                           overflow:
+                            //                           TextOverflow.ellipsis,
+                            //                           style: TextStyle(
+                            //                             fontFamily: 'Arial',
+                            //                             fontSize: 16,
+                            //                             color:
+                            //                             Color(0xFFFF9900),
+                            //                             fontWeight:
+                            //                             FontWeight.w700,
+                            //                           ),
+                            //                         ),
+                            //                         SizedBox(height: 8),
+                            //                         Text(
+                            //                           'Development (Mobile Application)',
+                            //                           maxLines: 1,
+                            //                           overflow:
+                            //                           TextOverflow.ellipsis,
+                            //                           style: TextStyle(
+                            //                             fontFamily: 'Arial',
+                            //                             fontSize: 14,
+                            //                             color:
+                            //                             Color(0xFF555555),
+                            //                             fontWeight:
+                            //                             FontWeight.w500,
+                            //                           ),
+                            //                         ),
+                            //                         Divider(
+                            //                             color: Colors
+                            //                                 .grey.shade300),
+                            //                       ],
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         );
+                            //       },
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -636,13 +420,19 @@ class _JoinUserState extends State<JoinUser> {
     );
   }
 
-  TitleDown? selectedItemJoin;
-  List<TitleDown> titleDownJoin = [
-    TitleDown(status_id: '001', status_name: 'DEV'),
-    TitleDown(status_id: '002', status_name: 'SEAL'),
-    TitleDown(status_id: '003', status_name: 'CAL'),
-    TitleDown(status_id: '004', status_name: 'DES'),
-  ];
+  void _addJoinUser() {
+    showModalBottomSheet<void>(
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (BuildContext context) {
+        return _getJoinUser();
+      },
+    );
+  }
 
   List<ModelEmployee> modelEmployee = [];
   Future<void> fetchModelEmployee() async {
@@ -673,6 +463,60 @@ class _JoinUserState extends State<JoinUser> {
     } else {
       throw Exception('Failed to load personal data: ${response.reasonPhrase}');
     }
+  }
+}
+
+class CheckBoxWidget extends StatefulWidget {
+  final String title;
+  final String isOwner;
+  final Function(String) onChanged;
+
+  const CheckBoxWidget({
+    required this.title,
+    required this.isOwner,
+    required this.onChanged,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _CheckBoxWidgetState createState() => _CheckBoxWidgetState();
+}
+
+class _CheckBoxWidgetState extends State<CheckBoxWidget> {
+  late bool isChecked;
+
+  @override
+  void initState() {
+    super.initState();
+    isChecked = widget.isOwner == 'Y';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Checkbox(
+          value: isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked = value!;
+            });
+            widget.onChanged(isChecked ? 'Y' : 'N');
+          },
+          checkColor: Colors.white,
+          activeColor: Colors.orange,
+        ),
+        Text(
+          widget.title,
+          style: const TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 14,
+            color: Color(0xFF555555),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
   }
 }
 

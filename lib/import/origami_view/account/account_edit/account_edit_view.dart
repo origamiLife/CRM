@@ -127,7 +127,8 @@ class _AccountEditViewState extends State<AccountEditView> {
           alignment: Alignment.centerLeft,
           child: Text(
             '${page}',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -148,7 +149,8 @@ class _AccountEditViewState extends State<AccountEditView> {
         items: items,
         iconSize: 18,
         animated: true,
-        titleStyle: GoogleFonts.openSans(),
+        titleStyle: TextStyle(
+                fontFamily: 'Arial',),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
@@ -196,7 +198,8 @@ class _AccountEditViewState extends State<AccountEditView> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Join User',
-                style: GoogleFonts.openSans(
+                style: TextStyle(
+                fontFamily: 'Arial',
                   fontSize: 18,
                   color: Colors.grey,
                   fontWeight: FontWeight.w700,
@@ -258,7 +261,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                                           'Jirapat Jangsawang',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w700,
@@ -271,7 +275,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                                           '(Mobile Application)',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -288,7 +293,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                                         'Owner : ',
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.openSans(
+                                        style: TextStyle(
+                fontFamily: 'Arial',
                                           fontSize: 14,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w700,
@@ -297,11 +303,13 @@ class _AccountEditViewState extends State<AccountEditView> {
                                       AdvancedSwitch(
                                         activeChild: Text(
                                           'ON',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                fontFamily: 'Arial',),
                                         ),
                                         inactiveChild: Text(
                                           'OFF',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                fontFamily: 'Arial',),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(100),
@@ -315,7 +323,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                                           'Approve Activity : ',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.openSans(
+                                          style: TextStyle(
+                fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w700,
@@ -325,11 +334,13 @@ class _AccountEditViewState extends State<AccountEditView> {
                                       AdvancedSwitch(
                                         activeChild: Text(
                                           'ON',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                fontFamily: 'Arial',),
                                         ),
                                         inactiveChild: Text(
                                           'OFF',
-                                          style: GoogleFonts.openSans(),
+                                          style: TextStyle(
+                fontFamily: 'Arial',),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(100),
@@ -351,7 +362,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                               'Role : ',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.openSans(
+                              style: TextStyle(
+                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.w700,
@@ -375,7 +387,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                 onPressed: _addJoinUser,
                 child: Text(
                   'Tap here to select an Join User.',
-                  style: GoogleFonts.openSans(
+                  style: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -411,11 +424,13 @@ class _AccountEditViewState extends State<AccountEditView> {
         isExpanded: true,
         hint: Text(
           'DEV',
-          style: GoogleFonts.openSans(
+          style: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
         ),
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
         ),
         items: titleDownJoin
@@ -423,7 +438,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                   value: item,
                   child: Text(
                     item.status_name,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -459,7 +475,8 @@ class _AccountEditViewState extends State<AccountEditView> {
               controller: _searchController,
               keyboardType: TextInputType.text,
               style:
-                  GoogleFonts.openSans(color: Color(0xFF555555), fontSize: 14),
+                  TextStyle(
+                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(
@@ -467,7 +484,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                   vertical: 8,
                 ),
                 hintText: '$Search...',
-                hintStyle: GoogleFonts.openSans(
+                hintStyle: TextStyle(
+                fontFamily: 'Arial',
                     fontSize: 14, color: Color(0xFF555555)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -516,7 +534,8 @@ class _AccountEditViewState extends State<AccountEditView> {
         //   return Center(
         //       child: Text(
         //         '$Empty',
-        //         style: GoogleFonts.openSans(
+        //         style: TextStyle(
+        //         fontFamily: 'Arial',
         //           color: Color(0xFF555555),
         //         ),
         //       ));
@@ -555,7 +574,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                               child: TextFormField(
                                 controller: _searchfilterController,
                                 keyboardType: TextInputType.text,
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                     color: Color(0xFF555555), fontSize: 14),
                                 decoration: InputDecoration(
                                   isDense: true,
@@ -564,7 +584,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                                   contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 12),
                                   hintText: 'Search',
-                                  hintStyle: GoogleFonts.openSans(
+                                  hintStyle: TextStyle(
+                fontFamily: 'Arial',
                                       fontSize: 14, color: Color(0xFF555555)),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(100),
@@ -677,7 +698,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style:
-                                                          GoogleFonts.openSans(
+                                                          TextStyle(
+                fontFamily: 'Arial',
                                                         fontSize: 16,
                                                         color: Color(0xFFFF9900),
                                                         fontWeight:
@@ -691,7 +713,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style:
-                                                          GoogleFonts.openSans(
+                                                          TextStyle(
+                fontFamily: 'Arial',
                                                         fontSize: 14,
                                                         color:
                                                             Color(0xFF555555),

@@ -41,7 +41,8 @@ class _ProjectMandayState extends State<ProjectManday> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Manday',
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -68,7 +69,8 @@ class _ProjectMandayState extends State<ProjectManday> {
           child: TextFormField(
             controller: _searchController,
             keyboardType: TextInputType.text,
-            style: GoogleFonts.openSans(
+            style: TextStyle(
+                fontFamily: 'Arial',
               color: Color(0xFF555555),
               fontSize: 14,
             ),
@@ -80,7 +82,8 @@ class _ProjectMandayState extends State<ProjectManday> {
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
               hintText: 'Search...',
               hintStyle:
-                  GoogleFonts.openSans(fontSize: 14, color: Color(0xFF555555)),
+                  TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(100),
               ),
@@ -114,7 +117,8 @@ class _ProjectMandayState extends State<ProjectManday> {
                   Text(
                     'Limit Manday : ',
                     maxLines: 2,
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 16,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -142,7 +146,8 @@ class _ProjectMandayState extends State<ProjectManday> {
                   child: Center(
                     child: Text(
                       'Save',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -253,7 +258,8 @@ class _ProjectMandayState extends State<ProjectManday> {
             Text(
               'Jirapat Jangsawang',
               maxLines: 1,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -268,7 +274,8 @@ class _ProjectMandayState extends State<ProjectManday> {
           children: [
             Text(
               'Charge: ',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF555555),
@@ -293,7 +300,8 @@ class _ProjectMandayState extends State<ProjectManday> {
                     Center(
                       child: Text(
                         '30.0 %',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
@@ -313,7 +321,8 @@ class _ProjectMandayState extends State<ProjectManday> {
           children: [
             Text(
               'No-Charge: ',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF555555),
@@ -339,7 +348,8 @@ class _ProjectMandayState extends State<ProjectManday> {
                   Center(
                     child: Text(
                       '50.0 %',
-                      style: GoogleFonts.openSans(
+                      style: TextStyle(
+                fontFamily: 'Arial',
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
@@ -358,7 +368,8 @@ class _ProjectMandayState extends State<ProjectManday> {
           children: [
             Text(
               'Total: ',
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: const Color(0xFF555555),
@@ -384,7 +395,8 @@ class _ProjectMandayState extends State<ProjectManday> {
                     Center(
                       child: Text(
                         '90.0 %',
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
@@ -437,7 +449,8 @@ class _ProjectMandayState extends State<ProjectManday> {
                   SizedBox(height: 8),
                   Text(
                     'Charge: 30.00',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: const Color(0xFF555555),
@@ -478,7 +491,8 @@ class _ProjectMandayState extends State<ProjectManday> {
                   SizedBox(height: 8),
                   Text(
                     'No-Charge: 60.00',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: const Color(0xFF555555),
@@ -519,7 +533,8 @@ class _ProjectMandayState extends State<ProjectManday> {
                   SizedBox(height: 8),
                   Text(
                     'Total: 90.00',
-                    style: GoogleFonts.openSans(
+                    style: TextStyle(
+                fontFamily: 'Arial',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: const Color(0xFF555555),
@@ -538,7 +553,8 @@ class _ProjectMandayState extends State<ProjectManday> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -549,7 +565,8 @@ class _ProjectMandayState extends State<ProjectManday> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -575,7 +592,8 @@ class _ProjectMandayState extends State<ProjectManday> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.number,
-      style: GoogleFonts.openSans(
+      style: TextStyle(
+                fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -585,7 +603,8 @@ class _ProjectMandayState extends State<ProjectManday> {
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         hintText: title,
-        hintStyle: GoogleFonts.openSans(fontSize: 14, color: Colors.grey),
+        hintStyle: TextStyle(
+                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),

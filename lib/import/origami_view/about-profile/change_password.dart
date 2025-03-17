@@ -76,7 +76,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                     children: [
                       Text(
                         "   Choose a strong password and don't reuse it for other accounts.",
-                        style: GoogleFonts.openSans(
+                        style: TextStyle(
+                fontFamily: 'Arial',
                           fontSize: 16,
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w500,
@@ -106,7 +107,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                             children: [
                               Text(
                                 'Change Password',
-                                style: GoogleFonts.openSans(
+                                style: TextStyle(
+                fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -169,7 +171,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                       SnackBar(
                         content: Text(
                           'The new password must be different from your old password. Please enter the new password again.',
-                          style: GoogleFonts.openSans(
+                          style: TextStyle(
+                fontFamily: 'Arial',
                             color: Colors.white,
                           ),
                         ),
@@ -184,7 +187,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                   child: Center(
                     child: Text(
                       '$Save',
-                      style: GoogleFonts.openSans(fontSize: 16.0),
+                      style: TextStyle(
+                fontFamily: 'Arial',fontSize: 16.0),
                     ),
                   ),
                 ),
@@ -201,7 +205,8 @@ class _ChangePasswordState extends State<ChangePassword> {
       width: 350,
       child: TextFormField(
         controller: controller,
-        style: GoogleFonts.openSans(
+        style: TextStyle(
+                fontFamily: 'Arial',
           color: Color(0xFF555555),
         ),
         obscureText: showPass,
@@ -213,10 +218,12 @@ class _ChangePasswordState extends State<ChangePassword> {
             vertical: 10,
           ),
           labelText: title,
-          labelStyle: GoogleFonts.openSans(
+          labelStyle: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
-          hintStyle: GoogleFonts.openSans(
+          hintStyle: TextStyle(
+                fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
           prefixIcon: Icon(
@@ -289,7 +296,8 @@ class _ChangePasswordState extends State<ChangePassword> {
             SizedBox(width: 8),
             Text(
               title,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w500,
@@ -346,7 +354,8 @@ class _ChangePasswordState extends State<ChangePassword> {
           SnackBar(
             content: Text(
               message,
-              style: GoogleFonts.openSans(
+              style: TextStyle(
+                fontFamily: 'Arial',
                 color: Colors.white,
               ),
             ),
