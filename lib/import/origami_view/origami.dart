@@ -2,17 +2,23 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 import 'package:origamilift/import/origami_view/project/project.dart';
+import 'package:origamilift/import/origami_view/sample/attendance_history.dart';
 import 'package:origamilift/import/origami_view/sample/time_stamp.dart';
 import 'package:origamilift/import/origami_view/work/work_page.dart';
 
+import '../Call/call_phone.dart';
 import 'IDOC/idoc_view.dart';
 import 'about-profile/profile.dart';
 import 'academy/academy.dart';
 import 'account/account_screen.dart';
 import 'activity/activity.dart';
 import 'calendar/calendar.dart';
+import 'chat/chat.dart';
 import 'contact/contact.dart';
-import 'helpdesk/help_desk.dart';
+import 'helpdesk/chat_ui/chat_ui.dart';
+import 'helpdesk/deflep/deflep.dart';
+import 'helpdesk/helpdesk.dart';
+import 'issue_log/issue_log.dart';
 import 'language/translate_page.dart';
 import 'need/need_view/need.dart';
 import 'need/need_view/need_request.dart';
@@ -39,15 +45,17 @@ class _OrigamiPageState extends State<OrigamiPage> {
   TextStyle optionStyle = TextStyle(
     fontFamily: 'Arial',
     fontSize: 24,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w700,
     color: Color(0xFF555555),
   );
   TextStyle styleOrange = TextStyle(
     fontFamily: 'Arial',
+    fontSize: 14,
     color: Color(0xFFFF9900),
   );
   TextStyle styleGrey = TextStyle(
     fontFamily: 'Arial',
+    fontSize: 14,
     color: Color(0xFF555555),
   );
 
@@ -102,7 +110,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
           foregroundColor: Color(0xFFFF9900),
           backgroundColor: Colors.white,
           title: Text(
-            _listTitle[_index],
+            _TitleHeader[_index],
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 24,
@@ -111,9 +119,32 @@ class _OrigamiPageState extends State<OrigamiPage> {
             ),
           ),
           actions: <Widget>[
-            if (branchStr == 'Time')
+            if (_index == 5)
               Row(
                 children: [
+                  InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext dialogContext) {
+                            return Dialog(
+                              elevation: 0,
+                              backgroundColor: Colors.white, // สีพื้นหลัง
+                              insetPadding:
+                                  EdgeInsets.all(8), // ปรับระยะขอบให้แคบลง
+                              child: TimeAttendanceHistory(
+                                employee: widget.employee,
+                                pageInput: '5',
+                                Authorization: widget.Authorization,
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Icon(Icons.history,
+                          color: Colors.orange,
+                          size: (isAndroid || isIPhone) ? 24 : 32)),
+                  SizedBox(width: 16),
                   InkWell(
                       onTap: () => _changeBranch(timeStampList),
                       child: Icon(Icons.home,
@@ -133,7 +164,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                           size: (isAndroid || isIPhone) ? 24 : 32)),
                   SizedBox(width: 16),
                 ],
-              ),
+              )
           ],
         ),
         drawer: Container(
@@ -190,7 +221,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                                 style: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w700,
                                   color: Colors.white,
                                 ),
                                 maxLines: 1,
@@ -220,7 +251,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                                 style: TextStyle(
                                     fontFamily: 'Arial',
                                     fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w700,
                                     color: Colors.white),
                               ),
                               Expanded(
@@ -245,11 +276,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
                     children: [
                       Expanded(
                         child: SingleChildScrollView(
-                          child: _ListMenu(),
+                          child: _menu(),
                         ),
                       ),
-                      // _test(),
-                      _output(),
+                      _logout(),
                     ],
                   ),
                 ),
@@ -259,14 +289,104 @@ class _OrigamiPageState extends State<OrigamiPage> {
         ),
         body: SafeArea(
           child: Center(
-            child: _buildPage(),
+            child: _buildScreen(),
           ),
         ),
       ),
     );
   }
 
-  Widget _ListMenu() {
+  Widget _buildScreen() {
+    final pages = {
+      0: NeedsView(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      1: NeedRequest(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      2: AcademyPage(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+        page: widget.page ?? '',
+      ),
+      3: TranslatePage(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      4: Text('Index 6: LogOut', style: optionStyle),
+      5: TimeSample(
+        employee: widget.employee,
+        timestamp: timeStampObject,
+        Authorization: widget.Authorization,
+        fetchBranchCallback: () => fetchBranch(),
+        branch_name: branch_name,
+        branch_id: branch_id,
+      ),
+      6: ProfilePage(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      7: HelpDeskScreen(
+        employee: widget.employee,
+        pageInput: 'helpdesk',
+        Authorization: widget.Authorization,
+      ),
+      8: PettyCash(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      9: ActivityScreen(
+        employee: widget.employee,
+        pageInput: 'activity',
+        Authorization: widget.Authorization,
+      ),
+      10: ProjectScreen(
+        employee: widget.employee,
+        pageInput: 'project',
+        Authorization: widget.Authorization,
+      ),
+      11: WorkPage(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      12: ContactScreen(
+        employee: widget.employee,
+        pageInput: 'contact',
+        Authorization: widget.Authorization,
+      ),
+      13: AccountList(
+        employee: widget.employee,
+        pageInput: 'account',
+        Authorization: widget.Authorization,
+      ),
+      14: CalendarScreen(
+        employee: widget.employee,
+        pageInput: 'calendar',
+        Authorization: widget.Authorization,
+      ),
+      15: HelpDesk2(
+        employee: widget.employee,
+        pageInput: 'helpdesk',
+        Authorization: widget.Authorization,
+      ),
+      16: IdocScreen(
+        employee: widget.employee,
+        pageInput: '',
+        Authorization: widget.Authorization,
+      ),
+      17: IssueLogScreen(
+        employee: widget.employee,
+        pageInput: '',
+        Authorization: widget.Authorization,
+      ),
+      18: CallScreen(),
+    };
+    return pages[_index] ?? CallScreen();
+  }
+
+  Widget _menu() {
     return Column(
       children: [
         Column(
@@ -435,18 +555,18 @@ class _OrigamiPageState extends State<OrigamiPage> {
             ),
           ],
         ),
-        // Container(
-        //   child: _viewMenu(15, 'HelpDesk', Icons.keyboard_arrow_right,
-        //       FontAwesomeIcons.lifeRing),
-        // ),
-        // Container(
-        //   child: _viewMenu(12, 'Contact', Icons.keyboard_arrow_right,
-        //       Icons.perm_contact_cal_outlined),
-        // ),
-        // Container(
-        //   child: _viewMenu(
-        //       13, 'Account', Icons.keyboard_arrow_right, Icons.person_sharp),
-        // ),
+        Container(
+          child: _viewMenu(15, 'HelpDesk', Icons.keyboard_arrow_right,
+              FontAwesomeIcons.lifeRing),
+        ),
+        Container(
+          child: _viewMenu(12, 'Contact', Icons.keyboard_arrow_right,
+              Icons.perm_contact_cal_outlined),
+        ),
+        Container(
+          child: _viewMenu(
+              13, 'Account', Icons.keyboard_arrow_right, Icons.person_sharp),
+        ),
         Container(
           child: _viewMenu(10, 'Project', Icons.keyboard_arrow_right,
               FontAwesomeIcons.projectDiagram),
@@ -455,10 +575,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
           child: _viewMenu(9, 'Activity', Icons.keyboard_arrow_right,
               FontAwesomeIcons.running),
         ),
-        // Container(
-        //   child: _viewMenu(
-        //       14, 'Calendar', Icons.keyboard_arrow_right, Icons.calendar_month),
-        // ),
+        Container(
+          child: _viewMenu(
+              14, 'Calendar', Icons.keyboard_arrow_right, Icons.calendar_month),
+        ),
         Container(
           child: _viewMenu(
               5, 'Time', Icons.keyboard_arrow_right, FontAwesomeIcons.clock),
@@ -480,13 +600,29 @@ class _OrigamiPageState extends State<OrigamiPage> {
         ),
         Container(
           child: _viewMenu(
-              16, 'IDOC', Icons.keyboard_arrow_right, Icons.edit_document,),
+            16,
+            'IDOC',
+            Icons.keyboard_arrow_right,
+            Icons.edit_document,
+          ),
+        ),
+        Container(
+          child: _viewMenu(17, 'Issue Log', Icons.keyboard_arrow_right,
+              FontAwesomeIcons.checkDouble),
+        ),
+        Container(
+          child: _viewMenu(
+              7, 'HELPDESK', Icons.keyboard_arrow_right, Icons.message),
+        ),
+        Container(
+          child: _viewMenu(
+              18, 'Members', Icons.keyboard_arrow_right, Icons.phone_android),
         ),
       ],
     );
   }
 
-  final List<String> _listTitle = [
+  final List<String> _TitleHeader = [
     "$need",
     "$request",
     "Academy",
@@ -494,7 +630,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     "$logoutTS",
     "Time",
     "Profile",
-    "TestChat",
+    "HELPDESK",
     "Petty Cash",
     "Activity",
     "Project",
@@ -503,90 +639,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
     "Account",
     "Calendar",
     "HelpDesk",
-    "IDOC"
+    "IDOC",
+    "Issue Log",
+    "Contact Members",
   ];
-
-  Widget _buildPage() {
-    final pages = {
-      0: NeedsView(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      1: NeedRequest(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      2: AcademyPage(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-        page: widget.page ?? '',
-      ),
-      3: TranslatePage(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      4: Text('Index 6: LogOut', style: optionStyle),
-      5: TimeSample(
-        employee: widget.employee,
-        timestamp: timeStampObject,
-        Authorization: widget.Authorization,
-        fetchBranchCallback: () => fetchBranch(),
-        branch_name: branch_name,
-        branch_id: branch_id,
-      ),
-      6: ProfilePage(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      // 7: ChatView(
-      //   employee: widget.employee, pageInput: '',Authorization:widget.Authorization,
-      // ),
-      8: PettyCash(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      9: ActivityScreen(
-        employee: widget.employee,
-        pageInput: 'activity',
-        Authorization: widget.Authorization,
-      ),
-      10: ProjectScreen(
-        employee: widget.employee,
-        pageInput: 'project',
-        Authorization: widget.Authorization,
-      ),
-      11: WorkPage(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      12: ContactScreen(
-        employee: widget.employee,
-        pageInput: 'contact',
-        Authorization: widget.Authorization,
-      ),
-      13: AccountList(
-        employee: widget.employee,
-        pageInput: 'account',
-        Authorization: widget.Authorization,
-      ),
-      14: CalendarScreen(
-        employee: widget.employee,
-        pageInput: 'calendar',
-        Authorization: widget.Authorization,
-      ),
-      15: HelpDesk(
-        employee: widget.employee,
-        pageInput: 'helpdesk',
-        Authorization: widget.Authorization,
-      ),
-      16: IdocScreen(
-        employee: widget.employee,
-        pageInput: '',
-        Authorization: widget.Authorization,
-      ),
-    };
-    return pages[_index] ?? Container();
-  }
 
   String branchStr = '';
   Widget _viewMenu(int page, String title, IconData icons, IconData faIcon) {
@@ -645,7 +701,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
-  Widget _output() {
+  Widget _logout() {
     return Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 8, left: 8, right: 8),
       child: Container(
@@ -666,6 +722,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                 child: Icon(
                   Icons.door_back_door_outlined,
                   color: Colors.red,
+                  size: 18,
                 ),
               ),
               SizedBox(
@@ -676,7 +733,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                 style: TextStyle(
                   fontFamily: 'Arial',
                   color: Colors.red,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -695,7 +753,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   actions: <Widget>[
                     TextButton(
                       child: Text(
-                        '$Cancel',
+                        '$CancelTS',
                         style: styleGrey,
                       ),
                       onPressed: () {
@@ -711,7 +769,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                         style: TextStyle(
                           fontFamily: 'Arial',
                           color: Color(0xFF555555),
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                       onPressed: () {
@@ -864,12 +922,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
         timeStampList =
             dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
         timeStampObject = timeStampList[index_branch];
-        dataJson
-            .map((json) => GetTimeStampSim.fromJson(json))
-            .forEach((item) {
-              if(item.branch_default == '1'){
-                branch_id = item.branch_id;
-              }
+        dataJson.map((json) => GetTimeStampSim.fromJson(json)).forEach((item) {
+          if (item.branch_default == '1') {
+            branch_id = item.branch_id;
+          }
         });
       });
       print('branch_id : $branch_id');

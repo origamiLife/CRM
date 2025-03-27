@@ -4,7 +4,10 @@ import 'package:origamilift/import/import.dart';
 
 class CalendarScreen extends StatefulWidget {
   CalendarScreen({
-    Key? key, required this.employee, required this.pageInput, required this.Authorization,
+    Key? key,
+    required this.employee,
+    required this.pageInput,
+    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
@@ -92,7 +95,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 title: Text(
                                   'เหตุการณ์ในวันที่ : \n${selectedDate.toLocal()}',
                                   style: TextStyle(
-                fontFamily: 'Arial',
+                                    fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w500,
@@ -101,7 +104,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 content: Text(
                                   events.join('\n'),
                                   style: TextStyle(
-                fontFamily: 'Arial',
+                                    fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w500,
@@ -114,7 +117,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     child: Text(
                                       'ปิด',
                                       style: TextStyle(
-                fontFamily: 'Arial',
+                                        fontFamily: 'Arial',
                                         fontSize: 16,
                                         color: Color(0xFF555555),
                                         fontWeight: FontWeight.w500,
@@ -136,7 +139,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Container(
                 color: Colors.orange.shade50,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 4,bottom: 4),
+                  padding: const EdgeInsets.only(top: 4, bottom: 4),
                   child: Container(
                     color: Colors.white,
                     child: SfCalendar(
@@ -147,18 +150,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             .appointment, // แสดงเหตุการณ์ในเดือน
                       ),
                       appointmentTextStyle: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 16,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w500,
                       ),
                       onTap: (CalendarTapDetails details) {
-                        if (details.targetElement == CalendarElement.calendarCell) {
+                        if (details.targetElement ==
+                            CalendarElement.calendarCell) {
                           final DateTime selectedDate = details.date!;
-                          final List<Appointment> appointments = getAppointments();
+                          final List<Appointment> appointments =
+                              getAppointments();
                           final List<String> events = appointments
-                              .where((appointment) =>
-                                  isSameDate(appointment.startTime, selectedDate))
+                              .where((appointment) => isSameDate(
+                                  appointment.startTime, selectedDate))
                               .map((appointment) => appointment.subject)
                               .toList();
 
@@ -170,7 +175,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   title: Text(
                                     'เหตุการณ์ในวันที่ ${selectedDate.toLocal()}',
                                     style: TextStyle(
-                fontFamily: 'Arial',
+                                      fontFamily: 'Arial',
                                       fontSize: 16,
                                       color: Color(0xFF555555),
                                       fontWeight: FontWeight.w500,
@@ -179,11 +184,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   content: Text(events.join('\n')),
                                   actions: [
                                     TextButton(
-                                      onPressed: () => Navigator.of(context).pop(),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
                                       child: Text(
                                         'ปิด',
                                         style: TextStyle(
-                fontFamily: 'Arial',
+                                          fontFamily: 'Arial',
                                           fontSize: 16,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w500,
@@ -348,8 +354,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     currentMonthHolidays = holidays
         .where((holiday) =>
-            (holiday.date?.month??'') == currentMonth &&
-            (holiday.date?.year??'') == currentYear)
+            (holiday.date?.month ?? '') == currentMonth &&
+            (holiday.date?.year ?? '') == currentYear)
         .toList();
   }
 
@@ -376,5 +382,5 @@ class ThaiHoliday {
   final String? name;
   final DateTime? date;
 
-  ThaiHoliday({ this.name, this.date});
+  ThaiHoliday({this.name, this.date});
 }

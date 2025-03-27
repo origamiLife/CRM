@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
-import 'chat_ui/chat_ui.dart';
+import '../chat_ui/chat_ui.dart';
 
 class HelpDescription extends StatefulWidget {
   const HelpDescription({
@@ -51,7 +51,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
           child: Text(
             '',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -66,14 +66,16 @@ class _HelpDescriptionState extends State<HelpDescription> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [IconButton(
-          icon: Icon(
-            Icons.share_outlined,
-            color: Color(0xFF555555),
-            size: 20,
-          ),
-          onPressed: () => Navigator.pop(context),
-        )],
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.share_outlined,
+              color: Color(0xFF555555),
+              size: 20,
+            ),
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
       ),
       body: _getContentWidget(),
     );
@@ -97,7 +99,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   child: Text(
                     'TKT-535',
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Colors.orange,
                       fontWeight: FontWeight.w700,
@@ -110,7 +112,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                 child: Text(
                   'Thailand Tax Rate',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 22,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.w700,
@@ -152,7 +154,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                               Text(
                                 'Status',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -178,7 +180,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                               Text(
                                 'Sub Status',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -202,7 +204,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     Text(
                       'Thailand Tax Rate',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 18,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w700,
@@ -212,7 +214,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     Text(
                       'What is Thailand Text Rate? How Much is my estimated payable tax in Thailand............',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w500,
@@ -230,7 +232,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     Text(
                       'Attachments',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 18,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w700,
@@ -240,7 +242,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     Text(
                       'No attachments uploaded. Tap "Upload" below to attach necessary files or media.',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w500,
@@ -273,7 +275,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                 Text(
                                   'Add attachment',
                                   style: TextStyle(
-                fontFamily: 'Arial',
+                                    fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Colors.blueAccent,
                                     fontWeight: FontWeight.w700,
@@ -295,7 +297,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     Text(
                       'Linked',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 18,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w700,
@@ -316,11 +318,15 @@ class _HelpDescriptionState extends State<HelpDescription> {
                               ),
                             ),
                             child: InkWell(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ChatBubbles(employee: widget.employee, Authorization: widget.Authorization, pageInput: widget.pageInput,)),
+                                      builder: (context) => ChatBubbles(
+                                            employee: widget.employee,
+                                            Authorization: widget.Authorization,
+                                            pageInput: widget.pageInput,
+                                          )),
                                 );
                                 // Navigator.push(
                                 //   context,
@@ -333,7 +339,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -342,7 +349,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                           Text(
                                             'Issues',
                                             style: TextStyle(
-                fontFamily: 'Arial',
+                                              fontFamily: 'Arial',
                                               fontSize: 14,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -356,7 +363,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                       Text(
                                         '0',
                                         style: TextStyle(
-                fontFamily: 'Arial',
+                                          fontFamily: 'Arial',
                                           fontSize: 20,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w700,
@@ -394,34 +401,41 @@ class _HelpDescriptionState extends State<HelpDescription> {
                       children: [
                         _cardTable('Owner', 'jirapat', true, true, false, false,
                             false, true),
-                        _cardTable('Severity', 'medium', true, false, false, false,
-                            false, true),
+                        _cardTable('Severity', 'medium', true, false, false,
+                            false, false, true),
                         _cardTable('Stage', 'queued', true, false, false, false,
                             false, true),
                         _cardTable('Part', 'Tickets', true, false, true, false,
                             false, true),
-                        _cardTable('Needs Response', '', false, false, false, true,
-                            false, false),
+                        _cardTable('Needs Response', '', false, false, false,
+                            true, false, false),
                         _cardTable('Created by', 'taweesak', true, true, false,
                             false, false, false),
                         _cardTable('Created date', 'Nov 12', true, false, false,
                             false, false, false),
-                        _cardTable('Modified date', 'Nov 12', true, false, false,
-                            false, false, false),
-                        _cardTable('Target Close Date', 'Add', true, false, false,
-                            false, false, true),
+                        _cardTable('Modified date', 'Nov 12', true, false,
+                            false, false, false, false),
+                        _cardTable('Target Close Date', 'Add', true, false,
+                            false, false, false, true),
                         _cardTable('Customer Workspace', 'MIT Sloan - Default',
                             true, true, false, false, false, true),
-                        _cardTable('Modified by', 'AI Workflow - Suggested Answer',
-                            true, true, false, false, false, false),
+                        _cardTable(
+                            'Modified by',
+                            'AI Workflow - Suggested Answer',
+                            true,
+                            true,
+                            false,
+                            false,
+                            false,
+                            false),
                         _cardTable('Sentiment', '', false, false, false, false,
                             false, false),
-                        _cardTable('Reported by', 'Jirat@Slon', true, true, false,
-                            false, false, true),
-                        _cardTable('Source channel', '', false, false, false, false,
-                            false, false),
-                        _cardTable('Channels', '', false, false, false, false, true,
-                            false),
+                        _cardTable('Reported by', 'Jirat@Slon', true, true,
+                            false, false, false, true),
+                        _cardTable('Source channel', '', false, false, false,
+                            false, false, false),
+                        _cardTable('Channels', '', false, false, false, false,
+                            true, false),
                       ],
                     ),
                   ),
@@ -447,7 +461,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   child: Text(
                     startText,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w500,
@@ -460,7 +474,8 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 4, bottom: 4, right: 8),
+                        padding:
+                            const EdgeInsets.only(top: 4, bottom: 4, right: 8),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.lightBlue.shade100,
@@ -471,7 +486,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                             child: Text(
                               'FEAT-1',
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 12,
                                 color: Colors.blueAccent,
                                 fontWeight: FontWeight.w500,
@@ -497,7 +512,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                         child: Text(
                           'TA',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontSize: 12,
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
@@ -512,7 +527,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   Text(
                     endText,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       color:
                           (endText == 'Add') ? Colors.grey : Color(0xFF555555),
@@ -552,10 +567,9 @@ class _HelpDescriptionState extends State<HelpDescription> {
     );
   }
 
-  Widget _showDown(){
+  Widget _showDown() {
     return Padding(
-      padding:
-      const EdgeInsets.only(left: 8, right: 8),
+      padding: const EdgeInsets.only(left: 8, right: 8),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.35,
         decoration: BoxDecoration(
@@ -567,37 +581,39 @@ class _HelpDescriptionState extends State<HelpDescription> {
         child: FractionallySizedBox(
           heightFactor: 0.95,
           child: Scaffold(
-                body: SingleChildScrollView(
-                  child: Column(
+              body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Expanded(flex:4,child: Container()),
-                            Expanded(flex:1,child: Container(
-                                padding: EdgeInsets.all(3),
+                      Expanded(flex: 4, child: Container()),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              padding: EdgeInsets.all(3),
                               decoration: BoxDecoration(
                                 color: Color(0xFF555555),
                                 borderRadius: BorderRadius.circular(10),
                               ))),
-                            Expanded(flex:4,child: Container()),
-                          ],
-                        ),
-                      ),
-                      _listShowDown('Photo Library',Icons.photo_outlined),
-                      _listShowDown('Browser Files',Icons.folder_open_outlined),
-                      _listShowDown('Take Photo',Icons.camera_alt_outlined),
-                      _listShowDown('Take Video',Icons.videocam_outlined),
+                      Expanded(flex: 4, child: Container()),
                     ],
                   ),
-                )),
+                ),
+                _listShowDown('Photo Library', Icons.photo_outlined),
+                _listShowDown('Browser Files', Icons.folder_open_outlined),
+                _listShowDown('Take Photo', Icons.camera_alt_outlined),
+                _listShowDown('Take Video', Icons.videocam_outlined),
+              ],
+            ),
+          )),
         ),
       ),
     );
   }
 
-  Widget _listShowDown(String text,icon){
+  Widget _listShowDown(String text, icon) {
     return Padding(
       padding: const EdgeInsets.all(4),
       child: Column(
@@ -614,7 +630,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   Text(
                     text,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -628,10 +644,9 @@ class _HelpDescriptionState extends State<HelpDescription> {
     );
   }
 
-  Widget _showDropdown(){
+  Widget _showDropdown() {
     return Padding(
-      padding:
-      const EdgeInsets.only(left: 16, right: 16, top: 16),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.6,
         decoration: BoxDecoration(
@@ -650,8 +665,9 @@ class _HelpDescriptionState extends State<HelpDescription> {
                   controller: _searchfilterController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -660,8 +676,9 @@ class _HelpDescriptionState extends State<HelpDescription> {
                         horizontal: 12, vertical: 12),
                     hintText: 'Search',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(100),
                     ),
@@ -692,8 +709,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
               SizedBox(height: 8),
               Expanded(
                 child: Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: ListView.builder(
                     itemCount: _modelType.length,
                     itemBuilder: (context, index) {
@@ -702,16 +718,12 @@ class _HelpDescriptionState extends State<HelpDescription> {
                           Navigator.pop(context);
                         },
                         child: Column(
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.start,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -721,12 +733,10 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                     backgroundColor: Colors.grey,
                                     child: CircleAvatar(
                                       radius: 21,
-                                      backgroundColor:
-                                      Colors.white,
+                                      backgroundColor: Colors.white,
                                       child: ClipRRect(
                                         borderRadius:
-                                        BorderRadius.circular(
-                                            100),
+                                            BorderRadius.circular(100),
                                         child: Image.network(
                                           'https://dev.origami.life/images/default.png',
                                           height: 100,
@@ -740,45 +750,34 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         _modelType[index].name,
                                         maxLines: 1,
-                                        overflow:
-                                        TextOverflow.ellipsis,
-                                        style:
-                                        TextStyle(
-                fontFamily: 'Arial',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 16,
-                                          color:
-                                          Color(0xFFFF9900),
-                                          fontWeight:
-                                          FontWeight.w700,
+                                          color: Color(0xFFFF9900),
+                                          fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                       SizedBox(height: 8),
                                       Text(
                                         'Development (Mobile Application)',
                                         maxLines: 1,
-                                        overflow:
-                                        TextOverflow.ellipsis,
-                                        style:
-                                        TextStyle(
-                fontFamily: 'Arial',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 14,
-                                          color:
-                                          Color(0xFF555555),
-                                          fontWeight:
-                                          FontWeight.w500,
+                                          color: Color(0xFF555555),
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                      Divider(
-                                          color: Colors
-                                              .grey.shade300),
+                                      Divider(color: Colors.grey.shade300),
                                     ],
                                   ),
                                 ),
@@ -799,97 +798,97 @@ class _HelpDescriptionState extends State<HelpDescription> {
   }
 
   Widget _Dropdown() {
-    return LayoutBuilder(
-        builder: (context, constraints) {
-          return Container(
-            // width: MediaQuery.of(context).size.width / 3,
-            height: 50,
-            child: DropdownButton2<ModelType>(
-              isExpanded: true,
-              hint: Text(
-                'Select',
-                style: TextStyle(
-                fontFamily: 'Arial',
-                  color: Colors.grey,
-                  fontSize: 14,
-                ),
-              ),
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-              items: _modelType
-                  .map((ModelType type) => DropdownMenuItem<ModelType>(
-                value: type,
-                child: Text(
-                  type.name,
-                  style: TextStyle(
-                fontFamily: 'Arial',
-                    fontSize: 14,
-                  ),
-                ),
-              ))
-                  .toList(),
-              value: selectedItem,
-              onChanged: (value) {
-                setState(() {
-                  selectedItem = value;
-                });
-              },
-              underline: SizedBox.shrink(),
-              iconStyleData: IconStyleData(
-                icon: Icon(Icons.arrow_drop_down,
-                    color: Color(0xFF555555), size: 30),
-                iconSize: 30,
-              ),
-              buttonStyleData: ButtonStyleData(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-              ),
-              dropdownStyleData: DropdownStyleData(
-                maxHeight:
-                200, // Height for displaying up to 5 lines (adjust as needed)
-              ),
-              menuItemStyleData: MenuItemStyleData(
-                height: 33,
-              ),
-              dropdownSearchData: DropdownSearchData(
-                searchController: _searchDownController,
-                searchInnerWidgetHeight: 50,
-                searchInnerWidget: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: TextFormField(
-                    controller: _searchDownController,
-                    keyboardType: TextInputType.text,
-                    style:
-                    TextStyle(
-                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 8,
-                      ),
-                      hintText: '$Search...',
-                      hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 14, color: Color(0xFF555555)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        // width: MediaQuery.of(context).size.width / 3,
+        height: 50,
+        child: DropdownButton2<ModelType>(
+          isExpanded: true,
+          hint: Text(
+            'Select',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+          ),
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.grey,
+            fontSize: 14,
+          ),
+          items: _modelType
+              .map((ModelType type) => DropdownMenuItem<ModelType>(
+                    value: type,
+                    child: Text(
+                      type.name,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
                       ),
                     ),
+                  ))
+              .toList(),
+          value: selectedItem,
+          onChanged: (value) {
+            setState(() {
+              selectedItem = value;
+            });
+          },
+          underline: SizedBox.shrink(),
+          iconStyleData: IconStyleData(
+            icon:
+                Icon(Icons.arrow_drop_down, color: Color(0xFF555555), size: 30),
+            iconSize: 30,
+          ),
+          buttonStyleData: ButtonStyleData(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+          ),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight:
+                200, // Height for displaying up to 5 lines (adjust as needed)
+          ),
+          menuItemStyleData: MenuItemStyleData(
+            height: 33,
+          ),
+          dropdownSearchData: DropdownSearchData(
+            searchController: _searchDownController,
+            searchInnerWidgetHeight: 50,
+            searchInnerWidget: Padding(
+              padding: const EdgeInsets.all(8),
+              child: TextFormField(
+                controller: _searchDownController,
+                keyboardType: TextInputType.text,
+                style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Color(0xFF555555),
+                    fontSize: 14),
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
+                  hintText: '$Search...',
+                  hintStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                searchMatchFn: (item, searchValue) {
-                  return item.value!.name
-                      .toLowerCase()
-                      .contains(searchValue.toLowerCase());
-                },
               ),
             ),
-          );
-        }
-    );
+            searchMatchFn: (item, searchValue) {
+              return item.value!.name
+                  .toLowerCase()
+                  .contains(searchValue.toLowerCase());
+            },
+          ),
+        ),
+      );
+    });
   }
 
   ModelType? selectedItem;

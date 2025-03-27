@@ -248,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.transparent,
         body: SafeArea(
           child: SizedBox.expand(
             // กำหนดให้เต็มจอ

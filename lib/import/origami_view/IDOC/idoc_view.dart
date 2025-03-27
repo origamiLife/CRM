@@ -186,7 +186,7 @@ class _IdocScreenState extends State<IdocScreen> {
                                         ),
                                       ),
                                       Text(
-                                        'SubTitile ${index + 1} (2024/10/25 16:17)',
+                                        'Subtitle ${index + 1} (2024/10/25 16:17)',
                                         maxLines: 1,
                                         style: TextStyle(
                                           fontFamily: 'Arial',

@@ -40,12 +40,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
     setState(() {
       String query = _searchController.text.toLowerCase();
       filteredActivityList = activityList.where((activity) {
-        return activity.activity_project_name?.toLowerCase().contains(query) ?? false;
+        return activity.activity_project_name?.toLowerCase().contains(query) ??
+            false;
       }).toList();
     });
     fetchModelActivityVoid();
   }
-
 
   @override
   void dispose() {
@@ -233,10 +233,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                     child: Image.network(
                                       widget.employee.emp_avatar ?? '',
                                       fit: BoxFit.fill,
-                                      errorBuilder: (context, error, stackTrace) {
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
                                         return Image.network(
                                           'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                                          width: double.infinity, // ความกว้างเต็มจอ
+                                          width: double
+                                              .infinity, // ความกว้างเต็มจอ
                                           fit: BoxFit.contain,
                                         );
                                       },
@@ -267,7 +269,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                 activity.activity_project_name ?? '',
                                 maxLines: 1,
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 14,
                                   color: Color(0xFFFF9900),
                                   fontWeight: FontWeight.w500,
@@ -277,7 +279,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                 activity.activity_location ?? '',
                                 maxLines: 1,
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 12,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w500,
@@ -290,7 +292,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                 '${widget.employee.emp_name ?? ''} - ${activity.projectname ?? ''}',
                                 maxLines: 1,
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 12,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w500,
@@ -303,7 +305,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                 '${activity.activity_start_date ?? ''} ${activity.time_start ?? ''} - ${activity.activity_end_date ?? ''} ${activity.time_end ?? ''}',
                                 maxLines: 1,
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 12,
                                   color: Colors.grey,
                                   fontWeight: FontWeight.w500,
@@ -319,7 +321,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                       'Type : Website & Application',
                                       maxLines: 1,
                                       style: TextStyle(
-                fontFamily: 'Arial',
+                                        fontFamily: 'Arial',
                                         fontSize: 12,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w500,
@@ -349,7 +351,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                             ? 'plan'
                                             : activity.activity_status ?? '',
                                         style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 12,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500),

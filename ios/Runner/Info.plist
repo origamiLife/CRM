@@ -74,5 +74,24 @@
     <key>GMSApiKey</key>
     <string>AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siow</string>
 
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+    </dict>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need microphone access to make phone calls.</string>
+
+    <key>NSPhoneNumbersUsageDescription</key>
+    <string>เราต้องการเข้าถึงข้อมูลหมายเลขโทรศัพท์เพื่อบันทึกรายละเอียดการโทร</string>
+    <key>NSCallKitUsageDescription</key>
+    <string>เราต้องการเข้าถึงข้อมูลการโทรเพื่อบันทึกรายละเอียดการโทร</string>
+
+    <key>NSContactsUsageDescription</key>
+    <string>We need access to contacts for incoming calls.</string>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>We need Bluetooth access for calls.</string>
+
 </dict>
 </plist>

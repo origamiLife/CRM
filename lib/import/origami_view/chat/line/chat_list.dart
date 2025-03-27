@@ -49,7 +49,7 @@ class _ChatListState extends State<ChatList> {
                         Text(
                           'Start chatting',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -61,7 +61,7 @@ class _ChatListState extends State<ChatList> {
                         Text(
                           'Message privately with your 2 WhatApp contact, \nno matter what device they use.',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             color: Colors.grey,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -95,7 +95,7 @@ class _ChatListState extends State<ChatList> {
                                         Text(
                                           'Your Notes',
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             color: Color(0xFF555555),
                                           ),
                                           overflow: TextOverflow.ellipsis,
@@ -121,7 +121,7 @@ class _ChatListState extends State<ChatList> {
                                         Text(
                                           '.Earth.🌏..',
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             color: Color(0xFF555555),
                                           ),
                                           overflow: TextOverflow.ellipsis,
@@ -152,43 +152,47 @@ class _ChatListState extends State<ChatList> {
                                 ),
                               ),
                               child: TextFormField(
-                                  controller: _searchController,
-                                  keyboardType: TextInputType.text,
-                                  style: TextStyle(
-                fontFamily: 'Arial',
-                                      color: Color(0xFF555555), fontSize: 14),
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 12),
-                                    hintText: '$Search...',
-                                    hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                                        fontSize: 14, color: Color(0xFF555555)),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                      color: Color(0xFFFF9900),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
+                                controller: _searchController,
+                                keyboardType: TextInputType.text,
+                                style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontSize: 14),
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 12),
+                                  hintText: '$Search...',
+                                  hintStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555)),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(100),
                                   ),
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    color: Color(0xFFFF9900),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -286,12 +290,12 @@ class _ChatListState extends State<ChatList> {
                                     child: Stack(
                                       children: [
                                         Align(
-                                          alignment :Alignment.centerRight,
+                                          alignment: Alignment.centerRight,
                                           child: Text(
                                             '16.15 น.',
                                             style: TextStyle(
-                fontFamily: 'Arial',
-                                              fontSize:12,
+                                              fontFamily: 'Arial',
+                                              fontSize: 12,
                                               color: Colors.grey.shade400,
                                             ),
                                             overflow: TextOverflow.ellipsis,
@@ -299,7 +303,8 @@ class _ChatListState extends State<ChatList> {
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(top: 12),
+                                          padding:
+                                              const EdgeInsets.only(top: 12),
                                           child: Row(
                                             children: [
                                               CircleAvatar(
@@ -311,15 +316,17 @@ class _ChatListState extends State<ChatList> {
                                               Flexible(
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       '.Earth.🌏..',
                                                       style: TextStyle(
-                fontFamily: 'Arial',
-                                                        color: Color(0xFF555555),
+                                                        fontFamily: 'Arial',
+                                                        color:
+                                                            Color(0xFF555555),
                                                       ),
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 1,
                                                     ),
                                                     Row(
@@ -328,20 +335,28 @@ class _ChatListState extends State<ChatList> {
                                                           child: Text(
                                                             'สำหรับข้อมูลเพิ่มเติมเกี่ยวกับสถานะการอัปเดตของรุ่น SDK แต่ละรุ่นที่เกี่ยวข้องกับข้างต้น โปรดดูที่หมายเหตุรุ่นSDK ของ LINE Messaging API',
                                                             style: TextStyle(
-                fontFamily: 'Arial',
-                                                              color: Colors.grey.shade400,
+                                                              fontFamily:
+                                                                  'Arial',
+                                                              color: Colors.grey
+                                                                  .shade400,
                                                             ),
                                                             overflow:
-                                                            TextOverflow.ellipsis,
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                             maxLines: 1,
                                                           ),
                                                         ),
                                                         Padding(
-                                                          padding: const EdgeInsets.all(4),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(4),
                                                           child: Card(
-                                                              color: Colors.green,
+                                                              color:
+                                                                  Colors.green,
                                                               child: Container(
-                                                                padding: EdgeInsets.all(6),
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(6),
                                                               )),
                                                         )
                                                       ],
@@ -358,7 +373,6 @@ class _ChatListState extends State<ChatList> {
                                 );
                               }),
                             ),
-
                           ],
                         ),
                       ),
