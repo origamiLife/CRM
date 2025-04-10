@@ -106,7 +106,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
@@ -118,7 +118,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 14,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -129,7 +129,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 14,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -156,7 +156,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                       child: Text(
                         'Other',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 18,
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w700,
@@ -210,15 +210,16 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           builder: (context) => ProjectNeed(),
                                         ),
                                       );
-                                    } else if (index == 3) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProjectIssueLog(),
-                                        ),
-                                      );
                                     }
+                                    // else if (index == 3) {
+                                    //   Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //       builder: (context) =>
+                                    //           ProjectIssueLog(),
+                                    //     ),
+                                    //   );
+                                    // }
                                     // else if(index == 4){
                                     //   Navigator.push(
                                     //     context,
@@ -235,14 +236,14 @@ class _ProjectOtherState extends State<ProjectOther> {
                                     //     ),
                                     //   );
                                     // }
-                                    else if (index == 4) {
+                                    else if (index == 3) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => ProjectManday(),
                                         ),
                                       );
-                                    } else if (index == 5) {
+                                    } else if (index == 4) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -272,7 +273,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -299,7 +300,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                           Text(
                             'Sutup Helpdesk',
                             style: TextStyle(
-                fontFamily: 'Arial',
+                              fontFamily: 'Arial',
                               fontSize: 18,
                               color: Color(0xFF555555),
                               fontWeight: FontWeight.w700,
@@ -317,7 +318,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                         child: Text(
                                           '1. Service level',
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 18,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w700,
@@ -328,12 +329,14 @@ class _ProjectOtherState extends State<ProjectOther> {
                                         activeChild: Text(
                                           'ON',
                                           style: TextStyle(
-                fontFamily: 'Arial',),
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
                                         inactiveChild: Text(
                                           'OFF',
                                           style: TextStyle(
-                fontFamily: 'Arial',),
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(100),
@@ -355,7 +358,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           Text(
                                             'Service level',
                                             style: TextStyle(
-                fontFamily: 'Arial',
+                                              fontFamily: 'Arial',
                                               fontSize: 16,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -373,7 +376,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           Text(
                                             'Height',
                                             style: TextStyle(
-                fontFamily: 'Arial',
+                                              fontFamily: 'Arial',
                                               fontSize: 16,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -390,7 +393,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           Text(
                                             'Medium',
                                             style: TextStyle(
-                fontFamily: 'Arial',
+                                              fontFamily: 'Arial',
                                               fontSize: 16,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -407,7 +410,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           Text(
                                             'Low',
                                             style: TextStyle(
-                fontFamily: 'Arial',
+                                              fontFamily: 'Arial',
                                               fontSize: 16,
                                               color: Color(0xFF555555),
                                               fontWeight: FontWeight.w500,
@@ -437,7 +440,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                         child: Text(
                                           'Auto complete (Day) : ',
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -456,7 +459,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                         child: Text(
                                           'Auto complete qouta (Day) : ',
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -475,7 +478,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                         child: Text(
                                           'Helpdesk Start date : ',
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -494,7 +497,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                                         child: Text(
                                           'Helpdesk End date : ',
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -555,7 +558,7 @@ class _ProjectOtherState extends State<ProjectOther> {
       controller: controller,
       keyboardType: TextInputType.number,
       style: TextStyle(
-                fontFamily: 'Arial',
+        fontFamily: 'Arial',
         color: Colors.green,
         fontSize: 14,
       ),
@@ -566,8 +569,8 @@ class _ProjectOtherState extends State<ProjectOther> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
         ),
@@ -600,7 +603,7 @@ class _ProjectOtherState extends State<ProjectOther> {
           enabled: false,
           keyboardType: TextInputType.number,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -612,7 +615,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: title,
             hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: Colors.grey, width: 1),
@@ -707,7 +710,7 @@ class _ProjectOtherState extends State<ProjectOther> {
     OtherPro('IDOC', FontAwesomeIcons.clipboard),
     OtherPro('Photo/Files', FontAwesomeIcons.image),
     OtherPro('Need', FontAwesomeIcons.fileText),
-    OtherPro('Issue Log', FontAwesomeIcons.exclamationTriangle),
+    // OtherPro('Issue Log', FontAwesomeIcons.exclamationTriangle),
     // OtherPro('Setup Helpdesk', FontAwesomeIcons.lifeRing),
     OtherPro('Manday', FontAwesomeIcons.batteryFull),
     OtherPro('Budgeting', FontAwesomeIcons.coins),
@@ -733,12 +736,12 @@ class _ProjectOtherState extends State<ProjectOther> {
         hint: Text(
           'Unit',
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
         ),
         style: TextStyle(
-                fontFamily: 'Arial',
+          fontFamily: 'Arial',
           color: Color(0xFF555555),
         ),
         items: unitOther
@@ -747,7 +750,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                   child: Text(
                     unit.name,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),

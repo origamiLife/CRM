@@ -8,7 +8,8 @@ import '../../need/need_view/need_detail.dart';
 class activityAdd extends StatefulWidget {
   const activityAdd({
     Key? key,
-    required this.employee, required this.Authorization,
+    required this.employee,
+    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String Authorization;
@@ -21,10 +22,12 @@ class _activityAddState extends State<activityAdd> {
   TextEditingController _subjectController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _costController = TextEditingController();
-  TextEditingController _searchController = TextEditingController();
+  // TextEditingController _searchProjectController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
   LatLng? _selectedLocation; // สำหรับเก็บตำแหน่งที่เลือก
   String _addfilter = '';
+  String _search = '';
 
   @override
   void initState() {
@@ -53,7 +56,8 @@ class _activityAddState extends State<activityAdd> {
       print("Current text: ${_costController.text}");
     });
     _searchController.addListener(() {
-      // _search = _searchController.text;
+      _search = _searchController.text;
+      voidProject();
       print("Current text: ${_searchController.text}");
     });
     _searchfilterController.addListener(() {
@@ -61,6 +65,18 @@ class _activityAddState extends State<activityAdd> {
       print("Current text: ${_searchfilterController.text}");
     });
     // addNewContactList.add();
+  }
+
+  void voidProject() {
+    // ค้นหา index ของค่าที่เลือกใน list
+    int index = projectList.indexWhere((item) => item.project_id == project_id);
+
+    if (index == 0) {
+      indexItems = 0;
+    } else if (index == projectList.length - 1 || index == sumroject) {
+      indexItems = maxproject + 1;
+    }
+    fetchActivityProject();
   }
 
   @override
@@ -159,7 +175,7 @@ class _activityAddState extends State<activityAdd> {
           child: Text(
             'Add Activity',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -187,7 +203,7 @@ class _activityAddState extends State<activityAdd> {
                 Text(
                   'DONE',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -212,7 +228,8 @@ class _activityAddState extends State<activityAdd> {
                 _DownStatus(),
                 _DownPriority(),
                 _TextController('Subject', _subjectController),
-                _TextController('Owner Activity Description', _descriptionController),
+                _TextController(
+                    'Owner Activity Description', _descriptionController),
                 Column(
                   children: [
                     SizedBox(height: 18),
@@ -249,17 +266,14 @@ class _activityAddState extends State<activityAdd> {
                   ],
                 ),
                 SizedBox(height: 8),
-
                 _DownPlace('Place'),
-
                 _locationGM(),
-
                 Text(
                   'Cost',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.bold,
@@ -270,8 +284,9 @@ class _activityAddState extends State<activityAdd> {
                   controller: _costController,
                   keyboardType: TextInputType.number,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -280,8 +295,9 @@ class _activityAddState extends State<activityAdd> {
                         horizontal: 12, vertical: 12),
                     hintText: '0.00',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(100),
                     ),
@@ -317,7 +333,7 @@ class _activityAddState extends State<activityAdd> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                     fontWeight: FontWeight.bold,
@@ -359,7 +375,8 @@ class _activityAddState extends State<activityAdd> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                           child: Image.network(
-                                            (contact.contact_image == null || contact.contact_image == '')
+                                            (contact.contact_image == null ||
+                                                    contact.contact_image == '')
                                                 ? 'https://dev.origami.life/images/default.png'
                                                 : '$host//crm/${contact.contact_image}',
                                             height: 100,
@@ -383,7 +400,7 @@ class _activityAddState extends State<activityAdd> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 16,
                                             color: Color(0xFFFF9900),
                                             fontWeight: FontWeight.w700,
@@ -394,7 +411,7 @@ class _activityAddState extends State<activityAdd> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -420,7 +437,7 @@ class _activityAddState extends State<activityAdd> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.bold,
@@ -460,8 +477,8 @@ class _activityAddState extends State<activityAdd> {
               child: Text(
             '$Empty',
             style: TextStyle(
-                fontFamily: 'Arial',
-              fontSize: 16,
+              fontFamily: 'Arial',
+              fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
             ),
@@ -493,8 +510,9 @@ class _activityAddState extends State<activityAdd> {
                       controller: _searchfilterController,
                       keyboardType: TextInputType.text,
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          color: Color(0xFF555555), fontSize: 14),
+                          fontFamily: 'Arial',
+                          color: Color(0xFF555555),
+                          fontSize: 14),
                       decoration: InputDecoration(
                         isDense: true,
                         filled: true,
@@ -503,8 +521,9 @@ class _activityAddState extends State<activityAdd> {
                             horizontal: 12, vertical: 12),
                         hintText: 'Search',
                         hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                            fontSize: 14, color: Color(0xFF555555)),
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Color(0xFF555555)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(100),
                         ),
@@ -555,7 +574,7 @@ class _activityAddState extends State<activityAdd> {
                                   setState(() {
                                     addNewContactList.add(
                                         contact); // เพิ่มรายการที่เลือกลงใน list
-                                    contact_list.add(contact.contact_id??'');
+                                    contact_list.add(contact.contact_id ?? '');
                                   });
                                 } else {
                                   // แจ้งเตือนว่ามีชื่ออยู่แล้ว
@@ -591,7 +610,10 @@ class _activityAddState extends State<activityAdd> {
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                               child: Image.network(
-                                                (contact.contact_image == null || contact.contact_image == '')
+                                                (contact.contact_image ==
+                                                            null ||
+                                                        contact.contact_image ==
+                                                            '')
                                                     ? 'https://dev.origami.life/images/default.png'
                                                     : '$host//crm/${contact.contact_image}',
                                                 height: 100,
@@ -615,7 +637,7 @@ class _activityAddState extends State<activityAdd> {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                fontFamily: 'Arial',
+                                                fontFamily: 'Arial',
                                                 fontSize: 16,
                                                 color: Color(0xFFFF9900),
                                                 fontWeight: FontWeight.w700,
@@ -626,7 +648,7 @@ class _activityAddState extends State<activityAdd> {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                fontFamily: 'Arial',
+                                                fontFamily: 'Arial',
                                                 fontSize: 14,
                                                 color: Color(0xFF555555),
                                                 fontWeight: FontWeight.w500,
@@ -667,7 +689,7 @@ class _activityAddState extends State<activityAdd> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.bold,
@@ -691,7 +713,7 @@ class _activityAddState extends State<activityAdd> {
           controller: textController,
           keyboardType: TextInputType.text,
           style: TextStyle(
-                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
+              fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -699,9 +721,8 @@ class _activityAddState extends State<activityAdd> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             hintText: '',
-            hintStyle:
-                TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
             ),
@@ -737,7 +758,7 @@ class _activityAddState extends State<activityAdd> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.bold,
@@ -774,7 +795,7 @@ class _activityAddState extends State<activityAdd> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: projectList
@@ -785,7 +806,7 @@ class _activityAddState extends State<activityAdd> {
                         overflow: TextOverflow.ellipsis,
                         item.project_name ?? '',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -795,6 +816,7 @@ class _activityAddState extends State<activityAdd> {
             onChanged: (value) {
               setState(() {
                 selectedProject = value;
+                project_id = value?.project_id ?? '';
               });
             },
             underline: SizedBox.shrink(),
@@ -822,8 +844,9 @@ class _activityAddState extends State<activityAdd> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -834,8 +857,9 @@ class _activityAddState extends State<activityAdd> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -914,23 +938,23 @@ class _activityAddState extends State<activityAdd> {
             ),
             items: contactList
                 .map((item) => DropdownMenuItem<ActivityContact>(
-              value: item,
-              child: Text(
-                item.contact_first ?? '',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                ),
-              ),
-            ))
+                      value: item,
+                      child: Text(
+                        item.contact_first ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                        ),
+                      ),
+                    ))
                 .toList(),
             value: selectedContact,
             onChanged: (value) {
               setState(() {
                 selectedContact = value;
-                contact_id = value?.contact_id??'';
+                contact_id = value?.contact_id ?? '';
               });
             },
             underline: SizedBox.shrink(),
@@ -944,7 +968,7 @@ class _activityAddState extends State<activityAdd> {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
+                  200, // Height for displaying up to 5 lines (adjust as needed)
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -959,7 +983,8 @@ class _activityAddState extends State<activityAdd> {
                   keyboardType: TextInputType.text,
                   style: TextStyle(
                       fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -971,7 +996,8 @@ class _activityAddState extends State<activityAdd> {
                     hintText: '$Search...',
                     hintStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1006,7 +1032,7 @@ class _activityAddState extends State<activityAdd> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1032,7 +1058,7 @@ class _activityAddState extends State<activityAdd> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: accountList
@@ -1043,7 +1069,7 @@ class _activityAddState extends State<activityAdd> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1053,7 +1079,7 @@ class _activityAddState extends State<activityAdd> {
             onChanged: (value) {
               setState(() {
                 selectedAccount = value;
-                account_id = value?.account_id??'';
+                account_id = value?.account_id ?? '';
               });
             },
             underline: SizedBox.shrink(),
@@ -1081,8 +1107,9 @@ class _activityAddState extends State<activityAdd> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1093,8 +1120,9 @@ class _activityAddState extends State<activityAdd> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1173,23 +1201,23 @@ class _activityAddState extends State<activityAdd> {
             ),
             items: statusList
                 .map((item) => DropdownMenuItem<ActivityStatus>(
-              value: item,
-              child: Text(
-                item.status_name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                ),
-              ),
-            ))
+                      value: item,
+                      child: Text(
+                        item.status_name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                        ),
+                      ),
+                    ))
                 .toList(),
             value: selectedStatus,
             onChanged: (value) {
               setState(() {
                 selectedStatus = value;
-                status_id = value?.status_id??'';
+                status_id = value?.status_id ?? '';
               });
             },
             underline: SizedBox.shrink(),
@@ -1203,7 +1231,7 @@ class _activityAddState extends State<activityAdd> {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
+                  200, // Height for displaying up to 5 lines (adjust as needed)
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -1218,7 +1246,8 @@ class _activityAddState extends State<activityAdd> {
                   keyboardType: TextInputType.text,
                   style: TextStyle(
                       fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1230,7 +1259,8 @@ class _activityAddState extends State<activityAdd> {
                     hintText: '$Search...',
                     hintStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1309,23 +1339,23 @@ class _activityAddState extends State<activityAdd> {
             ),
             items: priorityList
                 .map((item) => DropdownMenuItem<ActivityPriority>(
-              value: item,
-              child: Text(
-                item.priority_name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                ),
-              ),
-            ))
+                      value: item,
+                      child: Text(
+                        item.priority_name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                        ),
+                      ),
+                    ))
                 .toList(),
             value: selectedPriority,
             onChanged: (value) {
               setState(() {
                 selectedPriority = value;
-                priority_id = value?.priority_id??'';
+                priority_id = value?.priority_id ?? '';
               });
             },
             underline: SizedBox.shrink(),
@@ -1339,7 +1369,7 @@ class _activityAddState extends State<activityAdd> {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
+                  200, // Height for displaying up to 5 lines (adjust as needed)
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -1354,7 +1384,8 @@ class _activityAddState extends State<activityAdd> {
                   keyboardType: TextInputType.text,
                   style: TextStyle(
                       fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1366,7 +1397,8 @@ class _activityAddState extends State<activityAdd> {
                     hintText: '$Search...',
                     hintStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1403,7 +1435,7 @@ class _activityAddState extends State<activityAdd> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.bold,
@@ -1440,7 +1472,7 @@ class _activityAddState extends State<activityAdd> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: typeList
@@ -1451,7 +1483,7 @@ class _activityAddState extends State<activityAdd> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1461,7 +1493,7 @@ class _activityAddState extends State<activityAdd> {
             onChanged: (value) {
               setState(() {
                 selectedType = value;
-                type_id = value?.type_id??'';
+                type_id = value?.type_id ?? '';
               });
             },
             underline: SizedBox.shrink(),
@@ -1489,8 +1521,9 @@ class _activityAddState extends State<activityAdd> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1501,8 +1534,9 @@ class _activityAddState extends State<activityAdd> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1527,7 +1561,6 @@ class _activityAddState extends State<activityAdd> {
       ],
     );
   }
-
 
   Widget _DateBody(String _nemedate, bool ontap) {
     return Expanded(
@@ -1565,7 +1598,8 @@ class _activityAddState extends State<activityAdd> {
               borderRadius: BorderRadius.circular(10),
               color: (ontap == true) ? Colors.white : Colors.grey.shade300,
               border: Border.all(
-                color: (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
+                color:
+                    (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
                 width: 1.0,
               ),
             ),
@@ -1583,7 +1617,8 @@ class _activityAddState extends State<activityAdd> {
                       showlastDay,
                       style: TextStyle(
                           fontFamily: 'Arial',
-                          fontSize: 14, color: Color(0xFF555555)),
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
                     ),
                     Spacer(),
                     Icon(
@@ -1647,12 +1682,11 @@ class _activityAddState extends State<activityAdd> {
                 child: Row(
                   children: [
                     Text(
-                      inOut == 'start'
-                          ? start_time
-                          : end_time,
+                      inOut == 'start' ? start_time : end_time,
                       style: TextStyle(
                           fontFamily: 'Arial',
-                          fontSize: 14, color: Color(0xFF555555)),
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
                     ),
                     Spacer(),
                     Icon(
@@ -1701,7 +1735,7 @@ class _activityAddState extends State<activityAdd> {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Colors.white ,
+            color: Colors.white,
             border: Border.all(
               color: Color(0xFFFF9900),
               width: 1.0,
@@ -1722,23 +1756,23 @@ class _activityAddState extends State<activityAdd> {
             ),
             items: placeDown
                 .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-              value: item,
-              child: Text(
-                item.status_name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                ),
-              ),
-            ))
+                      value: item,
+                      child: Text(
+                        item.status_name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                        ),
+                      ),
+                    ))
                 .toList(),
             value: selectedItem,
             onChanged: (value) {
               setState(() {
                 selectedItem = value;
-                place_id = value?.status_id??'';
+                place_id = value?.status_id ?? '';
               });
             },
             underline: SizedBox.shrink(),
@@ -1752,7 +1786,7 @@ class _activityAddState extends State<activityAdd> {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
+                  200, // Height for displaying up to 5 lines (adjust as needed)
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -1767,7 +1801,8 @@ class _activityAddState extends State<activityAdd> {
                   keyboardType: TextInputType.text,
                   style: TextStyle(
                       fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1779,7 +1814,8 @@ class _activityAddState extends State<activityAdd> {
                     hintText: '$Search...',
                     hintStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1814,7 +1850,7 @@ class _activityAddState extends State<activityAdd> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.bold,
@@ -1857,7 +1893,7 @@ class _activityAddState extends State<activityAdd> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                     ),
@@ -1894,41 +1930,55 @@ class _activityAddState extends State<activityAdd> {
   String cost = '0';
   List<String> contact_list = [];
 
-  void _Done(){
-    if(type_id == ''){
-      type_id = selectedType?.type_id??'';
-    }if(project_id == ''){
-      project_id = selectedProject?.project_id??'';
-    }if(account_id == ''){
-      account_id = selectedAccount?.account_id??'';
-    }if(contact_id == ''){
-      contact_id = selectedContact?.contact_id??'';
-    }if(status_id == ''){
-      status_id = selectedStatus?.status_id??'';
-    }if(priority_id == ''){
-      priority_id = selectedPriority?.priority_id??'';
-    }if(place_id == ''){
+  void _Done() {
+    if (type_id == '') {
+      type_id = selectedType?.type_id ?? '';
+    }
+    if (project_id == '') {
+      project_id = selectedProject?.project_id ?? '';
+    }
+    if (account_id == '') {
+      account_id = selectedAccount?.account_id ?? '';
+    }
+    if (contact_id == '') {
+      contact_id = selectedContact?.contact_id ?? '';
+    }
+    if (status_id == '') {
+      status_id = selectedStatus?.status_id ?? '';
+    }
+    if (priority_id == '') {
+      priority_id = selectedPriority?.priority_id ?? '';
+    }
+    if (place_id == '') {
       place_id = placeDown[0].status_id;
-    }if (activity_name == '' ) {
+    }
+    if (activity_name == '') {
       // แจ้งเตือน
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              'Please fill in the topic before saving the data.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }if (start_date == '' && start_time == '' && end_date == '' && end_time == '') {
-      // แจ้งเตือน
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              'Please select a date and time before saving the data.'),
+          content: Text('Please fill in the topic before saving the data.'),
           duration: Duration(seconds: 2),
         ),
       );
     }
-    if(activity_name != '' && start_date != '' && start_time != '' && end_date != '' && end_time != ''){
+    if (start_date == '' &&
+        start_time == '' &&
+        end_date == '' &&
+        end_time == '') {
+      // แจ้งเตือน
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text('Please select a date and time before saving the data.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+    if (activity_name != '' &&
+        start_date != '' &&
+        start_time != '' &&
+        end_date != '' &&
+        end_time != '') {
       fetchAddActivity();
     }
   }
@@ -1937,31 +1987,32 @@ class _activityAddState extends State<activityAdd> {
     final uri = Uri.parse("$host/crm/ios_add_activity.php");
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
-        'type_id': type_id,
-        'project_id': project_id,
-        'account_id': account_id,
-        'contact_id': contact_id,
-        'status_id': status_id,
-        'priority_id': priority_id,
-        'place_id': place_id,
-        'location': '',
-        'location_lat': '',
-        'location_long': '',
-        'activity_name': activity_name,
-        'description': description,
-        'start_date': start_date,
-        'start_time': start_time,
-        'end_date': end_date,
-        'end_time': end_time,
-        'cost': cost,
-        'contact_list': contact_list.join(","),
-      },
-    );
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'Authorization': widget.Authorization,
+          'type_id': type_id,
+          'project_id': project_id,
+          'account_id': account_id,
+          'contact_id': contact_id,
+          'status_id': status_id,
+          'priority_id': priority_id,
+          'place_id': place_id,
+          'location': '',
+          'location_lat': '',
+          'location_long': '',
+          'activity_name': activity_name,
+          'description': description,
+          'start_date': start_date,
+          'start_time': start_time,
+          'end_date': end_date,
+          'end_time': end_time,
+          'cost': cost,
+          'contact_list': contact_list.join(","),
+        },
+      );
       if (response.statusCode == 200) {
         print('true: ${response.statusCode}');
       } else {
@@ -1970,32 +2021,41 @@ class _activityAddState extends State<activityAdd> {
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
     }
+  }
 
+  String formatText(String text) {
+    return text.replaceAll(RegExp(r'(\r\n|\r)'), '\n');
   }
 
   ActivityProject? selectedProject;
   List<ActivityProject> projectList = [];
+  int indexItems = 0;
+  int sumroject = 0;
+  int maxproject = 0;
   Future<void> fetchActivityProject() async {
-    final uri =
-        Uri.parse('$host/crm/ios_activity_project.php');
+    final uri = Uri.parse('$host/crm/project.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
-          'type': 'project',
+          'idemp': widget.employee.emp_id,
+          'index': (_search != '') ? '0' : indexItems.toString(),
+          'txt_search': _search,
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
+        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+        maxproject = jsonResponse['max'];
+        sumroject = jsonResponse['sum'];
+        print('sum : $sumroject');
         setState(() {
           projectList =
               dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-          if (projectList.isNotEmpty && selectedProject == null) {
-            selectedProject = projectList[0];
+          if (projectList.isNotEmpty) {
+            selectedProject = projectList.first;
           }
         });
       } else {
@@ -2009,11 +2069,11 @@ class _activityAddState extends State<activityAdd> {
   AccountData? selectedAccount;
   List<AccountData> accountList = [];
   Future<void> fetchActivityAccount() async {
-    final uri =
-    Uri.parse('$host/api/origami/need/account.php?page&search');
+    final uri = Uri.parse('$host/api/origami/need/account.php?page&search');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2041,11 +2101,11 @@ class _activityAddState extends State<activityAdd> {
   ActivityType? selectedType;
   List<ActivityType> typeList = [];
   Future<void> fetchActivityType() async {
-    final uri =
-    Uri.parse('$host/crm/ios_activity_type.php');
+    final uri = Uri.parse('$host/crm/ios_activity_type.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2073,11 +2133,11 @@ class _activityAddState extends State<activityAdd> {
   ActivityStatus? selectedStatus;
   List<ActivityStatus> statusList = [];
   Future<void> fetchActivityStatus() async {
-    final uri =
-    Uri.parse('$host/crm/ios_activity_status.php');
+    final uri = Uri.parse('$host/crm/ios_activity_status.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2105,11 +2165,11 @@ class _activityAddState extends State<activityAdd> {
   ActivityPriority? selectedPriority;
   List<ActivityPriority> priorityList = [];
   Future<void> fetchActivityPriority() async {
-    final uri =
-    Uri.parse('$host/crm/ios_activity_priority.php');
+    final uri = Uri.parse('$host/crm/ios_activity_priority.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2138,11 +2198,11 @@ class _activityAddState extends State<activityAdd> {
   List<ActivityContact> contactList = [];
   List<ActivityContact> addNewContactList = [];
   Future<void> fetchActivityContact() async {
-    final uri =
-        Uri.parse('$host/crm/ios_activity_contact.php');
+    final uri = Uri.parse('$host/crm/ios_activity_contact.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2169,10 +2229,10 @@ class _activityAddState extends State<activityAdd> {
   }
 
   Future<List<ActivityContact>> fetchAddContact() async {
-    final uri =
-        Uri.parse("$host/crm/ios_activity_contact.php");
+    final uri = Uri.parse("$host/crm/ios_activity_contact.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -2215,9 +2275,9 @@ class ActivityType {
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityType.fromJson(Map<String, dynamic> json) {
     return ActivityType(
-      type_id: json['type_id']??'',
-      type_name: json['type_name']??'',
-      type_chage: json['type_chage']??'',
+      type_id: json['type_id'] ?? '',
+      type_name: json['type_name'] ?? '',
+      type_chage: json['type_chage'] ?? '',
     );
   }
 }
@@ -2234,8 +2294,8 @@ class ActivityStatus {
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityStatus.fromJson(Map<String, dynamic> json) {
     return ActivityStatus(
-      status_id: json['status_id']??'',
-      status_name: json['status_name']??'',
+      status_id: json['status_id'] ?? '',
+      status_name: json['status_name'] ?? '',
     );
   }
 }
@@ -2254,27 +2314,87 @@ class ActivityPriority {
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityPriority.fromJson(Map<String, dynamic> json) {
     return ActivityPriority(
-      priority_id: json['priority_id']??'',
-      priority_name: json['priority_name']??'',
-      priority_value: json['priority_value']??'',
+      priority_id: json['priority_id'] ?? '',
+      priority_name: json['priority_name'] ?? '',
+      priority_value: json['priority_value'] ?? '',
     );
   }
 }
 
 class ActivityProject {
-  String? project_id;
-  String? project_name;
+  String project_id;
+  String project_name;
+  String project_latitude;
+  String project_longtitude;
+  String project_start;
+  String project_end;
+  String project_all_total;
+  String m_company;
+  String project_create_date;
+  String emp_id;
+  String project_value;
+  String project_type_name;
+  String project_description;
+  String project_sale_status_name;
+  String project_oppo_reve;
+  String comp_id;
+  String typeIds;
+  String salestatusIds;
+  String main_contact;
+  String cont_id;
+  String projct_location;
+  String cus_id;
 
   ActivityProject({
-    this.project_id,
-    this.project_name,
+    required this.project_id,
+    required this.project_name,
+    required this.project_latitude,
+    required this.project_longtitude,
+    required this.project_start,
+    required this.project_end,
+    required this.project_all_total,
+    required this.m_company,
+    required this.project_create_date,
+    required this.emp_id,
+    required this.project_value,
+    required this.project_type_name,
+    required this.project_description,
+    required this.project_sale_status_name,
+    required this.project_oppo_reve,
+    required this.comp_id,
+    required this.typeIds,
+    required this.salestatusIds,
+    required this.main_contact,
+    required this.cont_id,
+    required this.projct_location,
+    required this.cus_id,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityProject.fromJson(Map<String, dynamic> json) {
     return ActivityProject(
-      project_id: json['project_id'],
-      project_name: json['project_name'],
+      project_id: json['project_id'] ?? '',
+      project_name: json['project_name'] ?? '',
+      project_latitude: json['project_latitude'] ?? '',
+      project_longtitude: json['project_longtitude'] ?? '',
+      project_start: json['project_start'] ?? '',
+      project_end: json['project_end'] ?? '',
+      project_all_total: json['project_all_total'] ?? '',
+      m_company: json['m_company'] ?? '',
+      project_create_date: json['project_create_date'] ?? '',
+      emp_id: json['emp_id'] ?? '',
+      project_value: json['project_value'] ?? '',
+      project_type_name: json['project_type_name'] ?? '',
+      project_description: json['project_description'] ?? '',
+      project_sale_status_name: json['project_sale_status_name'] ?? '',
+      project_oppo_reve: json['project_oppo_reve'] ?? '',
+      comp_id: json['comp_id'] ?? '',
+      typeIds: json['typeIds'] ?? '',
+      salestatusIds: json['salestatusIds'] ?? '',
+      main_contact: json['main_contact'] ?? '',
+      cont_id: json['cont_id'] ?? '',
+      projct_location: json['projct_location'] ?? '',
+      cus_id: json['cus_id'] ?? '',
     );
   }
 }

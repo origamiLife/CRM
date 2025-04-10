@@ -68,8 +68,9 @@ class _NeedsViewState extends State<NeedsView> {
                     child: Text(
                       '$Priority : ',
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(height: 16),
@@ -83,8 +84,9 @@ class _NeedsViewState extends State<NeedsView> {
                     child: Text(
                       '$Department : ',
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(height: 16),
@@ -95,8 +97,9 @@ class _NeedsViewState extends State<NeedsView> {
                     child: Text(
                       '$Project : ',
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(height: 16),
@@ -107,8 +110,9 @@ class _NeedsViewState extends State<NeedsView> {
                     child: Text(
                       '$Owner : ',
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(height: 16),
@@ -146,8 +150,7 @@ class _NeedsViewState extends State<NeedsView> {
                   child: Center(
                     child: Text(
                       '$Save',
-                      style: TextStyle(
-                fontFamily: 'Arial',fontSize: 16.0),
+                      style: TextStyle(fontFamily: 'Arial', fontSize: 16.0),
                     ),
                   ),
                 ),
@@ -236,7 +239,7 @@ class _NeedsViewState extends State<NeedsView> {
               filled: true,
               fillColor: Colors.white,
               contentPadding:
-              const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               hintText: '$SearchTS...',
               hintStyle: const TextStyle(
                   fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
@@ -304,7 +307,7 @@ class _NeedsViewState extends State<NeedsView> {
             ),
             label: NeedTypeItemOption[indexItem].type_name,
             labelStyle: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 14.0,
               color: const Color(0xFF555555),
               fontWeight: FontWeight.bold,
@@ -370,7 +373,7 @@ class _NeedsViewState extends State<NeedsView> {
                               child: Text(
                                 NeedTypeOption[index].typeName,
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   color: (index == _selectcolor)
                                       ? Colors.white
                                       : const Color(0xFF555555),
@@ -388,7 +391,7 @@ class _NeedsViewState extends State<NeedsView> {
                   child: Row(
                     children: List.generate(
                       NeedTypeOption[_selectcolor].typeStatus?.length ?? 0,
-                          (index) {
+                      (index) {
                         return Padding(
                           padding: const EdgeInsets.only(left: 8, top: 4),
                           child: InkWell(
@@ -396,8 +399,8 @@ class _NeedsViewState extends State<NeedsView> {
                               setState(() {
                                 _indexcolor = index;
                                 status_id = NeedTypeOption[_selectcolor]
-                                    .typeStatus?[index]
-                                    .statusId ??
+                                        .typeStatus?[index]
+                                        .statusId ??
                                     '';
                               });
                               fetchNeedResponse();
@@ -414,11 +417,11 @@ class _NeedsViewState extends State<NeedsView> {
                                 child: Center(
                                   child: Text(
                                     NeedTypeOption[_selectcolor]
-                                        .typeStatus?[index]
-                                        .statusName ??
+                                            .typeStatus?[index]
+                                            .statusName ??
                                         '',
                                     style: TextStyle(
-                fontFamily: 'Arial',
+                                      fontFamily: 'Arial',
                                       color: (index == _indexcolor)
                                           ? Colors.white
                                           : const Color(0xFF555555),
@@ -463,7 +466,7 @@ class _NeedsViewState extends State<NeedsView> {
               Text(
                 '$Loading...',
                 style: TextStyle(
-                fontFamily: 'Arial',
+                  fontFamily: 'Arial',
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF555555),
@@ -523,7 +526,7 @@ class _NeedsViewState extends State<NeedsView> {
                                             employee: widget.employee,
                                             Authorization: widget.Authorization,
                                             request_id: needList[indexNl]
-                                                    .mny_request_id,
+                                                .mny_request_id,
                                             // approvelList:needList[indexNl],
                                           )
                                         : NeedDetail(
@@ -532,8 +535,7 @@ class _NeedsViewState extends State<NeedsView> {
                                             Authorization: widget.Authorization,
                                             employee: widget.employee,
                                             request_id: needList[indexNl]
-                                                    .mny_request_id
-                                          ),
+                                                .mny_request_id),
                                   ),
                                 ),
                               );
@@ -544,7 +546,7 @@ class _NeedsViewState extends State<NeedsView> {
                           title: Text(
                             needList[indexNl].need_subject,
                             style: TextStyle(
-                fontFamily: 'Arial',
+                              fontFamily: 'Arial',
                               fontSize: 18,
                               color: Color(0xFFFF9900),
                               fontWeight: FontWeight.bold,
@@ -562,7 +564,7 @@ class _NeedsViewState extends State<NeedsView> {
                                     Text(
                                       '${needList[indexNl].mny_type_name} - ${needList[indexNl].mny_request_generate_code}',
                                       style: TextStyle(
-                fontFamily: 'Arial',
+                                        fontFamily: 'Arial',
                                         fontSize: 14.0,
                                         color: Color(0xFF555555),
                                         fontWeight: FontWeight.bold,
@@ -572,7 +574,7 @@ class _NeedsViewState extends State<NeedsView> {
                                     Text(
                                       "$Date : ${needList[indexNl].create_date} ",
                                       style: TextStyle(
-                fontFamily: 'Arial',
+                                        fontFamily: 'Arial',
                                         fontSize: 14.0,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.bold,
@@ -582,7 +584,7 @@ class _NeedsViewState extends State<NeedsView> {
                                     Text(
                                       "$Amount : ${needList[indexNl].need_amount} $Baht",
                                       style: TextStyle(
-                fontFamily: 'Arial',
+                                        fontFamily: 'Arial',
                                         fontSize: 14.0,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.bold,
@@ -595,7 +597,7 @@ class _NeedsViewState extends State<NeedsView> {
                                           child: Text(
                                             "$Status1 : ${needList[indexNl].need_status}",
                                             style: TextStyle(
-                fontFamily: 'Arial',
+                                              fontFamily: 'Arial',
                                               fontSize: 14.0,
                                               color: Colors.grey,
                                               fontWeight: FontWeight.bold,
@@ -682,8 +684,8 @@ class _NeedsViewState extends State<NeedsView> {
               child: Text(
                 '$Empty',
                 style: TextStyle(
-                fontFamily: 'Arial',
-                  fontSize: 16,
+                  fontFamily: 'Arial',
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey,
                 ),
@@ -737,7 +739,7 @@ class _NeedsViewState extends State<NeedsView> {
                           ? editEmployeeText
                           : 'null',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: (editEmployeeText == '')
                           ? Colors.black38
@@ -795,7 +797,7 @@ class _NeedsViewState extends State<NeedsView> {
                           ? editprojectText
                           : 'null',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: (editprojectText == '')
                           ? Colors.black38
@@ -855,7 +857,7 @@ class _NeedsViewState extends State<NeedsView> {
                           ? editDepartmentText
                           : 'null',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: (editDepartmentText == '')
                           ? Colors.black38
@@ -938,36 +940,32 @@ class _NeedsViewState extends State<NeedsView> {
 
   Future<void> fetchTypeItemRespond() async {
     final uri = Uri.parse('$host/api/origami/need/need_type_item.php');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status'] == true) {
-          final List<dynamic> needTypeItemJson = jsonResponse['need_type_item'];
 
-          setState(() {
-            NeedTypeItemOption = needTypeItemJson
-                .map((json) => NeedTypeItemRespond.fromJson(json))
-                .toList();
-          });
-        } else {
-          throw Exception(
-              'Failed to load personal data: ${jsonResponse['message']}');
-        }
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'Authorization': widget.Authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      if (jsonResponse['status'] == true) {
+        final List<dynamic> needTypeItemJson = jsonResponse['need_type_item'];
+
+        setState(() {
+          NeedTypeItemOption = needTypeItemJson
+              .map((json) => NeedTypeItemRespond.fromJson(json))
+              .toList();
+        });
       } else {
         throw Exception(
-            'Failed to load personal data: ${response.reasonPhrase}');
+            'Failed to load personal data: ${jsonResponse['message']}');
       }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
     }
   }
 

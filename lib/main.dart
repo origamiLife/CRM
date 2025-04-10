@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:origamilift/import/import.dart';
 import 'package:http/http.dart' as http;
 
+String hostDev = 'https://dev.origami.life';
 String host = 'https://www.origami.life';
 int selectedRadio = 2;
 bool isAndroid = false;

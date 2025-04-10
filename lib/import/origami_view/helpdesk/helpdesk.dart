@@ -23,6 +23,8 @@ class HelpDeskScreen extends StatefulWidget {
 class _HelpDeskScreenState extends State<HelpDeskScreen> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _searchDownController = TextEditingController();
+  TextEditingController _subjectNewController = TextEditingController();
+  TextEditingController _detailNewController = TextEditingController();
 
   bool filter = false;
 
@@ -62,6 +64,156 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
     });
   }
 
+  Widget _showDown() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, right: 8),
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.35,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(10),
+          ),
+        ),
+        child: FractionallySizedBox(
+          heightFactor: 0.9,
+          child: Scaffold(
+              body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Categary',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  _buildDropdown( 'Select',
+                    _modelProject,
+                    selectedProject,
+                        (value) => setState(() => selectedProject = value),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      'Subject',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _subjectNewController,
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        color: Color(0xFF555555),
+                        fontSize: 14,
+                      ),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                        hintText: 'Subject',
+                        hintStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey, // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey, // ขอบสีส้มตอนที่โฟกัส
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      'Detail',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      minLines: 3,
+                      maxLines: null,
+                      controller: _detailNewController,
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        color: Color(0xFF555555),
+                        fontSize: 14,
+                      ),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                        hintText: 'Detail Incident',
+                        hintStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey, // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey, // ขอบสีส้มตอนที่โฟกัส
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,13 +224,55 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
         iconSize: 18,
         animated: true,
         titleStyle: TextStyle(
-          fontFamily: 'Arial',),
+          fontFamily: 'Arial',
+        ),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
         indexSelected: _selectedIndex,
         // paddingVertical: 25,
         onTap: _onItemTapped,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet<void>(
+            barrierColor: Colors.black87,
+            backgroundColor: Colors.white,
+            context: context,
+            isScrollControlled: true,
+            isDismissible: true,
+            enableDrag: false,
+            builder: (BuildContext context) {
+              return StatefulBuilder(
+                builder: (context, setModalState) {
+                  return _showDown();
+                },
+              );
+            },
+          ).whenComplete(() {
+            // _descriptionController.clear();
+            // _raisedByController.clear();
+            // _inChargeController.clear();
+            // _resultsController.clear();
+            // _remarksController.clear();
+            // _crMandayController.clear();
+            // _imageFiles = [];
+          });
+        },
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(100),
+            bottomLeft: Radius.circular(100),
+            bottomRight: Radius.circular(100),
+            topLeft: Radius.circular(100),
+          ),
+        ),
+        elevation: 0,
+        backgroundColor: Color(0xFFFF9900),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -105,24 +299,24 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                   'All Project',
                   _modelProject,
                   selectedProject,
-                      (value) => setState(() => selectedProject = value)),
+                  (value) => setState(() => selectedProject = value)),
               _buildDropdownFilter(
                   'All Raised By',
                   _modelRaisedBy,
                   selectedRaisedBy,
-                      (value) => setState(() => selectedRaisedBy = value)),
+                  (value) => setState(() => selectedRaisedBy = value)),
               _buildDropdownFilter(
                   'All In-Charge',
                   _modelInCharge,
                   selectedInCharge,
-                      (value) => setState(() => selectedInCharge = value)),
+                  (value) => setState(() => selectedInCharge = value)),
               _buildDropdownFilter(
                   'All Priority',
                   _modelPriority,
                   selectedPriority,
-                      (value) => setState(() => selectedPriority = value)),
+                  (value) => setState(() => selectedPriority = value)),
               _buildDropdownFilter('All Status', _modelStatus, selectedStatus,
-                      (value) => setState(() => selectedStatus = value)),
+                  (value) => setState(() => selectedStatus = value)),
             ],
           ),
         Divider(),
@@ -151,203 +345,214 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                         itemCount: ticketData.aaData.length,
                         itemBuilder: (context, index) {
                           final ticket = ticketData.aaData[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatBubbles(
+                          return Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatBubbles(
                                       employee: widget.employee,
-                                      Authorization: widget.Authorization, pageInput: '${ticket.ticket_account_category}',
-                                    // approvelList:ApprovelList[indexA],
+                                      Authorization: widget.Authorization,
+                                      pageInput:
+                                          '${ticket.ticket_account_category}',
+                                      // approvelList:ApprovelList[indexA],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Flexible(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.lens_sharp,
-                                              size: 10,
-                                              color: {
-                                                'very height': Colors.red,
-                                                'height': Colors.orange,
-                                                'medium': Colors.yellow,
-                                                'low': Colors.green,
-                                              }[ticket.ticket_priority] ??
-                                                  Colors.green,
-                                            ),
-                                            Padding(
-                                              padding:
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Flexible(
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.lens_sharp,
+                                                size: 10,
+                                                color: {
+                                                      'very height': Colors.red,
+                                                      'height': Colors.orange,
+                                                      'medium': Colors.yellow,
+                                                      'low': Colors.green,
+                                                    }[ticket.ticket_priority] ??
+                                                    Colors.green,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0),
+                                                child: Text(
+                                                  '${ticket.ticket_no}',
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 12,
+                                                    color: Color(0xFF555555),
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // InkWell(
+                                        //   onTap: () {},
+                                        //   child: Icon(
+                                        //     Icons.edit_document,
+                                        //     color: Colors.grey,
+                                        //     size: 18,
+                                        //   ),
+                                        // ),
+                                        Padding(
+                                          padding:
                                               const EdgeInsets.only(left: 8.0),
-                                              child: Text(
-                                                '${ticket.ticket_no}',
+                                          child: InkWell(
+                                            onTap: () {},
+                                            child: Icon(
+                                              Icons.delete,
+                                              color: Colors.grey,
+                                              size: 18,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Divider(thickness: 1),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      // mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 4, bottom: 4, right: 8),
+                                          child: CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: Colors.grey,
+                                            child: CircleAvatar(
+                                              radius: 24,
+                                              backgroundColor: Colors.white,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                child: Image.network(
+                                                  '$host/${ticket.create_pic}',
+                                                  fit: BoxFit.fill,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Image.network(
+                                                      'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                                      width: double
+                                                          .infinity, // ความกว้างเต็มจอ
+                                                      fit: BoxFit.contain,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${ticket.fullname} (${ticket.customer_comp_name})',
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   fontFamily: 'Arial',
+                                                  fontSize: 14,
+                                                  color: Colors.orange,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                              Text(
+                                                '${ticket.ticket_account_category} - ${ticket.ticket_subject}',
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                  fontFamily: 'Arial',
                                                   fontSize: 12,
-                                                  color: Color(0xFF555555),
+                                                  color: Colors.grey,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      // InkWell(
-                                      //   onTap: () {},
-                                      //   child: Icon(
-                                      //     Icons.edit_document,
-                                      //     color: Colors.grey,
-                                      //     size: 18,
-                                      //   ),
-                                      // ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 8.0),
-                                        child: InkWell(
-                                          onTap: () {},
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Colors.grey,
-                                            size: 18,
+                                              Text(
+                                                '${ticket.h_date_create}',
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 12,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                ticket.ticket_status ==
+                                                        'cancel_request'
+                                                    ? 'Request'
+                                                    : '${ticket.ticket_status}',
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 12,
+                                                  color: ticket.ticket_status ==
+                                                          'cancel_request'
+                                                      ? Colors.red
+                                                      : Color(0xFF555555),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(thickness: 1),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    // mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 4, bottom: 4, right: 8),
-                                        child: CircleAvatar(
-                                          radius: 25,
-                                          backgroundColor: Colors.grey,
-                                          child: CircleAvatar(
-                                            radius: 24,
-                                            backgroundColor: Colors.white,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                              BorderRadius.circular(50),
-                                              child: Image.network(
-                                                '$host/${ticket.create_pic}',
-                                                fit: BoxFit.fill,
-                                                errorBuilder:
-                                                    (context, error, stackTrace) {
-                                                  return Image.network(
-                                                    'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                                                    width: double
-                                                        .infinity, // ความกว้างเต็มจอ
-                                                    fit: BoxFit.contain,
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${ticket.fullname} (${ticket.customer_comp_name})',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14,
-                                                color: Colors.orange,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${ticket.ticket_account_category} - ${ticket.ticket_subject}',
-                                              maxLines: 1,
-                                              style: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 12,
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${ticket.h_date_create}',
-                                              maxLines: 1,
-                                              style: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 12,
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            Text(
-                                              ticket.ticket_status == 'cancel_request'?'Request':'${ticket.ticket_status}',
-                                              maxLines: 1,
-                                              style: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 12,
-                                                color: ticket.ticket_status == 'cancel_request'?Colors.red:Color(0xFF555555),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(top: 8.0),
-                                  //   child: Container(
-                                  //     padding: const EdgeInsets.only(
-                                  //         left: 18, right: 18, top: 4, bottom: 4),
-                                  //     decoration: BoxDecoration(
-                                  //       // color: Colors.grey,
-                                  //       border: Border.all(
-                                  //         color: Color(0xFF555555),
-                                  //       ),
-                                  //       borderRadius: BorderRadius.circular(10),
-                                  //     ),
-                                  //     child: Text(
-                                  //       '${issue.issue_description}',
-                                  //       style: TextStyle(
-                                  //         fontFamily: 'Arial',
-                                  //         fontSize: 12,
-                                  //         color: Color(0xFF555555),
-                                  //         fontWeight: FontWeight.w500,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
+                                      ],
+                                    ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.only(top: 8.0),
+                                    //   child: Container(
+                                    //     padding: const EdgeInsets.only(
+                                    //         left: 18, right: 18, top: 4, bottom: 4),
+                                    //     decoration: BoxDecoration(
+                                    //       // color: Colors.grey,
+                                    //       border: Border.all(
+                                    //         color: Color(0xFF555555),
+                                    //       ),
+                                    //       borderRadius: BorderRadius.circular(10),
+                                    //     ),
+                                    //     child: Text(
+                                    //       '${issue.issue_description}',
+                                    //       style: TextStyle(
+                                    //         fontFamily: 'Arial',
+                                    //         fontSize: 12,
+                                    //         color: Color(0xFF555555),
+                                    //         fontWeight: FontWeight.w500,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }
-                    ),
+                          );
+                        }),
                   ),
                 );
               }),
@@ -377,7 +582,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                   hintText: 'Search...',
                   hintStyle: TextStyle(
                       fontFamily: 'Arial',
@@ -456,9 +661,9 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                   fontFamily: 'Arial', color: Colors.grey, fontSize: 14),
               items: items
                   .map((type) => DropdownMenuItem(
-                  value: type,
-                  child: Text(type.name,
-                      style: TextStyle(fontFamily: 'Arial', fontSize: 14))))
+                      value: type,
+                      child: Text(type.name,
+                          style: TextStyle(fontFamily: 'Arial', fontSize: 14))))
                   .toList(),
               value: selectedItem,
               onChanged: onChanged,
@@ -468,7 +673,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                       color: Color(0xFF555555), size: 30),
                   iconSize: 30),
               buttonStyleData:
-              ButtonStyleData(padding: EdgeInsets.symmetric(vertical: 2)),
+                  ButtonStyleData(padding: EdgeInsets.symmetric(vertical: 2)),
               dropdownStyleData: DropdownStyleData(maxHeight: 200),
               menuItemStyleData: MenuItemStyleData(height: 33),
               dropdownSearchData: DropdownSearchData(
@@ -486,7 +691,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                     decoration: InputDecoration(
                       isDense: true,
                       contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                       hintText: 'Search...',
                       hintStyle: TextStyle(
                           fontFamily: 'Arial',
@@ -511,15 +716,15 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
   Widget _buildDropdown(String select, List<IssueModelType> items,
       IssueModelType? selectedItem, ValueChanged<IssueModelType?> onChanged) {
     return Padding(
-      padding: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.all(8),
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Container(
             width: double.infinity,
-            height: 48,
+            height: 45,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              border: Border.all(color: Colors.orange, width: 1.0),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey, width: 1.0),
             ),
             child: Card(
               elevation: 0,
@@ -536,10 +741,10 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                     fontFamily: 'Arial', color: Colors.grey, fontSize: 14),
                 items: items
                     .map((type) => DropdownMenuItem(
-                    value: type,
-                    child: Text(type.name,
-                        style:
-                        TextStyle(fontFamily: 'Arial', fontSize: 14))))
+                        value: type,
+                        child: Text(type.name,
+                            style:
+                                TextStyle(fontFamily: 'Arial', fontSize: 14))))
                     .toList(),
                 value: selectedItem,
                 onChanged: onChanged,
@@ -549,7 +754,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                         color: Color(0xFF555555), size: 30),
                     iconSize: 30),
                 buttonStyleData:
-                ButtonStyleData(padding: EdgeInsets.symmetric(vertical: 2)),
+                    ButtonStyleData(padding: EdgeInsets.symmetric(vertical: 2)),
                 dropdownStyleData: DropdownStyleData(maxHeight: 200),
                 menuItemStyleData: MenuItemStyleData(height: 33),
                 dropdownSearchData: DropdownSearchData(
@@ -567,7 +772,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'Search...',
                         hintStyle: TextStyle(
                             fontFamily: 'Arial',
@@ -675,7 +880,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
       emp_raised: "0",
       emp_raised_name: "Charoenwich",
       issue_description:
-      "ใส่ รูป ก่อนหน้าแล้ว เปิดมาอีกที การแสดงผลหายไป (รูปภาพ)",
+          "ใส่ รูป ก่อนหน้าแล้ว เปิดมาอีกที การแสดงผลหายไป (รูปภาพ)",
       date_start: "2025-03-10",
       date_end: "2025-03-10",
       issue_remark: "",
@@ -866,7 +1071,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
       emp_raised: "0",
       emp_raised_name: "Kridsada",
       issue_description:
-      "+ Create Contact สามารถสร้าง 1 ครั้งได้มากกว่า 1 Contact",
+          "+ Create Contact สามารถสร้าง 1 ครั้งได้มากกว่า 1 Contact",
       date_start: "2025-01-28",
       date_end: "2025-01-28",
       issue_remark: "",
@@ -881,76 +1086,70 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
   ];
 
   List<TicketData> _TicketData = [
-    TicketData(
-        draw: 1,
-        iTotalRecords: "1",
-        iTotalDisplayRecords: "1",
-        aaData:[
-          TicketDetail(
-              ticket_h_id: "16504",
-              ticket_no: "ALB2411-005",
-              ticket_live_id: "0",
-              ticket_priority: "low",
-              project_id: "2672",
-              remark_id: "83",
-              ticket_subject: "ทดสอบ",
-              ticket_status: "cancel_request",
-              user_create: "19777",
-              ticket_remark: "",
-              problem_detail: null,
-              infomant_name: null,
-              infomant_lastname: null,
-              infomant_tel: null,
-              infomant_tel_code: null,
-              infomant_work_addr: null,
-              infomant_address: null,
-              serial_no: null,
-              serial_product: null,
-              warranty_id: null,
-              cus_id: null,
-              cont_id: null,
-              rating: null,
-              rating_comment: null,
-              rating_datetime: null,
-              rating_by: null,
-              agent_emp_id: null,
-              agent_detail: null,
-              assign_emp_id: null,
-              assign_emp_pic: null,
-              date_create: "2024-11-21 12:22:58",
-              emp_created: "19777",
-              comp_id: "5",
-              service_team_id: null,
-              support_team_id: null,
-              ticket_service_id: null,
-              ticket_service_status: "0",
-              ticket_remark_user: "19777",
-              ticket_h_stamp: "2025-02-24 17:59:09",
-              ticket_h_del: null,
-              sub_status: null,
-              count_account: "2",
-              count_support: "0",
-              date_complete: null,
-              date_close: null,
-              date_auto_complete: null,
-              date_auto_close: null,
-              status_sort: "8",
-              rating_sort: null,
-              ticket_account_category: "แจ้งการอบรม ( Training Request )",
-              emp_pic_own_acc: "",
-              emp_id_own_acc: null,
-              sms_acc: "0",
-              create_pic: "uploads/employee/5/employee/19777.jpg",
-              fullname: "Jirapat Jangsawang",
-              customer_comp_name: "Allable Co.,Ltd.",
-              h_date_create: "2024-11-21 12:22:58",
-              remark_name_th: "แจ้งการอบรม",
-              remark_name_en: "Training Request",
-              ticket_company_service_level: null,
-              ticket_company_service_level_type: null
-          )
-        ]
-    ),
+    TicketData(draw: 1, iTotalRecords: "1", iTotalDisplayRecords: "1", aaData: [
+      TicketDetail(
+          ticket_h_id: "16504",
+          ticket_no: "ALB2411-005",
+          ticket_live_id: "0",
+          ticket_priority: "low",
+          project_id: "2672",
+          remark_id: "83",
+          ticket_subject: "ทดสอบ",
+          ticket_status: "cancel_request",
+          user_create: "19777",
+          ticket_remark: "",
+          problem_detail: null,
+          infomant_name: null,
+          infomant_lastname: null,
+          infomant_tel: null,
+          infomant_tel_code: null,
+          infomant_work_addr: null,
+          infomant_address: null,
+          serial_no: null,
+          serial_product: null,
+          warranty_id: null,
+          cus_id: null,
+          cont_id: null,
+          rating: null,
+          rating_comment: null,
+          rating_datetime: null,
+          rating_by: null,
+          agent_emp_id: null,
+          agent_detail: null,
+          assign_emp_id: null,
+          assign_emp_pic: null,
+          date_create: "2024-11-21 12:22:58",
+          emp_created: "19777",
+          comp_id: "5",
+          service_team_id: null,
+          support_team_id: null,
+          ticket_service_id: null,
+          ticket_service_status: "0",
+          ticket_remark_user: "19777",
+          ticket_h_stamp: "2025-02-24 17:59:09",
+          ticket_h_del: null,
+          sub_status: null,
+          count_account: "2",
+          count_support: "0",
+          date_complete: null,
+          date_close: null,
+          date_auto_complete: null,
+          date_auto_close: null,
+          status_sort: "8",
+          rating_sort: null,
+          ticket_account_category: "แจ้งการอบรม ( Training Request )",
+          emp_pic_own_acc: "",
+          emp_id_own_acc: null,
+          sms_acc: "0",
+          create_pic: "uploads/employee/5/employee/19777.jpg",
+          fullname: "Jirapat Jangsawang",
+          customer_comp_name: "Allable Co.,Ltd.",
+          h_date_create: "2024-11-21 12:22:58",
+          remark_name_th: "แจ้งการอบรม",
+          remark_name_en: "Training Request",
+          ticket_company_service_level: null,
+          ticket_company_service_level_type: null)
+    ]),
   ];
 
   List<TicketHistory> _TicketHistory = [
@@ -968,7 +1167,6 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
       ticket_sub_status: null,
     ),
   ];
-
 }
 
 class TicketHistory {
@@ -1229,7 +1427,8 @@ class TicketDetail {
       remark_name_th: json['remark_name_th'],
       remark_name_en: json['remark_name_en'],
       ticket_company_service_level: json['ticket_company_service_level'],
-      ticket_company_service_level_type: json['ticket_company_service_level_type'],
+      ticket_company_service_level_type:
+          json['ticket_company_service_level_type'],
     );
   }
 }

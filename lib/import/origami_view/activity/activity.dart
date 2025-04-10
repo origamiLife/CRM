@@ -59,7 +59,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
     return Scaffold(
       backgroundColor: activityAll.isEmpty ? Colors.white : Colors.grey.shade50,
       floatingActionButton: FloatingActionButton(
-        // tooltip: 'Increment',
         onPressed: () {
           Navigator.push(
             context,
@@ -98,14 +97,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
           child: Column(
             children: [
               _buildSearchField(),
-              // Container(
-              //   padding: EdgeInsets.all(10),
-              //   color: Colors.blueAccent,
-              //   child: Text(
-              //     isAtEnd ? "ถึงรายการสุดท้ายแล้ว" : "ยังเลื่อนต่อได้",
-              //     style: TextStyle(color: Colors.white),
-              //   ),
-              // ),
               Expanded(
                 child: _getContentWidget(),
               ),
@@ -215,7 +206,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      // mainAxisSize: MainAxisSize.max,
                       children: [
                         Stack(
                           children: [

@@ -176,7 +176,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           child: Text(
             '',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -234,7 +234,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: Image.network(
-                                widget.employee.emp_avatar??'',
+                                widget.employee.emp_avatar ?? '',
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -247,7 +247,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             Text(
                               'Date: ',
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.w700,
@@ -256,7 +256,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             Text(
                               startDate,
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 14,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -271,7 +271,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             Text(
                               'Status: ',
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.w700,
@@ -280,7 +280,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             Text(
                               'วันทำงาน',
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 14,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w500,
@@ -293,7 +293,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                         //   '$startDate ${selectedStartTime?.format(context)??'00:00'} - '
                         //       '$endDate ${selectedEndTime?.format(context)??'00:00'}',
                         //   style: TextStyle(
-                // fontFamily: 'Arial',
+                        // fontFamily: 'Arial',
                         //     fontSize: 14,
                         //     color: Colors.grey,
                         //     fontWeight: FontWeight.w500,
@@ -309,7 +309,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               Text(
                                 'Types of leave',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -328,7 +328,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               Text(
                                 'Start Date',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -353,9 +353,9 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          '$startDate ${selectedStartTime?.format(context)??'00:00'}',
+                                          '$startDate ${selectedStartTime?.format(context) ?? '00:00'}',
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                              fontFamily: 'Arial',
                                               fontSize: 14,
                                               color: Color(0xFF555555)),
                                         ),
@@ -381,7 +381,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               Text(
                                 'End Date',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -406,9 +406,9 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          '$endDate ${selectedEndTime?.format(context)??'00:00'}',
+                                          '$endDate ${selectedEndTime?.format(context) ?? '00:00'}',
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                              fontFamily: 'Arial',
                                               fontSize: 14,
                                               color: Color(0xFF555555)),
                                         ),
@@ -434,7 +434,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               Text(
                                 'Details',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -453,7 +453,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               Text(
                                 'Insert Images',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -468,7 +468,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 16,right: 16,top: 8,bottom: 8),
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 8, bottom: 8),
                   child: Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -483,7 +484,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             ),
                           ),
                           child: InkWell(
-                            onTap: (){
+                            onTap: () {
                               Navigator.pop(context);
                             },
                             child: Padding(
@@ -492,7 +493,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                 child: Text(
                                   'CLOSE ',
                                   style: TextStyle(
-                fontFamily: 'Arial',
+                                    fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w700,
@@ -515,7 +516,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                             ),
                           ),
                           child: InkWell(
-                            onTap: (){
+                            onTap: () {
                               Navigator.pop(context);
                             },
                             child: Padding(
@@ -524,7 +525,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                 child: Text(
                                   'SAVE ',
                                   style: TextStyle(
-                fontFamily: 'Arial',
+                                    fontFamily: 'Arial',
                                     fontSize: 16,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w700,
@@ -637,7 +638,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                   Text(
                     'Tap here to select an image.',
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w500,
@@ -669,7 +670,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                       Text(
                         'upload account image',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 16,
                           color: Colors.grey,
                           fontWeight: FontWeight.w500,
@@ -694,7 +695,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           controller: textController,
           keyboardType: TextInputType.text,
           style: TextStyle(
-                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
+              fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -702,9 +703,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             hintText: '',
-            hintStyle:
-                TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
             ),
@@ -753,7 +753,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: titleDown
@@ -762,7 +762,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                       child: Text(
                         item.status_name,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),

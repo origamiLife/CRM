@@ -25,7 +25,7 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
   static var optionStyle = TextStyle(
       fontFamily: 'Arial',
       fontSize: 16,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.w700,
       color: Color(0xFF555555));
   String _effective = '';
 
@@ -83,7 +83,7 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
                 detailItem?.need_type_name ?? '',
                 style: TextStyle(
                     fontFamily: 'Arial',
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     color: Colors.white),
               ),
             ),
@@ -143,7 +143,7 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     color: Color(0xFF555555),
                   ),
                 ),
@@ -475,7 +475,7 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
         border: Border.all(
-          color: Color(0xFFFF9900),
+          color: Colors.grey,
           width: 1.0,
         ),
       ),
@@ -688,7 +688,7 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
                         '$Empty',
                         style: TextStyle(
                           fontFamily: 'Arial',
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey,
                         ),
@@ -719,7 +719,7 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
                                     // fontFamily: 'Arial',
                                     //     fontSize: 18.0,
                                     //     color: Color(0xFFFF9900),
-                                    //     fontWeight: FontWeight.bold,
+                                    //     fontWeight: FontWeight.w700,
                                     //   ),
                                     //   overflow: TextOverflow.ellipsis,
                                     //   maxLines: 1,
@@ -741,15 +741,14 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
                                                         SizedBox(height: 8),
                                                         Text(
                                                           saveItemList[index]
-                                                                  .itemName ??
-                                                              '',
+                                                                  .itemName,
                                                           style: GoogleFonts
                                                               .openSans(
                                                             fontSize: 18.0,
                                                             color: Color(
                                                                 0xFFFF9900),
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                                FontWeight.w700,
                                                           ),
                                                           overflow: TextOverflow
                                                               .ellipsis,
@@ -771,7 +770,7 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
                                                             color: Color(
                                                                 0xFF555555),
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                                FontWeight.w700,
                                                           ),
                                                         ),
                                                         SizedBox(height: 8),

@@ -177,9 +177,9 @@ class _PettyCashState extends State<PettyCash> {
             Empty,
             style: TextStyle(
               fontFamily: 'Arial',
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF555555),
+              color: Colors.grey,
             ),
           ));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -637,9 +637,9 @@ class _PettyCashState extends State<PettyCash> {
               Empty,
               style: TextStyle(
                 fontFamily: 'Arial',
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF555555),
+                color: Colors.grey,
               ),
             ));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -648,9 +648,9 @@ class _PettyCashState extends State<PettyCash> {
               Empty,
               style: TextStyle(
                 fontFamily: 'Arial',
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: const Color(0xFF555555),
+                color: Colors.grey,
               ),
             ));
           } else {
@@ -966,9 +966,9 @@ class _PettyCashState extends State<PettyCash> {
             Empty,
             style: TextStyle(
               fontFamily: 'Arial',
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF555555),
+              color: Colors.grey,
             ),
           ));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -977,9 +977,9 @@ class _PettyCashState extends State<PettyCash> {
             Empty,
             style: TextStyle(
               fontFamily: 'Arial',
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF555555),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
             ),
           ));
         } else {

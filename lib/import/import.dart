@@ -37,4 +37,5 @@ export 'package:origamilift/import/origami_view/language/translate.dart';
 export 'package:origamilift/import/origami_view/origami.dart';
 export 'package:quickalert/quickalert.dart';
 export 'package:carousel_slider/carousel_slider.dart';
-
+// export 'package:smooth_page_indicator/smooth_page_indicator.dart';
+export 'package:video_player_android/video_player_android.dart';

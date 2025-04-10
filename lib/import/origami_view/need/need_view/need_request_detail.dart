@@ -9,7 +9,8 @@ class NeedDetailApprove extends StatefulWidget {
   const NeedDetailApprove({
     super.key,
     required this.employee,
-    required this.request_id, required this.Authorization,
+    required this.request_id,
+    required this.Authorization,
     // required this.approvelList,
   });
   final Employee employee;
@@ -22,10 +23,11 @@ class NeedDetailApprove extends StatefulWidget {
 }
 
 class _NeedDetailApproveState extends State<NeedDetailApprove> {
-
   static var optionStyle = TextStyle(
-                fontFamily: 'Arial',
-      fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF555555));
+      fontFamily: 'Arial',
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Color(0xFF555555));
   String _effective = '';
 
   Future<void> needEdit() async {
@@ -81,8 +83,9 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
               child: Text(
                 detailItem?.need_type_name ?? '',
                 style: TextStyle(
-                fontFamily: 'Arial',
-                    fontWeight: FontWeight.bold, color: Colors.white),
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ),
             Spacer(),
@@ -126,16 +129,24 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
         future: futureLoadData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: Row(
+            return Center(
+                child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(color: Color(0xFFFF9900),),
-                SizedBox(width: 12,),
+                CircularProgressIndicator(
+                  color: Color(0xFFFF9900),
+                ),
+                SizedBox(
+                  width: 12,
+                ),
                 Text(
                   '$Loading...',
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      fontSize: 16, fontWeight: FontWeight.bold,color: Color(0xFF555555),),
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF555555),
+                  ),
                 ),
               ],
             ));
@@ -185,9 +196,9 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          '$_searchSubject',
+                          _searchSubject,
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontSize: 14,
                             color: Color(0xFF555555),
                           ),
@@ -227,7 +238,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                       child: Text(
                         (_reson == '') ? '' : _reson,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           color: Color(0xFF555555),
                         ),
@@ -297,11 +308,15 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                         ? detailItem?.effectiveDate ?? ''
                                         : _effective,
                                     style: TextStyle(
-                fontFamily: 'Arial',
-                                        fontSize: 14, color: Color(0xFF555555)),
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFF555555)),
                                   ),
                                   Spacer(),
-                                  Icon(Icons.calendar_month,color: Color(0xFF555555),),
+                                  Icon(
+                                    Icons.calendar_month,
+                                    color: Color(0xFF555555),
+                                  ),
                                 ],
                               ),
                             ),
@@ -461,7 +476,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
         border: Border.all(
-          color: Color(0xFFFF9900),
+          color: Colors.grey,
           width: 1.0,
         ),
       ),
@@ -472,7 +487,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
               ? detailItem?.priorityName ?? ''
               : editpriorityText,
           style: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
+              fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
         ),
       ),
     );
@@ -662,7 +677,9 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
               title: Text(
                 '',
                 style: TextStyle(
-                fontFamily: 'Arial',color: Color(0xFF555555),),
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                ),
               ),
             ),
             body: (saveItemList.length == 0)
@@ -671,8 +688,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                       child: Text(
                         '$Empty',
                         style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 16,
+                          fontFamily: 'Arial',
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey,
                         ),
@@ -700,7 +717,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                     // title: Text(
                                     //   saveItem[index].itemItem ?? '',
                                     //   style: TextStyle(
-                // fontFamily: 'Arial',
+                                    // fontFamily: 'Arial',
                                     //     fontSize: 18.0,
                                     //     color: Color(0xFFFF9900),
                                     //     fontWeight: FontWeight.bold,
@@ -730,8 +747,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                                           style: GoogleFonts
                                                               .openSans(
                                                             fontSize: 18.0,
-                                                            color:
-                                                                Color(0xFFFF9900),
+                                                            color: Color(
+                                                                0xFFFF9900),
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                           ),
@@ -764,7 +781,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                               Text(
                                                 "$Detail : ${(saveItemList[index].itemNote == '') ? '-' : saveItemList[index].itemNote ?? ''}",
                                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                                  fontFamily: 'Arial',
                                                   fontSize: 14.0,
                                                   color: Color(0xFF555555),
                                                 ),
@@ -777,7 +794,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                                   Text(
                                                     "$Quantity : ${(saveItemList[index].itemQuantity == '') ? '0' : saveItemList[index].itemQuantity} ",
                                                     style: TextStyle(
-                fontFamily: 'Arial',
+                                                      fontFamily: 'Arial',
                                                       fontSize: 14.0,
                                                       color: Color(0xFF555555),
                                                     ),
@@ -788,7 +805,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                                   Text(
                                                     "$Price : ${(saveItemList[index].itemPrice == '') ? '0' : saveItemList[index].itemPrice} $Baht",
                                                     style: TextStyle(
-                fontFamily: 'Arial',
+                                                      fontFamily: 'Arial',
                                                       fontSize: 14.0,
                                                       color: Color(0xFF555555),
                                                     ),
@@ -800,7 +817,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                                 "$Total_price : ${(saveItemList[index].itemPrice == '' || saveItemList[index].itemQuantity == '') ? '0' : "${double.parse(saveItemList[index].itemPrice ?? '') * double.parse(saveItemList[index].itemQuantity ?? '')}"} "
                                                 "${(saveItemList[index].unitCode == '') ? '$Baht/$Unit' : " $Baht/${saveItemList[index].unitDesc ?? ''}"}",
                                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                                  fontFamily: 'Arial',
                                                   fontSize: 14.0,
                                                   color: Color(0xFF555555),
                                                 ),
@@ -820,7 +837,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                                       BorderRadius.circular(20),
                                                 ),
                                                 child: Icon(
-                                                  null,color: Color(0xFF555555),
+                                                  null,
+                                                  color: Color(0xFF555555),
                                                   size: 30,
                                                 )),
                                             SizedBox(
@@ -833,7 +851,8 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                                                       BorderRadius.circular(20),
                                                 ),
                                                 child: Icon(
-                                                  null,color: Color(0xFF555555),
+                                                  null,
+                                                  color: Color(0xFF555555),
                                                   size: 30,
                                                 )),
                                             SizedBox(
@@ -940,25 +959,22 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
     );
   }
 
-
   Future<void> _launchUrl(Uri url) async {
     if (!await launchUrl(url)) {
       throw Exception('Could not launch ${url}');
     }
   }
 
-
-
   List<NeedData>? NeedDetailApprove = [];
   NeedData? detailItem;
   int i = 0;
 
   Future<void> fetchDetail(action_type, need_id, type_id) async {
-    final uri =
-        Uri.parse('$host/api/origami/need/detail.php');
+    final uri = Uri.parse('$host/api/origami/need/detail.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

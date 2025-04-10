@@ -10,12 +10,12 @@ class ProjectAdd extends StatefulWidget {
     required this.employee,
     required this.pageInput,
     required this.Authorization,
-    required this.nonSale,
+    required this.saleData,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
   final String Authorization;
-  final String nonSale;
+  final String saleData;
   @override
   _ProjectAddState createState() => _ProjectAddState();
 }
@@ -191,7 +191,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 _DropdownSale(
                     'Sale/Non Sale'), //0,1 => Sale Project , Non Sale Project
                 _DropdownModel('Project Model'), //0,1 => internal , external
-                if (widget.nonSale == '0')
+                if (widget.saleData == '0')
                   _DropdownApprove('Approve Quotation'),
                 _textBody('Cost Value', _projectController, true),
                 _DropdownSource('Source'),
@@ -1049,8 +1049,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             ),
             onMenuStateChange: (isOpen) {
               if (!isOpen) {
-                _searchController
-                    .clear();
+                _searchController.clear();
               }
             },
           ),
@@ -1178,8 +1177,7 @@ class _ProjectAddState extends State<ProjectAdd> {
             ),
             onMenuStateChange: (isOpen) {
               if (!isOpen) {
-                _searchController
-                    .clear();
+                _searchController.clear();
               }
             },
           ),
@@ -1345,7 +1343,7 @@ class _ProjectAddState extends State<ProjectAdd> {
           child: DropdownButton2<SaleData>(
             isExpanded: true,
             hint: Text(
-              'Sale Project',
+              widget.saleData == '0' ? 'Sale Project' : 'Non Sale Project',
               style: TextStyle(
                 fontFamily: 'Arial',
                 color: Color(0xFF555555),

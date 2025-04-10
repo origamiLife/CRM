@@ -7,6 +7,7 @@ import 'package:origamilift/import/origami_view/sample/time_stamp.dart';
 import 'package:origamilift/import/origami_view/work/work_page.dart';
 
 import '../Call/call_phone.dart';
+import '../job/job.dart';
 import 'IDOC/idoc_view.dart';
 import 'about-profile/profile.dart';
 import 'academy/academy.dart';
@@ -78,14 +79,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
       onWillPop: () async {
         // เช็คว่ามีการกดปุ่มย้อนกลับครั้งล่าสุดหรือไม่ และเวลาห่างจากปัจจุบันมากกว่า 2 วินาทีหรือไม่
         final now = DateTime.now();
-        final maxDuration = Duration(seconds: 2);
+        final maxDuration = Duration(seconds: 3);
         final isWarning =
             lastPressed == null || now.difference(lastPressed!) > maxDuration;
-
         if (isWarning) {
           // ถ้ายังไม่ได้กดสองครั้งภายในเวลาที่กำหนด ให้แสดง SnackBar แจ้งเตือน
           lastPressed = DateTime.now();
-
+          if(_index != 12)
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -100,11 +100,11 @@ class _OrigamiPageState extends State<OrigamiPage> {
           );
           return false; // ไม่ออกจากแอป
         }
-
         // ถ้ากดปุ่มย้อนกลับสองครั้งภายในเวลาที่กำหนด ให้ออกจากแอป
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 1,
           foregroundColor: Color(0xFFFF9900),
@@ -174,112 +174,16 @@ class _OrigamiPageState extends State<OrigamiPage> {
             backgroundColor: Colors.white,
             child: Column(
               children: [
-                Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: [
-                    const UserAccountsDrawerHeader(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/logoOrigami/default_bg.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      accountName: null,
-                      accountEmail: null,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16, right: 8, bottom: 25),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 35,
-                            backgroundColor: Colors.white,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(25),
-                              child: Image.network(
-                                widget.employee.emp_avatar ?? '',
-                                fit: BoxFit.fill,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.network(
-                                    'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                                    width: double.infinity, // ความกว้างเต็มจอ
-                                    fit: BoxFit.contain,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                '$Name: ',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  '${widget.employee.emp_name}',
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 6,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                '$Position1: ',
-                                style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  '${widget.employee.dept_description}',
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                _drawerHeader(),
                 Expanded(
                   child: Column(
                     children: [
                       Expanded(
                         child: SingleChildScrollView(
-                          child: _menu(),
+                          child: _getContentWidget(),
                         ),
                       ),
-                      _logout(),
+                      _logoutWidget(),
                     ],
                   ),
                 ),
@@ -296,97 +200,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
-  Widget _buildScreen() {
-    final pages = {
-      0: NeedsView(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      1: NeedRequest(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      2: AcademyPage(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-        page: widget.page ?? '',
-      ),
-      3: TranslatePage(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      4: Text('Index 6: LogOut', style: optionStyle),
-      5: TimeSample(
-        employee: widget.employee,
-        timestamp: timeStampObject,
-        Authorization: widget.Authorization,
-        fetchBranchCallback: () => fetchBranch(),
-        branch_name: branch_name,
-        branch_id: branch_id,
-      ),
-      6: ProfilePage(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      7: HelpDeskScreen(
-        employee: widget.employee,
-        pageInput: 'helpdesk',
-        Authorization: widget.Authorization,
-      ),
-      8: PettyCash(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      9: ActivityScreen(
-        employee: widget.employee,
-        pageInput: 'activity',
-        Authorization: widget.Authorization,
-      ),
-      10: ProjectScreen(
-        employee: widget.employee,
-        pageInput: 'project',
-        Authorization: widget.Authorization,
-      ),
-      11: WorkPage(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      12: ContactScreen(
-        employee: widget.employee,
-        pageInput: 'contact',
-        Authorization: widget.Authorization,
-      ),
-      13: AccountList(
-        employee: widget.employee,
-        pageInput: 'account',
-        Authorization: widget.Authorization,
-      ),
-      14: CalendarScreen(
-        employee: widget.employee,
-        pageInput: 'calendar',
-        Authorization: widget.Authorization,
-      ),
-      15: HelpDesk2(
-        employee: widget.employee,
-        pageInput: 'helpdesk',
-        Authorization: widget.Authorization,
-      ),
-      16: IdocScreen(
-        employee: widget.employee,
-        pageInput: '',
-        Authorization: widget.Authorization,
-      ),
-      17: IssueLogScreen(
-        employee: widget.employee,
-        pageInput: '',
-        Authorization: widget.Authorization,
-      ),
-      18: CallScreen(),
-    };
-    return pages[_index] ?? CallScreen();
-  }
-
-  Widget _menu() {
+  Widget _getContentWidget() {
     return Column(
       children: [
         Column(
@@ -555,68 +369,237 @@ class _OrigamiPageState extends State<OrigamiPage> {
             ),
           ],
         ),
-        Container(
-          child: _viewMenu(15, 'HelpDesk', Icons.keyboard_arrow_right,
-              FontAwesomeIcons.lifeRing),
-        ),
-        Container(
-          child: _viewMenu(12, 'Contact', Icons.keyboard_arrow_right,
-              Icons.perm_contact_cal_outlined),
-        ),
-        Container(
-          child: _viewMenu(
-              13, 'Account', Icons.keyboard_arrow_right, Icons.person_sharp),
-        ),
-        Container(
-          child: _viewMenu(10, 'Project', Icons.keyboard_arrow_right,
-              FontAwesomeIcons.projectDiagram),
-        ),
-        Container(
-          child: _viewMenu(9, 'Activity', Icons.keyboard_arrow_right,
-              FontAwesomeIcons.running),
-        ),
-        Container(
-          child: _viewMenu(
-              14, 'Calendar', Icons.keyboard_arrow_right, Icons.calendar_month),
-        ),
-        Container(
-          child: _viewMenu(
-              5, 'Time', Icons.keyboard_arrow_right, FontAwesomeIcons.clock),
-        ),
-        Container(
-          child: _viewMenu(11, 'Work', Icons.keyboard_arrow_right, Icons.work),
-        ),
-        Container(
-          child: _viewMenu(2, 'Academy', Icons.keyboard_arrow_right,
-              FontAwesomeIcons.university),
-        ),
-        Container(
-          child: _viewMenu(3, 'Language', Icons.keyboard_arrow_right,
-              FontAwesomeIcons.language),
-        ),
-        Container(
-          child: _viewMenu(
-              6, 'About', Icons.keyboard_arrow_right, FontAwesomeIcons.user),
-        ),
-        Container(
-          child: _viewMenu(
-            16,
-            'IDOC',
-            Icons.keyboard_arrow_right,
-            Icons.edit_document,
+        _viewMenu(13, 'Account (ไม่มี API)', Icons.keyboard_arrow_right,
+            Icons.person_sharp),
+        _viewMenu(12, 'Contact (ไม่มี API)', Icons.keyboard_arrow_right,
+            Icons.perm_contact_cal_outlined),
+        _viewMenu(10, 'Project', Icons.keyboard_arrow_right,
+            FontAwesomeIcons.projectDiagram),
+        _viewMenu(9, 'Activity (api dropdown ไม่ครบ)',
+            Icons.keyboard_arrow_right, FontAwesomeIcons.running),
+        _viewMenu(14, 'Calendar (ไม่มี API)', Icons.keyboard_arrow_right,
+            Icons.calendar_month),
+        _viewMenu(
+            5, 'Time', Icons.keyboard_arrow_right, FontAwesomeIcons.clock),
+        _viewMenu(11, 'Work (ขาด api การสร้าง)', Icons.keyboard_arrow_right,
+            Icons.work),
+        _viewMenu(2, 'Academy', Icons.keyboard_arrow_right,
+            FontAwesomeIcons.university),
+        _viewMenu(3, 'Language', Icons.keyboard_arrow_right,
+            FontAwesomeIcons.language),
+        _viewMenu(
+            6, 'About', Icons.keyboard_arrow_right, FontAwesomeIcons.user),
+        _viewMenu(7, 'HELPDESK (ไม่มี API)', Icons.keyboard_arrow_right,
+            Icons.message),
+        // _viewMenu(15, 'Deflate (ยังไม่เอา)', Icons.keyboard_arrow_right,
+        //     FontAwesomeIcons.lifeRing),
+        // _viewMenu(
+        //   16,
+        //   'IDOC (ยังไม่เอา)',
+        //   Icons.keyboard_arrow_right,
+        //   Icons.edit_document,
+        // ),
+        // _viewMenu(17, 'Issue Log (ยังไม่เอา)', Icons.keyboard_arrow_right,
+        //     FontAwesomeIcons.checkDouble),
+        // _viewMenu(18, 'Members (ไม่เอา)', Icons.keyboard_arrow_right,
+        //     Icons.phone_android),
+        // _viewMenu(19, 'Job (ยังไม่เอา)', Icons.keyboard_arrow_right,
+        //     Icons.person_2_rounded)
+      ],
+    );
+  }
+
+  Widget _buildScreen() {
+    final pages = {
+      0: NeedsView(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      1: NeedRequest(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      2: AcademyPage(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+        page: widget.page ?? '',
+      ),
+      3: TranslatePage(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      4: Text('Index 6: LogOut', style: optionStyle),
+      5: TimeSample(
+        employee: widget.employee,
+        timestamp: timeStampObject,
+        Authorization: widget.Authorization,
+        fetchBranchCallback: () => fetchBranch(),
+        branch_name: branch_name,
+        branch_id: branch_id,
+      ),
+      6: ProfilePage(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      7: HelpDeskScreen(
+        employee: widget.employee,
+        pageInput: 'helpdesk',
+        Authorization: widget.Authorization,
+      ),
+      8: PettyCash(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      9: ActivityScreen(
+        employee: widget.employee,
+        pageInput: 'activity',
+        Authorization: widget.Authorization,
+      ),
+      10: ProjectScreen(
+        employee: widget.employee,
+        pageInput: 'project',
+        Authorization: widget.Authorization,
+      ),
+      11: WorkPage(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      12: ContactScreen(
+        employee: widget.employee,
+        pageInput: 'contact',
+        Authorization: widget.Authorization,
+      ),
+      13: AccountScreen(
+        employee: widget.employee,
+        pageInput: 'account',
+        Authorization: widget.Authorization,
+      ),
+      14: CalendarScreen(
+        employee: widget.employee,
+        pageInput: 'calendar',
+        Authorization: widget.Authorization,
+      ),
+      15: HelpDesk2(
+        employee: widget.employee,
+        pageInput: 'helpdesk',
+        Authorization: widget.Authorization,
+      ),
+      16: IdocScreen(
+        employee: widget.employee,
+        pageInput: '',
+        Authorization: widget.Authorization,
+      ),
+      17: IssueLogScreen(
+        employee: widget.employee,
+        pageInput: '',
+        Authorization: widget.Authorization,
+      ),
+      18: Container(),//CallScreen(),
+      19: JobPage(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+    };
+    return pages[_index] ?? JobPage(
+      employee: widget.employee,
+      Authorization: widget.Authorization,
+    );
+  }
+
+  Widget _drawerHeader() {
+    return Stack(
+      alignment: Alignment.bottomLeft,
+      children: [
+        const UserAccountsDrawerHeader(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/logoOrigami/default_bg.png'),
+              fit: BoxFit.cover,
+            ),
           ),
+          accountName: null,
+          accountEmail: null,
         ),
-        Container(
-          child: _viewMenu(17, 'Issue Log', Icons.keyboard_arrow_right,
-              FontAwesomeIcons.checkDouble),
-        ),
-        Container(
-          child: _viewMenu(
-              7, 'HELPDESK', Icons.keyboard_arrow_right, Icons.message),
-        ),
-        Container(
-          child: _viewMenu(
-              18, 'Members', Icons.keyboard_arrow_right, Icons.phone_android),
+        Padding(
+          padding: EdgeInsets.only(left: 16, right: 8, bottom: 25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 35,
+                backgroundColor: Colors.white,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: Image.network(
+                    widget.employee.emp_avatar,
+                    fit: BoxFit.fill,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                        width: double.infinity, // ความกว้างเต็มจอ
+                        fit: BoxFit.contain,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
+                children: [
+                  Text(
+                    '$Name: ',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${widget.employee.emp_name}',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              Row(
+                children: [
+                  Text(
+                    '$Position1: ',
+                    style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${widget.employee.dept_description}',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -642,6 +625,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     "IDOC",
     "Issue Log",
     "Contact Members",
+    "Job",
   ];
 
   String branchStr = '';
@@ -701,13 +685,14 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
-  Widget _logout() {
+  Widget _logoutWidget() {
     return Padding(
-      padding: const EdgeInsets.only(top: 4, bottom: 8, left: 8, right: 8),
+      padding: const EdgeInsets.only(top: 8),
       child: Container(
+        padding: const EdgeInsets.only(top:4,bottom: 8,right: 4,left: 4),
         decoration: BoxDecoration(
           color: Colors.orange.shade50,
-          borderRadius: BorderRadius.circular(10),
+          // borderRadius: BorderRadius.circular(10),
         ),
         child: ListTile(
           trailing: Icon(Icons.keyboard_arrow_right, color: Colors.red),
@@ -739,7 +724,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
               ),
             ],
           ),
-          // selected: _index == 4,
           onTap: () {
             showDialog(
               context: context,

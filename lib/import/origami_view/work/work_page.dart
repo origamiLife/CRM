@@ -131,7 +131,7 @@ class _WorkPageState extends State<WorkPage> {
                               '$Empty',
                               style: TextStyle(
                                 fontFamily: 'Arial',
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.grey,
                               ),
@@ -160,7 +160,7 @@ class _WorkPageState extends State<WorkPage> {
                             '$Empty',
                             style: TextStyle(
                               fontFamily: 'Arial',
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey,
                             ),
@@ -718,9 +718,9 @@ class ModelWork {
       leave_type_name_th: json['leave_type_name_th'] ?? '',
       before_day: json['before_day'] ?? '',
       hours_day: json['hours_day'] ?? '',
-      total: json['total'] ?? '',
-      used: json['used'] ?? '',
-      available: json['Available'] ?? '',
+      total: json['total'] ?? '0.00',
+      used: json['used'] ?? '0',
+      available: json['Available'] ?? '0',
     );
   }
 }

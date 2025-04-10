@@ -155,15 +155,14 @@ class _ProjectEditState extends State<ProjectEdit> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
-        title: Align(
-          alignment: Alignment.centerLeft,
+        backgroundColor: Colors.white,
+        title: Center(
           child: Text(
             'Detail',
             style: TextStyle(
                 fontFamily: 'Arial',
               fontSize: 24,
-              color: Colors.white,
+              color: Colors.orange,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -171,7 +170,7 @@ class _ProjectEditState extends State<ProjectEdit> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color: Colors.orange,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -187,7 +186,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                   style: TextStyle(
                 fontFamily: 'Arial',
                     fontSize: 14,
-                    color: Colors.white,
+                    color: Colors.orange,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

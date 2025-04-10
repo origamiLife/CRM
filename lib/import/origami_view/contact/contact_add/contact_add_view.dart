@@ -100,7 +100,7 @@ class _ContactAddViewState extends State<ContactAddView> {
   Widget _getContentWidget() {
     switch (_selectedIndex) {
       case 0:
-        return ContactAddDetail();
+        return ContactAddDetail(employee: widget.employee, Authorization: widget.Authorization);
       case 1:
         return ContactAddInformation();
       default:

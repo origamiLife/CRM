@@ -43,8 +43,8 @@ class _NeedDetailState extends State<NeedDetail> {
 
   static var optionStyle = TextStyle(
       fontFamily: 'Arial',
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
       color: Color(0xFF555555));
 
   DateTime _selectedEffective = DateTime.now();
@@ -439,7 +439,7 @@ class _NeedDetailState extends State<NeedDetail> {
                             borderRadius: BorderRadius.circular(15),
                             color: Colors.white,
                             border: Border.all(
-                              color: Color(0xFFFF9900),
+                              color: Colors.grey,
                               width: 1.0,
                             ),
                           ),
@@ -489,7 +489,7 @@ class _NeedDetailState extends State<NeedDetail> {
                                   borderRadius: BorderRadius.circular(15),
                                   color: Colors.white,
                                   border: Border.all(
-                                    color: Color(0xFFFF9900),
+                                    color: Colors.grey,
                                     width: 1.0,
                                   ),
                                 ),
@@ -729,7 +729,7 @@ class _NeedDetailState extends State<NeedDetail> {
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
         border: Border.all(
-          color: Color(0xFFFF9900),
+          color: Colors.grey,
           width: 1.0,
         ),
       ),
@@ -1386,7 +1386,7 @@ class _NeedDetailState extends State<NeedDetail> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8),
       child: Text(
         title,
         style: optionStyle,
@@ -1425,7 +1425,7 @@ class _NeedDetailState extends State<NeedDetail> {
   BoxDecoration _inputDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(15.0),
-      border: Border.all(color: Color(0xFFFF9900), width: 1.0),
+      border: Border.all(color: Colors.grey, width: 1.0),
     );
   }
 
@@ -1539,11 +1539,9 @@ class _NeedDetailState extends State<NeedDetail> {
                       '$Empty',
                       style: TextStyle(
                           fontFamily: 'Arial',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey,),
                     ),
                   )
                 : SingleChildScrollView(
@@ -1864,7 +1862,7 @@ class _NeedDetailState extends State<NeedDetail> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
-                                  color: Color(0xFFFF9900),
+                                  color: Colors.grey,
                                   width: 1.0,
                                 ),
                               ),
@@ -1901,12 +1899,12 @@ class _NeedDetailState extends State<NeedDetail> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color: (index == indexImage)
-                                            ? Color(0xFFFF9900)
+                                            ? Colors.grey
                                             : Colors.transparent,
                                         border: Border.all(
                                           color: (index == indexImage)
-                                              ? Color(0xFFFF9900)
-                                              : Color(0xFFFF9900),
+                                              ? Colors.grey
+                                              : Colors.grey,
                                           width: 1.0,
                                         ),
                                       ),

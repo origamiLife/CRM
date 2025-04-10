@@ -27,9 +27,11 @@ class ProjectListUpdate extends StatefulWidget {
 
 class _ProjectListUpdateState extends State<ProjectListUpdate> {
   TextEditingController _searchController = TextEditingController();
+  late ModelProject project;
   @override
   void initState() {
     super.initState();
+    project = widget.project;
   }
 
   @override
@@ -47,22 +49,22 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       icon: Icons.person_add_alt_1_rounded,
       title: 'JoinUser',
     ),
-    // TabItem(
-    //   icon: Icons.accessibility_new,
-    //   title: 'Activity',
-    // ),
+    TabItem(
+      icon: Icons.accessibility_new,
+      title: 'Activity',
+    ),
     // TabItem(
     //   icon: FontAwesomeIcons.podcast,
     //   title: 'Skoop',
     // ),
-    // TabItem(
-    //   icon: Icons.calendar_month,
-    //   title: 'Calendar',
-    // ),
-    // TabItem(
-    //   icon: Icons.more_horiz,
-    //   title: 'Other',
-    // ),
+    TabItem(
+      icon: Icons.calendar_month,
+      title: 'Calendar',
+    ),
+    TabItem(
+      icon: Icons.more_horiz,
+      title: 'Other',
+    ),
   ];
 
   int _selectedIndex = 0;
@@ -75,14 +77,16 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         page = "Detail";
       } else if (index == 1) {
         page = "JoinUser";
-      // } else if (index == 2) {
-      //   page = "Activity";
-      // } else if (index == 3) {
+      } else if (index == 2) {
+        page = "Activity";
+      }
+      // else if (index == 3) {
       //   page = "Skoop";
-      // } else if (index == 4) {
-      //   page = "Calendar";
-      // } else if (index == 5) {
-      //   page = "Other";
+      // }
+      else if (index == 3) {
+        page = "Calendar";
+      } else if (index == 4) {
+        page = "Other";
       }
     });
   }
@@ -90,60 +94,25 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            '${page}',
-            style: TextStyle(
-                fontFamily: 'Arial',
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
+        backgroundColor: Colors.white,
+        title: Text(
+          page,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 24,
+            color: Colors.orange,
+            fontWeight: FontWeight.w500,
           ),
         ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color: Colors.orange,
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          if (widget.project.can_delete == 'Y')
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                  onTap: () {
-                    fetchDeleteProject();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        // Icon(Icons.delete, color: Colors.white),
-                        // SizedBox(width: 8),
-                        Text(
-                          'DELETE',
-                          style: TextStyle(
-                fontFamily: 'Arial',
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(width: 16)
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-        ],
       ),
       body: _getContentWidget(context),
       bottomNavigationBar: BottomBarDefault(
@@ -151,7 +120,8 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         iconSize: 18,
         animated: true,
         titleStyle: TextStyle(
-                fontFamily: 'Arial',),
+          fontFamily: 'Arial',
+        ),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
@@ -173,25 +143,25 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
           employee: widget.employee,
           Authorization: widget.Authorization,
           pageInput: widget.pageInput,
-          project: widget.project,
+          project: project,
         );
-      // case 2:
-      //   return ActivityScreen(
-      //     employee: widget.employee,
-      //     Authorization: widget.Authorization,
-      //     pageInput: widget.pageInput,
-      //   ); //'Close' or 'Plan'
+      case 2:
+        return ActivityScreen(
+          employee: widget.employee,
+          Authorization: widget.Authorization,
+          pageInput: widget.pageInput,
+        ); //'Close' or 'Plan'
       // case 3:
       //   return SkoopScreen(
       //     employee: widget.employee,
       //     Authorization: widget.Authorization,
       //     activity_id: '',
       //   );
-      // case 4:
-      //   return CalendarScreen(
-      //       employee: widget.employee,
-      //       Authorization: widget.Authorization,
-      //       pageInput: widget.pageInput);
+      case 3:
+        return CalendarScreen(
+            employee: widget.employee,
+            Authorization: widget.Authorization,
+            pageInput: widget.pageInput);
       default:
         return ProjectOther(
             employee: widget.employee,
@@ -201,117 +171,294 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
   }
 
   Widget _ProjectDetail(BuildContext context) {
-    return InkWell(
-      onTap: (widget.project.can_edit == 'Y')
-          ? () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProjectEdit(
-            employee: widget.employee,
-            Authorization: widget.Authorization,
-            pageInput: widget.pageInput,
-            project: widget.project,
-          ),
-        ),
-      )
-          : null,
-      child: _Detail(),
-    );
-  }
-
-  Widget _Detail() {
     return Column(
       children: [
-        Stack(
+        Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+          child: Row(
+            children: [
+              // Expanded(
+              //   child: _buildText(project.project_name, 16, Color(0xFF555555),
+              //       FontWeight.w700),
+              // ),
+
+              // _buildText(
+              //     project.project_code, 10, Colors.grey, FontWeight.w500),
+              // Flexible(child: Container()),
+            ],
+          ),
+        ),
+        // Divider(thickness: 1),
+        Row(
           children: [
-            ColorFiltered(
-              colorFilter: ColorFilter.mode(Colors.white, BlendMode.saturation),
-              child: Image.asset(
-                'assets/images/busienss1.jpg',
-                fit: BoxFit.cover,
-                height: 60,
-                width: double.infinity,
-              ),
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: CircleAvatar(
-                  radius: 57,
-                  backgroundColor: Colors.grey.shade400,
-                  child: CircleAvatar(
-                    radius: 55,
-                    backgroundColor: Colors.white,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.network(
-                        widget.project.owner_avatar,
-                        fit: BoxFit.fill,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.network(
-                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                            // height: 60,
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            fit: BoxFit.fill,
-                          );
-                        },
-                      ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 8, bottom: 16),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      project.owner_avatar,
+                      height: 180,
+                      fit: BoxFit.fill,
+                      color: Colors.grey.shade100,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                          'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                          width: MediaQuery.of(context).size.width * 0.2,
+                          fit: BoxFit.fill,
+                        );
+                      },
                     ),
                   ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      project.owner_avatar,
+                      height: 170,
+                      fit: BoxFit.fill,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                          'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                          width: MediaQuery.of(context).size.width * 0.2,
+                          fit: BoxFit.fill,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          project.owner_name,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 22,
+                            color: Color(0xFF555555),
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        _buildText(
+                            project.project_code, 12, Colors.grey, FontWeight.w500),
+                        SizedBox(height: 8),
+                        Text(
+                          project.account_name,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'Start Date : ${project.project_create} \nEnd Date : ${project.last_activity}',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.orange.shade100,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Icon(Icons.mail,
+                                    color: Colors.orange.shade400),
+                              ),
+                            ),
+                            Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Icon(Icons.call,
+                                      color: Colors.red.shade400),
+                                )),
+                            Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Icon(Icons.camera_alt,
+                                      color: Colors.grey),
+                                )),
+                            Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.shade100,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Icon(Icons.location_history,
+                                      color: Colors.green.shade400),
+                                )),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
+            SizedBox(width: 16)
           ],
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                SizedBox(height: 8),
-                _buildText(widget.project.project_name, 20, Color(0xFF555555), FontWeight.w500),
-                _buildText('${widget.project.project_code}', 16, Colors.grey, FontWeight.w500),
-                SizedBox(height: 4),
-                _buildText("${widget.project.project_create} - ${widget.project.last_activity}", 16, Colors.grey, FontWeight.w500),
-                SizedBox(height: 8),
-                _subData('Main Owner', widget.project.owner_name),
-                _subData('Contact', widget.project.contact_name),
-                _subData('Account', widget.project.account_name),
-                _subData('Type', widget.project.project_type_name),
-                _subData('Description', widget.project.project_description),
-                _subData('Sale Status', widget.project.project_sale_nonsale_name),
-                _subData('Source', widget.project.project_source_name),
-                _subData('Process', widget.project.project_process_name),
-                _subData('Sales', widget.project.project_status_name),
-                _subData('Priority', widget.project.project_priority_name),
-                _OpportunitySection([
-                  widget.project.opportunity_line1,
-                  widget.project.opportunity_line2,
-                  widget.project.opportunity_line3,
-                ]),
-              ],
+        Flexible(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  SizedBox(height: 4),
+                  _subData('Main Owner', project.owner_name),
+                  _subData('Contact', project.contact_name),
+                  _subData('Account', project.account_name),
+                  _subData('Type', project.project_type_name),
+                  _subData('Description', project.project_description),
+                  _subData('Sale Status', project.project_sale_nonsale_name),
+                  _subData('Source', project.project_source_name),
+                  _subData('Process', project.project_process_name),
+                  _subData('Sales', project.project_status_name),
+                  _subData('Priority', project.project_priority_name),
+                  _OpportunitySection([
+                    project.opportunity_line1,
+                    project.opportunity_line2,
+                    project.opportunity_line3,
+                  ]),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: (project.can_edit == 'Y')
+                          ? Colors.orange.shade100
+                          : Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 2, right: 2),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          padding: const EdgeInsets.all(8),
+                          foregroundColor: Colors.red,
+                          backgroundColor: (project.can_edit == 'Y')
+                              ? Colors.orange.shade400
+                              : Colors.grey.shade400,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: (project.can_edit == 'Y')
+                            ? () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProjectEdit(
+                                      employee: widget.employee,
+                                      Authorization: widget.Authorization,
+                                      pageInput: widget.pageInput,
+                                      project: project,
+                                    ),
+                                  ),
+                                )
+                            : null,
+                        child: Center(
+                          child: Text(
+                            'EDIT',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              color: _getEditColor(),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (project.can_delete == 'Y')
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade100,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 2, right: 2),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              padding: const EdgeInsets.all(8),
+                              foregroundColor: Colors.red,
+                              backgroundColor: Colors.red.shade400,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            onPressed: () {
+                              fetchDeleteProject();
+                            },
+                            child: Center(
+                              child: Text(
+                                'DELETE',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16, bottom: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Icon(FontAwesomeIcons.pen, color: _getEditColor(), size: 20),
-              SizedBox(width: 8),
-              _buildText('EDIT', 18, _getEditColor(), FontWeight.w700),
-            ],
           ),
         ),
       ],
     );
   }
 
-  Color _getEditColor() => (widget.project.can_edit == 'Y') ? Colors.orange : Colors.grey;
+  Color _getEditColor() =>
+      (project.can_edit == 'Y') ? Colors.white : Colors.grey;
 
-  Color _getSubDataColor(String label) => (label == 'Date' || label == 'to') ? Colors.orange : Colors.grey;
+  Color _getSubDataColor(String label) =>
+      (label == 'Date' || label == 'to') ? Colors.orange : Colors.grey;
 
   Widget _buildText(String text, double size, Color color, FontWeight weight) {
     return Text(
@@ -319,7 +466,10 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
-                fontFamily: 'Arial',fontSize: size, color: color, fontWeight: weight),
+          fontFamily: 'Arial',
+          fontSize: size,
+          color: color,
+          fontWeight: weight),
     );
   }
 
@@ -327,11 +477,13 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 12 , bottom: 12),
+          padding: const EdgeInsets.only(top: 12, bottom: 12),
           child: Row(
             children: [
-              _buildText('$label : ', 18, Color(0xFF555555), FontWeight.w700),
-              Flexible(child: _buildText(value, 16, _getSubDataColor(label), FontWeight.w500)),
+              _buildText('$label : ', 14, Color(0xFF555555), FontWeight.w700),
+              Flexible(
+                  child: _buildText(
+                      value, 14, _getSubDataColor(label), FontWeight.w500)),
             ],
           ),
         ),
@@ -339,7 +491,6 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       ],
     );
   }
-
 
   Future<void> fetchDeleteProject() async {
     final uri = Uri.parse("$host/crm/delete_project.php");
@@ -350,7 +501,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         'comp_id': widget.employee.comp_id,
         'idemp': widget.employee.emp_id,
         'Authorization': widget.Authorization,
-        'projectId': widget.project.project_id,
+        'projectId': project.project_id,
       },
     );
 
@@ -374,7 +525,10 @@ class _OpportunitySection extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
-                fontFamily: 'Arial',fontSize: size, color: color, fontWeight: weight),
+          fontFamily: 'Arial',
+          fontSize: size,
+          color: color,
+          fontWeight: weight),
     );
   }
 
@@ -391,8 +545,11 @@ class _OpportunitySection extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 children: [
-                  _buildText(index == 0 ? 'Opportunity : ' : '', 16, Color(0xFF555555), FontWeight.w700),
-                  Flexible(child: _buildText(opportunities[index], 14, Colors.grey, FontWeight.w500)),
+                  _buildText(index == 0 ? 'Opportunity : ' : '', 16,
+                      Color(0xFF555555), FontWeight.w700),
+                  Flexible(
+                      child: _buildText(opportunities[index], 14, Colors.grey,
+                          FontWeight.w500)),
                 ],
               ),
             ),

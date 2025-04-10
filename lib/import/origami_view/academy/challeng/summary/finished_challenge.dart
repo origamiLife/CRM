@@ -87,9 +87,9 @@ class _FinishedChallengeState extends State<FinishedChallenge> {
                   'No data available.',
                   style: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF555555),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
                   ),
                 ),
               );

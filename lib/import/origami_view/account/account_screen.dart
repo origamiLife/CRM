@@ -1,13 +1,12 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:origamilift/import/import.dart';
 
-import '../activity/activity.dart';
+import '../../import.dart';
 import 'account_add/account_add_view.dart';
 import 'account_edit/account_edit_view.dart';
 
-class AccountList extends StatefulWidget {
-  const AccountList({
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({
     Key? key,
     required this.employee,
     required this.pageInput,
@@ -17,37 +16,54 @@ class AccountList extends StatefulWidget {
   final String pageInput;
   final String Authorization;
   @override
-  _AccountListState createState() => _AccountListState();
+  _AccountScreenState createState() => _AccountScreenState();
 }
 
-class _AccountListState extends State<AccountList> {
+class _AccountScreenState extends State<AccountScreen> {
   TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController = ScrollController();
   String _search = "";
+  bool isLoading = false;
+  bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
+
   @override
   void initState() {
     super.initState();
-    // ตรวจสอบสถานะการโหลดข้อมูล
-    fetchModelAccount();
+    fetchModelAccountVoid();
+    _scrollController.addListener(_scrollListener);
+    // _searchController.addListener(_filterAccountScreen);
     _searchController.addListener(() {
-      setState(() {
-        _search = _searchController.text;
-      });
-      fetchModelAccount();
-      print("Current text: ${_searchController.text}");
+      int index = 0;
+      _search = _searchController.text;
+      indexItems = 0;
+      print('$indexItems');
+      AccountScreen= [];
+      fetchModelAccountVoid();
     });
   }
 
+  // void _filterAccountScreen() {
+  //   setState(() {
+  //     String query = _searchController.text.toLowerCase();
+  //     filteredAccountScreen = AccountScreen.where((Account) {
+  //       return Account.account_name?.toLowerCase().contains(query) ??
+  //           false;
+  //     }).toList();
+  //   });
+  //   fetchModelAccountVoid();
+  // }
+
   @override
   void dispose() {
-    // _scrollController.dispose();
-    _searchController.dispose(); // ปล่อยหน่วยความจำเมื่อไม่ใช้งาน
+    _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AccountAll.isEmpty ? Colors.white : Colors.grey.shade50,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -82,344 +98,476 @@ class _AccountListState extends State<AccountList> {
         backgroundColor: Color(0xFFFF9900),
       ),
       body: SafeArea(
-        child: _getAccountWidget(),
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: _buildSearchField(),
+              ),
+              Expanded(
+                child: _getContentWidget(),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  bool isLoading = false;
-  Widget _getAccountWidget() {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      body: Column(
-        children: [
-          Container(
+  Widget _buildSearchField() {
+    return Padding(
+        padding: const EdgeInsets.all(8),
+        child: Container(
+          decoration: BoxDecoration(
             color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: _searchController,
-                keyboardType: TextInputType.text,
-                style: TextStyle(
-                fontFamily: 'Arial',
-                  color: Color(0xFF555555),
-                  fontSize: 14,
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // สีเงา
+                blurRadius: 1, // ความฟุ้งของเงา
+                offset: Offset(0, 4), // การเยื้องของเงา (แนวแกน X, Y)
+              ),
+            ],
+          ),
+          child: TextFormField(
+            controller: _searchController,
+            keyboardType: TextInputType.text,
+            style: const TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+              fontSize: 14,
+            ),
+            decoration: InputDecoration(
+              isDense: true,
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              hintText: '$SearchTS...',
+              hintStyle: const TextStyle(
+                  fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
+              border: InputBorder.none, // เอาขอบปกติออก
+              suffixIcon: const Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.search,
+                  size: 24,
+                  color: Colors.orange,
                 ),
-                decoration: InputDecoration(
-                  isDense: true,
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                  hintText: 'Search...',
-                  hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                      fontSize: 14, color: Color(0xFF555555)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Color(0xFFFF9900),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: Colors.orange,
+                  width: 1,
                 ),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: Colors.orange,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(50),
               ),
             ),
           ),
-          SizedBox(height: 8),
-          Expanded(
-              child: FutureBuilder<void>(
-            future: fetchModelAccount(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        color: Color(0xFFFF9900),
-                      ),
-                      SizedBox(width: 12),
-                      Text(
-                        '$Loading...',
-                        style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF555555),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              } else if (allAccount.isEmpty) {
-                return Center(
-                  child: Text(
-                    '$Empty',
-                    style: TextStyle(
-                fontFamily: 'Arial',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
-                    ),
-                  ),
-                );
-              } else {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: ListView.builder(
-                      itemCount: allAccount.length +
-                          (isLoading ? 1 : 0), // เพิ่ม 1 ถ้ากำลังโหลด
-                      controller: _scrollController,
-                      itemBuilder: (context, index) {
-                        final account = allAccount[index];
-                        return _AccountData(account);
-                      }),
-                );
-              }
-            },
-          )),
-        ],
-      ),
-    );
+        ));
   }
 
-  Widget _AccountData(ModelActivity account) {
+  Widget _getContentWidget() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AccountEditView(
-                    employee: widget.employee,
-                    Authorization: widget.Authorization,
-                    pageInput: widget.pageInput,
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: ListView.builder(
+          controller: _scrollController,
+          itemCount: AccountScreen.length,
+          itemBuilder: (context, index) {
+            AccountAll = AccountScreen;
+            // AccountScreen.sort((a, b) => b.cus_id.compareTo(a.cus_id));
+            final Account = AccountScreen[index];
+            print('AccountScreen.length : ${AccountScreen.length}');
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AccountEditView(
+                      employee: widget.employee,
+                      Authorization: widget.Authorization,
+                      pageInput: widget.pageInput,
+                    ),
                   ),
-                ),
-              ).then((value) {
-                setState(() {
-                  indexItems = 0;
-                  // allAccount.clear();
-                  // fetchModelAccount(); // เรียกฟังก์ชันโหลด API ใหม่
+                ).then((value) {
+                  setState(() {
+                    indexItems = 0;
+                    // allAccount.clear();
+                    // fetchModelAccount(); // เรียกฟังก์ชันโหลด API ใหม่
+                  });
                 });
-              });
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  account.activity_project_name ?? '',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                fontFamily: 'Arial',
-                    fontSize: 18,
-                    color: Color(0xFF555555),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 4, bottom: 4, right: 8),
-                      child: CircleAvatar(
-                        radius: 25,
-                        backgroundColor: Colors.grey,
-                        child: CircleAvatar(
-                          radius: 24,
-                          backgroundColor: Color(0xFFFF9900),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Text(
-                              account.activity_project_name?.substring(0, 1) ??
-                                  '',
-                              style: TextStyle(
-                fontFamily: 'Arial',
-                                fontSize: 24,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      Account.cus_code,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 12,
+                                        color: Color(0xFF555555),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Padding(
+                                //   padding: EdgeInsets.only(left: 8.0),
+                                //   child: Text(
+                                //     project.project_priority_name,
+                                //     maxLines: 1,
+                                //     overflow: TextOverflow.ellipsis,
+                                //     style: TextStyle(
+                                //       fontFamily: 'Arial',
+                                //       fontSize: 12,
+                                //       color: Color(0xFF555555),
+                                //       fontWeight: FontWeight.w500,
+                                //     ),
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ),
+                          // Container(
+                          //   width: 1, // ความกว้างของเส้น
+                          //   height: 16, // ความสูงของเส้น
+                          //   color: Colors.grey, // สีของเส้น
+                          //   margin: EdgeInsets.symmetric(
+                          //       horizontal:
+                          //       8), // ระยะห่างจาก IconButton
+                          // ),
+                          // InkWell(
+                          //   onTap: () {},
+                          //   child: Icon(
+                          //     Icons.delete,
+                          //     color: Colors.grey,
+                          //     size: 18,
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 4, bottom: 4, right: 8),
+                          child: CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Colors.grey,
+                            child: CircleAvatar(
+                              radius: 24,
+                              backgroundColor: Colors.white,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.network(
+                                  Account.cus_logo,
+                                  fit: BoxFit.fill,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.network(
+                                      'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                      width: double.infinity, // ความกว้างเต็มจอ
+                                      fit: BoxFit.contain,
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (Account.account_name_en != '')
+                                Text(
+                                  (Account.registration_name == '')
+                                      ? Account.account_name_en
+                                      : '${Account.registration_name ?? ''} : ${Account.account_name_en}',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14,
+                                    color: Color(0xFFFF9900),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              else
+                                Text(
+                                  (Account.registration_name == '')
+                                      ? Account.account_name_th
+                                      : '${Account.registration_name ?? ''} : ${Account.account_name_th}',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14,
+                                    color: Color(0xFFFF9900),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              Text(
+                                'Grop : ${Account.cus_group_name}',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                'Type : ${Account.cus_type_name ?? ''}',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              (Account.cus_tel_no == '')
+                                  ? Container()
+                                  : Text(
+                                      'Tel : ${Account.cus_tel_no ?? ''}',
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                              (Account.cus_email == '')
+                                  ? Container()
+                                  : Text(
+                                      'Email : ${Account.cus_email}',
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Group : ',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  account?.projectname ?? '',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                fontFamily: 'Arial',
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Tel : ',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  '+6622048512',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                fontFamily: 'Arial',
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Email : ',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  'info@trandar.com',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                fontFamily: 'Arial',
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    Divider(color: Colors.grey),
                   ],
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
+            );
+          }),
     );
   }
 
-  int indexItems = 0;
-  List<ModelActivity> allAccount = [];
-  Future<void> fetchModelAccount() async {
-    final uri = Uri.parse("$host/crm/activity.php");
-    final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'idemp': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
-        'index': (_search != '') ? '0' : indexItems.toString(),
-        'txt_search': _search,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> dataJson = jsonResponse['data'];
-      int max = jsonResponse['max'];
-      int sum = jsonResponse['sum'];
-      List<ModelActivity> newModel =
-          dataJson.map((json) => ModelActivity.fromJson(json)).toList();
-      allAccount.clear();
-      // เก็บข้อมูลเก่าและรวมกับข้อมูลใหม่
-      allAccount.addAll(newModel);
-
-      // เช็คเงื่อนไขตามที่ต้องการ
-      // if (_search == '') {
-      //   if (sum > indexItems) {
-      //     indexItems = indexItems + max;
-      //     if (indexItems >= sum) {
-      //       indexItems = sum;
-      //       _search == '0';
-      //     }
-      //     await fetchModelAccount(); // โหลดข้อมูลใหม่เมื่อ index เปลี่ยน
-      //   } else if (sum <= indexItems) {
-      //     indexItems = sum;
-      //     _search == '0';
-      //   }
-      // }
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent) {
+      if (!isAtEnd) {
+        // ป้องกันการโหลดซ้ำ
+        setState(() {
+          isAtEnd = true;
+        });
+        fetchModelAccountVoid();
+      }
     } else {
-      throw Exception('Failed to load projects');
+      setState(() {
+        isAtEnd = false; // ยังไม่ถึงสุดท้าย
+      });
     }
+  }
+
+  bool _isFirstTime = true;
+  int indexItems = 0;
+  List<ModelAccount> AccountScreen = [];
+  List<ModelAccount> AccountAll = [];
+  Future<void> fetchModelAccountVoid() async {
+    final uri = Uri.parse(
+        "$hostDev/api/origami/crm/account/list-account.php?search=$_search");
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        body: {
+          // 'comp_id': widget.employee.comp_id,
+          // 'emp_id': widget.employee.emp_id,
+          'comp_id': '5',
+          'emp_id': '185',
+          'index': indexItems.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final List<dynamic> AccountJson = jsonResponse['account_data'] ?? [];
+        bool nextPage = jsonResponse['next_page'];
+        List<ModelAccount> newActivities =
+            AccountJson.map((json) => ModelAccount.fromJson(json)).toList();
+
+        setState(() {
+          // กรอง id ที่ซ้ำ
+          Set<String> seenIds = AccountScreen.map((e) => e.cus_id).toSet();
+          newActivities =
+              newActivities.where((a) => seenIds.add(a.cus_id)).toList();
+
+          AccountScreen.addAll(newActivities);
+          print('$AccountScreen');
+          // AccountScreen.sort((a, b) => b.cus_id.compareTo(a.cus_id));
+          if (_isFirstTime) {
+            _isFirstTime = false; // ป้องกันการรันซ้ำ
+          }
+          if (nextPage == true) {
+            indexItems = indexItems + 1;
+          } else {
+            indexItems = indexItems;
+          }
+          isAtEnd = false; // โหลดเสร็จแล้ว
+        });
+        print('nextPage : $indexItems');
+
+        print("Total activities: ${AccountScreen.length}");
+      } else {
+        throw Exception(
+            'Failed to load data, status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+}
+
+class ModelAccount {
+  final String cus_id;
+  final String cus_code;
+  final String cus_logo;
+  final String cus_group_name;
+  final String cus_type_name;
+  final String account_name_en;
+  final String account_name_th;
+  final String account_name;
+  final String cus_class_name;
+  final String last_activity_date;
+  final String create_date;
+  final String owner_name;
+  final String owner_pic;
+  final String registration_name;
+  final String cus_tel_no;
+  final String cus_email;
+  final String cus_mob_no;
+  final String account_status_icon;
+  final String customer_contact;
+  final String cus_type;
+  final String emp_id;
+  final String cus_del;
+  final String customer_status;
+  final String cus_description;
+  final String source_name;
+  final String owner_group;
+  final String owner_info;
+  final String join_status;
+  final String account_pin;
+  final String cus_tax_no;
+  final String customer_approve_status;
+
+  ModelAccount({
+    required this.cus_id,
+    required this.cus_code,
+    required this.cus_logo,
+    required this.cus_group_name,
+    required this.cus_type_name,
+    required this.account_name_en,
+    required this.account_name_th,
+    required this.account_name,
+    required this.cus_class_name,
+    required this.last_activity_date,
+    required this.create_date,
+    required this.owner_name,
+    required this.owner_pic,
+    required this.registration_name,
+    required this.cus_tel_no,
+    required this.cus_email,
+    required this.cus_mob_no,
+    required this.account_status_icon,
+    required this.customer_contact,
+    required this.cus_type,
+    required this.emp_id,
+    required this.cus_del,
+    required this.customer_status,
+    required this.cus_description,
+    required this.source_name,
+    required this.owner_group,
+    required this.owner_info,
+    required this.join_status,
+    required this.account_pin,
+    required this.cus_tax_no,
+    required this.customer_approve_status,
+  });
+
+  factory ModelAccount.fromJson(Map<String, dynamic> json) {
+    return ModelAccount(
+      cus_id: json['cus_id'] ?? '',
+      cus_code: json['cus_code'] ?? '',
+      cus_logo: json['cus_logo'] ?? '',
+      cus_group_name: json['cus_group_name'] ?? '',
+      cus_type_name: json['cus_type_name'] ?? '',
+      account_name_en: json['account_name_en'] ?? '',
+      account_name_th: json['account_name_th'] ?? '',
+      account_name: json['account_name'] ?? '',
+      cus_class_name: json['cus_class_name'] ?? '',
+      last_activity_date: json['last_activity_date'] ?? '',
+      create_date: json['create_date'] ?? '',
+      owner_name: json['owner_name'] ?? '',
+      owner_pic: json['owner_pic'] ?? '',
+      registration_name: json['registration_name'] ?? '',
+      cus_tel_no: json['cus_tel_no'] ?? '',
+      cus_email: json['cus_email'] ?? '',
+      cus_mob_no: json['cus_mob_no'] ?? '',
+      account_status_icon: json['account_status_icon'] ?? '',
+      customer_contact: json['customer_contact'] ?? '',
+      cus_type: json['cus_type'] ?? '',
+      emp_id: json['emp_id'] ?? '',
+      cus_del: json['cus_del'] ?? '',
+      customer_status: json['customer_status'] ?? '',
+      cus_description: json['cus_description'] ?? '',
+      source_name: json['source_name'] ?? '',
+      owner_group: json['owner_group'] ?? '',
+      owner_info: json['owner_info'] ?? '',
+      join_status: json['join_status'] ?? '',
+      account_pin: json['account_pin'] ?? '',
+      cus_tax_no: json['cus_tax_no'] ?? '',
+      customer_approve_status: json['customer_approve_status'] ?? '',
+    );
   }
 }

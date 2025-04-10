@@ -1,18 +1,23 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:origamilift/import/import.dart';
+
+import '../../../import.dart';
+import 'contact_edit_information.dart';
 
 class ContactEditDetail extends StatefulWidget {
   const ContactEditDetail({
     Key? key,
+    required this.employee,
+    required this.Authorization,
   }) : super(key: key);
+  final Employee employee;
+  final String Authorization;
 
   @override
   _ContactEditDetailState createState() => _ContactEditDetailState();
 }
 
 class _ContactEditDetailState extends State<ContactEditDetail> {
-  TextEditingController _searchController = TextEditingController();
   TextEditingController _FirstnameController = TextEditingController();
   TextEditingController _LastnameController = TextEditingController();
   TextEditingController _NicknameController = TextEditingController();
@@ -26,16 +31,15 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   TextEditingController _SpouseNameController = TextEditingController();
   TextEditingController _DescriptionController = TextEditingController();
 
-  String _search = "";
   int _page = 0;
 
   @override
   void initState() {
     super.initState();
     _showDate();
-    _searchController.addListener(() {
-      _search = _searchController.text;
-      print("Current text: ${_searchController.text}");
+    _FirstnameController.addListener(() {
+      // _search = _FirstnameController.text;
+      print("Current text: ${_FirstnameController.text}");
     });
   }
 
@@ -49,11 +53,81 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _logoInformation(),
+      appBar: AppBar(
+        elevation: 1,
+        foregroundColor: Color(0xFFFF9900),
+        backgroundColor: Colors.white,
+        title: Text(
+          page,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 24,
+            color: Color(0xFFFF9900),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.orange,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      bottomNavigationBar: BottomBarDefault(
+        items: items,
+        iconSize: 18,
+        animated: true,
+        titleStyle: TextStyle(
+          fontFamily: 'Arial',
+        ),
+        backgroundColor: Colors.white,
+        color: Colors.grey.shade400,
+        colorSelected: Color(0xFFFF9900),
+        indexSelected: _selectedIndex,
+        // paddingVertical: 25,
+        onTap: _onItemTapped,
+      ),
+      body: _switchBodeWidget(context),
     );
   }
 
-  Widget _logoInformation() {
+  List<TabItem> items = [
+    TabItem(
+      icon: Icons.perm_contact_cal_outlined,
+      title: 'Detail',
+    ),
+    TabItem(
+      icon: Icons.info,
+      title: 'Infomation',
+    ),
+  ];
+
+  int _selectedIndex = 0;
+  String page = "Detail";
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (index == 0) {
+        page = "Detail";
+      } else if (index == 1) {
+        page = "Other Infomation";
+      }
+    });
+  }
+
+  Widget _switchBodeWidget(BuildContext context) {
+    switch (_selectedIndex) {
+      case 0:
+        return _logoInformation(context);
+      case 1:
+        return ContactEditInformation();
+      default:
+        return Container();
+    }
+  }
+
+  Widget _logoInformation(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -63,20 +137,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               child: (_page == 0)
                   ? Column(
                       children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Information',
-                            style: TextStyle(
-                fontFamily: 'Arial',
-                              fontSize: 22,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        _showImagePhoto('upload account logo'),
+                        SizedBox(height: 16),
+                        _showImagePhoto('upload account detail', 0),
                         SizedBox(height: 16),
                         _information(),
                       ],
@@ -90,50 +152,46 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                               child: Text(
                                 'Name Card',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 22,
                                   color: Colors.grey,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
                             SizedBox(height: 8),
-                            Row(
+                            Column(
                               children: [
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      _showImagePhoto('upload front card'),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        'Front Name card',
-                                        style: TextStyle(
-                fontFamily: 'Arial',
-                                          fontSize: 14,
-                                          color: Color(0xFF555555),
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                Column(
+                                  children: [
+                                    _showImagePhoto('upload front card', 1),
+                                    SizedBox(height: 8),
+                                    // Text(
+                                    //   'Front Name card',
+                                    //   style: TextStyle(
+                                    //     fontFamily: 'Arial',
+                                    //     fontSize: 14,
+                                    //     color: Color(0xFF555555),
+                                    //     fontWeight: FontWeight.w500,
+                                    //   ),
+                                    // ),
+                                  ],
                                 ),
                                 SizedBox(width: 8),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      _showImagePhoto('upload back card'),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        'Back Name card',
-                                        style: TextStyle(
-                fontFamily: 'Arial',
-                                          fontSize: 14,
-                                          color: Color(0xFF555555),
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                Column(
+                                  children: [
+                                    _showImagePhoto('upload back card', 2),
+                                    SizedBox(height: 8),
+                                    // Text(
+                                    //   'Back Name card',
+                                    //   style: TextStyle(
+                                    //     fontFamily: 'Arial',
+                                    //     fontSize: 14,
+                                    //     color: Color(0xFF555555),
+                                    //     fontWeight: FontWeight.w500,
+                                    //   ),
+                                    // ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -144,10 +202,10 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                               child: Text(
                                 'Owner contact',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 22,
                                   color: Colors.grey,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
@@ -163,98 +221,38 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     );
   }
 
-  Widget _showImagePhoto(String comment) {
-    return Container(
-      child: _image != null
-          ? Padding(
-              padding: const EdgeInsets.only(top: 8),
+  Widget _buildImagePickerPlaceholder(String comment, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.shade300, width: 4),
+            ),
+            child: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.transparent,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Image.file(
-                            File(_image!.path),
-                            height: 200,
-                            width: 200,
-                            fit: BoxFit.cover,
-                          ),
-                          Positioned(
-                            top: 4,
-                            right: 4,
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _image = null;
-                                });
-                              },
-                              child: Stack(
-                                children: [
-                                  Icon(
-                                    Icons.cancel_outlined,
-                                    color: Colors.white,
-                                  ),
-                                  Icon(
-                                    Icons.cancel,
-                                    color: Colors.red,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                  const Icon(Icons.cloud_upload, color: Colors.grey, size: 45),
+                  Text(
+                    comment,
+                    style: const TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
               ),
-            )
-          : InkWell(
-              onTap: () => _pickImage(),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Color(0xFFFF9900),
-                          width: 1.0,
-                        ),
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.cloud_upload,
-                                color: Colors.grey, size: 45),
-                            Text(
-                              comment,
-                              style: TextStyle(
-                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -276,15 +274,16 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w500,
               ),
             ),
             SizedBox(height: 8),
             _AccountCalendar('Birthday', 0, false),
-            SizedBox(height: 8),
+            SizedBox(height: 16),
           ],
         ),
         _DropdownProject('Religion'),
+        SizedBox(height: 8),
         _DropdownProject('Account'),
       ],
     );
@@ -306,7 +305,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                     '',
                     maxLines: 1,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -334,7 +333,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                     '',
                     maxLines: 1,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -367,11 +366,10 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         _AccountTextColumn('Position', _PositionController),
         Row(
           children: [
-            Expanded(
-                flex:2,child: _DropdownProject('Role')),
+            Expanded(flex: 2, child: _DropdownProject('Role')),
             SizedBox(width: 8),
             Expanded(
-              flex:1,
+              flex: 1,
               child: _DropdownEmotion('Emotion'),
             ),
           ],
@@ -384,124 +382,63 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   }
 
   Widget _pageController() {
-    return (_page == 0)
-        ? Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+    TextStyle buttonStyle = const TextStyle(
+      fontFamily: 'Arial',
+      fontSize: 16,
+      color: Color(0xFFFF9900),
+      fontWeight: FontWeight.w700,
+    );
+
+    Widget _navButton(String text, VoidCallback onTap) {
+      return InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(text, style: buttonStyle),
+        ),
+      );
+    }
+
+    Widget _saveButton(VoidCallback onTap) {
+      return InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
             children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _page = 1;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Next >>',
-                    style: TextStyle(
-                fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Color(0xFFFF9900),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
+              const Icon(Icons.save, size: 20, color: Color(0xFFFF9900)),
+              const SizedBox(width: 4),
+              Text('SAVE', style: buttonStyle),
             ],
-          )
-        : (_page == 1)
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        _page = 0;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '<< Back',
-                        style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 16,
-                          color: Color(0xFFFF9900),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        _page = 2;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Next >>',
-                        style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 16,
-                          color: Color(0xFFFF9900),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        _page = 1;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '<< Back',
-                        style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 16,
-                          color: Color(0xFFFF9900),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        _page = 0;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Icon(Icons.save, size: 20, color: Color(0xFFFF9900)),
-                          SizedBox(width: 4),
-                          Text(
-                            'SAVE',
-                            style: TextStyle(
-                fontFamily: 'Arial',
-                              fontSize: 16,
-                              color: Color(0xFFFF9900),
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
+          ),
+        ),
+      );
+    }
+
+    if (_page == 0) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _navButton('Next >>', () => setState(() => _page = 1)),
+        ],
+      );
+    } else if (_page == 1) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _navButton('<< Back', () => setState(() => _page = 0)),
+          _navButton('Next >>', () => setState(() => _page = 2)),
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _navButton('<< Back', () => setState(() => _page = 1)),
+          _saveButton(() => setState(() => _page = 0)), // ปรับตรงนี้ตาม logic ของคุณ
+        ],
+      );
+    }
   }
 
   Widget _DropdownProject(String value) {
@@ -511,10 +448,10 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Text(
           value,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w500,
           ),
         ),
         SizedBox(height: 8),
@@ -523,7 +460,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
             border: Border.all(
-              color: Color(0xFFFF9900),
+              color: Colors.grey.shade300,
               width: 1.0,
             ),
           ),
@@ -538,7 +475,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Colors.grey,
               fontSize: 14,
             ),
@@ -548,7 +485,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                       child: Text(
                         type.name,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -591,15 +528,15 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           title,
           maxLines: 1,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w500,
           ),
         ),
         SizedBox(height: 8),
         _AccountText(title, controller),
-        SizedBox(height: 8),
+        SizedBox(height: 16),
       ],
     );
   }
@@ -609,9 +546,10 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       controller: controller,
       keyboardType: TextInputType.text,
       style: TextStyle(
-                fontFamily: 'Arial',
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
+        fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
         isDense: true,
@@ -620,32 +558,19 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900),
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
-            width: 1,
-          ),
-        ),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
+        border: InputBorder.none, // เอาขอบปกติออก
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
@@ -659,7 +584,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       controller: controller,
       keyboardType: TextInputType.number,
       style: TextStyle(
-                fontFamily: 'Arial',
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -670,11 +595,11 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900),
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
@@ -682,20 +607,20 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
+            color: Colors.grey.shade300,
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
@@ -712,20 +637,20 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           'Description',
           maxLines: 1,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(height: 8),
+        SizedBox(height: 16),
         TextFormField(
           minLines: 2,
           maxLines: null,
           controller: controller,
           keyboardType: TextInputType.text,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -737,10 +662,10 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: title,
             hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Color(0xFFFF9900),
+                color: Colors.grey.shade300,
                 width: 1.0,
               ),
               borderRadius: BorderRadius.circular(10),
@@ -748,27 +673,27 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
+                color: Colors.grey.shade300,
                 width: 1,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                color: Colors.grey.shade300,
                 width: 1.0,
               ),
               borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+                color: Colors.grey.shade300,
                 width: 1.0,
               ),
               borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
-        SizedBox(height: 8),
+        SizedBox(height: 16),
       ],
     );
   }
@@ -787,7 +712,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           enabled: false,
           keyboardType: TextInputType.number,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -799,10 +724,10 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: (ifTime == true) ? '${title} $currentTime' : title,
             hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Color(0xFFFF9900),
+                color: Colors.grey.shade300,
                 width: 1.0,
               ),
               borderRadius: BorderRadius.circular(10),
@@ -810,20 +735,20 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
+                color: Colors.grey.shade300,
                 width: 1,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                color: Colors.grey.shade300,
                 width: 1.0,
               ),
               borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+                color: Colors.grey.shade300,
                 width: 1.0,
               ),
               borderRadius: BorderRadius.circular(10),
@@ -854,20 +779,20 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           child: Text(
             'Emotion',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 14,
               color: Color(0xFF555555),
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
-        SizedBox(height: 8),
+        SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
             border: Border.all(
-              color: Color(0xFFFF9900),
+              color: Colors.grey.shade300,
               width: 1.0,
             ),
           ),
@@ -882,21 +807,21 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Colors.grey,
               fontSize: 14,
             ),
             items: _emotions
                 .map((String emotions) => DropdownMenuItem<String>(
-              value: emotions,
-              child: Text(
-                emotions,
-                style: TextStyle(
-                fontFamily: 'Arial',
-                  fontSize: 24,
-                ),
-              ),
-            ))
+                      value: emotions,
+                      child: Text(
+                        emotions,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 24,
+                        ),
+                      ),
+                    ))
                 .toList(),
             value: _selectedEmotion,
             onChanged: (value) {
@@ -915,14 +840,14 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
+                  200, // Height for displaying up to 5 lines (adjust as needed)
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 33,
             ),
           ),
         ),
-        SizedBox(height: 8),
+        SizedBox(height: 16),
       ],
     );
   }
@@ -982,16 +907,84 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     );
   }
 
-  final ImagePicker _picker = ImagePicker();
-  File? _image;
-  List<String> _addImage = [];
+  Widget _showImagePhoto(String comment, int index) {
+    File? currentImage;
+    if (index == 0) currentImage = _imagelogo;
+    else if (index == 1) currentImage = _imagefront;
+    else currentImage = _imageback;
 
-  Future<void> _pickImage() async {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: currentImage != null
+          ? _buildImagePreview(currentImage, () {
+        setState(() {
+          if (index == 0) _imagelogo = null;
+          else if (index == 1) _imagefront = null;
+          else _imageback = null;
+        });
+      })
+          : _buildImagePickerPlaceholder(comment, () => _pickImage(index)),
+    );
+  }
+
+  Widget _buildImagePreview(File imageFile, VoidCallback onRemove) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.transparent,
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.file(
+              imageFile,
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: InkWell(
+              onTap: onRemove,
+              child: Stack(
+                children: const [
+                  Icon(Icons.cancel_outlined, color: Colors.white),
+                  Icon(Icons.cancel, color: Colors.red),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  final ImagePicker _picker = ImagePicker();
+  File? _imagelogo;
+  File? _imagefront;
+  File? _imageback;
+  List<String> _addImagelogo = [];
+  List<String> _addImagefront = [];
+  List<String> _addImageback = [];
+
+  Future<void> _pickImage(int index) async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        _image = File(image.path);
-        _addImage.add(_image!.path);
+        if (index == 0) {
+          _imagelogo = File(image.path);
+          _addImagelogo.add(_imagelogo!.path);
+        } else if (index == 1) {
+          _imagefront = File(image.path);
+          _addImagefront.add(_imagefront!.path);
+        } else {
+          _imageback = File(image.path);
+          _addImageback.add(_imageback!.path);
+        }
       });
     }
   }
@@ -1018,7 +1011,6 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     TitleDown(status_id: '004', status_name: 'DES'),
   ];
 
-  double total = 0.0;
 }
 
 class ModelType {

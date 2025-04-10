@@ -68,41 +68,41 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
             child: SingleChildScrollView(
               child: (_page == 0)
                   ? Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Address Information',
-                      style: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 22,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  _AddressInformation(),
-                ],
-              )
+                      children: [
+                        //   Align(
+                        //     alignment: Alignment.centerLeft,
+                        //     child: Text(
+                        //       'Address Information',
+                        //       style: TextStyle(
+                        // fontFamily: 'Arial',
+                        //         fontSize: 22,
+                        //         color: Colors.grey,
+                        //         fontWeight: FontWeight.w700,
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   SizedBox(height: 16),
+                        _AddressInformation(),
+                      ],
+                    )
                   : Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Other Information',
-                      style: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 22,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      children: [
+                        // Align(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: Text(
+                        //     'Other Information',
+                        //     style: TextStyle(
+                        //       fontFamily: 'Arial',
+                        //       fontSize: 22,
+                        //       color: Colors.grey,
+                        //       fontWeight: FontWeight.w700,
+                        //     ),
+                        //   ),
+                        // ),
+                        // SizedBox(height: 16),
+                        _OtherInformation()
+                      ],
                     ),
-                  ),
-                  SizedBox(height: 16),
-                  _OtherInformation()
-                ],
-              ),
             ),
           ),
           _pageController(),
@@ -122,10 +122,10 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                fontFamily: 'Arial',
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -149,7 +149,7 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w500,
@@ -159,7 +159,6 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                 ],
               ),
             ),
-
           ],
         ),
         _AccountTextColumn('No', _NoAddressController),
@@ -198,78 +197,78 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
   Widget _pageController() {
     return (_page == 0)
         ? Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        InkWell(
-          onTap: () {
-            setState(() {
-              _page = 1;
-            });
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Next >>',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 16,
-                color: Color(0xFFFF9900),
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ),
-      ],
-    )
-        : Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        InkWell(
-          onTap: () {
-            setState(() {
-              _page = 0;
-            });
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              '<< Back',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 16,
-                color: Color(0xFFFF9900),
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ),
-        InkWell(
-          onTap: () {
-            setState(() {
-              _page = 0;
-            });
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Icon(Icons.save, size: 20, color: Color(0xFFFF9900)),
-                SizedBox(width: 4),
-                Text(
-                  'SAVE',
-                  style: TextStyle(
-                fontFamily: 'Arial',
-                    fontSize: 16,
-                    color: Color(0xFFFF9900),
-                    fontWeight: FontWeight.w700,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _page = 1;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Next >>',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                      color: Color(0xFFFF9900),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+              ),
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _page = 0;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '<< Back',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                      color: Color(0xFFFF9900),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _page = 0;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.save, size: 20, color: Color(0xFFFF9900)),
+                      SizedBox(width: 4),
+                      Text(
+                        'SAVE',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          color: Color(0xFFFF9900),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 
   Widget _DropdownProject(String value) {
@@ -279,10 +278,10 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
         Text(
           value,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w500,
           ),
         ),
         SizedBox(height: 8),
@@ -291,7 +290,7 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
             border: Border.all(
-              color: Color(0xFFFF9900),
+              color: Colors.grey.shade300,
               width: 1.0,
             ),
           ),
@@ -306,21 +305,21 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Colors.grey,
               fontSize: 14,
             ),
             items: _modelType
                 .map((ModelType type) => DropdownMenuItem<ModelType>(
-              value: type,
-              child: Text(
-                type.name,
-                style: TextStyle(
-                fontFamily: 'Arial',
-                  fontSize: 14,
-                ),
-              ),
-            ))
+                      value: type,
+                      child: Text(
+                        type.name,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                        ),
+                      ),
+                    ))
                 .toList(),
             value: selectedItem,
             onChanged: (value) {
@@ -339,7 +338,7 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
+                  200, // Height for displaying up to 5 lines (adjust as needed)
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 33,
@@ -359,10 +358,10 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
           title,
           maxLines: 1,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w500,
           ),
         ),
         SizedBox(height: 8),
@@ -377,7 +376,7 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
       controller: controller,
       keyboardType: TextInputType.text,
       style: TextStyle(
-                fontFamily: 'Arial',
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -386,13 +385,13 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
         filled: true,
         fillColor: Colors.white,
         contentPadding:
-        const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900),
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
@@ -400,20 +399,20 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
+            color: Colors.grey.shade300,
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
@@ -427,7 +426,7 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
       controller: controller,
       keyboardType: TextInputType.number,
       style: TextStyle(
-                fontFamily: 'Arial',
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -436,13 +435,13 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
         filled: true,
         fillColor: Colors.white,
         contentPadding:
-        const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900),
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
@@ -450,20 +449,20 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
+            color: Colors.grey.shade300,
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+            color: Colors.grey.shade300,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),

@@ -25,11 +25,7 @@ class ActivityEditList extends StatefulWidget {
 class _ActivityEditListState extends State<ActivityEditList> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _telController = TextEditingController();
-  TextEditingController _searchController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
-
-  final _controllerOwner = ValueNotifier<bool>(false);
-  final _controllerActivity = ValueNotifier<bool>(false);
 
   ModelActivity? activity;
   @override
@@ -81,8 +77,6 @@ class _ActivityEditListState extends State<ActivityEditList> {
       case 2:
         return _activityTime();
       case 3:
-        return _activityJoinUser();
-      case 4:
         return _activityLyzen();
       default:
         return Container(
@@ -116,10 +110,6 @@ class _ActivityEditListState extends State<ActivityEditList> {
       title: 'Time',
     ),
     TabItem(
-      icon: Icons.account_circle,
-      title: 'JoinUser',
-    ),
-    TabItem(
       icon: FontAwesomeIcons.pen,
       title: 'Signature',
     ),
@@ -132,16 +122,13 @@ class _ActivityEditListState extends State<ActivityEditList> {
       // backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            '',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
+        title: Text(
+          '',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 24,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
           ),
         ),
         leading: IconButton(
@@ -652,34 +639,6 @@ class _ActivityEditListState extends State<ActivityEditList> {
 
   String _addInTime = '';
   String _addOutTime = '';
-
-  Widget _activityJoinUser() {
-    return Container(
-      child: Column(
-        children: [
-          Column(
-            children: [
-              Text(
-                '${skoopDetail?.first_en ?? ''} ${skoopDetail?.last_en ?? ''}',
-                maxLines: 1,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  color: Color(0xFF555555),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 8),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: _showJoinUser(),
-          ),
-        ],
-      ),
-    );
-  }
 
   final ImagePicker _picker = ImagePicker();
   File? _image;

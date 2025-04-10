@@ -42,7 +42,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     DateFormat formatter = DateFormat('yyyy/MM/dd');
     showlastDay = formatter.format(_selectedDate);
   }
-
+  final CalendarController _scheduleController = CalendarController(); // เพิ่มตรงนี้
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,74 +63,76 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Container(
                 color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4),
                   child: SfCalendar(
+                    cellBorderColor:Colors.transparent,
                     view: CalendarView.month,
                     dataSource: MeetingDataSource(getAppointments()),
-                    monthViewSettings: MonthViewSettings(
+                    monthViewSettings: const MonthViewSettings(
                       appointmentDisplayMode: MonthAppointmentDisplayMode
                           .appointment, // แสดงเหตุการณ์ในเดือน
+                        // showAgenda: true
                     ),
-                    appointmentTextStyle: TextStyle(
-                      color: Color(0xFF555555), // สีของข้อความในเหตุการณ์
+                    appointmentTextStyle: const TextStyle(
+                      fontFamily: 'Arial',
+                      color: Colors.white, // สีของข้อความในเหตุการณ์
                       fontSize: 14,
                     ),
-                    onTap: (CalendarTapDetails details) {
-                      if (details.targetElement ==
-                          CalendarElement.calendarCell) {
-                        final DateTime selectedDate = details.date!;
-                        final List<Appointment> appointments =
-                            getAppointments();
-                        final List<String> events = appointments
-                            .where((appointment) =>
-                                isSameDate(appointment.startTime, selectedDate))
-                            .map((appointment) => appointment.subject)
-                            .toList();
+                      onTap: (CalendarTapDetails details) {
+                        if (details.targetElement == CalendarElement.calendarCell) {
+                          final DateTime selectedDate = details.date!;
+                          final List<Appointment> appointments = getAppointments();
+                          final List<String> events = appointments
+                              .where((appointment) =>
+                              isSameDate(appointment.startTime, selectedDate))
+                              .map((appointment) => appointment.subject)
+                              .toList();
 
-                        if (events.isNotEmpty) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text(
-                                  'เหตุการณ์ในวันที่ : \n${selectedDate.toLocal()}',
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    color: Color(0xFF555555),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                content: Text(
-                                  events.join('\n'),
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    color: Color(0xFF555555),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: Text(
-                                      'ปิด',
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 16,
-                                        color: Color(0xFF555555),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      }
-                    },
+                          // 👉 เลื่อนไปยังวันที่ที่ถูกกดใน schedule view
+                          _scheduleController.displayDate = selectedDate;
+
+                          // if (events.isNotEmpty) {
+                          //   showDialog(
+                          //     context: context,
+                          //     builder: (BuildContext context) {
+                          //       return AlertDialog(
+                          //         title: Text(
+                          //           'เหตุการณ์ในวันที่ : \n${selectedDate.toLocal()}',
+                          //           style: const TextStyle(
+                          //             fontFamily: 'Arial',
+                          //             fontSize: 16,
+                          //             color: Color(0xFF555555),
+                          //             fontWeight: FontWeight.w500,
+                          //           ),
+                          //         ),
+                          //         content: Text(
+                          //           events.join('\n'),
+                          //           style: const TextStyle(
+                          //             fontFamily: 'Arial',
+                          //             fontSize: 16,
+                          //             color: Color(0xFF555555),
+                          //             fontWeight: FontWeight.w500,
+                          //           ),
+                          //         ),
+                          //         actions: [
+                          //           TextButton(
+                          //             onPressed: () => Navigator.of(context).pop(),
+                          //             child: const Text(
+                          //               'Close',
+                          //               style: TextStyle(
+                          //                 fontFamily: 'Arial',
+                          //                 fontSize: 16,
+                          //                 color: Color(0xFF555555),
+                          //                 fontWeight: FontWeight.w500,
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       );
+                          //     },
+                          //   );
+                          // }
+                        }}
                   ),
                 ),
               ),
@@ -144,6 +146,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     color: Colors.white,
                     child: SfCalendar(
                       view: CalendarView.schedule,
+                      controller: _scheduleController, // เชื่อม controller ตรงนี้
                       dataSource: MeetingDataSource(getAppointments()),
                       monthViewSettings: MonthViewSettings(
                         appointmentDisplayMode: MonthAppointmentDisplayMode
@@ -225,122 +228,86 @@ class _CalendarScreenState extends State<CalendarScreen> {
   List<Appointment> getAppointments() {
     return [
       Appointment(
-        startTime: DateTime(2024, 1, 1, 9, 0, 0),
-        endTime: DateTime(2024, 1, 1, 10, 0, 0),
+        startTime: DateTime(2025, 1, 1, 9, 0, 0),
+        endTime: DateTime(2025, 1, 1, 10, 0, 0),
         subject: 'วันขึ้นปีใหม่',
         color: Colors.green,
       ),
       Appointment(
-        startTime: DateTime(2024, 2, 12, 9, 0, 0),
-        endTime: DateTime(2024, 2, 12, 10, 0, 0),
-        subject: 'วันหยุดชดเชยวันตรุษจีน',
+        startTime: DateTime(2025, 2, 12, 9, 0, 0),
+        endTime: DateTime(2025, 2, 12, 10, 0, 0),
+        subject: 'วันมาฆบูชา',
         color: Colors.blue,
       ),
       Appointment(
-        startTime: DateTime(2024, 2, 26, 9, 0, 0),
-        endTime: DateTime(2024, 2, 26, 10, 0, 0),
-        subject: 'วันหยุดชดเชยวันมาฆบูชา',
-        color: Colors.redAccent,
-      ),
-      Appointment(
-        startTime: DateTime(2024, 4, 8, 9, 0, 0),
-        endTime: DateTime(2024, 4, 8, 10, 0, 0),
-        subject: 'วันหยุดชดเชยวันจักรี',
-        color: Colors.redAccent,
-      ),
-      Appointment(
-        startTime: DateTime(2024, 4, 13, 9, 0, 0),
-        endTime: DateTime(2024, 4, 15, 17, 0, 0), // วันสงกรานต์ 13-15 เมษายน
+        startTime: DateTime(2025, 4, 13, 9, 0, 0),
+        endTime: DateTime(2025, 4, 15, 17, 0, 0), // วันสงกรานต์ 13-15 เมษายน
         subject: 'วันสงกรานต์',
         color: Colors.cyan,
       ),
       Appointment(
-        startTime: DateTime(2024, 4, 16, 9, 0, 0),
-        endTime: DateTime(2024, 4, 16, 10, 0, 0),
-        subject: 'วันหยุดชดเชยวันสงกรานต์',
-        color: Colors.purple,
-      ),
-      Appointment(
-        startTime: DateTime(2024, 5, 6, 9, 0, 0),
-        endTime: DateTime(2024, 5, 6, 10, 0, 0),
-        subject: 'วันหยุดชดเชยวันฉัตรมงคล',
+        startTime: DateTime(2025, 5, 5, 9, 0, 0),
+        endTime: DateTime(2025, 5, 5, 10, 0, 0),
+        subject: 'วันฉัตรมงคล',
         color: Colors.teal,
       ),
       Appointment(
-        startTime: DateTime(2024, 5, 10, 9, 0, 0),
-        endTime: DateTime(2024, 5, 10, 10, 0, 0),
-        subject: 'วันพืชมงคล',
-        color: Colors.lightGreen,
-      ),
-      Appointment(
-        startTime: DateTime(2024, 5, 22, 9, 0, 0),
-        endTime: DateTime(2024, 5, 22, 10, 0, 0),
+        startTime: DateTime(2025, 5, 12, 9, 0, 0),
+        endTime: DateTime(2025, 5, 12, 10, 0, 0),
         subject: 'วันวิสาขบูชา',
         color: Colors.indigo,
       ),
       Appointment(
-        startTime: DateTime(2024, 6, 3, 9, 0, 0),
-        endTime: DateTime(2024, 6, 3, 10, 0, 0),
-        subject: 'วันเฉลิมพระชนมพรรษาสมเด็จพระนางเจ้าฯ',
+        startTime: DateTime(2025, 6, 3, 9, 0, 0),
+        endTime: DateTime(2025, 6, 3, 10, 0, 0),
+        subject: 'วันเฉลิมพระชนมพรรษาฯ สมเด็จพระนางเจ้าสุทิดา พัชรสุธาพิมลลักษณ พระบรมราชินี',
         color: Colors.amber,
       ),
       Appointment(
-        startTime: DateTime(2024, 6, 17, 9, 0, 0),
-        endTime: DateTime(2024, 6, 17, 10, 0, 0),
-        subject: 'วันอีฎิ้ลอัดฮา',
+        startTime: DateTime(2025, 7, 13, 9, 0, 0),
+        endTime: DateTime(2025, 7, 13, 10, 0, 0),
+        subject: 'วันอาสาฬหบูชา',
         color: Colors.brown,
       ),
       Appointment(
-        startTime: DateTime(2024, 7, 22, 9, 0, 0),
-        endTime: DateTime(2024, 7, 22, 10, 0, 0),
-        subject: 'วันหยุดชดเชยวันอาสาฬหบูชา',
+        startTime: DateTime(2025, 7, 14, 9, 0, 0),
+        endTime: DateTime(2025, 7, 14, 10, 0, 0),
+        subject: 'วันเข้าพรรษา',
         color: Colors.redAccent,
       ),
       Appointment(
-        startTime: DateTime(2024, 7, 29, 9, 0, 0),
-        endTime: DateTime(2024, 7, 29, 10, 0, 0),
-        subject: 'วันหยุดชดเชยวันพระบรมราชสมภพ',
+        startTime: DateTime(2025, 7, 28, 9, 0, 0),
+        endTime: DateTime(2025, 7, 28, 10, 0, 0),
+        subject: 'วันเฉลิมพระชนมพรรษาฯ พระบาทสมเด็จพระวชิรเกล้าเจ้าอยู่หัว',
         color: Colors.redAccent,
       ),
       Appointment(
-        startTime: DateTime(2024, 8, 12, 9, 0, 0),
-        endTime: DateTime(2024, 8, 12, 10, 0, 0),
-        subject: 'วันเฉลิมพระชนมพรรษา สมเด็จพระนางเจ้าสิริกิติ์',
+        startTime: DateTime(2025, 8, 12, 9, 0, 0),
+        endTime: DateTime(2025, 8, 12, 10, 0, 0),
+        subject: 'วันแม่แห่งชาติ',
         color: Colors.pink,
       ),
       Appointment(
-        startTime: DateTime(2024, 10, 14, 9, 0, 0),
-        endTime: DateTime(2024, 10, 14, 10, 0, 0),
-        subject: 'วันหยุดชดเชยวันคล้ายวันสวรรคต',
+        startTime: DateTime(2025, 10, 13, 9, 0, 0),
+        endTime: DateTime(2025, 10, 13, 10, 0, 0),
+        subject: 'วันคล้ายวันสวรรคต พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร',
         color: Colors.redAccent,
       ),
       Appointment(
-        startTime: DateTime(2024, 10, 23, 9, 0, 0),
-        endTime: DateTime(2024, 10, 23, 10, 0, 0),
+        startTime: DateTime(2025, 10, 23, 9, 0, 0),
+        endTime: DateTime(2025, 10, 23, 10, 0, 0),
         subject: 'วันปิยมหาราช',
         color: Colors.lightBlue,
       ),
       Appointment(
-        startTime: DateTime(2024, 12, 5, 9, 0, 0),
-        endTime: DateTime(2024, 12, 5, 10, 0, 0),
+        startTime: DateTime(2025, 12, 5, 9, 0, 0),
+        endTime: DateTime(2025, 12, 5, 10, 0, 0),
         subject: 'วันพ่อแห่งชาติ',
         color: Colors.deepOrange,
       ),
       Appointment(
-        startTime: DateTime(2024, 12, 10, 9, 0, 0),
-        endTime: DateTime(2024, 12, 10, 10, 0, 0),
-        subject: 'วันรัฐธรรมนูญ',
-        color: Colors.lightGreenAccent,
-      ),
-      Appointment(
-        startTime: DateTime(2024, 12, 30, 9, 0, 0),
-        endTime: DateTime(2024, 12, 30, 10, 0, 0),
-        subject: 'วันหยุดราชการเพิ่มเป็นกรณีพิเศษ',
-        color: Colors.redAccent,
-      ),
-      Appointment(
-        startTime: DateTime(2024, 12, 31, 9, 0, 0),
-        endTime: DateTime(2024, 12, 31, 10, 0, 0),
+        startTime: DateTime(2025, 12, 31, 9, 0, 0),
+        endTime: DateTime(2025, 12, 31, 10, 0, 0),
         subject: 'วันสิ้นปี',
         color: Colors.redAccent,
       ),
@@ -360,15 +327,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   final List<ThaiHoliday> holidays = [
-    ThaiHoliday(name: 'วันปีใหม่', date: DateTime(2024, 1, 1)),
-    ThaiHoliday(name: 'วันมาฆบูชา', date: DateTime(2024, 2, 24)),
-    ThaiHoliday(name: 'วันสงกรานต์', date: DateTime(2024, 4, 13)),
-    ThaiHoliday(name: 'วันวิสาขบูชา', date: DateTime(2024, 5, 22)),
-    ThaiHoliday(name: 'วันแม่แห่งชาติ', date: DateTime(2024, 8, 12)),
-    ThaiHoliday(name: 'วันปิยมหาราช', date: DateTime(2024, 10, 23)),
-    ThaiHoliday(name: 'วันพ่อแห่งชาติ', date: DateTime(2024, 12, 5)),
-    ThaiHoliday(name: 'วันคริสต์มาส', date: DateTime(2024, 12, 25)),
-    ThaiHoliday(name: 'วันสิ้นปี', date: DateTime(2024, 12, 31)),
+    ThaiHoliday(name: 'วันปีใหม่', date: DateTime(2025, 1, 1)),
+    ThaiHoliday(name: 'วันมาฆบูชา', date: DateTime(2025, 2, 12)),
+    ThaiHoliday(name: 'วันสงกรานต์', date: DateTime(2025, 4, 13)),
+    ThaiHoliday(name: 'วันสงกรานต์', date: DateTime(2025, 4, 14)),
+    ThaiHoliday(name: 'วันสงกรานต์', date: DateTime(2025, 4, 15)),
+    ThaiHoliday(name: 'วันฉัตรมงคล', date: DateTime(2025, 5, 5)),
+    ThaiHoliday(name: 'วันวิสาขบูชา', date: DateTime(2025, 5, 12)),
+    ThaiHoliday(name: 'วันเฉลิมพระชนมพรรษาฯ สมเด็จพระนางเจ้าสุทิดา พัชรสุธาพิมลลักษณ พระบรมราชินี', date: DateTime(2025, 6, 3)),
+    ThaiHoliday(name: 'วันอาสาฬหบูชา', date: DateTime(2025, 7, 13)),
+    ThaiHoliday(name: 'วันเข้าพรรษา', date: DateTime(2025, 7, 14)),
+    ThaiHoliday(name: 'วันเฉลิมพระชนมพรรษาฯ พระบาทสมเด็จพระวชิรเกล้าเจ้าอยู่หัว', date: DateTime(2025, 7, 28)),
+    ThaiHoliday(name: 'วันแม่แห่งชาติ', date: DateTime(2025, 8, 12)),
+    ThaiHoliday(name: 'วันคล้ายวันสวรรคต พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร', date: DateTime(2025, 10, 13)),
+    ThaiHoliday(name: 'วันปิยมหาราช', date: DateTime(2025, 10, 23)),
+    ThaiHoliday(name: 'วันพ่อแห่งชาติ', date: DateTime(2025, 12, 5)),
+    ThaiHoliday(name: 'วันสิ้นปี', date: DateTime(2025, 12, 31)),
   ];
 }
 
