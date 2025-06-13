@@ -90,48 +90,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                           // 👉 เลื่อนไปยังวันที่ที่ถูกกดใน schedule view
                           _scheduleController.displayDate = selectedDate;
-
-                          // if (events.isNotEmpty) {
-                          //   showDialog(
-                          //     context: context,
-                          //     builder: (BuildContext context) {
-                          //       return AlertDialog(
-                          //         title: Text(
-                          //           'เหตุการณ์ในวันที่ : \n${selectedDate.toLocal()}',
-                          //           style: const TextStyle(
-                          //             fontFamily: 'Arial',
-                          //             fontSize: 16,
-                          //             color: Color(0xFF555555),
-                          //             fontWeight: FontWeight.w500,
-                          //           ),
-                          //         ),
-                          //         content: Text(
-                          //           events.join('\n'),
-                          //           style: const TextStyle(
-                          //             fontFamily: 'Arial',
-                          //             fontSize: 16,
-                          //             color: Color(0xFF555555),
-                          //             fontWeight: FontWeight.w500,
-                          //           ),
-                          //         ),
-                          //         actions: [
-                          //           TextButton(
-                          //             onPressed: () => Navigator.of(context).pop(),
-                          //             child: const Text(
-                          //               'Close',
-                          //               style: TextStyle(
-                          //                 fontFamily: 'Arial',
-                          //                 fontSize: 16,
-                          //                 color: Color(0xFF555555),
-                          //                 fontWeight: FontWeight.w500,
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       );
-                          //     },
-                          //   );
-                          // }
                         }}
                   ),
                 ),

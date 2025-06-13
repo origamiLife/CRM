@@ -6,11 +6,11 @@ import '../../Contact/contact_edit/contact_edit_detail.dart';
 import 'account_add_detail.dart';
 import 'account_add_location.dart';
 
-
 class AccountAddView extends StatefulWidget {
   const AccountAddView({
     Key? key,
-    required this.employee, required this.Authorization,
+    required this.employee,
+    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String Authorization;
@@ -82,7 +82,7 @@ class _AccountAddViewState extends State<AccountAddView> {
         page = "Account Detail";
       } else if (index == 1) {
         page = "Location";
-      }else if (index == 2) {
+      } else if (index == 2) {
         page = "Join User";
       }
     });
@@ -99,7 +99,7 @@ class _AccountAddViewState extends State<AccountAddView> {
           child: Text(
             '${page}',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -121,7 +121,8 @@ class _AccountAddViewState extends State<AccountAddView> {
         iconSize: 18,
         animated: true,
         titleStyle: TextStyle(
-                fontFamily: 'Arial',),
+          fontFamily: 'Arial',
+        ),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
@@ -156,7 +157,7 @@ class _AccountAddViewState extends State<AccountAddView> {
               child: Text(
                 'Join User',
                 style: TextStyle(
-                fontFamily: 'Arial',
+                  fontFamily: 'Arial',
                   fontSize: 18,
                   color: Colors.grey,
                   fontWeight: FontWeight.w700,
@@ -166,173 +167,179 @@ class _AccountAddViewState extends State<AccountAddView> {
             SizedBox(height: 8),
             Column(
                 children: List.generate(1, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 0,
-                            blurRadius: 0,
-                            offset: Offset(1, 3), // x, y
-                          ),
-                        ],
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: Offset(1, 3), // x, y
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 22,
-                                  backgroundColor: Colors.grey.shade400,
-                                  child: CircleAvatar(
-                                    radius: 21,
-                                    backgroundColor: Colors.white,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: Image.network(
-                                        '$host/uploads/employee/5/employee/19777.jpg?v=1730343291',
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
+                            CircleAvatar(
+                              radius: 22,
+                              backgroundColor: Colors.grey.shade400,
+                              child: CircleAvatar(
+                                radius: 21,
+                                backgroundColor: Colors.white,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    '$host/uploads/employee/5/employee/19777.jpg?v=1730343291',
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Column(
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Flexible(
-                                            child: Text(
-                                              'Jirapat Jangsawang',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                fontFamily: 'Arial',
-                                                fontSize: 14,
-                                                color: Color(0xFF555555),
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
+                                      Flexible(
+                                        child: Text(
+                                          'Jirapat Jangsawang',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.w700,
                                           ),
-                                          SizedBox(width: 8),
-                                          Flexible(
-                                            child: Text(
-                                              '(Mobile Application)',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                fontFamily: 'Arial',
-                                                fontSize: 14,
-                                                color: Color(0xFF555555),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                      SizedBox(height: 8),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Owner : ',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                fontFamily: 'Arial',
-                                              fontSize: 14,
-                                              color: Color(0xFF555555),
-                                              fontWeight: FontWeight.w700,
-                                            ),
+                                      SizedBox(width: 8),
+                                      Flexible(
+                                        child: Text(
+                                          '(Mobile Application)',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                          AdvancedSwitch(
-                                            activeChild: Text(
-                                              'ON',
-                                              style: TextStyle(
-                fontFamily: 'Arial',),
-                                            ),
-                                            inactiveChild: Text(
-                                              'OFF',
-                                              style: TextStyle(
-                fontFamily: 'Arial',),
-                                            ),
-                                            borderRadius: BorderRadius.circular(100),
-                                            height: 25,
-                                            controller: _controllerOwner,
-                                            enabled: true,
-                                          ),
-                                          SizedBox(width: 8),
-                                          Flexible(
-                                            child: Text(
-                                              'Approve Activity : ',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                fontFamily: 'Arial',
-                                                fontSize: 14,
-                                                color: Color(0xFF555555),
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                          ),
-                                          AdvancedSwitch(
-                                            activeChild: Text(
-                                              'ON',
-                                              style: TextStyle(
-                fontFamily: 'Arial',),
-                                            ),
-                                            inactiveChild: Text(
-                                              'OFF',
-                                              style: TextStyle(
-                fontFamily: 'Arial',),
-                                            ),
-                                            borderRadius: BorderRadius.circular(100),
-                                            height: 25,
-                                            controller: _controllerActivity,
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                      SizedBox(height: 8),
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Text(
-                                  'Role : ',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    color: Color(0xFF555555),
-                                    fontWeight: FontWeight.w700,
+                                  SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Owner : ',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 14,
+                                          color: Color(0xFF555555),
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      AdvancedSwitch(
+                                        activeChild: Text(
+                                          'ON',
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                          ),
+                                        ),
+                                        inactiveChild: Text(
+                                          'OFF',
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                          ),
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        height: 25,
+                                        controller: _controllerOwner,
+                                        enabled: true,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Flexible(
+                                        child: Text(
+                                          'Approve Activity : ',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                      AdvancedSwitch(
+                                        activeChild: Text(
+                                          'ON',
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                          ),
+                                        ),
+                                        inactiveChild: Text(
+                                          'OFF',
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                          ),
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        height: 25,
+                                        controller: _controllerActivity,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Expanded(child: _DropdownUser()),
-                              ],
+                                  SizedBox(height: 8),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text(
+                              'Role : ',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Expanded(child: _DropdownUser()),
+                          ],
+                        ),
+                      ],
                     ),
-                  );
-                })),
+                  ),
+                ),
+              );
+            })),
             SizedBox(
               height: 8,
             ),
@@ -343,7 +350,7 @@ class _AccountAddViewState extends State<AccountAddView> {
                 child: Text(
                   'Tap here to select an Join User.',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -380,25 +387,25 @@ class _AccountAddViewState extends State<AccountAddView> {
         hint: Text(
           'DEV',
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
         ),
         style: TextStyle(
-                fontFamily: 'Arial',
+          fontFamily: 'Arial',
           color: Color(0xFF555555),
         ),
         items: titleDownJoin
             .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-          value: item,
-          child: Text(
-            item.status_name,
-            style: TextStyle(
-                fontFamily: 'Arial',
-              fontSize: 14,
-            ),
-          ),
-        ))
+                  value: item,
+                  child: Text(
+                    item.status_name,
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                    ),
+                  ),
+                ))
             .toList(),
         value: selectedItemJoin,
         onChanged: (value) {
@@ -416,7 +423,7 @@ class _AccountAddViewState extends State<AccountAddView> {
         ),
         dropdownStyleData: DropdownStyleData(
           maxHeight:
-          200, // Height for displaying up to 5 lines (adjust as needed)
+              200, // Height for displaying up to 5 lines (adjust as needed)
         ),
         menuItemStyleData: MenuItemStyleData(
           height: 40, // Height for each menu item
@@ -429,9 +436,8 @@ class _AccountAddViewState extends State<AccountAddView> {
             child: TextFormField(
               controller: _searchController,
               keyboardType: TextInputType.text,
-              style:
-              TextStyle(
-                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
+              style: TextStyle(
+                  fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(
@@ -440,8 +446,9 @@ class _AccountAddViewState extends State<AccountAddView> {
                 ),
                 hintText: '$Search...',
                 hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                    fontSize: 14, color: Color(0xFF555555)),
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -511,7 +518,7 @@ class _AccountAddViewState extends State<AccountAddView> {
                 children: [
                   Padding(
                     padding:
-                    const EdgeInsets.only(left: 16, right: 16, top: 16),
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.7,
                       decoration: BoxDecoration(
@@ -530,8 +537,9 @@ class _AccountAddViewState extends State<AccountAddView> {
                                 controller: _searchfilterController,
                                 keyboardType: TextInputType.text,
                                 style: TextStyle(
-                fontFamily: 'Arial',
-                                    color: Color(0xFF555555), fontSize: 14),
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontSize: 14),
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
@@ -540,8 +548,9 @@ class _AccountAddViewState extends State<AccountAddView> {
                                       horizontal: 12, vertical: 12),
                                   hintText: 'Search',
                                   hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                                      fontSize: 14, color: Color(0xFF555555)),
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555)),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(100),
                                   ),
@@ -573,7 +582,7 @@ class _AccountAddViewState extends State<AccountAddView> {
                             Expanded(
                               child: Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 15),
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 child: ListView.builder(
                                   itemCount: titleDownJoin.length,
                                   itemBuilder: (context, index) {
@@ -605,15 +614,15 @@ class _AccountAddViewState extends State<AccountAddView> {
                                       },
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                                MainAxisAlignment.start,
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                                CrossAxisAlignment.center,
                                             children: [
                                               Padding(
                                                 padding: const EdgeInsets.only(
@@ -624,11 +633,11 @@ class _AccountAddViewState extends State<AccountAddView> {
                                                   child: CircleAvatar(
                                                     radius: 21,
                                                     backgroundColor:
-                                                    Colors.white,
+                                                        Colors.white,
                                                     child: ClipRRect(
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
+                                                          BorderRadius.circular(
+                                                              100),
                                                       child: Image.network(
                                                         'https://dev.origami.life/images/default.png',
                                                         height: 100,
@@ -643,22 +652,22 @@ class _AccountAddViewState extends State<AccountAddView> {
                                               Expanded(
                                                 child: Column(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                                      MainAxisAlignment.start,
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
+                                                    const Text(
                                                       'Jirapat Jangsawang',
                                                       maxLines: 1,
                                                       overflow:
-                                                      TextOverflow.ellipsis,
-                                                      style:
-                                                      TextStyle(
-                fontFamily: 'Arial',
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Arial',
                                                         fontSize: 16,
-                                                        color: Color(0xFFFF9900),
+                                                        color:
+                                                            Color(0xFFFF9900),
                                                         fontWeight:
-                                                        FontWeight.w700,
+                                                            FontWeight.w700,
                                                       ),
                                                     ),
                                                     SizedBox(height: 8),
@@ -666,15 +675,14 @@ class _AccountAddViewState extends State<AccountAddView> {
                                                       'Development (Mobile Application)',
                                                       maxLines: 1,
                                                       overflow:
-                                                      TextOverflow.ellipsis,
-                                                      style:
-                                                      TextStyle(
-                fontFamily: 'Arial',
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Arial',
                                                         fontSize: 14,
                                                         color:
-                                                        Color(0xFF555555),
+                                                            Color(0xFF555555),
                                                         fontWeight:
-                                                        FontWeight.w500,
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                     Divider(
@@ -721,5 +729,4 @@ class _AccountAddViewState extends State<AccountAddView> {
     TitleDown(status_id: '003', status_name: 'CAL'),
     TitleDown(status_id: '004', status_name: 'DES'),
   ];
-
 }

@@ -89,10 +89,7 @@ class _AcademyPageState extends State<AcademyPage> {
             SizedBox(height: 8),
             (page == 'challenge')
                 ? Expanded(
-              child: ChallengeStartTime(
-                employee: widget.employee,
-                Authorization: widget.Authorization,
-              ),
+              child: Container(),
             )
                 : Expanded(child: _buildPopularEvents()),
           ],
@@ -188,11 +185,7 @@ class _AcademyPageState extends State<AcademyPage> {
   }
 
   Widget _buildAcademyListView(List<AcademyRespond> filteredAcademy) {
-    if (isAndroid || isIPhone) {
-      return _buildAcademyList(filteredAcademy);
-    } else {
-      return _buildAcademyList2(filteredAcademy);
-    }
+    return _buildAcademyList(filteredAcademy);
   }
 
   Widget _buildNotFoundText() {

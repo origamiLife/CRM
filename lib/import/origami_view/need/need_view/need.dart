@@ -340,110 +340,120 @@ class _NeedsViewState extends State<NeedsView> {
             child: Column(
               children: [
                 _buildSearchField(),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      children: List.generate(NeedTypeOption.length, (index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _selectcolor = index;
-                                typeName = NeedTypeOption[index].typeId;
-                              });
-                              fetchNeedResponse();
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: (index == _selectcolor)
-                                    ? const Color(0xFFFF9900)
-                                    : Colors.grey.shade100,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 0.5,
-                                ),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 16),
-                              child: Text(
-                                NeedTypeOption[index].typeName,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  color: (index == _selectcolor)
-                                      ? Colors.white
-                                      : const Color(0xFF555555),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(
-                      NeedTypeOption[_selectcolor].typeStatus?.length ?? 0,
-                      (index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 8, top: 4),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _indexcolor = index;
-                                status_id = NeedTypeOption[_selectcolor]
-                                        .typeStatus?[index]
-                                        .statusId ??
-                                    '';
-                              });
-                              fetchNeedResponse();
-                            },
-                            child: ClipPath(
-                              clipper: ArrowClipper(15, 32, Edge.RIGHT),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 16),
-                                height: 34,
-                                color: (index == _indexcolor)
-                                    ? const Color(0xFFFF9900)
-                                    : Colors.grey.shade100,
-                                child: Center(
-                                  child: Text(
-                                    NeedTypeOption[_selectcolor]
-                                            .typeStatus?[index]
-                                            .statusName ??
-                                        '',
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      color: (index == _indexcolor)
-                                          ? Colors.white
-                                          : const Color(0xFF555555),
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                _buildTypeSelector(),
+                _buildStatusSelector(),
                 const Divider(),
               ],
             ),
           ),
           Expanded(child: _loading()),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTypeSelector() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          children: List.generate(NeedTypeOption.length, (index) {
+            final isSelected = index == _selectcolor;
+            return Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _selectcolor = index;
+                    _indexcolor = 0; // reset status index
+                    typeName = NeedTypeOption[index].typeId;
+                    status_id =
+                        NeedTypeOption[index].typeStatus?.first.statusId ?? '';
+                  });
+                  fetchNeedResponse();
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: isSelected
+                        ? const Color(0xFFFF9900)
+                        : Colors.grey.shade100,
+                    border: Border.all(color: Colors.white, width: 0.5),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+                  child: Text(
+                    NeedTypeOption[index].typeName,
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      color:
+                          isSelected ? Colors.white : const Color(0xFF555555),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusSelector() {
+    // เช็คว่าข้อมูลมีจริง และไม่ว่างเปล่า
+    if (NeedTypeOption.isEmpty ||
+        _selectcolor >= NeedTypeOption.length ||
+        NeedTypeOption[_selectcolor].typeStatus == null ||
+        NeedTypeOption[_selectcolor].typeStatus!.isEmpty) {
+      return const SizedBox(); // หรือ Text('ไม่มีข้อมูลสถานะ')
+    }
+    final statusList = NeedTypeOption[_selectcolor].typeStatus!;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(statusList.length, (index) {
+          final isSelected = index == _indexcolor;
+          final status = statusList[index];
+
+          return Padding(
+            padding: const EdgeInsets.only(left: 8, top: 4),
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  _indexcolor = index;
+                  status_id = status.statusId;
+                });
+                fetchNeedResponse();
+              },
+              child: ClipPath(
+                clipper: ArrowClipper(15, 32, Edge.RIGHT),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  height: 34,
+                  color: isSelected
+                      ? const Color(0xFFFF9900)
+                      : Colors.grey.shade100,
+                  child: Center(
+                    child: Text(
+                      status.statusName,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        color:
+                            isSelected ? Colors.white : const Color(0xFF555555),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -917,14 +927,14 @@ class _NeedsViewState extends State<NeedsView> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
-          final List<dynamic> needTypeJson = jsonResponse['need_type'];
+          final List<dynamic> needTypeJson = jsonResponse['need_type'] ?? [];
 
           setState(() {
             NeedTypeOption = needTypeJson
                 .map((json) => NeedTypeRespond.fromJson(json))
                 .toList();
+            // print('print : $NeedTypeOption');
           });
-          print(NeedTypeOption);
         } else {
           throw Exception(
               'Failed to load personal data: ${jsonResponse['message']}');
@@ -953,7 +963,8 @@ class _NeedsViewState extends State<NeedsView> {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['status'] == true) {
-        final List<dynamic> needTypeItemJson = jsonResponse['need_type_item'];
+        final List<dynamic> needTypeItemJson =
+            jsonResponse['need_type_item'] ?? [];
 
         setState(() {
           NeedTypeItemOption = needTypeItemJson
@@ -998,7 +1009,7 @@ class _NeedsViewState extends State<NeedsView> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       // เข้าถึงข้อมูลในคีย์ 'instructors'
-      final List<dynamic> needJson = jsonResponse['need_data'];
+      final List<dynamic> needJson = jsonResponse['need_data'] ?? [];
       checkNeed = needJson.map((json) => NeedRespond.fromJson(json)).toList();
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
       return needJson.map((json) => NeedRespond.fromJson(json)).toList();
@@ -1029,7 +1040,8 @@ class _NeedsViewState extends State<NeedsView> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
-          final List<dynamic> priorityJson = jsonResponse['priority_data'];
+          final List<dynamic> priorityJson =
+              jsonResponse['priority_data'] ?? [];
           final priorityRespond = PriorityRespond.fromJson(jsonResponse);
           int_priority = priorityRespond.next_page_number ?? 0;
           setState(() {
@@ -1073,7 +1085,8 @@ class _NeedsViewState extends State<NeedsView> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
-          final List<dynamic> departmentJson = jsonResponse['department_data'];
+          final List<dynamic> departmentJson =
+              jsonResponse['department_data'] ?? [];
           final departmentRespond = DepartmentRespond.fromJson(jsonResponse);
           int_department = departmentRespond.next_page_number ?? 0;
           setState(() {
@@ -1118,7 +1131,7 @@ class _NeedsViewState extends State<NeedsView> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
-          final List<dynamic> projectJson = jsonResponse['project_data'];
+          final List<dynamic> projectJson = jsonResponse['project_data'] ?? [];
           setState(() {
             final projectRespond = ProjectRespond.fromJson(jsonResponse);
             int_project = projectRespond.next_page_number ?? 0;
@@ -1165,7 +1178,8 @@ class _NeedsViewState extends State<NeedsView> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
-          final List<dynamic> employeeJson = jsonResponse['employee_data'];
+          final List<dynamic> employeeJson =
+              jsonResponse['employee_data'] ?? [];
           final employeeRespond = EmployeeRespond.fromJson(jsonResponse);
           int_employee = employeeRespond.next_page_number ?? 0;
           setState(() {
@@ -1558,7 +1572,7 @@ class NeedTypeRespond {
   String typeName;
   String typeColor;
   String typeImage;
-  List<Status>? typeStatus;
+  List<TypeStatus>? typeStatus;
   List<String>? statusListString;
 
   NeedTypeRespond({
@@ -1577,7 +1591,7 @@ class NeedTypeRespond {
       typeColor: json['type_color'] ?? '',
       typeImage: json['type_image'] ?? '',
       typeStatus: (json['type_status'] as List?)
-              ?.map((statusJson) => Status.fromJson(statusJson))
+              ?.map((statusJson) => TypeStatus.fromJson(statusJson))
               .toList() ??
           [],
       statusListString:
@@ -1586,22 +1600,22 @@ class NeedTypeRespond {
   }
 }
 
-class Status {
+class TypeStatus {
   final String statusId;
   final String statusName;
-  final int? statusFlag;
+  final int? status_flag;
 
-  Status({
+  TypeStatus({
     required this.statusId,
     required this.statusName,
-    this.statusFlag,
+    this.status_flag,
   });
 
-  factory Status.fromJson(Map<String, dynamic> json) {
-    return Status(
-      statusId: json['status_id'] ?? '',
-      statusName: json['status_name'] ?? '',
-      statusFlag: int.parse(json['status_flag'].toString()),
+  factory TypeStatus.fromJson(Map<String, dynamic> json) {
+    return TypeStatus(
+      statusId: json['status_id'].toString(),
+      statusName: json['status_name'],
+      status_flag: int.parse(json['status_flag'].toString()),
     );
   }
 }

@@ -348,15 +348,27 @@ class _TimeSampleState extends State<TimeSample> {
     return Row(
       children: [
         Expanded(child: SizedBox()),
-        if (getBranch.stamp_out == '' || getBranch.stamp_out == null)
-          Center(
-            child: GestureDetector(
-              onTap: () => _pickImage(ImageSource.camera, getBranch),
-              child: CircleAvatar(
-                  radius: 50,
-                  child:
-                      Image.asset('assets/images/stamp/stamp_button_out.png')),
-            ),
+        if (getBranch.stamp_out == '')
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              if(getBranch.stamp_in != '')
+              Center(
+                child: LoadingAnimationWidget.beat(
+                  size: 100,
+                  color: Colors.white12,
+                ),
+              ),
+              Center(
+                child: GestureDetector(
+                  onTap: () => _pickImage(ImageSource.camera, getBranch),
+                  child: CircleAvatar(
+                      radius: 50,
+                      child:
+                          Image.asset('assets/images/stamp/stamp_button_out.png')),
+                ),
+              ),
+            ],
           )
         else
           GestureDetector(
@@ -365,17 +377,21 @@ class _TimeSampleState extends State<TimeSample> {
                 backgroundImage:
                     AssetImage('assets/images/stamp/stamp_button_disable.png')),
           ),
-        if (getBranch.stamp_in == '' || getBranch.stamp_in == null)
+        if (getBranch.stamp_in == '')
           Expanded(flex: 2, child: SizedBox()),
-        if (getBranch.stamp_in == '' || getBranch.stamp_in == null)
-          Center(
-            child: GestureDetector(
-              onTap: () => _pickImage(ImageSource.camera, getBranch),
-              child: CircleAvatar(
-                  radius: 50,
-                  child:
-                      Image.asset('assets/images/stamp/stamp_button_in.png')),
-            ),
+        if (getBranch.stamp_in == '')
+          Stack(
+            children: [
+              Center(
+                child: GestureDetector(
+                  onTap: () => _pickImage(ImageSource.camera, getBranch),
+                  child: CircleAvatar(
+                      radius: 50,
+                      child:
+                          Image.asset('assets/images/stamp/stamp_button_in.png')),
+                ),
+              ),
+            ],
           ),
         Expanded(child: SizedBox()),
       ],
@@ -539,11 +555,9 @@ class _TimeSampleState extends State<TimeSample> {
   String check_Stamp_In = '';
   String check_Stamp_Out = '';
   Future<void> _fetchStamp() async {
-    final uri = Uri.parse('$host/api/origami/time/stamp.php');
-    // Uri.parse('$host/api/origami/time/stamp123.php');
     try {
       final response = await http.post(
-        uri,
+        Uri.parse('$host/api/origami/time/stamp.php'),
         headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
@@ -563,8 +577,36 @@ class _TimeSampleState extends State<TimeSample> {
           check_Stamp_In = jsonResponse['stamp_in'];
           check_Stamp_Out = jsonResponse['stamp_out'];
         });
-        _showDialog();
-        print('$jsonResponse');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 3),
+            content: Row(
+              children: [
+                Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: Icon(Icons.check_circle,
+                        color: Colors.green, size: 20)),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 14),
+                    child: Text(
+                      jsonResponse['message'],
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       } else {
         throw Exception('Failed to load status data');
       }

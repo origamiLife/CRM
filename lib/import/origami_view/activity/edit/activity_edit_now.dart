@@ -10,7 +10,9 @@ class ActivityEditNow extends StatefulWidget {
   const ActivityEditNow({
     Key? key,
     required this.employee,
-    required this.skoopDetail, required this.Authorization, required this.activity_id,
+    required this.skoopDetail,
+    required this.Authorization,
+    required this.activity_id,
   }) : super(key: key);
   final Employee employee;
   final GetSkoopDetail? skoopDetail;
@@ -28,11 +30,12 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   TextEditingController _searchfilterController = TextEditingController();
 
   LatLng? _selectedLocation; // สำหรับเก็บตำแหน่งที่เลือก
+  String _search = '';
 
   @override
   void initState() {
     super.initState();
-    fetchActivityProject();
+    fetchGetProject();
     fetchActivityAccount();
     fetchActivityType();
     fetchActivityStatus();
@@ -52,7 +55,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       print("Current text: ${_costController.text}");
     });
     _searchController.addListener(() {
-      print("Current text: ${_searchController.text}");
+      _search = _searchController.text;
     });
     _searchfilterController.addListener(() {
       print("Current text: ${_searchfilterController.text}");
@@ -79,8 +82,10 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     end_time = skoopDetail?.time_end ?? '';
     cost = _costController.text = skoopDetail?.cost ?? '';
     contact_list = skoopDetail?.contact_last ?? '';
-    start_time_close = '${selectedTimeInClose.hour.toString().padLeft(2, '0')}:${selectedTimeOutClose.minute.toString().padLeft(2, '0')}';
-    end_time_close='${selectedTimeOutClose.hour.toString().padLeft(2, '0')}:${selectedTimeOutClose.minute.toString().padLeft(2, '0')}';
+    start_time_close =
+        '${selectedTimeInClose.hour.toString().padLeft(2, '0')}:${selectedTimeOutClose.minute.toString().padLeft(2, '0')}';
+    end_time_close =
+        '${selectedTimeOutClose.hour.toString().padLeft(2, '0')}:${selectedTimeOutClose.minute.toString().padLeft(2, '0')}';
   }
 
   String currentTime = '';
@@ -94,31 +99,37 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   Future<void> _selectTime(BuildContext context, String close) async {
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
-      initialTime: close == 'bodyOn' ? selectedTimeIn :close == 'bodyOff' ? selectedTimeOut:close == 'closeOn' ?selectedTimeIn:selectedTimeOut,
+      initialTime: close == 'bodyOn'
+          ? selectedTimeIn
+          : close == 'bodyOff'
+              ? selectedTimeOut
+              : close == 'closeOn'
+                  ? selectedTimeIn
+                  : selectedTimeOut,
     );
 
     if (newTime != null) {
-        if (close == 'bodyOn') {
-          setState(() {
-            selectedTimeIn = newTime;
-            start_time = selectedTimeIn.format(context);
-          });
-        } else if (close == 'bodyOff') {
-          setState(() {
-            selectedTimeOut = newTime;
-            end_time = selectedTimeOut.format(context);
-          });
-        }else if (close == 'closeOn') {
-          setState(() {
-            selectedTimeInClose = newTime;
-            start_time_close = selectedTimeInClose.format(context);
-          });
-        }else if (close == 'closeOff') {
-          setState(() {
-            selectedTimeOutClose = newTime;
-            end_time_close = selectedTimeOutClose.format(context);
-          });
-        }
+      if (close == 'bodyOn') {
+        setState(() {
+          selectedTimeIn = newTime;
+          start_time = selectedTimeIn.format(context);
+        });
+      } else if (close == 'bodyOff') {
+        setState(() {
+          selectedTimeOut = newTime;
+          end_time = selectedTimeOut.format(context);
+        });
+      } else if (close == 'closeOn') {
+        setState(() {
+          selectedTimeInClose = newTime;
+          start_time_close = selectedTimeInClose.format(context);
+        });
+      } else if (close == 'closeOff') {
+        setState(() {
+          selectedTimeOutClose = newTime;
+          end_time_close = selectedTimeOutClose.format(context);
+        });
+      }
     }
   }
 
@@ -154,13 +165,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       _selectedDateEnd = newDate;
                       DateFormat formatter = DateFormat('yyyy/MM/dd');
                       showlastDay = formatter.format(_selectedDateEnd);
-                      if(close == 'bodyOn'){
+                      if (close == 'bodyOn') {
                         start_date = showlastDay;
-                      }else if(close == 'bodyOff'){
+                      } else if (close == 'bodyOff') {
                         end_date = showlastDay;
-                      }else if(close == 'closeOn'){
+                      } else if (close == 'closeOn') {
                         closeOn = showlastDay;
-                      }else if(close == 'closeOff'){
+                      } else if (close == 'closeOff') {
                         closeOff = showlastDay;
                       }
                     });
@@ -187,7 +198,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           child: Text(
             '',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -211,7 +222,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 Text(
                   'DONE',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -293,15 +304,16 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: _DateBody('End Date', false, 'bodyOff'),
+                                    child:
+                                        _DateBody('End Date', false, 'bodyOff'),
                                   ),
                                   SizedBox(width: 16),
                                   Expanded(
-                                    child: _TimeBody('End Time', 'end', 'bodyOff'),
+                                    child:
+                                        _TimeBody('End Time', 'end', 'bodyOff'),
                                   ),
                                 ],
                               ),
-
                               SizedBox(height: 8),
                               _DownPlace('Place'),
                               _locationGM(),
@@ -309,7 +321,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                 'Cost',
                                 maxLines: 1,
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 14,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -320,8 +332,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                 controller: _costController,
                                 keyboardType: TextInputType.number,
                                 style: TextStyle(
-                fontFamily: 'Arial',
-                                    color: Color(0xFF555555), fontSize: 14),
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontSize: 14),
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
@@ -330,8 +343,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                       horizontal: 12, vertical: 12),
                                   hintText: '0.00',
                                   hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                                      fontSize: 14, color: Color(0xFF555555)),
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555)),
                                   border: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Color(0xFFFF9900),
@@ -357,8 +371,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color:
-                                          Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+                                      color: Color(
+                                          0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
                                       width: 1.0,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
@@ -381,7 +395,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 14,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
@@ -449,11 +463,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                                       maxLines: 1,
                                                       overflow:
                                                           TextOverflow.ellipsis,
-                                                      style:
-                                                          TextStyle(
-                fontFamily: 'Arial',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Arial',
                                                         fontSize: 16,
-                                                        color: Color(0xFFFF9900),
+                                                        color:
+                                                            Color(0xFFFF9900),
                                                         fontWeight:
                                                             FontWeight.w700,
                                                       ),
@@ -463,9 +477,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                                       maxLines: 1,
                                                       overflow:
                                                           TextOverflow.ellipsis,
-                                                      style:
-                                                          TextStyle(
-                fontFamily: 'Arial',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Arial',
                                                         fontSize: 14,
                                                         color:
                                                             Color(0xFF555555),
@@ -494,7 +507,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                fontFamily: 'Arial',
+                                    fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Color(0xFFFF9900),
                                     fontWeight: FontWeight.w700,
@@ -507,7 +520,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       ),
                       SizedBox(height: 8),
                       Padding(
-                        padding: const EdgeInsets.only(left: 8,right: 8, bottom: 8),
+                        padding:
+                            const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
@@ -526,7 +540,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               child: Text(
                                 '$Save',
                                 style: TextStyle(
-                fontFamily: 'Arial',fontSize: 16.0),
+                                    fontFamily: 'Arial', fontSize: 16.0),
                               ),
                             ),
                           ),
@@ -554,7 +568,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                           MaterialPageRoute(
                             builder: (context) => SkoopScreen(
                               employee: widget.employee,
-                              Authorization: widget.Authorization, activity_id: widget.activity_id,
+                              Authorization: widget.Authorization,
+                              activity_id: widget.activity_id,
                             ),
                           ),
                         );
@@ -586,7 +601,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 ],
               ),
               SizedBox(height: 8),
-
             ],
           ),
         ),
@@ -607,7 +621,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           text,
           maxLines: 2,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 16,
             color: color,
             fontWeight: FontWeight.w700,
@@ -642,7 +656,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               child: Text(
             '$Empty',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.grey,
@@ -675,8 +689,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       controller: _searchfilterController,
                       keyboardType: TextInputType.text,
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          color: Color(0xFF555555), fontSize: 14),
+                          fontFamily: 'Arial',
+                          color: Color(0xFF555555),
+                          fontSize: 14),
                       decoration: InputDecoration(
                         isDense: true,
                         filled: true,
@@ -685,8 +700,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                             horizontal: 12, vertical: 12),
                         hintText: 'Search',
                         hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                            fontSize: 14, color: Color(0xFF555555)),
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Color(0xFF555555)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(100),
                         ),
@@ -772,7 +788,10 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                               child: Image.network(
-                                                (contact.contact_image == null || contact.contact_image == '')
+                                                (contact.contact_image ==
+                                                            null ||
+                                                        contact.contact_image ==
+                                                            '')
                                                     ? 'https://dev.origami.life/images/default.png'
                                                     : '$host//crm/${contact.contact_image}',
                                                 height: 100,
@@ -796,7 +815,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                fontFamily: 'Arial',
+                                                fontFamily: 'Arial',
                                                 fontSize: 16,
                                                 color: Color(0xFFFF9900),
                                                 fontWeight: FontWeight.w700,
@@ -807,7 +826,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                fontFamily: 'Arial',
+                                                fontFamily: 'Arial',
                                                 fontSize: 14,
                                                 color: Color(0xFF555555),
                                                 fontWeight: FontWeight.w500,
@@ -848,7 +867,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -872,7 +891,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           controller: textController,
           keyboardType: TextInputType.text,
           style: TextStyle(
-                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
+              fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -880,9 +899,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             hintText: '',
-            hintStyle:
-                TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),
@@ -930,7 +948,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontFamily: 'Arial',
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w700,
@@ -954,14 +972,15 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               borderRadius: BorderRadius.circular(10),
               color: (ontap == true) ? Colors.white : Colors.grey.shade300,
               border: Border.all(
-                color: (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
+                color:
+                    (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
                 width: 1.0,
               ),
             ),
             child: InkWell(
               onTap: () {
                 if (ontap == true) {
-                  _requestDateEnd(context,close);
+                  _requestDateEnd(context, close);
                 }
               },
               child: Padding(
@@ -971,8 +990,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     Text(
                       showlastDay,
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 14, color: Color(0xFF555555)),
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
                     ),
                     Spacer(),
                     Icon(
@@ -1001,7 +1021,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontFamily: 'Arial',
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w700,
@@ -1030,16 +1050,23 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               ),
             ),
             child: InkWell(
-              onTap: () async => await _selectTime(context,close),
+              onTap: () async => await _selectTime(context, close),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
                     Text(
-                      close == 'bodyOn' ? start_time :(close == 'bodyOff')? end_time:(close == 'closeOn')?start_time_close:end_time_close,
+                      close == 'bodyOn'
+                          ? start_time
+                          : (close == 'bodyOff')
+                              ? end_time
+                              : (close == 'closeOn')
+                                  ? start_time_close
+                                  : end_time_close,
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 14, color: Color(0xFF555555)),
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
                     ),
                     Spacer(),
                     Icon(
@@ -1067,7 +1094,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -1104,7 +1131,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: placeDown
@@ -1113,7 +1140,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       child: Text(
                         item.status_name,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1150,8 +1177,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1162,8 +1190,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1200,7 +1229,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -1237,16 +1266,16 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: projectList
                 .map((item) => DropdownMenuItem<ActivityProject>(
                       value: item,
                       child: Text(
-                        item.project_name ?? '',
+                        item.project_name,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1268,11 +1297,10 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
             dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+              maxHeight: 200,
             ),
             menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
+              height: 40,
             ),
             dropdownSearchData: DropdownSearchData(
               searchController: _searchController,
@@ -1283,8 +1311,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1295,8 +1324,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1304,15 +1334,14 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.project_name!
+                return item.value!.project_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
             ),
             onMenuStateChange: (isOpen) {
               if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
+                _searchController.clear();
               }
             },
           ),
@@ -1333,7 +1362,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -1370,7 +1399,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: typeList
@@ -1379,7 +1408,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       child: Text(
                         item.type_name,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1416,8 +1445,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1428,8 +1458,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1466,7 +1497,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -1503,7 +1534,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: statusList
@@ -1512,7 +1543,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       child: Text(
                         item.status_name,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1549,8 +1580,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1561,8 +1593,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1599,7 +1632,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -1636,7 +1669,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: priorityList
@@ -1645,7 +1678,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       child: Text(
                         item.priority_name,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1682,8 +1715,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1694,8 +1728,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1730,7 +1765,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -1756,7 +1791,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: accountList
@@ -1767,7 +1802,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1805,8 +1840,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1817,8 +1853,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1855,7 +1892,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                    fontFamily: 'Arial',
+                fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
                 fontWeight: FontWeight.w700,
@@ -1892,7 +1929,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: contactList
@@ -1901,7 +1938,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       child: Text(
                         item.contact_first ?? '',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -1938,8 +1975,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -1950,8 +1988,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1985,7 +2024,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           'Location',
           maxLines: 1,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -2027,7 +2066,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                         : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
                     maxLines: 1,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                     ),
@@ -2056,7 +2095,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               Text(
                 'Actual Activity',
                 style: TextStyle(
-                fontFamily: 'Arial',
+                  fontFamily: 'Arial',
                   fontSize: 18,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w700,
@@ -2093,7 +2132,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               child: Text(
                 '$Cancel',
                 style: TextStyle(
-                fontFamily: 'Arial',
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w700,
@@ -2135,45 +2174,75 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
 
   ActivityProject? selectedProject;
   List<ActivityProject> projectList = [];
-  Future<void> fetchActivityProject() async {
-    final uri =
-        Uri.parse('$host/crm/ios_activity_project.php');
-    try {
-      final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
-          'type': 'project',
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
-        setState(() {
-          projectList =
-              dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-          if (projectList.isNotEmpty && selectedProject == null) {
-            selectedProject = projectList[0];
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+  Future<void> fetchGetProject() async {
+    String comp_id = widget.employee.comp_id;
+    String emp_id = widget.employee.emp_id;
+    String cus_id = '';
+    String page = '1';
+    String action = 'getDropdownProject';
+    final uri = Uri.parse(
+      "$host/api/origami/crm/activity/create_dropdown_project.php?"
+          "comp_id=$comp_id&emp_id=$emp_id&cus_id=$cus_id&page=$page&term=${_search}&action=$action",
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data']??[];
+      setState(() {
+        projectList =
+            dataJson.map((json) => ActivityProject.fromJson(json)).toList();
+        if (projectList.isNotEmpty && selectedProject == null) {
+          selectedProject = projectList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load challenges');
     }
   }
+  // Future<void> fetchActivityProject() async {
+  //   final uri = Uri.parse('$host/crm/ios_activity_project.php');
+  //   try {
+  //     final response = await http.post(
+  //       uri,
+  //       headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+  //       body: {
+  //         'comp_id': widget.employee.comp_id,
+  //         'emp_id': widget.employee.emp_id,
+  //         'Authorization': widget.Authorization,
+  //         'type': 'project',
+  //       },
+  //     );
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
+  //       final List<dynamic> dataJson = jsonResponse['data'];
+  //       setState(() {
+  //         projectList =
+  //             dataJson.map((json) => ActivityProject.fromJson(json)).toList();
+  //         if (projectList.isNotEmpty && selectedProject == null) {
+  //           selectedProject = projectList[0];
+  //         }
+  //       });
+  //     } else {
+  //       throw Exception('Failed to load status data');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to load personal data: $e');
+  //   }
+  // }
 
   AccountData? selectedAccount;
   List<AccountData> accountList = [];
   Future<void> fetchActivityAccount() async {
-    final uri = Uri.parse(
-        '$host/api/origami/need/account.php?page&search');
+    final uri = Uri.parse('$host/api/origami/need/account.php?page&search');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2204,7 +2273,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     final uri = Uri.parse('$host/crm/ios_activity_type.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2232,11 +2302,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   ActivityStatus? selectedStatus;
   List<ActivityStatus> statusList = [];
   Future<void> fetchActivityStatus() async {
-    final uri =
-        Uri.parse('$host/crm/ios_activity_status.php');
+    final uri = Uri.parse('$host/crm/ios_activity_status.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2264,11 +2334,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   ActivityPriority? selectedPriority;
   List<ActivityPriority> priorityList = [];
   Future<void> fetchActivityPriority() async {
-    final uri =
-        Uri.parse('$host/crm/ios_activity_priority.php');
+    final uri = Uri.parse('$host/crm/ios_activity_priority.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2297,11 +2367,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   List<ActivityContact> contactList = [];
   List<ActivityContact> addNewContactList = [];
   Future<void> fetchActivityContact() async {
-    final uri =
-        Uri.parse('$host/crm/ios_activity_contact.php');
+    final uri = Uri.parse('$host/crm/ios_activity_contact.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2329,10 +2399,10 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   }
 
   Future<List<ActivityContact>> fetchAddContact() async {
-    final uri =
-        Uri.parse("$host/crm/ios_activity_contact.php");
+    final uri = Uri.parse("$host/crm/ios_activity_contact.php");
     final response = await http.post(
-      uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -2357,7 +2427,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     final uri = Uri.parse('$host/test');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2398,11 +2469,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   }
 
   Future<void> _fetchCloseActivity() async {
-    final uri =
-        Uri.parse('$host/crm/ios_close_activity.php');
+    final uri = Uri.parse('$host/crm/ios_close_activity.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -2426,11 +2497,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   }
 
   Future<void> _fetchDeleteActivity() async {
-    final uri =
-        Uri.parse('$host/crm/ios_delete_activity.php');
+    final uri = Uri.parse('$host/crm/ios_delete_activity.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri,
+        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

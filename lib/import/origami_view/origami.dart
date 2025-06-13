@@ -32,29 +32,39 @@ class OrigamiPage extends StatefulWidget {
     required this.popPage,
     required this.Authorization,
     this.page,
+    this.company_id,
   });
   final Employee employee;
   final int popPage;
   final String Authorization;
   final String? page;
+  final int? company_id;
   @override
   State<OrigamiPage> createState() => _OrigamiPageState();
 }
 
 class _OrigamiPageState extends State<OrigamiPage> {
+  DateTime? lastPressed;
+  bool isNeed = false;
+  bool isBranch = false;
+  List<GetTimeStampSim> _branches = [];
+  GetTimeStampSim? _branche;
   int _index = 12;
-  TextStyle optionStyle = TextStyle(
+
+  TextStyle optionStyle = const TextStyle(
     fontFamily: 'Arial',
     fontSize: 24,
     fontWeight: FontWeight.w700,
     color: Color(0xFF555555),
   );
-  TextStyle styleOrange = TextStyle(
+
+  TextStyle styleOrange = const TextStyle(
     fontFamily: 'Arial',
     fontSize: 14,
     color: Color(0xFFFF9900),
   );
-  TextStyle styleGrey = TextStyle(
+
+  TextStyle styleGrey = const TextStyle(
     fontFamily: 'Arial',
     fontSize: 14,
     color: Color(0xFF555555),
@@ -64,40 +74,36 @@ class _OrigamiPageState extends State<OrigamiPage> {
   void initState() {
     super.initState();
     _index = widget.popPage;
-    futureLoadData = loadData();
+    // futureLoadData = loadData();
     fetchBranch();
   }
 
-  DateTime? lastPressed;
-  bool isNeed = false;
-  bool isBranch = false;
-  GetTimeStampSim? timeStampObject;
-  List<GetTimeStampSim> timeStampList = [];
+  @override
   Widget build(BuildContext context) {
-    double drawerWidth = MediaQuery.of(context).size.width * 0.8;
     return WillPopScope(
       onWillPop: () async {
         // เช็คว่ามีการกดปุ่มย้อนกลับครั้งล่าสุดหรือไม่ และเวลาห่างจากปัจจุบันมากกว่า 2 วินาทีหรือไม่
         final now = DateTime.now();
-        final maxDuration = Duration(seconds: 3);
+        const maxDuration = Duration(seconds: 3);
         final isWarning =
             lastPressed == null || now.difference(lastPressed!) > maxDuration;
         if (isWarning) {
           // ถ้ายังไม่ได้กดสองครั้งภายในเวลาที่กำหนด ให้แสดง SnackBar แจ้งเตือน
           lastPressed = DateTime.now();
-          if(_index != 12)
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Press back again to exit the origami application.',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: Colors.white,
+          if (_index != 12) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Press back again to exit the origami application.',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Colors.white,
+                  ),
                 ),
+                duration: maxDuration,
               ),
-              duration: maxDuration,
-            ),
-          );
+            );
+          }
           return false; // ไม่ออกจากแอป
         }
         // ถ้ากดปุ่มย้อนกลับสองครั้งภายในเวลาที่กำหนด ให้ออกจากแอป
@@ -118,6 +124,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
               fontWeight: FontWeight.w700,
             ),
           ),
+          // leading: IconButton(
+          //   icon: Icon(
+          //     Icons.arrow_back_ios,
+          //     color: Colors.orange,
+          //   ),
+          //   onPressed: () {},
+          // ),
           actions: <Widget>[
             if (_index == 5)
               Row(
@@ -143,13 +156,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
                       },
                       child: Icon(Icons.history,
                           color: Colors.orange,
-                          size: (isAndroid || isIPhone) ? 24 : 32)),
+                          size: 24)),
                   SizedBox(width: 16),
                   InkWell(
-                      onTap: () => _changeBranch(timeStampList),
+                      onTap: () => _changeBranch(_branches),
                       child: Icon(Icons.home,
                           color: Colors.orange,
-                          size: (isAndroid || isIPhone) ? 24 : 32)),
+                          size: 24)),
                   SizedBox(width: 16),
                   InkWell(
                       onTap: () {
@@ -161,14 +174,14 @@ class _OrigamiPageState extends State<OrigamiPage> {
                       },
                       child: Icon(Icons.call_missed_outgoing,
                           color: Colors.orange,
-                          size: (isAndroid || isIPhone) ? 24 : 32)),
+                          size: 24)),
                   SizedBox(width: 16),
                 ],
               )
           ],
         ),
         drawer: Container(
-          width: drawerWidth,
+          width: MediaQuery.of(context).size.width * 0.8,
           child: Drawer(
             elevation: 0,
             backgroundColor: Colors.white,
@@ -375,13 +388,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
             Icons.perm_contact_cal_outlined),
         _viewMenu(10, 'Project', Icons.keyboard_arrow_right,
             FontAwesomeIcons.projectDiagram),
-        _viewMenu(9, 'Activity (api dropdown ไม่ครบ)',
+        _viewMenu(9, 'Activity (ขาด api ตัวใหม่, stamp กิจกรรม)',
             Icons.keyboard_arrow_right, FontAwesomeIcons.running),
         _viewMenu(14, 'Calendar (ไม่มี API)', Icons.keyboard_arrow_right,
             Icons.calendar_month),
         _viewMenu(
             5, 'Time', Icons.keyboard_arrow_right, FontAwesomeIcons.clock),
-        _viewMenu(11, 'Work (ขาด api การสร้าง)', Icons.keyboard_arrow_right,
+        _viewMenu(11, 'Work (ขาด api create work)', Icons.keyboard_arrow_right,
             Icons.work),
         _viewMenu(2, 'Academy', Icons.keyboard_arrow_right,
             FontAwesomeIcons.university),
@@ -431,7 +444,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
       4: Text('Index 6: LogOut', style: optionStyle),
       5: TimeSample(
         employee: widget.employee,
-        timestamp: timeStampObject,
+        timestamp: _branche,
         Authorization: widget.Authorization,
         fetchBranchCallback: () => fetchBranch(),
         branch_name: branch_name,
@@ -494,16 +507,17 @@ class _OrigamiPageState extends State<OrigamiPage> {
         pageInput: '',
         Authorization: widget.Authorization,
       ),
-      18: Container(),//CallScreen(),
+      18: Container(), //CallScreen(),
       19: JobPage(
         employee: widget.employee,
         Authorization: widget.Authorization,
       ),
     };
-    return pages[_index] ?? JobPage(
-      employee: widget.employee,
-      Authorization: widget.Authorization,
-    );
+    return pages[_index] ??
+        JobPage(
+          employee: widget.employee,
+          Authorization: widget.Authorization,
+        );
   }
 
   Widget _drawerHeader() {
@@ -588,7 +602,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   ),
                   Expanded(
                     child: Text(
-                      '${widget.employee.dept_description}',
+                      '${widget.employee.dept_name}',
                       style: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 16,
@@ -660,9 +674,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   SizedBox(
                     width: 8,
                   ),
-                  Text(
-                    title,
-                    style: (_index == page) ? styleOrange : styleGrey,
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: (_index == page) ? styleOrange : styleGrey,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   ),
                 ],
               ),
@@ -689,7 +707,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Container(
-        padding: const EdgeInsets.only(top:4,bottom: 8,right: 4,left: 4),
+        padding: const EdgeInsets.only(top: 4, bottom: 8, right: 4, left: 4),
         decoration: BoxDecoration(
           color: Colors.orange.shade50,
           // borderRadius: BorderRadius.circular(10),
@@ -794,7 +812,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
-  int index_branch = 0;
   String branch_name = '';
   Widget _getBranch(List<GetTimeStampSim> branchList) {
     return Container(
@@ -830,14 +847,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   itemCount: branchList.length,
                   itemBuilder: (context, index) {
                     final branch = branchList[index];
-                    index_branch = index;
                     return Column(
                       children: [
                         InkWell(
                           onTap: () {
                             setState(() {
                               branch_name = branch.branch_name ?? '';
-                              timeStampObject = branch;
+                              _branche = branch;
                             });
                             Navigator.pop(context);
                           },
@@ -903,9 +919,9 @@ class _OrigamiPageState extends State<OrigamiPage> {
       final List<dynamic> dataJson = jsonResponse['branch_data'];
       descriptionTime = jsonResponse['comp_description'];
       setState(() {
-        timeStampList =
+        _branches =
             dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
-        timeStampObject = timeStampList[index_branch];
+        _branche = _branches.first;
         dataJson.map((json) => GetTimeStampSim.fromJson(json)).forEach((item) {
           if (item.branch_default == '1') {
             branch_id = item.branch_id;

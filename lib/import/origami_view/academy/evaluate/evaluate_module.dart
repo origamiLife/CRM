@@ -204,7 +204,7 @@ class _EvaluateModuleState extends State<EvaluateModule>
                   widget.academy.academy_subject,
                   style: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF555555),
                   ),
@@ -249,9 +249,9 @@ class _EvaluateModuleState extends State<EvaluateModule>
                                 fastView.fastview_text,
                                 style: TextStyle(
                                   fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF555555),
                                 ),
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
@@ -263,9 +263,9 @@ class _EvaluateModuleState extends State<EvaluateModule>
                                     "$startTS: ",
                                     style: TextStyle(
                                       fontFamily: 'Arial',
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
+                                      color: Color(0xFF555555),
                                     ),
                                   ),
                                   Flexible(
@@ -273,9 +273,9 @@ class _EvaluateModuleState extends State<EvaluateModule>
                                       fastView.fastview_exp,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.amber,
+                                        color: Colors.orange,
                                       ),
                                     ),
                                   ),
@@ -287,9 +287,9 @@ class _EvaluateModuleState extends State<EvaluateModule>
                                     "$statusTS: ",
                                     style: TextStyle(
                                       fontFamily: 'Arial',
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
+                                      color: Color(0xFF555555),
                                     ),
                                   ),
                                   Flexible(
@@ -297,9 +297,9 @@ class _EvaluateModuleState extends State<EvaluateModule>
                                       fastView.fastview_button,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w500,
-                                        color: Color(0xFFFF9900),
+                                        color: Colors.orange,
                                       ),
                                     ),
                                   ),
@@ -382,6 +382,11 @@ class _EvaluateModuleState extends State<EvaluateModule>
             TabBar(
               indicatorColor: Color(0xFFFF9900),
               labelColor: Color(0xFFFF9900),
+              labelStyle: const TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Colors.grey,
+              ),
               unselectedLabelColor: Colors.grey,
               onTap: (index) {
                 setState(() {

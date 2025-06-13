@@ -173,10 +173,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                             child: GridView.builder(
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount:
-                                    (isAndroid == true || isIPhone == true)
-                                        ? 4
-                                        : 6,
+                                crossAxisCount:4,
                               ),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),

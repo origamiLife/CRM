@@ -83,7 +83,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                           child: Text(
                             'Register Address',
                             style: TextStyle(
-                fontFamily: 'Arial',
+                              fontFamily: 'Arial',
                               fontSize: 22,
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -101,7 +101,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                           child: Text(
                             'Map Location',
                             style: TextStyle(
-                fontFamily: 'Arial',
+                              fontFamily: 'Arial',
                               fontSize: 22,
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -117,7 +117,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                           child: Text(
                             'Ship To',
                             style: TextStyle(
-                fontFamily: 'Arial',
+                              fontFamily: 'Arial',
                               fontSize: 22,
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -132,7 +132,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                           child: Text(
                             'Document Address',
                             style: TextStyle(
-                fontFamily: 'Arial',
+                              fontFamily: 'Arial',
                               fontSize: 22,
                               color: Colors.grey,
                               fontWeight: FontWeight.w700,
@@ -160,7 +160,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                         child: Text(
                           'Next >>',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFFFF9900),
                             fontWeight: FontWeight.w700,
@@ -184,7 +184,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                         child: Text(
                           '<< Back',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFFFF9900),
                             fontWeight: FontWeight.w700,
@@ -202,12 +202,13 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            Icon(Icons.save, size: 20, color: Color(0xFFFF9900)),
+                            Icon(Icons.save,
+                                size: 20, color: Color(0xFFFF9900)),
                             SizedBox(width: 4),
                             Text(
                               'SAVE',
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFFFF9900),
                                 fontWeight: FontWeight.w700,
@@ -325,7 +326,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                                     Text(
                                       'Tap here to select an image.',
                                       style: TextStyle(
-                fontFamily: 'Arial',
+                                        fontFamily: 'Arial',
                                         fontSize: 16,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w500,
@@ -430,7 +431,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
         Text(
           value,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -457,7 +458,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Colors.grey,
               fontSize: 14,
             ),
@@ -467,7 +468,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                       child: Text(
                         type.name,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -510,7 +511,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
           title,
           maxLines: 1,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -528,7 +529,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
       controller: controller,
       keyboardType: TextInputType.text,
       style: TextStyle(
-                fontFamily: 'Arial',
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -539,8 +540,8 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -578,7 +579,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
       controller: controller,
       keyboardType: TextInputType.number,
       style: TextStyle(
-                fontFamily: 'Arial',
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -591,8 +592,8 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
         hintText: (_selectedLocation == null)
             ? title
             : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
-        hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         suffixIcon: Container(
           alignment: Alignment.centerRight,
           child: InkWell(
@@ -621,7 +622,8 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                   width: 1.0,
                 ),
               ),
-              child: Icon(Icons.location_on, size: 22, color: Color(0xFFFF9900)),
+              child:
+                  Icon(Icons.location_on, size: 22, color: Color(0xFFFF9900)),
             ),
           ),
         ),
@@ -668,7 +670,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                 title,
                 maxLines: 1,
                 style: TextStyle(
-                fontFamily: 'Arial',
+                  fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
                   fontWeight: FontWeight.w700,
@@ -694,7 +696,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         color: Color(0xFF555555),
                         fontWeight: FontWeight.w500,
@@ -713,7 +715,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
           controller: controller,
           keyboardType: TextInputType.text,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -725,7 +727,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: title,
             hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),
@@ -833,5 +835,8 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
 class ModelType {
   String id;
   String name;
-  ModelType({required this.id, required this.name});
+  ModelType({
+    required this.id,
+    required this.name,
+  });
 }

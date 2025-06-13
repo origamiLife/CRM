@@ -1179,7 +1179,8 @@ class _NeedDetailState extends State<NeedDetail> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8,left:8 ,right: 8,bottom: 24),
+                  padding: const EdgeInsets.only(
+                      top: 8, left: 8, right: 8, bottom: 24),
                   child: Row(
                     children: [
                       Expanded(
@@ -1260,7 +1261,7 @@ class _NeedDetailState extends State<NeedDetail> {
         sumT,
         _detail,
         _itemdate,
-        imageItem,
+        imageItem, //Base64
         imageBase64,
         imageTypeData,
       );
@@ -1538,10 +1539,11 @@ class _NeedDetailState extends State<NeedDetail> {
                     child: Text(
                       '$Empty',
                       style: TextStyle(
-                          fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Colors.grey,),
+                        color: Colors.grey,
+                      ),
                     ),
                   )
                 : SingleChildScrollView(
@@ -1719,89 +1721,55 @@ class _NeedDetailState extends State<NeedDetail> {
 
   bool _isLoading = false;
   Widget _bill() {
-    return WillPopScope(
-      onWillPop: () async {
-        return await showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                elevation: 0,
-                title: Text(
-                  '$Exit$Bill',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16,
-                    color: Color(0xFF555555),
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedImages = [];
-                        myList = [];
-                        imageItem = [];
-                      });
-                      Navigator.of(context).pop(false);
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      '$Ok',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        color: Color(0xFF555555),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ) ??
-            false;
-      },
-      child: Container(
-        color: Colors.white,
-        child: FractionallySizedBox(
-          heightFactor: 0.8,
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
-                backgroundColor: (selectedImages.isNotEmpty)
-                    ? Colors.white
-                    : Colors.grey.shade100,
-                appBar: AppBar(
-                  backgroundColor: Colors.white,
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        onTap: () {}, //=> _pickCameraImage(),
-                        child: Icon(
+    return Container(
+      color: Colors.white,
+      child: FractionallySizedBox(
+        // heightFactor: 1,
+        child: Scaffold(
+            backgroundColor: (selectedImages.isNotEmpty)
+                ? Colors.white
+                : Colors.grey.shade100,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              title: Text(''),
+            ),
+            body: Column(
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Icon(
                           null, //Icons.camera_alt_outlined,
                           color: Color(0xFF555555),
                         ),
-                      ),
-                      Text(
-                        '$Bill',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
+                        Text(
+                          '$Bill',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const Icon(
+                          null, //Icons.camera_alt_outlined,
                           color: Color(0xFF555555),
                         ),
-                      ),
-                      InkWell(
-                        onTap: () => getImages(),
-                        child: Icon(
-                          Icons.photo,
-                          color: Color(0xFF555555),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-                body: selectedImages.isNotEmpty
-                    ? SingleChildScrollView(child: _InPhoto())
-                    : _InPhoto()),
-          ),
-        ),
+                Expanded(
+                  child: selectedImages.isNotEmpty
+                      ? SingleChildScrollView(child: _InPhoto())
+                      : _InPhoto(),
+                ),
+              ],
+            )),
       ),
     );
   }
@@ -1848,9 +1816,6 @@ class _NeedDetailState extends State<NeedDetail> {
         selectedImages.isNotEmpty
             ? Column(
                 children: [
-                  SizedBox(
-                    height: 16,
-                  ),
                   CarouselSlider.builder(
                     carouselController: _controller,
                     itemCount: selectedImages.length,
@@ -1881,7 +1846,7 @@ class _NeedDetailState extends State<NeedDetail> {
                             ),
                           ),
                           SizedBox(
-                            height: 30,
+                            height: 20,
                           ),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
@@ -1919,12 +1884,12 @@ class _NeedDetailState extends State<NeedDetail> {
                       );
                     },
                     options: CarouselOptions(
-                      height: MediaQuery.of(context).size.height * 0.64,
+                      height: MediaQuery.of(context).size.height * 0.78,
                       autoPlay: false,
                       autoPlayInterval: Duration(seconds: 3),
-                      enlargeCenterPage: true,
-                      aspectRatio: 16 / 9,
-                      viewportFraction: 0.8,
+                      enlargeCenterPage: false,
+                      // aspectRatio: 16 / 9,
+                      viewportFraction: 1,
                       initialPage: _currentIndex,
                       onPageChanged: (index, reason) {
                         setState(() {
@@ -1935,7 +1900,30 @@ class _NeedDetailState extends State<NeedDetail> {
                   ),
                 ],
               )
-            : Expanded(child: Center(child: Text('$No_Image'))),
+            : Expanded(
+                child: InkWell(
+                  onTap: () => getImages(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.image_outlined,color: Colors.grey.shade400,size: 400,),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom:100),
+                        child: Text(
+                          'Add Image',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 50,
+                            color: Colors.grey.shade400,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
         SizedBox(
           height: 4,
         ),
@@ -2095,18 +2083,17 @@ class _NeedDetailState extends State<NeedDetail> {
             });
           }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            // is this context <<<
-            SnackBar(
-              content: Text(
-                'Nothing is selected',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: Color(0xFF555555),
-                ),
-              ),
-            ),
-          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text(
+          //       'Nothing is selected',
+          //       style: TextStyle(
+          //         fontFamily: 'Arial',
+          //         color: Color(0xFF555555),
+          //       ),
+          //     ),
+          //   ),
+          // );
         }
       },
     );

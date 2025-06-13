@@ -70,42 +70,44 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
     return Padding(
       padding: EdgeInsets.all(16),
       child: SingleChildScrollView(
-        child: (_infomationPage == 0)?Column(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Information',
-                style: TextStyle(
-                fontFamily: 'Arial',
-                  fontSize: 22,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            SizedBox(height: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Logo',
-                  style: TextStyle(
-                fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555),
-                    fontWeight: FontWeight.w700,
+        child: (_infomationPage == 0)
+            ? Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Information',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 22,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 8),
-                _showImagePhoto(),
-                SizedBox(height: 8),
-              ],
-            ),
-            SizedBox(height: 8),
-            _information(),
-          ],
-        ):_information2(),
+                  SizedBox(height: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Logo',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      _showImagePhoto(),
+                      SizedBox(height: 8),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  _information(),
+                ],
+              )
+            : _information2(),
       ),
     );
   }
@@ -182,7 +184,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                   Text(
                     'Tap here to select an image.',
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFFFF9900),
                       fontWeight: FontWeight.w500,
@@ -214,7 +216,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                       Text(
                         'upload accoount logo',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 16,
                           color: Colors.grey,
                           fontWeight: FontWeight.w500,
@@ -246,7 +248,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                     '',
                     maxLines: 1,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -273,7 +275,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                     '',
                     maxLines: 1,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -300,7 +302,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                     '',
                     maxLines: 1,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -318,34 +320,34 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         _DropdownProject('Account Helpdesk'),
         _DropdownProject('Class'),
         SizedBox(height: 8),
-        if(_infomationPage == 0)
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            InkWell(
-              onTap: (){
-                setState(() {
-                  _infomationPage = 1;
-                });
-              },
-              child: Text(
-                'Next >>',
-                style: TextStyle(
-                fontFamily: 'Arial',
-                  fontSize: 16,
-                  color: Color(0xFFFF9900),
-                  fontWeight: FontWeight.w700,
+        if (_infomationPage == 0)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _infomationPage = 1;
+                  });
+                },
+                child: Text(
+                  'Next >>',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    color: Color(0xFFFF9900),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         SizedBox(height: 8),
       ],
     );
   }
 
-  Widget _information2(){
+  Widget _information2() {
     return Column(
       children: [
         Row(
@@ -360,7 +362,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                     '',
                     maxLines: 1,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
@@ -399,50 +401,50 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         _DropdownProject('Source'),
         _AccountTextDetail('Description', _descriptionController),
         SizedBox(height: 8),
-        if(_infomationPage == 1)
+        if (_infomationPage == 1)
           Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            InkWell(
-              onTap: (){
-                setState(() {
-                  _infomationPage = 0;
-                });
-              },
-              child: Text(
-                '<< Back',
-                style: TextStyle(
-                fontFamily: 'Arial',
-                  fontSize: 16,
-                  color: Color(0xFFFF9900),
-                  fontWeight: FontWeight.w700,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _infomationPage = 0;
+                  });
+                },
+                child: Text(
+                  '<< Back',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    color: Color(0xFFFF9900),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-            ),
-            InkWell(
-              onTap: (){
-                setState(() {
-                  _infomationPage = 0;
-                });
-              },
-              child: Row(
-                children: [
-                  Icon(Icons.save,size:20,color: Color(0xFFFF9900)),
-                  SizedBox(width: 4),
-                  Text(
-                    'SAVE',
-                    style: TextStyle(
-                fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Color(0xFFFF9900),
-                      fontWeight: FontWeight.w700,
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _infomationPage = 0;
+                  });
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.save, size: 20, color: Color(0xFFFF9900)),
+                    SizedBox(width: 4),
+                    Text(
+                      'SAVE',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16,
+                        color: Color(0xFFFF9900),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         SizedBox(height: 8),
       ],
     );
@@ -455,7 +457,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         Text(
           value,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -482,7 +484,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Colors.grey,
               fontSize: 14,
             ),
@@ -492,7 +494,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                       child: Text(
                         type.name,
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                         ),
                       ),
@@ -535,7 +537,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
           title,
           maxLines: 1,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -553,7 +555,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
       controller: controller,
       keyboardType: TextInputType.text,
       style: TextStyle(
-                fontFamily: 'Arial',
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -564,8 +566,8 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -603,7 +605,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
       controller: controller,
       keyboardType: TextInputType.number,
       style: TextStyle(
-                fontFamily: 'Arial',
+        fontFamily: 'Arial',
         color: Color(0xFF555555),
         fontSize: 14,
       ),
@@ -614,8 +616,8 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         hintText: title,
-        hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+        hintStyle:
+            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFFF9900),
@@ -656,7 +658,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
           'Description',
           maxLines: 1,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 14,
             color: Color(0xFF555555),
             fontWeight: FontWeight.w700,
@@ -669,7 +671,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
           controller: controller,
           keyboardType: TextInputType.text,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -681,7 +683,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: title,
             hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),
@@ -731,7 +733,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
           enabled: false,
           keyboardType: TextInputType.number,
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
             fontSize: 14,
           ),
@@ -743,7 +745,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: (ifTime == true) ? '${title} $currentTime' : title,
             hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.grey),
+                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
             border: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Color(0xFFFF9900),
@@ -875,5 +877,8 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
 class ModelType {
   String id;
   String name;
-  ModelType({required this.id, required this.name});
+  ModelType({
+    required this.id,
+    required this.name,
+  });
 }

@@ -444,25 +444,25 @@ class _ActivityScreenState extends State<ActivityScreen> {
 }
 
 class ModelActivity {
-  String activity_id;
-  String activity_location;
-  String activity_project_name;
-  String activity_description;
-  String activity_start_date;
-  String comp_id;
-  String activity_create_date;
-  String emp_id;
-  String activity_end_date;
-  String time_start;
-  String time_end;
-  String activity_real_start_date;
-  String activity_status;
-  String activity_lat;
-  String activity_lng;
-  String activity_real_comment;
-  String activity_create_user;
-  String projectname;
-  String activity_place_type;
+  final String activity_id;
+  final String activity_location;
+  final String activity_project_name;
+  final String activity_description;
+  final String activity_start_date;
+  final String comp_id;
+  final String activity_create_date;
+  final String emp_id;
+  final String activity_end_date;
+  final String time_start;
+  final String time_end;
+  final String activity_real_start_date;
+  final String activity_status;
+  final String activity_lat;
+  final String activity_lng;
+  final String activity_real_comment;
+  final String activity_create_user;
+  final String projectname;
+  final String activity_place_type;
 
   ModelActivity({
     required this.activity_id,

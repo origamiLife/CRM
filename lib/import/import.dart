@@ -39,3 +39,4 @@ export 'package:quickalert/quickalert.dart';
 export 'package:carousel_slider/carousel_slider.dart';
 // export 'package:smooth_page_indicator/smooth_page_indicator.dart';
 export 'package:video_player_android/video_player_android.dart';
+export 'package:shimmer/shimmer.dart';

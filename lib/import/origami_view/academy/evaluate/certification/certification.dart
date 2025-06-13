@@ -45,7 +45,28 @@ class _CertificationState extends State<Certification> {
     return FutureBuilder<List<CertificationData>>(
       future: fetchCertification(),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: Color(0xFFFF9900),
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Text(
+                '$loadingTS...',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF555555),
+                ),
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
           return Center(
               child: Text(
             'Error: ${snapshot.error}',

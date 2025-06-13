@@ -26,14 +26,14 @@ class _activityAddState extends State<activityAdd> {
   TextEditingController _searchfilterController = TextEditingController();
   TextEditingController _searchController = TextEditingController();
   LatLng? _selectedLocation; // สำหรับเก็บตำแหน่งที่เลือก
-  String _addfilter = '';
+  Timer? _debounce;
   String _search = '';
 
   @override
   void initState() {
     super.initState();
     showDate();
-    fetchActivityProject();
+    fetchGetProject();
     fetchActivityAccount();
     fetchActivityType();
     fetchActivityStatus();
@@ -57,26 +57,13 @@ class _activityAddState extends State<activityAdd> {
     });
     _searchController.addListener(() {
       _search = _searchController.text;
-      voidProject();
-      print("Current text: ${_searchController.text}");
+      // print("Current text: ${_searchController.text}");
     });
     _searchfilterController.addListener(() {
       // _addfilter = _searchfilterController.text;
       print("Current text: ${_searchfilterController.text}");
     });
     // addNewContactList.add();
-  }
-
-  void voidProject() {
-    // ค้นหา index ของค่าที่เลือกใน list
-    int index = projectList.indexWhere((item) => item.project_id == project_id);
-
-    if (index == 0) {
-      indexItems = 0;
-    } else if (index == projectList.length - 1 || index == sumroject) {
-      indexItems = maxproject + 1;
-    }
-    fetchActivityProject();
   }
 
   @override
@@ -87,6 +74,7 @@ class _activityAddState extends State<activityAdd> {
     _descriptionController.dispose();
     _costController.dispose();
     _searchController.dispose();
+    _debounce?.cancel();
     _searchfilterController.dispose();
   }
 
@@ -375,8 +363,7 @@ class _activityAddState extends State<activityAdd> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                           child: Image.network(
-                                            (contact.contact_image == null ||
-                                                    contact.contact_image == '')
+                                            (contact.contact_image == '')
                                                 ? 'https://dev.origami.life/images/default.png'
                                                 : '$host//crm/${contact.contact_image}',
                                             height: 100,
@@ -761,7 +748,7 @@ class _activityAddState extends State<activityAdd> {
                 fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
               ),
             ),
             SizedBox(width: 8),
@@ -800,23 +787,20 @@ class _activityAddState extends State<activityAdd> {
             ),
             items: projectList
                 .map((item) => DropdownMenuItem<ActivityProject>(
-                      value: item,
-                      child: Text(
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        item.project_name ?? '',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
+              value: item,
+              child: Text(
+                item.project_name,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                ),
+              ),
+            ))
                 .toList(),
             value: selectedProject,
             onChanged: (value) {
               setState(() {
                 selectedProject = value;
-                project_id = value?.project_id ?? '';
               });
             },
             underline: SizedBox.shrink(),
@@ -829,11 +813,10 @@ class _activityAddState extends State<activityAdd> {
               padding: const EdgeInsets.symmetric(vertical: 2),
             ),
             dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
+              maxHeight: 200,
             ),
             menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
+              height: 40,
             ),
             dropdownSearchData: DropdownSearchData(
               searchController: _searchController,
@@ -867,15 +850,14 @@ class _activityAddState extends State<activityAdd> {
                 ),
               ),
               searchMatchFn: (item, searchValue) {
-                return item.value!.project_name!
+                return item.value!.project_name
                     .toLowerCase()
                     .contains(searchValue.toLowerCase());
               },
             ),
             onMenuStateChange: (isOpen) {
               if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
+                _searchController.clear();
               }
             },
           ),
@@ -1935,7 +1917,7 @@ class _activityAddState extends State<activityAdd> {
       type_id = selectedType?.type_id ?? '';
     }
     if (project_id == '') {
-      project_id = selectedProject?.project_id ?? '';
+      project_id = selectedProject?.project_id.toString()??'';
     }
     if (account_id == '') {
       account_id = selectedAccount?.account_id ?? '';
@@ -2027,44 +2009,44 @@ class _activityAddState extends State<activityAdd> {
     return text.replaceAll(RegExp(r'(\r\n|\r)'), '\n');
   }
 
-  ActivityProject? selectedProject;
-  List<ActivityProject> projectList = [];
-  int indexItems = 0;
-  int sumroject = 0;
-  int maxproject = 0;
-  Future<void> fetchActivityProject() async {
-    final uri = Uri.parse('$host/crm/project.php');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'idemp': widget.employee.emp_id,
-          'index': (_search != '') ? '0' : indexItems.toString(),
-          'txt_search': _search,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-        maxproject = jsonResponse['max'];
-        sumroject = jsonResponse['sum'];
-        print('sum : $sumroject');
-        setState(() {
-          projectList =
-              dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-          if (projectList.isNotEmpty) {
-            selectedProject = projectList.first;
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
-  }
+  // ActivityProject? selectedProject;
+  // List<ActivityProject> projectList = [];
+  // int indexItems = 0;
+  // int sumroject = 0;
+  // int maxproject = 0;
+  // Future<void> fetchActivityProject() async {
+  //   final uri = Uri.parse('$host/crm/project.php');
+  //   try {
+  //     final response = await http.post(
+  //       uri,
+  //       headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+  //       body: {
+  //         'comp_id': widget.employee.comp_id,
+  //         'idemp': widget.employee.emp_id,
+  //         'index': (_search != '') ? '0' : indexItems.toString(),
+  //         'txt_search': _search,
+  //       },
+  //     );
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
+  //       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+  //       maxproject = jsonResponse['max'];
+  //       sumroject = jsonResponse['sum'];
+  //       print('sum : $sumroject');
+  //       setState(() {
+  //         projectList =
+  //             dataJson.map((json) => ActivityProject.fromJson(json)).toList();
+  //         if (projectList.isNotEmpty) {
+  //           selectedProject = projectList.first;
+  //         }
+  //       });
+  //     } else {
+  //       throw Exception('Failed to load status data');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to load personal data: $e');
+  //   }
+  // }
 
   AccountData? selectedAccount;
   List<AccountData> accountList = [];
@@ -2249,6 +2231,40 @@ class _activityAddState extends State<activityAdd> {
       throw Exception('Failed to load contacts');
     }
   }
+
+  ActivityProject? selectedProject;
+  List<ActivityProject> projectList = [];
+  Future<void> fetchGetProject() async {
+    String comp_id = widget.employee.comp_id;
+    String emp_id = widget.employee.emp_id;
+    String cus_id = '';
+    String page = '1';
+    String action = 'getDropdownProject';
+
+    final uri = Uri.parse(
+      "$host/api/origami/crm/activity/create_dropdown_project.php?"
+      "comp_id=$comp_id&emp_id=$emp_id&cus_id=$cus_id&page=$page&term=${_search}&action=$action",
+    );
+
+    final response = await http.get(
+      uri,
+      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data']??[];
+      setState(() {
+        projectList =
+            dataJson.map((json) => ActivityProject.fromJson(json)).toList();
+        if (projectList.isNotEmpty && selectedProject == null) {
+          selectedProject = projectList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load challenges');
+    }
+  }
 }
 
 class TitleDown {
@@ -2259,6 +2275,39 @@ class TitleDown {
     required this.status_id,
     required this.status_name,
   });
+}
+
+class ActivityProject {
+  final String project_id;
+  final String project_name;
+  final String total_project;
+  final String project_code;
+  final String location_lat;
+  final String location_lng;
+  final String location_name;
+
+  ActivityProject({
+    required this.project_id,
+    required this.project_name,
+    required this.total_project,
+    required this.project_code,
+    required this.location_lat,
+    required this.location_lng,
+    required this.location_name,
+  });
+
+  // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
+  factory ActivityProject.fromJson(Map<String, dynamic> json) {
+    return ActivityProject(
+      project_id: json['project_id']?.toString() ?? '',
+      project_name: json['project_name'] ?? '',
+      total_project: json['total_project']?.toString() ?? '',
+      project_code: json['project_code'] ?? '',
+      location_lat: json['location_lat'] ?? '',
+      location_lng: json['location_lng'] ?? '',
+      location_name: json['location_name'] ?? '',
+    );
+  }
 }
 
 class ActivityType {
@@ -2283,8 +2332,8 @@ class ActivityType {
 }
 
 class ActivityStatus {
-  String status_id;
-  String status_name;
+  final String status_id;
+  final String status_name;
 
   ActivityStatus({
     required this.status_id,
@@ -2301,9 +2350,9 @@ class ActivityStatus {
 }
 
 class ActivityPriority {
-  String priority_id;
-  String priority_name;
-  String priority_value;
+  final String priority_id;
+  final String priority_name;
+  final String priority_value;
 
   ActivityPriority({
     required this.priority_id,
@@ -2321,113 +2370,113 @@ class ActivityPriority {
   }
 }
 
-class ActivityProject {
-  String project_id;
-  String project_name;
-  String project_latitude;
-  String project_longtitude;
-  String project_start;
-  String project_end;
-  String project_all_total;
-  String m_company;
-  String project_create_date;
-  String emp_id;
-  String project_value;
-  String project_type_name;
-  String project_description;
-  String project_sale_status_name;
-  String project_oppo_reve;
-  String comp_id;
-  String typeIds;
-  String salestatusIds;
-  String main_contact;
-  String cont_id;
-  String projct_location;
-  String cus_id;
-
-  ActivityProject({
-    required this.project_id,
-    required this.project_name,
-    required this.project_latitude,
-    required this.project_longtitude,
-    required this.project_start,
-    required this.project_end,
-    required this.project_all_total,
-    required this.m_company,
-    required this.project_create_date,
-    required this.emp_id,
-    required this.project_value,
-    required this.project_type_name,
-    required this.project_description,
-    required this.project_sale_status_name,
-    required this.project_oppo_reve,
-    required this.comp_id,
-    required this.typeIds,
-    required this.salestatusIds,
-    required this.main_contact,
-    required this.cont_id,
-    required this.projct_location,
-    required this.cus_id,
-  });
-
-  // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
-  factory ActivityProject.fromJson(Map<String, dynamic> json) {
-    return ActivityProject(
-      project_id: json['project_id'] ?? '',
-      project_name: json['project_name'] ?? '',
-      project_latitude: json['project_latitude'] ?? '',
-      project_longtitude: json['project_longtitude'] ?? '',
-      project_start: json['project_start'] ?? '',
-      project_end: json['project_end'] ?? '',
-      project_all_total: json['project_all_total'] ?? '',
-      m_company: json['m_company'] ?? '',
-      project_create_date: json['project_create_date'] ?? '',
-      emp_id: json['emp_id'] ?? '',
-      project_value: json['project_value'] ?? '',
-      project_type_name: json['project_type_name'] ?? '',
-      project_description: json['project_description'] ?? '',
-      project_sale_status_name: json['project_sale_status_name'] ?? '',
-      project_oppo_reve: json['project_oppo_reve'] ?? '',
-      comp_id: json['comp_id'] ?? '',
-      typeIds: json['typeIds'] ?? '',
-      salestatusIds: json['salestatusIds'] ?? '',
-      main_contact: json['main_contact'] ?? '',
-      cont_id: json['cont_id'] ?? '',
-      projct_location: json['projct_location'] ?? '',
-      cus_id: json['cus_id'] ?? '',
-    );
-  }
-}
+// class ActivityProject {
+//   String project_id;
+//   String project_name;
+//   String project_latitude;
+//   String project_longtitude;
+//   String project_start;
+//   String project_end;
+//   String project_all_total;
+//   String m_company;
+//   String project_create_date;
+//   String emp_id;
+//   String project_value;
+//   String project_type_name;
+//   String project_description;
+//   String project_sale_status_name;
+//   String project_oppo_reve;
+//   String comp_id;
+//   String typeIds;
+//   String salestatusIds;
+//   String main_contact;
+//   String cont_id;
+//   String projct_location;
+//   String cus_id;
+//
+//   ActivityProject({
+//     required this.project_id,
+//     required this.project_name,
+//     required this.project_latitude,
+//     required this.project_longtitude,
+//     required this.project_start,
+//     required this.project_end,
+//     required this.project_all_total,
+//     required this.m_company,
+//     required this.project_create_date,
+//     required this.emp_id,
+//     required this.project_value,
+//     required this.project_type_name,
+//     required this.project_description,
+//     required this.project_sale_status_name,
+//     required this.project_oppo_reve,
+//     required this.comp_id,
+//     required this.typeIds,
+//     required this.salestatusIds,
+//     required this.main_contact,
+//     required this.cont_id,
+//     required this.projct_location,
+//     required this.cus_id,
+//   });
+//
+//   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
+//   factory ActivityProject.fromJson(Map<String, dynamic> json) {
+//     return ActivityProject(
+//       project_id: json['project_id'] ?? '',
+//       project_name: json['project_name'] ?? '',
+//       project_latitude: json['project_latitude'] ?? '',
+//       project_longtitude: json['project_longtitude'] ?? '',
+//       project_start: json['project_start'] ?? '',
+//       project_end: json['project_end'] ?? '',
+//       project_all_total: json['project_all_total'] ?? '',
+//       m_company: json['m_company'] ?? '',
+//       project_create_date: json['project_create_date'] ?? '',
+//       emp_id: json['emp_id'] ?? '',
+//       project_value: json['project_value'] ?? '',
+//       project_type_name: json['project_type_name'] ?? '',
+//       project_description: json['project_description'] ?? '',
+//       project_sale_status_name: json['project_sale_status_name'] ?? '',
+//       project_oppo_reve: json['project_oppo_reve'] ?? '',
+//       comp_id: json['comp_id'] ?? '',
+//       typeIds: json['typeIds'] ?? '',
+//       salestatusIds: json['salestatusIds'] ?? '',
+//       main_contact: json['main_contact'] ?? '',
+//       cont_id: json['cont_id'] ?? '',
+//       projct_location: json['projct_location'] ?? '',
+//       cus_id: json['cus_id'] ?? '',
+//     );
+//   }
+// }
 
 class ActivityContact {
-  String? contact_id;
-  String? contact_first;
-  String? contact_last;
-  String? contact_image;
-  String? customer_id;
-  String? customer_en;
-  String? customer_th;
+  final String contact_id;
+  final String contact_first;
+  final String contact_last;
+  final String contact_image;
+  final String customer_id;
+  final String customer_en;
+  final String customer_th;
 
   ActivityContact({
-    this.contact_id,
-    this.contact_first,
-    this.contact_last,
-    this.contact_image,
-    this.customer_id,
-    this.customer_en,
-    this.customer_th,
+    required this.contact_id,
+    required this.contact_first,
+    required this.contact_last,
+    required this.contact_image,
+    required this.customer_id,
+    required this.customer_en,
+    required this.customer_th,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityContact.fromJson(Map<String, dynamic> json) {
     return ActivityContact(
-      contact_id: json['contact_id'],
-      contact_first: json['contact_first'],
-      contact_last: json['contact_last'],
-      contact_image: json['contact_image'],
-      customer_id: json['customer_id'],
-      customer_en: json['customer_en'],
-      customer_th: json['customer_th'],
+      contact_id: json['contact_id']??'',
+      contact_first: json['contact_first']??'',
+      contact_last: json['contact_last']??'',
+      contact_image: json['contact_image']??'',
+      customer_id: json['customer_id']??'',
+      customer_en: json['customer_en']??'',
+      customer_th: json['customer_th']??'',
     );
   }
 }

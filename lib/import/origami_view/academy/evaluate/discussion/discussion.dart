@@ -104,7 +104,28 @@ class _DiscussionState extends State<Discussion> {
     return FutureBuilder<List<DiscussionData>>(
       future: fetchDiscussion(),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: Color(0xFFFF9900),
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Text(
+                '$loadingTS...',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF555555),
+                ),
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
@@ -346,46 +367,48 @@ class _DiscussionState extends State<Discussion> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      _buildTextField(_commentControllerA, '$ExplainTS...', (value) {
+                      _buildTextField(_commentControllerA, '$ExplainTS...',
+                          (value) {
                         setState(() {
                           _commentA = value;
                         });
                       }),
                       SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade300,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        if (_commentA.isNotEmpty) {
-                          DiscussionSave(
-                            discussionId,
-                            "save",
-                            "",
-                            _commentA,
-                          );
-                          _commentControllerA.clear();
-                          setState(() {
-                            _commentA = "";
-                          });
-                        }
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      ),
-                      child: Text(
-                        "$postTS",
-                        style: const TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    )),
+                      Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.orange.shade300,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              if (_commentA.isNotEmpty) {
+                                DiscussionSave(
+                                  discussionId,
+                                  "save",
+                                  "",
+                                  _commentA,
+                                );
+                                _commentControllerA.clear();
+                                setState(() {
+                                  _commentA = "";
+                                });
+                              }
+                            },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
+                            ),
+                            child: Text(
+                              "$postTS",
+                              style: const TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          )),
                     ],
                   ),
                 ),
@@ -396,40 +419,40 @@ class _DiscussionState extends State<Discussion> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(
-                                color: Color(0xFFFF9900),
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Text(
-                                '$loadingTS...',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF555555),
-                                ),
-                              ),
-                            ],
-                          ));
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            color: Color(0xFFFF9900),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Text(
+                            '$loadingTS...',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF555555),
+                            ),
+                          ),
+                        ],
+                      ));
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Center(
                           child: Text(
-                            NotFoundDataTS,
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 16.0,
-                              color: const Color(0xFF555555),
-                              fontWeight: FontWeight.w700,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ));
+                        NotFoundDataTS,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0,
+                          color: const Color(0xFF555555),
+                          fontWeight: FontWeight.w700,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ));
                     } else {
                       return _bodyReply(snapshot.data!);
                     }
@@ -466,14 +489,14 @@ class _DiscussionState extends State<Discussion> {
         controller: controller,
         keyboardType: TextInputType.text,
         style: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: const Color(0xFF555555)),
+            fontFamily: 'Arial', fontSize: 14, color: const Color(0xFF555555)),
         decoration: InputDecoration(
           isDense: true,
           filled: true,
           fillColor: Colors.white,
           hintText: hintText,
           hintStyle: TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Colors.black38),
+              fontFamily: 'Arial', fontSize: 14, color: Colors.black38),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide.none,
@@ -829,14 +852,12 @@ class _DiscussionState extends State<Discussion> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
-          if(method == 'save'){
+          if (method == 'save') {
             _commentControllerA.clear();
             setState(() {
               _commentA = "";
             });
-          }else if(method == 'edit'){
-
-          }
+          } else if (method == 'edit') {}
 
           print("message: true");
         } else {

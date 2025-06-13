@@ -700,7 +700,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
                                   child: InkWell(
                                     onTap: () {
                                       setState(() {
-                                        _addImage.removeAt(index); // ลบรูปออกจากรายการ
+                                        _addImage.removeAt(
+                                            index); // ลบรูปออกจากรายการ
                                       });
                                     },
                                     child: Stack(
@@ -780,73 +781,71 @@ class _ActivityEditListState extends State<ActivityEditList> {
       children: [
         Column(
             children: List.generate(modelEmployee.length, (index) {
-              final join_user = modelEmployee[index];
-              return Padding(
-                padding: const EdgeInsets.all(4),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 0,
-                            blurRadius: 0,
-                            offset: Offset(1, 3), // x, y
-                          ),
-                        ],
+          final join_user = modelEmployee[index];
+          return Padding(
+            padding: const EdgeInsets.all(4),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: Offset(1, 3), // x, y
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Column(
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Colors.grey.shade400,
-                                  child: CircleAvatar(
-                                    radius: 31,
-                                    backgroundColor: Colors.white,
-                                    child: ClipRRect(
-                                      borderRadius:
-                                      BorderRadius.circular(50),
-                                      child: Image.network(
-                                        join_user.emp_pic,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Colors.grey.shade400,
+                              child: CircleAvatar(
+                                radius: 31,
+                                backgroundColor: Colors.white,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    join_user.emp_pic,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
-                                SizedBox(width: 8),
-                                _switch(join_user),
-                              ],
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: _checkBox(
-                                        'Owner', join_user.is_owner)),
-                                Expanded(
-                                    child: _checkBox('Approve Activity',
-                                        join_user.is_owner)),
-                              ],
-                            ),
+                            SizedBox(width: 8),
+                            _switch(join_user),
                           ],
                         ),
-                      ),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: _checkBox('Owner', join_user.is_owner)),
+                            Expanded(
+                                child: _checkBox(
+                                    'Approve Activity', join_user.is_owner)),
+                          ],
+                        ),
+                      ],
                     ),
-                    Divider(),
-                  ],
+                  ),
                 ),
-              );
-            })),
+                Divider(),
+              ],
+            ),
+          );
+        })),
         SizedBox(
           height: 8,
         ),
@@ -1283,7 +1282,7 @@ class _ActivityEditListState extends State<ActivityEditList> {
                 children: [
                   Padding(
                     padding:
-                    const EdgeInsets.only(left: 16, right: 16, top: 16),
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.7,
                       decoration: BoxDecoration(
@@ -1566,11 +1565,13 @@ class _ActivityEditListState extends State<ActivityEditList> {
       throw Exception('Failed to load personal data: ${response.reasonPhrase}');
     }
   }
-
 }
 
 class TitleDown {
-  String status_id;
-  String status_name;
-  TitleDown({required this.status_id, required this.status_name});
+  final String status_id;
+  final String status_name;
+  TitleDown({
+    required this.status_id,
+    required this.status_name,
+  });
 }
