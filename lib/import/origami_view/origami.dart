@@ -216,172 +216,172 @@ class _OrigamiPageState extends State<OrigamiPage> {
   Widget _getContentWidget() {
     return Column(
       children: [
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 2, left: 6, right: 6),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ListTile(
-                      trailing: Icon(Icons.keyboard_arrow_down,
-                          color: (_index == 0 || _index == 1)
-                              ? Colors.transparent
-                              : Color(0xFF555555)),
-                      title: Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: FaIcon(FontAwesomeIcons.fileText,
-                                size: 18,
-                                color: (_index == 0 || _index == 1)
-                                    ? Color(0xFFFF9900)
-                                    : Color(0xFF555555)),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            '$need',
-                            style: TextStyle(
-                                fontFamily: 'Arial',
-                                color: (_index == 0 || _index == 1)
-                                    ? Color(0xFFFF9900)
-                                    : Color(0xFF555555)),
-                          ),
-                        ],
-                      ),
-                      // selected: _index == 0,
-                      // onTap: () {
-                      //   setState(() {
-                      //     (isNeed == true) ? _index = 0 : _index = _index;
-                      //     (isNeed == true) ? isNeed = false : isNeed = true;
-                      //   });
-                      // },
-                    ),
-                  ),
-                  if (isNeed == false)
-                    Container(
-                      padding: EdgeInsets.only(left: 16),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, right: 8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: ListTile(
-                                trailing: FaIcon(
-                                    FontAwesomeIcons.handHoldingUsd,
-                                    size: 18,
-                                    color: (_index == 0)
-                                        ? Color(0xFFFF9900)
-                                        : Color(0xFF555555)),
-                                title: Text(
-                                  '$need',
-                                  style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      color: (_index == 0)
-                                          ? Color(0xFFFF9900)
-                                          : Color(0xFF555555)),
-                                ),
-                                selected: _index == 0,
-                                onTap: () {
-                                  setState(() {
-                                    _index = 0;
-                                  });
-
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, right: 8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: ListTile(
-                                trailing: FaIcon(FontAwesomeIcons.checkDouble,
-                                    size: 18,
-                                    color: (_index == 1)
-                                        ? Color(0xFFFF9900)
-                                        : Color(0xFF555555)),
-                                title: Text(
-                                  '$request',
-                                  style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      color: (_index == 1)
-                                          ? Color(0xFFFF9900)
-                                          : Color(0xFF555555)),
-                                ),
-                                selected: _index == 1,
-                                onTap: () {
-                                  setState(() {
-                                    _index = 1;
-                                  });
-
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, right: 8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: ListTile(
-                                trailing: FaIcon(FontAwesomeIcons.wallet,
-                                    size: 18,
-                                    color: (_index == 8)
-                                        ? Color(0xFFFF9900)
-                                        : Color(0xFF555555)),
-                                title: Text(
-                                  'Petty Cash',
-                                  style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      color: (_index == 8)
-                                          ? Color(0xFFFF9900)
-                                          : Color(0xFF555555)),
-                                ),
-                                selected: _index == 8,
-                                onTap: () {
-                                  setState(() {
-                                    _index = 8;
-                                  });
-
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 12, right: 12),
-              child: Divider(),
-            ),
-          ],
-        ),
+        // Column(
+        //   children: [
+        //     Padding(
+        //       padding: const EdgeInsets.only(top: 2, left: 6, right: 6),
+        //       child: Column(
+        //         children: [
+        //           Container(
+        //             decoration: BoxDecoration(
+        //               color: Colors.white,
+        //               borderRadius: BorderRadius.circular(10),
+        //             ),
+        //             child: ListTile(
+        //               trailing: Icon(Icons.keyboard_arrow_down,
+        //                   color: (_index == 0 || _index == 1)
+        //                       ? Colors.transparent
+        //                       : Color(0xFF555555)),
+        //               title: Row(
+        //                 children: [
+        //                   Container(
+        //                     padding: EdgeInsets.all(8),
+        //                     decoration: BoxDecoration(
+        //                       color: Colors.white,
+        //                       borderRadius: BorderRadius.circular(10),
+        //                     ),
+        //                     child: FaIcon(FontAwesomeIcons.fileText,
+        //                         size: 18,
+        //                         color: (_index == 0 || _index == 1)
+        //                             ? Color(0xFFFF9900)
+        //                             : Color(0xFF555555)),
+        //                   ),
+        //                   SizedBox(
+        //                     width: 8,
+        //                   ),
+        //                   Text(
+        //                     '$need',
+        //                     style: TextStyle(
+        //                         fontFamily: 'Arial',
+        //                         color: (_index == 0 || _index == 1)
+        //                             ? Color(0xFFFF9900)
+        //                             : Color(0xFF555555)),
+        //                   ),
+        //                 ],
+        //               ),
+        //               // selected: _index == 0,
+        //               // onTap: () {
+        //               //   setState(() {
+        //               //     (isNeed == true) ? _index = 0 : _index = _index;
+        //               //     (isNeed == true) ? isNeed = false : isNeed = true;
+        //               //   });
+        //               // },
+        //             ),
+        //           ),
+        //           if (isNeed == false)
+        //             Container(
+        //               padding: EdgeInsets.only(left: 16),
+        //               child: Column(
+        //                 children: [
+        //                   Padding(
+        //                     padding: const EdgeInsets.only(left: 8, right: 8),
+        //                     child: Container(
+        //                       decoration: BoxDecoration(
+        //                         color: Colors.white,
+        //                         borderRadius: BorderRadius.circular(10),
+        //                       ),
+        //                       child: ListTile(
+        //                         trailing: FaIcon(
+        //                             FontAwesomeIcons.handHoldingUsd,
+        //                             size: 18,
+        //                             color: (_index == 0)
+        //                                 ? Color(0xFFFF9900)
+        //                                 : Color(0xFF555555)),
+        //                         title: Text(
+        //                           '$need',
+        //                           style: TextStyle(
+        //                               fontFamily: 'Arial',
+        //                               color: (_index == 0)
+        //                                   ? Color(0xFFFF9900)
+        //                                   : Color(0xFF555555)),
+        //                         ),
+        //                         selected: _index == 0,
+        //                         onTap: () {
+        //                           setState(() {
+        //                             _index = 0;
+        //                           });
+        //
+        //                           Navigator.pop(context);
+        //                         },
+        //                       ),
+        //                     ),
+        //                   ),
+        //                   Padding(
+        //                     padding: const EdgeInsets.only(left: 8, right: 8),
+        //                     child: Container(
+        //                       decoration: BoxDecoration(
+        //                         color: Colors.white,
+        //                         borderRadius: BorderRadius.circular(10),
+        //                       ),
+        //                       child: ListTile(
+        //                         trailing: FaIcon(FontAwesomeIcons.checkDouble,
+        //                             size: 18,
+        //                             color: (_index == 1)
+        //                                 ? Color(0xFFFF9900)
+        //                                 : Color(0xFF555555)),
+        //                         title: Text(
+        //                           '$request',
+        //                           style: TextStyle(
+        //                               fontFamily: 'Arial',
+        //                               color: (_index == 1)
+        //                                   ? Color(0xFFFF9900)
+        //                                   : Color(0xFF555555)),
+        //                         ),
+        //                         selected: _index == 1,
+        //                         onTap: () {
+        //                           setState(() {
+        //                             _index = 1;
+        //                           });
+        //
+        //                           Navigator.pop(context);
+        //                         },
+        //                       ),
+        //                     ),
+        //                   ),
+        //                   Padding(
+        //                     padding: const EdgeInsets.only(left: 8, right: 8),
+        //                     child: Container(
+        //                       decoration: BoxDecoration(
+        //                         color: Colors.white,
+        //                         borderRadius: BorderRadius.circular(10),
+        //                       ),
+        //                       child: ListTile(
+        //                         trailing: FaIcon(FontAwesomeIcons.wallet,
+        //                             size: 18,
+        //                             color: (_index == 8)
+        //                                 ? Color(0xFFFF9900)
+        //                                 : Color(0xFF555555)),
+        //                         title: Text(
+        //                           'Petty Cash',
+        //                           style: TextStyle(
+        //                               fontFamily: 'Arial',
+        //                               color: (_index == 8)
+        //                                   ? Color(0xFFFF9900)
+        //                                   : Color(0xFF555555)),
+        //                         ),
+        //                         selected: _index == 8,
+        //                         onTap: () {
+        //                           setState(() {
+        //                             _index = 8;
+        //                           });
+        //
+        //                           Navigator.pop(context);
+        //                         },
+        //                       ),
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //         ],
+        //       ),
+        //     ),
+        //     Container(
+        //       padding: EdgeInsets.only(left: 12, right: 12),
+        //       child: Divider(),
+        //     ),
+        //   ],
+        // ),
         _viewMenu(13, 'Account (ไม่มี API)', Icons.keyboard_arrow_right,
             Icons.person_sharp),
         _viewMenu(12, 'Contact (ไม่มี API)', Icons.keyboard_arrow_right,
@@ -424,14 +424,14 @@ class _OrigamiPageState extends State<OrigamiPage> {
 
   Widget _buildScreen() {
     final pages = {
-      0: NeedsView(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
-      1: NeedRequest(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
+      // 0: NeedsView(
+      //   employee: widget.employee,
+      //   Authorization: widget.Authorization,
+      // ),
+      // 1: NeedRequest(
+      //   employee: widget.employee,
+      //   Authorization: widget.Authorization,
+      // ),
       2: AcademyPage(
         employee: widget.employee,
         Authorization: widget.Authorization,
@@ -514,9 +514,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
       ),
     };
     return pages[_index] ??
-        JobPage(
+        TimeSample(
           employee: widget.employee,
+          timestamp: _branche,
           Authorization: widget.Authorization,
+          fetchBranchCallback: () => fetchBranch(),
+          branch_name: branch_name,
+          branch_id: branch_id,
         );
   }
 

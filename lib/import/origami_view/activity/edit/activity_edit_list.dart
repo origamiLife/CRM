@@ -614,18 +614,22 @@ class _ActivityEditListState extends State<ActivityEditList> {
               },
               child: CircleAvatar(
                 radius: 50,
-                backgroundColor: Color(0xFF555555),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Stamp',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                backgroundColor: Colors.red,
+                child: CircleAvatar(
+                  radius: 47,
+                  backgroundColor: Color(0xFF555555),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Stamp',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 24,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
@@ -1495,11 +1499,12 @@ class _ActivityEditListState extends State<ActivityEditList> {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
+        final List<dynamic> dataJson = jsonResponse['data']??[];
         setState(() {
           getSkoopDetail =
               dataJson.map((json) => GetSkoopDetail.fromJson(json)).toList();
           skoopDetail = getSkoopDetail[0];
+          print(getSkoopDetail);
         });
       } else {
         throw Exception('Failed to load status data');
@@ -1544,14 +1549,14 @@ class _ActivityEditListState extends State<ActivityEditList> {
       headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'project_id': '20774',
+        'project_id': skoopDetail?.project_id??0,
         'index': '',
       },
     );
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['status'] == true) {
-        final List<dynamic> dataJson = jsonResponse['employee_data'];
+        final List<dynamic> dataJson = jsonResponse['employee_data']??[];
         int limit = jsonResponse['limit'];
         setState(() {
           modelEmployee =
