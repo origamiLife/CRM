@@ -82,103 +82,43 @@ class _OrigamiPageState extends State<OrigamiPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // เช็คว่ามีการกดปุ่มย้อนกลับครั้งล่าสุดหรือไม่ และเวลาห่างจากปัจจุบันมากกว่า 2 วินาทีหรือไม่
         final now = DateTime.now();
         const maxDuration = Duration(seconds: 3);
-        final isWarning =
-            lastPressed == null || now.difference(lastPressed!) > maxDuration;
+        final isWarning = lastPressed == null || now.difference(lastPressed!) > maxDuration;
+
         if (isWarning) {
-          // ถ้ายังไม่ได้กดสองครั้งภายในเวลาที่กำหนด ให้แสดง SnackBar แจ้งเตือน
-          lastPressed = DateTime.now();
+          lastPressed = now;
           if (_index != 12) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text(
                   'Press back again to exit the origami application.',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontFamily: 'Arial', color: Colors.white),
                 ),
                 duration: maxDuration,
               ),
             );
           }
-          return false; // ไม่ออกจากแอป
+          return false;
         }
-        // ถ้ากดปุ่มย้อนกลับสองครั้งภายในเวลาที่กำหนด ให้ออกจากแอป
         return true;
       },
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 1,
-          foregroundColor: Color(0xFFFF9900),
           backgroundColor: Colors.white,
+          foregroundColor: const Color(0xFFFF9900),
           title: Text(
             _TitleHeader[_index],
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Arial',
               fontSize: 24,
-              color: Color(0xFFFF9900),
               fontWeight: FontWeight.w700,
+              color: Color(0xFFFF9900),
             ),
           ),
-          // leading: IconButton(
-          //   icon: Icon(
-          //     Icons.arrow_back_ios,
-          //     color: Colors.orange,
-          //   ),
-          //   onPressed: () {},
-          // ),
-          actions: <Widget>[
-            if (_index == 5)
-              Row(
-                children: [
-                  InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext dialogContext) {
-                            return Dialog(
-                              elevation: 0,
-                              backgroundColor: Colors.white, // สีพื้นหลัง
-                              insetPadding:
-                                  EdgeInsets.all(8), // ปรับระยะขอบให้แคบลง
-                              child: TimeAttendanceHistory(
-                                employee: widget.employee,
-                                pageInput: '5',
-                                Authorization: widget.Authorization,
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Icon(Icons.history,
-                          color: Colors.orange,
-                          size: 24)),
-                  SizedBox(width: 16),
-                  InkWell(
-                      onTap: () => _changeBranch(_branches),
-                      child: Icon(Icons.home,
-                          color: Colors.orange,
-                          size: 24)),
-                  SizedBox(width: 16),
-                  InkWell(
-                      onTap: () {
-                        // if (branchStr == 'Time') {
-                        //   _changeBranch();
-                        // } else {
-                        //   return;
-                        // }
-                      },
-                      child: Icon(Icons.call_missed_outgoing,
-                          color: Colors.orange,
-                          size: 24)),
-                  SizedBox(width: 16),
-                ],
-              )
-          ],
+          actions: (_index == 5) ? _buildAppBarTimeStamp() : null,
         ),
         drawer: Container(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -213,225 +153,165 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
-  Widget _getContentWidget() {
-    return Column(
+  Widget _drawerHeader() {
+    return Stack(
+      alignment: Alignment.bottomLeft,
       children: [
-        // Column(
-        //   children: [
-        //     Padding(
-        //       padding: const EdgeInsets.only(top: 2, left: 6, right: 6),
-        //       child: Column(
-        //         children: [
-        //           Container(
-        //             decoration: BoxDecoration(
-        //               color: Colors.white,
-        //               borderRadius: BorderRadius.circular(10),
-        //             ),
-        //             child: ListTile(
-        //               trailing: Icon(Icons.keyboard_arrow_down,
-        //                   color: (_index == 0 || _index == 1)
-        //                       ? Colors.transparent
-        //                       : Color(0xFF555555)),
-        //               title: Row(
-        //                 children: [
-        //                   Container(
-        //                     padding: EdgeInsets.all(8),
-        //                     decoration: BoxDecoration(
-        //                       color: Colors.white,
-        //                       borderRadius: BorderRadius.circular(10),
-        //                     ),
-        //                     child: FaIcon(FontAwesomeIcons.fileText,
-        //                         size: 18,
-        //                         color: (_index == 0 || _index == 1)
-        //                             ? Color(0xFFFF9900)
-        //                             : Color(0xFF555555)),
-        //                   ),
-        //                   SizedBox(
-        //                     width: 8,
-        //                   ),
-        //                   Text(
-        //                     '$need',
-        //                     style: TextStyle(
-        //                         fontFamily: 'Arial',
-        //                         color: (_index == 0 || _index == 1)
-        //                             ? Color(0xFFFF9900)
-        //                             : Color(0xFF555555)),
-        //                   ),
-        //                 ],
-        //               ),
-        //               // selected: _index == 0,
-        //               // onTap: () {
-        //               //   setState(() {
-        //               //     (isNeed == true) ? _index = 0 : _index = _index;
-        //               //     (isNeed == true) ? isNeed = false : isNeed = true;
-        //               //   });
-        //               // },
-        //             ),
-        //           ),
-        //           if (isNeed == false)
-        //             Container(
-        //               padding: EdgeInsets.only(left: 16),
-        //               child: Column(
-        //                 children: [
-        //                   Padding(
-        //                     padding: const EdgeInsets.only(left: 8, right: 8),
-        //                     child: Container(
-        //                       decoration: BoxDecoration(
-        //                         color: Colors.white,
-        //                         borderRadius: BorderRadius.circular(10),
-        //                       ),
-        //                       child: ListTile(
-        //                         trailing: FaIcon(
-        //                             FontAwesomeIcons.handHoldingUsd,
-        //                             size: 18,
-        //                             color: (_index == 0)
-        //                                 ? Color(0xFFFF9900)
-        //                                 : Color(0xFF555555)),
-        //                         title: Text(
-        //                           '$need',
-        //                           style: TextStyle(
-        //                               fontFamily: 'Arial',
-        //                               color: (_index == 0)
-        //                                   ? Color(0xFFFF9900)
-        //                                   : Color(0xFF555555)),
-        //                         ),
-        //                         selected: _index == 0,
-        //                         onTap: () {
-        //                           setState(() {
-        //                             _index = 0;
-        //                           });
-        //
-        //                           Navigator.pop(context);
-        //                         },
-        //                       ),
-        //                     ),
-        //                   ),
-        //                   Padding(
-        //                     padding: const EdgeInsets.only(left: 8, right: 8),
-        //                     child: Container(
-        //                       decoration: BoxDecoration(
-        //                         color: Colors.white,
-        //                         borderRadius: BorderRadius.circular(10),
-        //                       ),
-        //                       child: ListTile(
-        //                         trailing: FaIcon(FontAwesomeIcons.checkDouble,
-        //                             size: 18,
-        //                             color: (_index == 1)
-        //                                 ? Color(0xFFFF9900)
-        //                                 : Color(0xFF555555)),
-        //                         title: Text(
-        //                           '$request',
-        //                           style: TextStyle(
-        //                               fontFamily: 'Arial',
-        //                               color: (_index == 1)
-        //                                   ? Color(0xFFFF9900)
-        //                                   : Color(0xFF555555)),
-        //                         ),
-        //                         selected: _index == 1,
-        //                         onTap: () {
-        //                           setState(() {
-        //                             _index = 1;
-        //                           });
-        //
-        //                           Navigator.pop(context);
-        //                         },
-        //                       ),
-        //                     ),
-        //                   ),
-        //                   Padding(
-        //                     padding: const EdgeInsets.only(left: 8, right: 8),
-        //                     child: Container(
-        //                       decoration: BoxDecoration(
-        //                         color: Colors.white,
-        //                         borderRadius: BorderRadius.circular(10),
-        //                       ),
-        //                       child: ListTile(
-        //                         trailing: FaIcon(FontAwesomeIcons.wallet,
-        //                             size: 18,
-        //                             color: (_index == 8)
-        //                                 ? Color(0xFFFF9900)
-        //                                 : Color(0xFF555555)),
-        //                         title: Text(
-        //                           'Petty Cash',
-        //                           style: TextStyle(
-        //                               fontFamily: 'Arial',
-        //                               color: (_index == 8)
-        //                                   ? Color(0xFFFF9900)
-        //                                   : Color(0xFF555555)),
-        //                         ),
-        //                         selected: _index == 8,
-        //                         onTap: () {
-        //                           setState(() {
-        //                             _index = 8;
-        //                           });
-        //
-        //                           Navigator.pop(context);
-        //                         },
-        //                       ),
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //         ],
-        //       ),
-        //     ),
-        //     Container(
-        //       padding: EdgeInsets.only(left: 12, right: 12),
-        //       child: Divider(),
-        //     ),
-        //   ],
-        // ),
-        _viewMenu(13, 'Account (ไม่มี API)', Icons.keyboard_arrow_right,
-            Icons.person_sharp),
-        _viewMenu(12, 'Contact (ไม่มี API)', Icons.keyboard_arrow_right,
-            Icons.perm_contact_cal_outlined),
-        _viewMenu(10, 'Project', Icons.keyboard_arrow_right,
-            FontAwesomeIcons.projectDiagram),
-        _viewMenu(9, 'Activity (ขาด api ตัวใหม่, stamp กิจกรรม)',
-            Icons.keyboard_arrow_right, FontAwesomeIcons.running),
-        _viewMenu(14, 'Calendar (ไม่มี API)', Icons.keyboard_arrow_right,
-            Icons.calendar_month),
-        _viewMenu(
-            5, 'Time', Icons.keyboard_arrow_right, FontAwesomeIcons.clock),
-        _viewMenu(11, 'Work (ขาด api create work)', Icons.keyboard_arrow_right,
-            Icons.work),
-        _viewMenu(2, 'Academy', Icons.keyboard_arrow_right,
-            FontAwesomeIcons.university),
-        _viewMenu(3, 'Language', Icons.keyboard_arrow_right,
-            FontAwesomeIcons.language),
-        _viewMenu(
-            6, 'About', Icons.keyboard_arrow_right, FontAwesomeIcons.user),
-        _viewMenu(7, 'HELPDESK (ไม่มี API)', Icons.keyboard_arrow_right,
-            Icons.message),
-        // _viewMenu(15, 'Deflate (ยังไม่เอา)', Icons.keyboard_arrow_right,
-        //     FontAwesomeIcons.lifeRing),
-        // _viewMenu(
-        //   16,
-        //   'IDOC (ยังไม่เอา)',
-        //   Icons.keyboard_arrow_right,
-        //   Icons.edit_document,
-        // ),
-        // _viewMenu(17, 'Issue Log (ยังไม่เอา)', Icons.keyboard_arrow_right,
-        //     FontAwesomeIcons.checkDouble),
-        // _viewMenu(18, 'Members (ไม่เอา)', Icons.keyboard_arrow_right,
-        //     Icons.phone_android),
-        // _viewMenu(19, 'Job (ยังไม่เอา)', Icons.keyboard_arrow_right,
-        //     Icons.person_2_rounded)
+        const UserAccountsDrawerHeader(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/logoOrigami/default_bg.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          accountName: null,
+          accountEmail: null,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16, right: 8, bottom: 25),
+          child: _employeeInfo(),
+        ),
       ],
     );
   }
 
+  Widget _employeeInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CircleAvatar(
+          radius: 35,
+          backgroundColor: Colors.white,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(25),
+            child: Image.network(
+              widget.employee.emp_avatar,
+              fit: BoxFit.fill,
+              errorBuilder: (_, __, ___) => Image.network(
+                'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        _infoRow('$Name: ', widget.employee.emp_name),
+        const SizedBox(height: 6),
+        _infoRow('$Position1: ', widget.employee.dept_name),
+      ],
+    );
+  }
+
+  Widget _infoRow(String label, String? value) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value ?? '',
+            style: const TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Colors.white,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _getContentWidget() {
+    return Column(
+      children: menuItems.map((item) {
+        return _viewMenu(
+          item['index'],
+          item['title'],
+          Icons.keyboard_arrow_right,
+          item['icon'],
+        );
+      }).toList(),
+    );
+  }
+
+  final List<Map<String, dynamic>> menuItems = [
+    {
+      'index': 13,
+      'title': 'Account (ไม่มี API)',
+      'icon': FontAwesomeIcons.user,
+    },
+    {
+      'index': 12,
+      'title': 'Contact (ไม่มี API)',
+      'icon': FontAwesomeIcons.vcard,
+    },
+    {
+      'index': 10,
+      'title': 'Project',
+      'icon': FontAwesomeIcons.projectDiagram,
+    },
+    {
+      'index': 9,
+      'title': 'Activity (ขาด api ตัวใหม่, stamp กิจกรรม)',
+      'icon': FontAwesomeIcons.running,
+    },
+    {
+      'index': 14,
+      'title': 'Calendar (ไม่มี API)',
+      'icon': FontAwesomeIcons.calendar,
+    },
+    {
+      'index': 5,
+      'title': 'Time',
+      'icon': FontAwesomeIcons.clock,
+    },
+    {
+      'index': 11,
+      'title': 'Work (ขาด api create work)',
+      'icon': FontAwesomeIcons.briefcase,
+    },
+    {
+      'index': 2,
+      'title': 'Academy',
+      'icon': FontAwesomeIcons.university,
+    },
+    {
+      'index': 3,
+      'title': 'Language',
+      'icon': FontAwesomeIcons.language,
+    },
+    {
+      'index': 6,
+      'title': 'About',
+      'icon': FontAwesomeIcons.user,
+    },
+    {
+      'index': 7,
+      'title': 'HELPDESK (ไม่มี API)',
+      'icon': Icons.message,
+    },
+    // เพิ่มอีกเมนูได้ที่นี่...
+  ];
+
   Widget _buildScreen() {
     final pages = {
-      // 0: NeedsView(
-      //   employee: widget.employee,
-      //   Authorization: widget.Authorization,
-      // ),
-      // 1: NeedRequest(
-      //   employee: widget.employee,
-      //   Authorization: widget.Authorization,
-      // ),
+      0: NeedsView(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
+      1: NeedRequest(
+        employee: widget.employee,
+        Authorization: widget.Authorization,
+      ),
       2: AcademyPage(
         employee: widget.employee,
         Authorization: widget.Authorization,
@@ -524,126 +404,27 @@ class _OrigamiPageState extends State<OrigamiPage> {
         );
   }
 
-  Widget _drawerHeader() {
-    return Stack(
-      alignment: Alignment.bottomLeft,
-      children: [
-        const UserAccountsDrawerHeader(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/logoOrigami/default_bg.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          accountName: null,
-          accountEmail: null,
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 16, right: 8, bottom: 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                radius: 35,
-                backgroundColor: Colors.white,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(25),
-                  child: Image.network(
-                    widget.employee.emp_avatar,
-                    fit: BoxFit.fill,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.network(
-                        'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                        width: double.infinity, // ความกว้างเต็มจอ
-                        fit: BoxFit.contain,
-                      );
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Text(
-                    '$Name: ',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Expanded(
-                    child: Text(
-                      '${widget.employee.emp_name}',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 6,
-              ),
-              Row(
-                children: [
-                  Text(
-                    '$Position1: ',
-                    style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white),
-                  ),
-                  Expanded(
-                    child: Text(
-                      '${widget.employee.dept_name}',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   final List<String> _TitleHeader = [
-    "$need",
-    "$request",
-    "Academy",
-    "Language",
-    "$logoutTS",
-    "Time",
-    "Profile",
-    "HELPDESK",
-    "Petty Cash",
-    "Activity",
-    "Project",
-    "Work",
-    "Contact",
-    "Account",
-    "Calendar",
-    "HelpDesk",
-    "IDOC",
-    "Issue Log",
-    "Contact Members",
-    "Job",
+    need,       // 0
+    request,    // 1
+    "Academy",  // 2
+    "Language", // 3
+    logoutTS,   // 4
+    "Time",     // 5
+    "Profile",  // 6
+    "HELPDESK", // 7
+    "Petty Cash", // 8
+    "Activity", // 9
+    "Project",  // 10
+    "Work",     // 11
+    "Contact",  // 12
+    "Account",  // 13
+    "Calendar", // 14
+    "HelpDesk", // 15
+    "IDOC",     // 16
+    "Issue Log",// 17
+    "Contact Members", // 18
+    "Job",      // 19
   ];
 
   String branchStr = '';
@@ -707,101 +488,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
-  Widget _logoutWidget() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Container(
-        padding: const EdgeInsets.only(top: 4, bottom: 8, right: 4, left: 4),
-        decoration: BoxDecoration(
-          color: Colors.orange.shade50,
-          // borderRadius: BorderRadius.circular(10),
-        ),
-        child: ListTile(
-          trailing: Icon(Icons.keyboard_arrow_right, color: Colors.red),
-          title: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.orange.shade200,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  Icons.door_back_door_outlined,
-                  color: Colors.red,
-                  size: 18,
-                ),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Text(
-                '$logout',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: Colors.red,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext dialogContext) {
-                return AlertDialog(
-                  elevation: 0,
-                  title: Text(
-                    'Do you want to log out?',
-                    style: styleGrey,
-                  ),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text(
-                        '$CancelTS',
-                        style: styleGrey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          Navigator.of(dialogContext).pop();
-                          // Navigator.pop(context);
-                        });
-                      },
-                    ),
-                    TextButton(
-                      child: Text(
-                        '$logoutTS',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          color: Color(0xFF555555),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop();
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginPage(
-                                    num: 1,
-                                    popPage: 0,
-                                  )),
-                          (Route<dynamic> route) =>
-                              false, // ลบหน้าทั้งหมดใน stack
-                        );
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
-  }
-
   void _changeBranch(List<GetTimeStampSim> data) {
     showModalBottomSheet<void>(
       barrierColor: Colors.black87,
@@ -820,11 +506,9 @@ class _OrigamiPageState extends State<OrigamiPage> {
   Widget _getBranch(List<GetTimeStampSim> branchList) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.3,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(10),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -832,12 +516,12 @@ class _OrigamiPageState extends State<OrigamiPage> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              SizedBox(height: 16),
-              Container(
+              const SizedBox(height: 16),
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Branch',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 22,
                     color: Color(0xFFFF9900),
@@ -845,54 +529,28 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Expanded(
-                child: ListView.builder(
+                child: ListView.separated(
                   itemCount: branchList.length,
+                  separatorBuilder: (_, __) => const Divider(),
                   itemBuilder: (context, index) {
                     final branch = branchList[index];
-                    return Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              branch_name = branch.branch_name ?? '';
-                              _branche = branch;
-                            });
-                            Navigator.pop(context);
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      color: Color(0xFF555555),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Flexible(
-                                      child: Text(
-                                        '${branch?.branch_name ?? ''}',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: styleGrey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Divider(),
-                            ],
-                          ),
-                        ),
-                        Divider(),
-                      ],
+                    return ListTile(
+                      leading: const Icon(Icons.location_on, color: Color(0xFF555555)),
+                      title: Text(
+                        branch.branch_name ?? '',
+                        style: styleGrey,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          branch_name = branch.branch_name ?? '';
+                          _branche = branch;
+                        });
+                        Navigator.pop(context);
+                      },
                     );
                   },
                 ),
@@ -937,5 +595,116 @@ class _OrigamiPageState extends State<OrigamiPage> {
     } else {
       throw Exception('Failed to load contacts');
     }
+  }
+
+  List<Widget> _buildAppBarTimeStamp() {
+    return [
+      IconButton(
+        icon: const Icon(Icons.history, color: Colors.orange),
+        onPressed: () => showDialog(
+          context: context,
+          builder: (_) => Dialog(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            insetPadding: const EdgeInsets.all(8),
+            child: TimeAttendanceHistory(
+              employee: widget.employee,
+              pageInput: '5',
+              Authorization: widget.Authorization,
+            ),
+          ),
+        ),
+      ),
+      IconButton(
+        icon: const Icon(Icons.home, color: Colors.orange),
+        onPressed: () => _changeBranch(_branches),
+      ),
+      IconButton(
+        icon: const Icon(Icons.call_missed_outgoing, color: Colors.orange),
+        onPressed: () {
+          // reserved for future use
+        },
+      ),
+    ];
+  }
+
+  Widget _logoutWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        decoration: BoxDecoration(
+          color: Colors.orange.shade50,
+        ),
+        child: ListTile(
+          trailing: const Icon(Icons.keyboard_arrow_right, color: Colors.red),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade200,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.door_back_door_outlined,
+                  color: Colors.red,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                logout,
+                style: const TextStyle(
+                  fontFamily: 'Arial',
+                  color: Colors.red,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          onTap: () => _confirmLogout(),
+        ),
+      ),
+    );
+  }
+
+  void _confirmLogout() {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          elevation: 0,
+          title: Text('Do you want to log out?', style: styleGrey),
+          actions: <Widget>[
+            TextButton(
+              child: Text(CancelTS, style: styleGrey),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+            ),
+            TextButton(
+              child: Text(
+                logoutTS,
+                style: const TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => LoginPage(num: 1, popPage: 0),
+                  ),
+                      (route) => false,
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

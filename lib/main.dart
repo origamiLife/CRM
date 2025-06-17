@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const LoginPage(
         num: 0, // num 1 ยังไม่ได้ login
-        popPage: 0,
+        popPage: 5,
         company_id: 0,
       ),
     );
@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     print('Username: $username');
-    print('Password: $password');
+    // print('Password: $password');
   }
 
   // Future<void> checkDeviceType(BuildContext? context) async {
