@@ -10,12 +10,12 @@ class JoinUser extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
+
     required this.project,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
+
   final ModelProject project;
   @override
   _JoinUserState createState() => _JoinUserState();
@@ -24,8 +24,6 @@ class JoinUser extends StatefulWidget {
 class _JoinUserState extends State<JoinUser> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
-  bool _switchOwner = false;
-  bool _switchActivity = false;
 
   @override
   void initState() {
@@ -49,26 +47,26 @@ class _JoinUserState extends State<JoinUser> {
         child: SingleChildScrollView(
           child: (modelEmployee == [])
               ? Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Color(0xFFFF9900),
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Text(
-                    '$Loading...',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF555555),
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: Color(0xFFFF9900),
                     ),
-                  ),
-                ],
-              ))
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Text(
+                      '$Loading...',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF555555),
+                      ),
+                    ),
+                  ],
+                ))
               : JoinUser(),
         ),
       ),
@@ -80,73 +78,76 @@ class _JoinUserState extends State<JoinUser> {
       children: [
         Column(
             children: List.generate(modelEmployee.length, (index) {
-              final join_user = modelEmployee[index];
-              return Padding(
-                padding: const EdgeInsets.all(4),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 0,
-                            blurRadius: 0,
-                            offset: Offset(1, 3), // x, y
-                          ),
-                        ],
+          final join_user = modelEmployee[index];
+          String owner = '';
+          if (join_user.approve_activity == '0') {
+            owner = 'Y';
+          } else {
+            owner = 'N';
+          }
+          return Padding(
+            padding: const EdgeInsets.all(4),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: Offset(1, 3), // x, y
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Column(
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Colors.grey.shade400,
-                                  child: CircleAvatar(
-                                    radius: 31,
-                                    backgroundColor: Colors.white,
-                                    child: ClipRRect(
-                                      borderRadius:
-                                      BorderRadius.circular(50),
-                                      child: Image.network(
-                                        join_user.emp_pic,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Colors.grey.shade400,
+                              child: CircleAvatar(
+                                radius: 31,
+                                backgroundColor: Colors.white,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    join_user.emp_pic,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
-                                SizedBox(width: 8),
-                                _switch(join_user),
-                              ],
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: _checkBox(
-                                        'Owner', join_user.is_owner)),
-                                Expanded(
-                                    child: _checkBox('Approve Activity',
-                                        join_user.is_owner)),
-                              ],
-                            ),
+                            SizedBox(width: 8),
+                            _switch(join_user),
                           ],
                         ),
-                      ),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: _checkBox('Owner', join_user.is_owner)),
+                            Expanded(
+                                child: _checkBox('Approve Activity', owner)),
+                          ],
+                        ),
+                      ],
                     ),
-                    Divider(),
-                  ],
+                  ),
                 ),
-              );
-            })),
+                Divider(),
+              ],
+            ),
+          );
+        })),
         SizedBox(
           height: 8,
         ),
@@ -238,7 +239,7 @@ class _JoinUserState extends State<JoinUser> {
                 children: [
                   Padding(
                     padding:
-                    const EdgeInsets.only(left: 16, right: 16, top: 16),
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.7,
                       decoration: BoxDecoration(
@@ -440,7 +441,7 @@ class _JoinUserState extends State<JoinUser> {
         "$host/api/origami/crm/project/component/employee.php?search");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'project_id': widget.project.project_id,

@@ -14,11 +14,9 @@ class ProjectOther extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
   @override
   _ProjectOtherState createState() => _ProjectOtherState();
 }
@@ -188,7 +186,6 @@ class _ProjectOtherState extends State<ProjectOther> {
                                           builder: (context) => IdocScreen(
                                             employee: widget.employee,
                                             pageInput: widget.pageInput,
-                                            Authorization: widget.Authorization,
                                           ),
                                         ),
                                       );

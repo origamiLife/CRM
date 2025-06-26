@@ -621,7 +621,7 @@ class GetSkoopDetail {
       cost: json['cost'] ?? '',
       is_ticket: json['is_ticket'] ?? '',
       activity_status: json['activity_status'] ?? '',
-      is_join: json['is_join'] ?? '',
+      is_join: json['is_join'].toString()??'',
       is_main_activity: json['is_main_activity'] ?? '',
       status: json['status'] ?? '',
       stamp_in: json['stamp_in'] ?? '',

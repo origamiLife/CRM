@@ -9,11 +9,11 @@ class IdocScreen extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
+
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
+
 
   @override
   _IdocScreenState createState() => _IdocScreenState();
@@ -142,7 +142,7 @@ class _IdocScreenState extends State<IdocScreen> {
                                 builder: (context) => IdocEdit(
                                     employee: widget.employee,
                                     pageInput: widget.pageInput,
-                                    Authorization: widget.Authorization),
+                                    Authorization: authorization),
                               ),
                             );
                           },

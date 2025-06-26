@@ -10,11 +10,9 @@ class AccountScreen extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
   @override
   _AccountScreenState createState() => _AccountScreenState();
 }
@@ -33,11 +31,10 @@ class _AccountScreenState extends State<AccountScreen> {
     _scrollController.addListener(_scrollListener);
     // _searchController.addListener(_filterAccountScreen);
     _searchController.addListener(() {
-      int index = 0;
       _search = _searchController.text;
       indexItems = 0;
       print('$indexItems');
-      AccountScreen= [];
+      accountScreen = [];
       fetchModelAccountVoid();
     });
   }
@@ -62,55 +59,63 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AccountAll.isEmpty ? Colors.white : Colors.grey.shade50,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AccountAddView(
-                employee: widget.employee,
-                Authorization: widget.Authorization,
+    return (widget.pageInput != 'origami')
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            body: bodyBuild(),
+          )
+        : Scaffold(
+            backgroundColor: Colors.white,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AccountAddView(
+                      employee: widget.employee,
+                    ),
+                  ),
+                ).then((value) {
+                  setState(() {
+                    indexItems = 0;
+                    // allAccount.clear();
+                    // fetchModelAccount(); // เรียกฟังก์ชันโหลด API ใหม่
+                  });
+                });
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(100),
+                  bottomLeft: Radius.circular(100),
+                  bottomRight: Radius.circular(100),
+                  topLeft: Radius.circular(100),
+                ),
+              ),
+              elevation: 0,
+              backgroundColor: Color(0xFFFF9900),
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
               ),
             ),
-          ).then((value) {
-            setState(() {
-              indexItems = 0;
-              // allAccount.clear();
-              // fetchModelAccount(); // เรียกฟังก์ชันโหลด API ใหม่
-            });
-          });
-        },
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(100),
-            bottomLeft: Radius.circular(100),
-            bottomRight: Radius.circular(100),
-            topLeft: Radius.circular(100),
-          ),
-        ),
-        elevation: 0,
-        backgroundColor: Color(0xFFFF9900),
-      ),
-      body: SafeArea(
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: _buildSearchField(),
-              ),
-              Expanded(
-                child: _getContentWidget(),
-              ),
-            ],
-          ),
+            body: bodyBuild(),
+          );
+  }
+
+  Widget bodyBuild() {
+    return SafeArea(
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: _buildSearchField(),
+            ),
+            Expanded(
+              child: _getContentWidget(),
+            ),
+          ],
         ),
       ),
     );
@@ -181,12 +186,12 @@ class _AccountScreenState extends State<AccountScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: ListView.builder(
           controller: _scrollController,
-          itemCount: AccountScreen.length,
+          itemCount: accountScreen.length,
           itemBuilder: (context, index) {
-            AccountAll = AccountScreen;
+            accountAll = accountScreen;
             // AccountScreen.sort((a, b) => b.cus_id.compareTo(a.cus_id));
-            final Account = AccountScreen[index];
-            print('AccountScreen.length : ${AccountScreen.length}');
+            final account = accountScreen[index];
+            print('AccountScreen.length : ${accountScreen.length}');
             return InkWell(
               onTap: () {
                 Navigator.push(
@@ -194,7 +199,6 @@ class _AccountScreenState extends State<AccountScreen> {
                   MaterialPageRoute(
                     builder: (context) => AccountEditView(
                       employee: widget.employee,
-                      Authorization: widget.Authorization,
                       pageInput: widget.pageInput,
                     ),
                   ),
@@ -223,7 +227,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   child: Padding(
                                     padding: EdgeInsets.only(left: 8.0),
                                     child: Text(
-                                      Account.cus_code,
+                                      account.cus_code,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -286,7 +290,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.network(
-                                  Account.cus_logo,
+                                  account.cus_logo,
                                   fit: BoxFit.fill,
                                   errorBuilder: (context, error, stackTrace) {
                                     return Image.network(
@@ -308,11 +312,11 @@ class _AccountScreenState extends State<AccountScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (Account.account_name_en != '')
+                              if (account.account_name_en != '')
                                 Text(
-                                  (Account.registration_name == '')
-                                      ? Account.account_name_en
-                                      : '${Account.registration_name ?? ''} : ${Account.account_name_en}',
+                                  (account.registration_name == '')
+                                      ? account.account_name_en
+                                      : '${account.registration_name ?? ''} : ${account.account_name_en}',
                                   maxLines: 1,
                                   style: TextStyle(
                                     fontFamily: 'Arial',
@@ -323,9 +327,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                 )
                               else
                                 Text(
-                                  (Account.registration_name == '')
-                                      ? Account.account_name_th
-                                      : '${Account.registration_name ?? ''} : ${Account.account_name_th}',
+                                  (account.registration_name == '')
+                                      ? account.account_name_th
+                                      : '${account.registration_name ?? ''} : ${account.account_name_th}',
                                   maxLines: 1,
                                   style: TextStyle(
                                     fontFamily: 'Arial',
@@ -335,7 +339,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   ),
                                 ),
                               Text(
-                                'Grop : ${Account.cus_group_name}',
+                                'Grop : ${account.cus_group_name}',
                                 maxLines: 1,
                                 style: TextStyle(
                                   fontFamily: 'Arial',
@@ -345,7 +349,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                 ),
                               ),
                               Text(
-                                'Type : ${Account.cus_type_name ?? ''}',
+                                'Type : ${account.cus_type_name ?? ''}',
                                 maxLines: 1,
                                 style: TextStyle(
                                   fontFamily: 'Arial',
@@ -354,10 +358,10 @@ class _AccountScreenState extends State<AccountScreen> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              (Account.cus_tel_no == '')
+                              (account.cus_tel_no == '')
                                   ? Container()
                                   : Text(
-                                      'Tel : ${Account.cus_tel_no ?? ''}',
+                                      'Tel : ${account.cus_tel_no ?? ''}',
                                       maxLines: 1,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
@@ -366,10 +370,10 @@ class _AccountScreenState extends State<AccountScreen> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                              (Account.cus_email == '')
+                              (account.cus_email == '')
                                   ? Container()
                                   : Text(
-                                      'Email : ${Account.cus_email}',
+                                      'Email : ${account.cus_email}',
                                       maxLines: 1,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
@@ -411,40 +415,37 @@ class _AccountScreenState extends State<AccountScreen> {
 
   bool _isFirstTime = true;
   int indexItems = 0;
-  List<ModelAccount> AccountScreen = [];
-  List<ModelAccount> AccountAll = [];
+  List<ModelAccount> accountScreen = [];
+  List<ModelAccount> accountAll = [];
   Future<void> fetchModelAccountVoid() async {
     final uri = Uri.parse(
-        "$hostDev/api/origami/crm/account/list-account.php?search=$_search");
+        "$host/api/origami/crm/account/list-account.php?search=$_search");
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
-          // 'comp_id': widget.employee.comp_id,
-          // 'emp_id': widget.employee.emp_id,
-          'comp_id': '5',
-          'emp_id': '185',
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
           'index': indexItems.toString(),
         },
       );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> AccountJson = jsonResponse['account_data'] ?? [];
+        final List<dynamic> accountJson = jsonResponse['account_data'] ?? [];
         bool nextPage = jsonResponse['next_page'];
         List<ModelAccount> newActivities =
-            AccountJson.map((json) => ModelAccount.fromJson(json)).toList();
+            accountJson.map((json) => ModelAccount.fromJson(json)).toList();
 
         setState(() {
           // กรอง id ที่ซ้ำ
-          Set<String> seenIds = AccountScreen.map((e) => e.cus_id).toSet();
+          Set<String> seenIds = accountScreen.map((e) => e.cus_id).toSet();
           newActivities =
               newActivities.where((a) => seenIds.add(a.cus_id)).toList();
 
-          AccountScreen.addAll(newActivities);
-          print('$AccountScreen');
-          // AccountScreen.sort((a, b) => b.cus_id.compareTo(a.cus_id));
+          accountScreen.addAll(newActivities);
+          accountScreen.sort((a, b) => b.cus_id.compareTo(a.cus_id));
           if (_isFirstTime) {
             _isFirstTime = false; // ป้องกันการรันซ้ำ
           }
@@ -457,7 +458,7 @@ class _AccountScreenState extends State<AccountScreen> {
         });
         print('nextPage : $indexItems');
 
-        print("Total activities: ${AccountScreen.length}");
+        print("Total activities: ${accountScreen.length}");
       } else {
         throw Exception(
             'Failed to load data, status code: ${response.statusCode}');

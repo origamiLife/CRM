@@ -10,10 +10,9 @@ class AccountAddView extends StatefulWidget {
   const AccountAddView({
     Key? key,
     required this.employee,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
-  final String Authorization;
+
   @override
   _AccountAddViewState createState() => _AccountAddViewState();
 }

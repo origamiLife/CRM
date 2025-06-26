@@ -10,11 +10,9 @@ class ContactScreen extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
   @override
   _ContactScreenState createState() => _ContactScreenState();
 }
@@ -36,13 +34,13 @@ class _ContactScreenState extends State<ContactScreen> {
       _search = _searchController.text;
       indexItems = 0;
       print('$indexItems');
-      if (_selectedIndex == 0) {
-        ContactScreen = [];
-        fetchModelContact();
-      } else if (_selectedIndex == 1) {
-        ContactCallScreen = [];
-        fetchModelContactCall();
-      }
+      // if (_selectedIndex == 0) {
+      //   ContactScreen = [];
+      //   fetchModelContact();
+      // } else if (_selectedIndex == 1) {
+      //   ContactCallScreen = [];
+      //   fetchModelContactCall();
+      // }
     });
   }
 
@@ -53,122 +51,98 @@ class _ContactScreenState extends State<ContactScreen> {
     super.dispose();
   }
 
-  String page = "Contact";
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      if (index == 0) {
-        page = "Contact";
-      } else if (index == 1) {
-        page = "Call";
-      } else if (index == 2) {
-        page = "Recent";
-      }
-    });
-  }
-
-  List<TabItem> items = [
-    TabItem(
-      icon: Icons.perm_contact_cal_sharp,
-      title: 'Contact',
-    ),
-    TabItem(
-      icon: Icons.call,
-      title: 'Call',
-    ),
-    TabItem(
-      icon: Icons.history,
-      title: 'Recent',
-    ),
-  ];
+  // String page = "Contact";
+  // int _selectedIndex = 0;
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //     if (index == 0) {
+  //       page = "Contact";
+  //     } else if (index == 1) {
+  //       page = "Call";
+  //     } else if (index == 2) {
+  //       page = "Recent";
+  //     }
+  //   });
+  // }
+  //
+  // List<TabItem> items = [
+  //   TabItem(
+  //     icon: Icons.perm_contact_cal_sharp,
+  //     title: 'Contact',
+  //   ),
+  //   TabItem(
+  //     icon: Icons.call,
+  //     title: 'Call',
+  //   ),
+  //   TabItem(
+  //     icon: Icons.history,
+  //     title: 'Recent',
+  //   ),
+  // ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ContactAddView(
-                employee: widget.employee,
-                Authorization: widget.Authorization,
+    return (widget.pageInput != 'origami')
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            body: _switchBodeWidget(),
+          )
+        : Scaffold(
+            backgroundColor: Colors.white,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ContactAddView(
+                      employee: widget.employee,
+                      Authorization: authorization,
+                    ),
+                  ),
+                ).then((value) {
+                  // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
+                  setState(() {
+                    indexItems = 0;
+                    // fetchModelContactVoid(); // เรียกฟังก์ชันโหลด API ใหม่
+                  });
+                });
+              },
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(100),
+                  bottomLeft: Radius.circular(100),
+                  bottomRight: Radius.circular(100),
+                  topLeft: Radius.circular(100),
+                ),
+              ),
+              elevation: 0,
+              backgroundColor: Color(0xFFFF9900),
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
               ),
             ),
-          ).then((value) {
-            // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-            setState(() {
-              indexItems = 0;
-              // fetchModelContactVoid(); // เรียกฟังก์ชันโหลด API ใหม่
-            });
-          });
-        },
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(100),
-            bottomLeft: Radius.circular(100),
-            bottomRight: Radius.circular(100),
-            topLeft: Radius.circular(100),
-          ),
-        ),
-        elevation: 0,
-        backgroundColor: Color(0xFFFF9900),
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
-      bottomNavigationBar: BottomBarDefault(
-        items: items,
-        iconSize: 18,
-        animated: true,
-        titleStyle: TextStyle(
-          fontFamily: 'Arial',
-        ),
-        backgroundColor: Colors.white,
-        color: Colors.grey.shade400,
-        colorSelected: Color(0xFFFF9900),
-        indexSelected: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-      body: _switchBodeWidget(),
-    );
+            body: _switchBodeWidget(),
+          );
   }
 
   Widget _switchBodeWidget() {
-    switch (_selectedIndex) {
-      case 0:
-        return _getContentWidget();
-      case 1:
-        return _getContentWidget();
-      case 2:
-        return RecentScreen(localCallLogs: localCallLogs);
-      default:
-        return Container();
-    }
+    return _getContentWidget();
   }
 
   Widget _getContentWidget() {
     return SafeArea(
       child: Container(
         color: Colors.white,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: _buildSearchField(),
-            ),
-            if (_selectedIndex == 0)
-              Expanded(
-                child: _getContentListWidget(),
-              )
-            else if (_selectedIndex == 1)
-              Expanded(
-                child: _getContentCallWidget(),
-              )
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Column(
+            children: [
+              _buildSearchField(),
+              Expanded(child: _getContentListWidget())
+            ],
+          ),
         ),
       ),
     );
@@ -245,23 +219,22 @@ class _ContactScreenState extends State<ContactScreen> {
             // print('ContactScreen.length : ${ContactScreen.length}');
             return InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ContactEditView(
-                      employee: widget.employee,
-                      Authorization: widget.Authorization,
-                      pageInput: widget.pageInput,
-                      contact: contact,
-                    ),
-                  ),
-                ).then((value) {
-                  // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-                  setState(() {
-                    indexItems = 0;
-                    // fetchModelContactVoid(); // เรียกฟังก์ชันโหลด API ใหม่
-                  });
-                });
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => ContactEditView(
+                //       employee: widget.employee,
+                //       pageInput: widget.pageInput,
+                //       contact: contact,
+                //     ),
+                //   ),
+                // ).then((value) {
+                //   // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
+                //   setState(() {
+                //     indexItems = 0;
+                //     // fetchModelContactVoid(); // เรียกฟังก์ชันโหลด API ใหม่
+                //   });
+                // });
               },
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 5),
@@ -648,16 +621,14 @@ class _ContactScreenState extends State<ContactScreen> {
   List<ModelContact> ContactScreen = [];
   Future<void> fetchModelContact() async {
     final uri = Uri.parse(
-        "$hostDev/api/origami/crm/contact/list-contact.php?search=$_search");
+        "$host/api/origami/crm/contact/list-contact.php?search=$_search");
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $authorization'},
         body: {
-          // 'comp_id': widget.employee.comp_id,
-          // 'emp_id': widget.employee.emp_id,
-          'comp_id': '5',
-          'emp_id': '185',
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
           'index': indexItems.toString(),
         },
       );
@@ -681,7 +652,7 @@ class _ContactScreenState extends State<ContactScreen> {
           }
 
           ContactScreen.addAll(newContacts);
-
+          ContactScreen.sort((a, b) => b.create_date.compareTo(a.create_date));
           // Update indexItems only when nextPage is true
           if (nextPage) {
             indexItems += 1;
@@ -702,16 +673,14 @@ class _ContactScreenState extends State<ContactScreen> {
   List<ModelContact> ContactCallScreen = [];
   Future<void> fetchModelContactCall() async {
     final uri = Uri.parse(
-        "$hostDev/api/origami/crm/contact/list-contact.php?search=$_search");
+        "$host/api/origami/crm/contact/list-contact.php?search=$_search");
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
-          // 'comp_id': widget.employee.comp_id,
-          // 'emp_id': widget.employee.emp_id,
-          'comp_id': '5',
-          'emp_id': '185',
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
           'index': indexItems.toString(),
         },
       );

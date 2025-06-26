@@ -9,10 +9,10 @@ class activityAdd extends StatefulWidget {
   const activityAdd({
     Key? key,
     required this.employee,
-    required this.Authorization,
+
   }) : super(key: key);
   final Employee employee;
-  final String Authorization;
+
   @override
   _activityAddState createState() => _activityAddState();
 }
@@ -1970,11 +1970,11 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'type_id': type_id,
           'project_id': project_id,
           'account_id': account_id,
@@ -2019,7 +2019,7 @@ class _activityAddState extends State<activityAdd> {
   //   try {
   //     final response = await http.post(
   //       uri,
-  //       headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+  //       headers: {'Authorization': 'Bearer ${authorization}'},
   //       body: {
   //         'comp_id': widget.employee.comp_id,
   //         'idemp': widget.employee.emp_id,
@@ -2055,11 +2055,11 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -2087,11 +2087,11 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -2119,11 +2119,11 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -2151,11 +2151,11 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -2184,11 +2184,11 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'index': '0',
         },
       );
@@ -2214,11 +2214,11 @@ class _activityAddState extends State<activityAdd> {
     final uri = Uri.parse("$host/crm/ios_activity_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': authorization,
         'index': '0',
       },
     );
@@ -2248,7 +2248,7 @@ class _activityAddState extends State<activityAdd> {
 
     final response = await http.get(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
     );
 
     if (response.statusCode == 200) {

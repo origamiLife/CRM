@@ -17,9 +17,6 @@ int selectedRadio = 2;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // รอการ initialize
-  // ป้องกันการจับภาพหน้าจอ (สำหรับ Android)
-  // await secureScreen();
-  print('ABC');
   // เตรียมข้อมูลสำหรับ Locale ภาษาไทย
   await initializeDateFormatting('th', null);
 
@@ -102,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
     countPage = widget.num;
     print(widget.popPage);
     print(widget.company_id);
-    _fetchComponent();
+    // _fetchComponent();
     Translate();
     loadCredentials();
     // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -275,43 +272,46 @@ class _LoginPageState extends State<LoginPage> {
       return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              // Container(
-              //   color: Colors.white,
-              //   width: MediaQuery.of(context).size.width * 0.4,
-              //   child: Image.network(
-              //     logoComponent, // ใส่โลโก้
-              //     width: MediaQuery.of(context).size.width * 0.4,
-              //     fit: BoxFit.contain,
-              //     errorBuilder: (context, error, stackTrace) {
-              //       return Container();
-              //     },
-              //   ),
-              // ),
               Container(
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: Image.asset(
-                  'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container();
-                  },
+                decoration: BoxDecoration(
+                    image: backgroudComponent.isNotEmpty
+                        ? DecorationImage(
+                      image: NetworkImage(backgroudComponent),
+                      fit: BoxFit.cover,
+                    )
+                        : DecorationImage(
+                      image: AssetImage('assets/images/logoOrigami/default_bg.png'),
+                      fit: BoxFit.cover,
+                    ) // หรือใช้ภาพจาก assets แทน
                 ),
               ),
-              SizedBox(height: 16),
-              Container(
-                color: Colors.white,
-                child: Center(
-                  child: LoadingAnimationWidget.horizontalRotatingDots(
-                    size: 65,
-                    color: Colors.orange,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+
+                  Image.asset(
+                    'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container();
+                    },
                   ),
-                ),
+                  SizedBox(height: 16),
+                  Container(
+                    // color: Colors.white,
+                    child: Center(
+                      child: LoadingAnimationWidget.horizontalRotatingDots(
+                        size: 65,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -355,7 +355,10 @@ class _LoginPageState extends State<LoginPage> {
                       image: NetworkImage(backgroudComponent),
                       fit: BoxFit.cover,
                     )
-                        : null, // หรือใช้ภาพจาก assets แทน
+                        : DecorationImage(
+                      image: AssetImage('assets/images/logoOrigami/default_bg.png'),
+                      fit: BoxFit.cover,
+                    ) // หรือใช้ภาพจาก assets แทน
                   ),
                 ),
                 LayoutBuilder(builder: (context, constraints) {
@@ -761,215 +764,323 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showFullScreenImage(List<Employee> employee) {
+  void _showFullScreenImage(List<Employee> employeeList) {
     showDialog(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.black87,
+      barrierColor: Colors.black.withOpacity(0.85),
       builder: (context) {
         return Dialog(
-            backgroundColor: Colors.white,
-            insetPadding: EdgeInsets.all(18), // ขยายเต็มจอ
-            child: GridView.builder(
-                padding: const EdgeInsets.all(8),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: employee.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // 2 รูปต่อแถว
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 1, // อัตราส่วนกว้าง/สูง (ปรับได้ตามต้องการ)
+          backgroundColor: Colors.white,
+          insetPadding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  'เลือกสถานที่ที่ต้องการเข้าใช้งาน',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
+              ),
+              Expanded(
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: employeeList.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 1,
+                  ),
+                  itemBuilder: (context, index) {
+                    final employee = employeeList[index];
+                    return GestureDetector(
                       onTap: () async {
-                        await Future.delayed(Duration(seconds: 1));
+                        Navigator.pop(context); // ปิด Dialog ก่อนเปลี่ยนหน้า
+                        await Future.delayed(const Duration(milliseconds: 500));
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => OrigamiPage(
-                              employee: employee[index],
+                              employee: employee,
                               Authorization: authorization,
                               popPage: widget.popPage,
                               company_id: index,
                             ),
                           ),
                         );
-                        // Navigator.pop(context); // ปิด Dialog เมื่อแตะที่รูป
                       },
                       child: Card(
-                        child: Image.network(
-                          employee[index].comp_logo,
-                          fit: BoxFit.contain,
-                          width: 50,
-                          height: 50,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.error);
-                          },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.network(
+                            employee.comp_logo,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.broken_image),
+                          ),
                         ),
                       ),
-                  );
-                }));
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
       },
     );
   }
 
+
+  // void _showFullScreenImage(List<Employee> employee) {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     barrierColor: Colors.black87,
+  //     builder: (context) {
+  //       return Dialog(
+  //           backgroundColor: Colors.white,
+  //           insetPadding: EdgeInsets.all(18), // ขยายเต็มจอ
+  //           child: GridView.builder(
+  //               padding: const EdgeInsets.all(8),
+  //               shrinkWrap: true,
+  //               physics: const NeverScrollableScrollPhysics(),
+  //               itemCount: employee.length,
+  //               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //                 crossAxisCount: 2, // 2 รูปต่อแถว
+  //                 crossAxisSpacing: 8,
+  //                 mainAxisSpacing: 8,
+  //                 childAspectRatio: 1, // อัตราส่วนกว้าง/สูง (ปรับได้ตามต้องการ)
+  //               ),
+  //               itemBuilder: (context, index) {
+  //                 return GestureDetector(
+  //                     onTap: () async {
+  //                       await Future.delayed(Duration(seconds: 1));
+  //                       Navigator.pushReplacement(
+  //                         context,
+  //                         MaterialPageRoute(
+  //                           builder: (context) => OrigamiPage(
+  //                             employee: employee[index],
+  //                             Authorization: authorization,
+  //                             popPage: widget.popPage,
+  //                             company_id: index,
+  //                           ),
+  //                         ),
+  //                       );
+  //                       // Navigator.pop(context); // ปิด Dialog เมื่อแตะที่รูป
+  //                     },
+  //                     child: Card(
+  //                       child: Image.network(
+  //                         employee[index].comp_logo,
+  //                         fit: BoxFit.contain,
+  //                         width: 50,
+  //                         height: 50,
+  //                         errorBuilder: (context, error, stackTrace) {
+  //                           return Icon(Icons.error);
+  //                         },
+  //                       ),
+  //                     ),
+  //                 );
+  //               }));
+  //     },
+  //   );
+  // }
+
   Future<void> _login() async {
-    // _loadSelectedRadio();
-    String username = _usernameController.text;
-    String password = _passwordController.text;
-    // _saveCredentials(username, password);
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+
     saveCredentials(username, password);
-    if (username.isEmpty && password.isEmpty) {
+
+    if (username.isEmpty || password.isEmpty) {
+      String errorMessage = '';
+      if (username.isEmpty && password.isEmpty) {
+        errorMessage = 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน';
+      } else if (username.isEmpty) {
+        errorMessage = 'กรุณากรอกชื่อผู้ใช้';
+      } else {
+        errorMessage = 'กรุณากรอกรหัสผ่าน';
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(checkPwdTS,
-              style: const TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.white,
-              )),
+          content: Text(
+            errorMessage,
+            style: const TextStyle(fontFamily: 'Arial', color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
         ),
       );
       return;
-    } else if (username.isNotEmpty && password.isNotEmpty) {
-      _fetchLogin(username, password);
     }
+
+    // เรียก API login
+    await _fetchLogin(username, password);
   }
+
 
   Future<void> _fetchLogin(String username, String password) async {
     final uri = Uri.parse('$host/api/origami/signin.php');
-    final response = await http.post(
-      uri,
-      body: {
-        // 'username': 'chakrit@trandar.com',
-        // 'password': '@HengL!ke08'
-        'auth_password': 'ori20#17gami',
-        'username': username,
-        'password': password,
-      },
-    );
 
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      if (jsonResponse['status'] == 200) {
-        final List employeeJson = jsonResponse['employee_data'];
-        List<Employee> employee = [];
-        setState(() {
-          employee =
-              employeeJson.map((json) => Employee.fromJson(json)).toList();
-          _isLoading = true;
-        });
-        if (countPage == 1) {
-          _showFullScreenImage(employee);
-        } else {
-          await Future.delayed(const Duration(seconds: 1));
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => OrigamiPage(
-                employee: employee[widget.company_id ?? 0],
-                Authorization: authorization,
-                company_id: widget.company_id ?? 0,
-                popPage: widget.popPage,
+    try {
+      final response = await http.post(
+        uri,
+        body: {
+          'auth_password': 'ori20#17gami',
+          'username': username.trim(),
+          'password': password.trim(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+
+        if (jsonResponse['status'] == 200) {
+          final List<dynamic> employeeJson = jsonResponse['employee_data'] ?? [];
+
+          if (employeeJson.isEmpty) {
+            throw Exception('No employee data found.');
+          }
+
+          final List<Employee> employeeList = employeeJson
+              .map<Employee>((json) => Employee.fromJson(json))
+              .toList();
+
+          setState(() {
+            _isLoading = true;
+          });
+
+          if (countPage == 1 && employeeList.length >= 2) {
+            _showFullScreenImage(employeeList);
+          } else {
+            await Future.delayed(const Duration(seconds: 1));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OrigamiPage(
+                  employee: employeeList[widget.company_id ?? 0],
+                  Authorization: authorization,
+                  company_id: widget.company_id ?? 0,
+                  popPage: widget.popPage,
+                ),
               ),
-            ),
-          );
+            );
+          }
+        } else {
+          final String errorMessage = jsonResponse['message'] ?? 'Login failed';
+          _showErrorSnackbar(errorMessage);
         }
       } else {
-        final String error_message = jsonResponse['message'];
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              error_message, // 'Email or Password is incorrect, please try again',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
+        _showErrorSnackbar('Server error (${response.statusCode})');
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('$statusCodeErrorTS',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.white,
-              )),
-        ),
-      );
+    } catch (e, stacktrace) {
+      print('Login Exception: $e');
+      print(stacktrace);
+      _showErrorSnackbar('An error occurred. Please try again later.');
     }
   }
 
   String forgot_mail = '';
   Future<void> _fetchForgetMail() async {
     final uri = Uri.parse("$host/api/origami/forgot_password.php");
-    final response = await http.post(
-      uri,
-      body: {
-        'email': forgot_mail,
-      },
-    );
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      if (jsonResponse['status'] == false) {
-        final message = jsonResponse['message'];
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              message,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
+    try {
+      final response = await http.post(
+        uri,
+        body: {
+          'email': forgot_mail.trim(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+
+        if (jsonResponse['status'] == false) {
+          _showErrorSnackbar(jsonResponse['message'] ?? 'An error occurred');
+        } else {
+          _showSuccessSnackbar(jsonResponse['message'] ?? 'Please check your email.');
+        }
+      } else {
+        throw Exception('Server returned status ${response.statusCode}');
       }
-    } else {
-      throw Exception('Failed to load projects');
+    } catch (e) {
+      print('Error in _fetchForgetMail: $e');
+      _showErrorSnackbar('Failed to send email. Please try again.');
     }
   }
 
-  String logoComponent = '';
-  String titleComponent = '';
+
+  // String logoComponent = '';
+  // String titleComponent = '';
   String backgroudComponent = '';
-  Future<void> _fetchComponent() async {
-    final uri = Uri.parse("$host/api/origami/e-learning/component.php");
-    final response = await http.post(
-      uri,
-      body: {
-        'auth_password': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      if (jsonResponse['status'] == 200) {
-        setState(() {
-          logoComponent = jsonResponse['logo'];
-          titleComponent = jsonResponse['title'];
-          backgroudComponent = jsonResponse['backgroud'];
-        });
-      } else {
-        final message = jsonResponse['message'];
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              message,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.white,
-              ),
-            ),
+  // Future<void> _fetchComponent() async {
+  //   final uri = Uri.parse("$host/api/origami/e-learning/component.php");
+  //
+  //   try {
+  //     final response = await http.post(
+  //       uri,
+  //       body: {
+  //         'auth_password': authorization,
+  //       },
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       final jsonResponse = jsonDecode(response.body);
+  //
+  //       if (jsonResponse['status'] == 200) {
+  //         setState(() {
+  //           logoComponent = jsonResponse['logo'] ?? '';
+  //           titleComponent = jsonResponse['title'] ?? '';
+  //           backgroudComponent = jsonResponse['backgroud'] ?? '';
+  //         });
+  //       } else {
+  //         _showErrorSnackbar(jsonResponse['message'] ?? 'Component not found.');
+  //       }
+  //     } else {
+  //       throw Exception('Server returned status ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error in _fetchComponent: $e');
+  //     _showErrorSnackbar('Failed to load components. Please try again.');
+  //   }
+  // }
+
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
           ),
-        );
-      }
-    } else {
-      throw Exception('Failed to load projects');
-    }
+        ),
+        // backgroundColor: Colors.red,
+      ),
+    );
   }
+
+  void _showSuccessSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+        // backgroundColor: Colors.green,
+      ),
+    );
+  }
+
 }
 
 class Employee {

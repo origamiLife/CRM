@@ -14,11 +14,10 @@ class AccountEditView extends StatefulWidget {
   const AccountEditView({
     Key? key,
     required this.employee,
-    required this.pageInput, required this.Authorization,
+    required this.pageInput
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
   @override
   _AccountEditViewState createState() => _AccountEditViewState();
 }
@@ -80,10 +79,6 @@ class _AccountEditViewState extends State<AccountEditView> {
       title: 'Contact',
     ),
     TabItem(
-      icon: FontAwesomeIcons.clipboard,
-      title: 'IDOC',
-    ),
-    TabItem(
       icon: FontAwesomeIcons.projectDiagram,
       title: 'Project',
     ),
@@ -104,14 +99,12 @@ class _AccountEditViewState extends State<AccountEditView> {
       } else if (index == 1) {
         page = "Account Location";
       } else if (index == 2) {
-        page = "Account Contact";
-      } else if (index == 3) {
         page = "Join User";
-      } else if (index == 4) {
-        page = "Account IDOC";
-      } else if (index == 5) {
+      } else if (index == 3) {
+        page = "Account Contact";
+      }  else if (index == 4) {
         page = "Account Project";
-      } else if (index == 6) {
+      } else if (index == 5) {
         page = "Account Activity";
       }
     });
@@ -165,24 +158,21 @@ class _AccountEditViewState extends State<AccountEditView> {
     switch (_selectedIndex) {
       case 0:
         return AccountEditDetail(
-            employee: widget.employee, Authorization: widget.Authorization,pageInput: widget.pageInput);
+            employee: widget.employee, pageInput: widget.pageInput);
       case 1:
         return AccountEditLocation(
-            employee: widget.employee, Authorization: widget.Authorization,pageInput: widget.pageInput);
+            employee: widget.employee, pageInput: widget.pageInput);
       case 2:
-        return ContactScreen(
-            employee: widget.employee, Authorization: widget.Authorization,pageInput: widget.pageInput);
-      case 3:
         return JoinUser();
+      case 3:
+        return ContactScreen(
+            employee: widget.employee, pageInput: widget.pageInput);
       case 4:
-        return IdocScreen(
-            employee: widget.employee, Authorization: widget.Authorization,pageInput: widget.pageInput);
-      case 5:
         return ProjectScreen(
-            employee: widget.employee, Authorization: widget.Authorization,pageInput: widget.pageInput);
-      case 6:
+            employee: widget.employee,pageInput: widget.pageInput);
+      case 5:
         return ActivityScreen(
-            employee: widget.employee, Authorization: widget.Authorization,pageInput: widget.pageInput);
+            employee: widget.employee,pageInput: widget.pageInput);
       default:
         return Container();
     }

@@ -9,12 +9,10 @@ class ProjectAdd extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
     required this.saleData,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
   final String saleData;
   @override
   _ProjectAddState createState() => _ProjectAddState();
@@ -1740,11 +1738,11 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -1773,11 +1771,11 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -1806,11 +1804,11 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'index': '',
         },
       );
@@ -1839,11 +1837,11 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'index': ''
         },
       );
@@ -1873,11 +1871,11 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'index': ''
         },
       );
@@ -1908,11 +1906,11 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'index': ''
         },
       );
@@ -1942,11 +1940,11 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'index': ''
         },
       );
@@ -1976,11 +1974,11 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'index': ''
         },
       );

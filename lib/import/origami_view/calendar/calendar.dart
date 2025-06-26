@@ -7,11 +7,11 @@ class CalendarScreen extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
+
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
+
   @override
   _CalendarScreenState createState() => _CalendarScreenState();
 }

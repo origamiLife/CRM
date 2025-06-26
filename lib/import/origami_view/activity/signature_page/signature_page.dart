@@ -42,7 +42,7 @@ class _SignaturePageState extends State<SignaturePage> {
           child: Text(
             'Signature',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -93,7 +93,7 @@ class _SignaturePageState extends State<SignaturePage> {
                         Text(
                           'Next',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontSize: 18.0,
                             color: Color(0xFFFF9900),
                             fontWeight: FontWeight.w500,

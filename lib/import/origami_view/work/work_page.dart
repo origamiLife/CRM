@@ -5,10 +5,9 @@ import 'package:origamilift/import/origami_view/work/work_apply_add.dart';
 
 class WorkPage extends StatefulWidget {
   const WorkPage(
-      {Key? key, required this.employee, required this.Authorization})
+      {Key? key, required this.employee})
       : super(key: key);
   final Employee employee;
-  final String Authorization;
   @override
   _WorkPageState createState() => _WorkPageState();
 }
@@ -38,34 +37,34 @@ class _WorkPageState extends State<WorkPage> {
       length: 2,
       child: Scaffold(
         backgroundColor: Colors.grey.shade50,
-        floatingActionButton: FloatingActionButton(
-          // tooltip: 'Increment',
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => WorkApplyAdd(
-                  employee: widget.employee,
-                  Authorization: widget.Authorization,
-                ),
-              ),
-            );
-          },
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(100),
-              bottomLeft: Radius.circular(100),
-              bottomRight: Radius.circular(100),
-              topLeft: Radius.circular(100),
-            ),
-          ),
-          elevation: 0,
-          backgroundColor: Color(0xFFFF9900),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   // tooltip: 'Increment',
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => WorkApplyAdd(
+        //           employee: widget.employee,
+        //           Authorization: authorization,
+        //         ),
+        //       ),
+        //     );
+        //   },
+        //   child: const Icon(
+        //     Icons.add,
+        //     color: Colors.white,
+        //   ),
+        //   shape: const RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.only(
+        //       topRight: Radius.circular(100),
+        //       bottomLeft: Radius.circular(100),
+        //       bottomRight: Radius.circular(100),
+        //       topLeft: Radius.circular(100),
+        //     ),
+        //   ),
+        //   elevation: 0,
+        //   backgroundColor: Color(0xFFFF9900),
+        // ),
         body: Column(
           children: [
             Container(
@@ -88,59 +87,57 @@ class _WorkPageState extends State<WorkPage> {
             Expanded(
               child: TabBarView(
                 children: [
-                  Container(
-                    child: FutureBuilder<List<ModelWorkList>>(
-                        future: fetchModelWorkList(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                                child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(
-                                  color: Color(0xFFFF9900),
-                                ),
-                                SizedBox(
-                                  width: 12,
-                                ),
-                                Text(
-                                  '$Loading...',
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF555555),
-                                  ),
-                                ),
-                              ],
-                            ));
-                          } else if (snapshot.hasError) {
-                            return Center(
-                                child: Text(
-                              'Error: ${snapshot.error}',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                color: const Color(0xFF555555),
+                  FutureBuilder<List<ModelWorkList>>(
+                      future: fetchModelWorkList(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                color: Color(0xFFFF9900),
                               ),
-                            ));
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
-                            return Center(
-                                child: Text(
-                              '$Empty',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
+                              SizedBox(
+                                width: 12,
                               ),
-                            ));
-                          } else {
-                            return _historyWork(snapshot.data);
-                          }
-                        }),
-                  ),
+                              Text(
+                                '$Loading...',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF555555),
+                                ),
+                              ),
+                            ],
+                          ));
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text(
+                            'Error: ${snapshot.error}',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              color: const Color(0xFF555555),
+                            ),
+                          ));
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return Center(
+                              child: Text(
+                            '$Empty',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                            ),
+                          ));
+                        } else {
+                          return _historyWork(snapshot.data);
+                        }
+                      }),
                   FutureBuilder<List<ModelWork>>(
                       future: fetchModelWork(),
                       builder: (context, snapshot) {
@@ -573,11 +570,11 @@ class _WorkPageState extends State<WorkPage> {
     final uri = Uri.parse("$host/api/get_list_work.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': authorization,
       },
     );
     if (response.statusCode == 200) {
@@ -595,11 +592,11 @@ class _WorkPageState extends State<WorkPage> {
     final uri = Uri.parse("$host/api/get_work.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': authorization,
       },
     );
     if (response.statusCode == 200) {

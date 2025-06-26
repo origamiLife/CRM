@@ -3,9 +3,11 @@ import 'package:origamilift/import/import.dart';
 import 'package:origamilift/import/origami_view/project/update_project/project_edit.dart';
 import 'package:origamilift/import/origami_view/project/update_project/project_other_view/project_other_view.dart';
 
+import '../../account/account_screen.dart';
 import '../../activity/activity.dart';
 import '../../activity/skoop/skoop.dart';
 import '../../calendar/calendar.dart';
+import '../../contact/contact.dart';
 import '../project.dart';
 import 'join_user/join_user.dart';
 
@@ -15,12 +17,10 @@ class ProjectListUpdate extends StatefulWidget {
     required this.employee,
     required this.project,
     required this.pageInput,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final ModelProject project;
   final String pageInput;
-  final String Authorization;
   @override
   _ProjectListUpdateState createState() => _ProjectListUpdateState();
 }
@@ -50,6 +50,14 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       title: 'JoinUser',
     ),
     TabItem(
+      icon: Icons.supervisor_account,
+      title: 'Account',
+    ),
+    TabItem(
+      icon: Icons.contact_emergency,
+      title: 'Contact',
+    ),
+    TabItem(
       icon: Icons.accessibility_new,
       title: 'Activity',
     ),
@@ -57,14 +65,14 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     //   icon: FontAwesomeIcons.podcast,
     //   title: 'Skoop',
     // ),
-    TabItem(
-      icon: Icons.calendar_month,
-      title: 'Calendar',
-    ),
-    TabItem(
-      icon: Icons.more_horiz,
-      title: 'Other',
-    ),
+    // TabItem(
+    //   icon: Icons.calendar_month,
+    //   title: 'Calendar',
+    // ),
+    // TabItem(
+    //   icon: Icons.more_horiz,
+    //   title: 'Other',
+    // ),
   ];
 
   int _selectedIndex = 0;
@@ -78,15 +86,11 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       } else if (index == 1) {
         page = "JoinUser";
       } else if (index == 2) {
-        page = "Activity";
-      }
-      // else if (index == 3) {
-      //   page = "Skoop";
-      // }
-      else if (index == 3) {
-        page = "Calendar";
+        page = "Account";
+      } else if (index == 3) {
+        page = "Contact";
       } else if (index == 4) {
-        page = "Other";
+        page = "Activity";
       }
     });
   }
@@ -141,31 +145,32 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       case 1:
         return JoinUser(
           employee: widget.employee,
-          Authorization: widget.Authorization,
           pageInput: widget.pageInput,
           project: project,
         );
       case 2:
         return ActivityScreen(
           employee: widget.employee,
-          Authorization: widget.Authorization,
           pageInput: widget.pageInput,
         ); //'Close' or 'Plan'
-      // case 3:
-      //   return SkoopScreen(
-      //     employee: widget.employee,
-      //     Authorization: widget.Authorization,
-      //     activity_id: '',
-      //   );
       case 3:
-        return CalendarScreen(
-            employee: widget.employee,
-            Authorization: widget.Authorization,
-            pageInput: widget.pageInput);
+        return AccountScreen(
+          employee: widget.employee,
+          pageInput: 'project',
+        );
+      case 4:
+        return ContactScreen(
+          employee: widget.employee,
+          pageInput: 'project',
+        );
+      case 5:
+        return ActivityScreen(
+          employee: widget.employee,
+          pageInput: widget.pageInput,
+        );
       default:
         return ProjectOther(
             employee: widget.employee,
-            Authorization: widget.Authorization,
             pageInput: widget.pageInput);
     }
   }
@@ -249,8 +254,8 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                           maxLines: 10,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        _buildText(
-                            project.project_code, 12, Colors.grey, FontWeight.w500),
+                        _buildText(project.project_code, 12, Colors.grey,
+                            FontWeight.w500),
                         SizedBox(height: 8),
                         Text(
                           project.account_name,
@@ -386,7 +391,6 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                                   MaterialPageRoute(
                                     builder: (context) => ProjectEdit(
                                       employee: widget.employee,
-                                      Authorization: widget.Authorization,
                                       pageInput: widget.pageInput,
                                       project: project,
                                     ),
@@ -496,11 +500,11 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     final uri = Uri.parse("$host/crm/delete_project.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'idemp': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': authorization,
         'projectId': project.project_id,
       },
     );

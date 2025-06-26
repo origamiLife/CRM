@@ -13,11 +13,12 @@ class ActivityEditList extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.activity,
-    required this.Authorization,
+    required this.index,
   }) : super(key: key);
   final Employee employee;
   final ModelActivity activity;
-  final String Authorization;
+  final int index;
+
   @override
   _ActivityEditListState createState() => _ActivityEditListState();
 }
@@ -26,8 +27,8 @@ class _ActivityEditListState extends State<ActivityEditList> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _telController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
-
   ModelActivity? activity;
+  int _index = 0;
   @override
   void initState() {
     super.initState();
@@ -115,6 +116,17 @@ class _ActivityEditListState extends State<ActivityEditList> {
     ),
   ];
 
+  List<TabItem> tabApprovrd = [
+    TabItem(
+      icon: Icons.accessibility_new,
+      title: 'Activity',
+    ),
+    TabItem(
+      icon: FontAwesomeIcons.images,
+      title: 'Photo',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +160,6 @@ class _ActivityEditListState extends State<ActivityEditList> {
                       MaterialPageRoute(
                         builder: (context) => ActivityEditNow(
                           employee: widget.employee,
-                          Authorization: widget.Authorization,
                           skoopDetail: getSkoopDetail[0],
                           activity_id: widget.activity.activity_id,
                         ),
@@ -1489,21 +1500,23 @@ class _ActivityEditListState extends State<ActivityEditList> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'activity_id': widget.activity.activity_id,
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data']??[];
+        final List<dynamic> dataJson = jsonResponse['data'] ??
+            []; //is_join => null || '' Activity ปกติ, 0 Approvrd, 1 Waiting
+        _index = widget.index;
         setState(() {
           getSkoopDetail =
               dataJson.map((json) => GetSkoopDetail.fromJson(json)).toList();
-          skoopDetail = getSkoopDetail[0];
+          skoopDetail = getSkoopDetail.first;
           print(getSkoopDetail);
         });
       } else {
@@ -1518,7 +1531,7 @@ class _ActivityEditListState extends State<ActivityEditList> {
 //   final uri = Uri.parse("$host/crm/ios_upload_activity.php");
 //   try {
 //     final response = await http.post(
-//       uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+//       uri, headers: {'Authorization': 'Bearer ${authorization}'},
 //       body: {
 //         'comp_id': widget.employee.comp_id,
 //         'emp_id': widget.employee.emp_id,
@@ -1546,17 +1559,17 @@ class _ActivityEditListState extends State<ActivityEditList> {
         "$host/api/origami/crm/project/component/employee.php?search");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'project_id': skoopDetail?.project_id??0,
+        'project_id': skoopDetail?.project_id ?? 0,
         'index': '',
       },
     );
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['status'] == true) {
-        final List<dynamic> dataJson = jsonResponse['employee_data']??[];
+        final List<dynamic> dataJson = jsonResponse['employee_data'] ?? [];
         int limit = jsonResponse['limit'];
         setState(() {
           modelEmployee =

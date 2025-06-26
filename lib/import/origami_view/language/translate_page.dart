@@ -4,11 +4,8 @@ import 'package:origamilift/import/import.dart';
 
 class TranslatePage extends StatefulWidget {
   const TranslatePage({
-    Key? key,
-    required this.employee, required this.Authorization,
-  }) : super(key: key);
-  final Employee employee;
-  final String Authorization;
+    Key? key}) : super(key: key);
+
   @override
   _TranslatePageState createState() => _TranslatePageState();
 }

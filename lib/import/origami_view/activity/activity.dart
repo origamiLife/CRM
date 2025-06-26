@@ -10,11 +10,9 @@ class ActivityScreen extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
   @override
   _ActivityScreenState createState() => _ActivityScreenState();
 }
@@ -65,7 +63,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
             MaterialPageRoute(
               builder: (context) => activityAdd(
                 employee: widget.employee,
-                Authorization: widget.Authorization,
               ),
             ),
           ).then((value) {
@@ -185,8 +182,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   MaterialPageRoute(
                     builder: (context) => ActivityEditList(
                       employee: widget.employee,
-                      Authorization: widget.Authorization,
-                      activity: activity,
+                      activity: activity, index: index,
                     ),
                   ),
                 ).then((value) {
@@ -391,7 +387,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'idemp': widget.employee.emp_id,

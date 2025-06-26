@@ -8,10 +8,8 @@ class ContactEditDetail extends StatefulWidget {
   const ContactEditDetail({
     Key? key,
     required this.employee,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
-  final String Authorization;
 
   @override
   _ContactEditDetailState createState() => _ContactEditDetailState();

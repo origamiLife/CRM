@@ -50,14 +50,6 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
     super.dispose();
   }
 
-  TitleDown? selectedItemJoin;
-  List<TitleDown> titleDownJoin = [
-    TitleDown(status_id: '001', status_name: 'DEV'),
-    TitleDown(status_id: '002', status_name: 'SEAL'),
-    TitleDown(status_id: '003', status_name: 'CAL'),
-    TitleDown(status_id: '004', status_name: 'DES'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

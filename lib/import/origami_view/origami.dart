@@ -74,7 +74,9 @@ class _OrigamiPageState extends State<OrigamiPage> {
   void initState() {
     super.initState();
     _index = widget.popPage;
-    // futureLoadData = loadData();
+    if(_index == 0){
+      _index = 5;
+    }
     fetchBranch();
   }
 
@@ -84,7 +86,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
       onWillPop: () async {
         final now = DateTime.now();
         const maxDuration = Duration(seconds: 3);
-        final isWarning = lastPressed == null || now.difference(lastPressed!) > maxDuration;
+        final isWarning =
+            lastPressed == null || now.difference(lastPressed!) > maxDuration;
 
         if (isWarning) {
           lastPressed = now;
@@ -246,12 +249,12 @@ class _OrigamiPageState extends State<OrigamiPage> {
   final List<Map<String, dynamic>> menuItems = [
     {
       'index': 13,
-      'title': 'Account (ไม่มี API)',
+      'title': 'Account',
       'icon': FontAwesomeIcons.user,
     },
     {
       'index': 12,
-      'title': 'Contact (ไม่มี API)',
+      'title': 'Contact',
       'icon': FontAwesomeIcons.vcard,
     },
     {
@@ -261,12 +264,12 @@ class _OrigamiPageState extends State<OrigamiPage> {
     },
     {
       'index': 9,
-      'title': 'Activity (ขาด api ตัวใหม่, stamp กิจกรรม)',
+      'title': 'Activity',
       'icon': FontAwesomeIcons.running,
     },
     {
       'index': 14,
-      'title': 'Calendar (ไม่มี API)',
+      'title': 'Calendar',
       'icon': FontAwesomeIcons.calendar,
     },
     {
@@ -276,14 +279,14 @@ class _OrigamiPageState extends State<OrigamiPage> {
     },
     {
       'index': 11,
-      'title': 'Work (ขาด api create work)',
+      'title': 'Work',
       'icon': FontAwesomeIcons.briefcase,
     },
-    {
-      'index': 2,
-      'title': 'Academy',
-      'icon': FontAwesomeIcons.university,
-    },
+    // {
+    //   'index': 2,
+    //   'title': 'Academy',
+    //   'icon': FontAwesomeIcons.university,
+    // },
     {
       'index': 3,
       'title': 'Language',
@@ -294,11 +297,11 @@ class _OrigamiPageState extends State<OrigamiPage> {
       'title': 'About',
       'icon': FontAwesomeIcons.user,
     },
-    {
-      'index': 7,
-      'title': 'HELPDESK (ไม่มี API)',
-      'icon': Icons.message,
-    },
+    // {
+    //   'index': 7,
+    //   'title': 'HELPDESK (ไม่มี API)',
+    //   'icon': Icons.message,
+    // },
     // เพิ่มอีกเมนูได้ที่นี่...
   ];
 
@@ -317,15 +320,11 @@ class _OrigamiPageState extends State<OrigamiPage> {
         Authorization: widget.Authorization,
         page: widget.page ?? '',
       ),
-      3: TranslatePage(
-        employee: widget.employee,
-        Authorization: widget.Authorization,
-      ),
+      3: const TranslatePage(),
       4: Text('Index 6: LogOut', style: optionStyle),
       5: TimeSample(
         employee: widget.employee,
         timestamp: _branche,
-        Authorization: widget.Authorization,
         fetchBranchCallback: () => fetchBranch(),
         branch_name: branch_name,
         branch_id: branch_id,
@@ -336,7 +335,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
       ),
       7: HelpDeskScreen(
         employee: widget.employee,
-        pageInput: 'helpdesk',
+        pageInput: 'origami',
         Authorization: widget.Authorization,
       ),
       8: PettyCash(
@@ -345,46 +344,39 @@ class _OrigamiPageState extends State<OrigamiPage> {
       ),
       9: ActivityScreen(
         employee: widget.employee,
-        pageInput: 'activity',
-        Authorization: widget.Authorization,
+        pageInput: 'origami',
       ),
       10: ProjectScreen(
         employee: widget.employee,
-        pageInput: 'project',
-        Authorization: widget.Authorization,
+        pageInput: 'origami',
       ),
       11: WorkPage(
         employee: widget.employee,
-        Authorization: widget.Authorization,
       ),
       12: ContactScreen(
         employee: widget.employee,
-        pageInput: 'contact',
-        Authorization: widget.Authorization,
+        pageInput: 'origami',
       ),
       13: AccountScreen(
         employee: widget.employee,
-        pageInput: 'account',
-        Authorization: widget.Authorization,
+        pageInput: 'origami',
       ),
       14: CalendarScreen(
         employee: widget.employee,
-        pageInput: 'calendar',
-        Authorization: widget.Authorization,
+        pageInput: 'origami',
       ),
       15: HelpDesk2(
         employee: widget.employee,
-        pageInput: 'helpdesk',
+        pageInput: 'origami',
         Authorization: widget.Authorization,
       ),
       16: IdocScreen(
         employee: widget.employee,
-        pageInput: '',
-        Authorization: widget.Authorization,
+        pageInput: 'origami',
       ),
       17: IssueLogScreen(
         employee: widget.employee,
-        pageInput: '',
+        pageInput: 'origami',
         Authorization: widget.Authorization,
       ),
       18: Container(), //CallScreen(),
@@ -397,7 +389,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
         TimeSample(
           employee: widget.employee,
           timestamp: _branche,
-          Authorization: widget.Authorization,
           fetchBranchCallback: () => fetchBranch(),
           branch_name: branch_name,
           branch_id: branch_id,
@@ -405,26 +396,26 @@ class _OrigamiPageState extends State<OrigamiPage> {
   }
 
   final List<String> _TitleHeader = [
-    need,       // 0
-    request,    // 1
-    "Academy",  // 2
+    need, // 0
+    request, // 1
+    "Academy", // 2
     "Language", // 3
-    logoutTS,   // 4
-    "Time",     // 5
-    "Profile",  // 6
+    logoutTS, // 4
+    "Time", // 5
+    "Profile", // 6
     "HELPDESK", // 7
     "Petty Cash", // 8
     "Activity", // 9
-    "Project",  // 10
-    "Work",     // 11
-    "Contact",  // 12
-    "Account",  // 13
+    "Project", // 10
+    "Work", // 11
+    "Contact", // 12
+    "Account", // 13
     "Calendar", // 14
     "HelpDesk", // 15
-    "IDOC",     // 16
-    "Issue Log",// 17
+    "IDOC", // 16
+    "Issue Log", // 17
     "Contact Members", // 18
-    "Job",      // 19
+    "Job", // 19
   ];
 
   String branchStr = '';
@@ -537,7 +528,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   itemBuilder: (context, index) {
                     final branch = branchList[index];
                     return ListTile(
-                      leading: const Icon(Icons.location_on, color: Color(0xFF555555)),
+                      leading: const Icon(Icons.location_on,
+                          color: Color(0xFF555555)),
                       title: Text(
                         branch.branch_name ?? '',
                         style: styleGrey,
@@ -621,9 +613,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
       ),
       IconButton(
         icon: const Icon(Icons.call_missed_outgoing, color: Colors.orange),
-        onPressed: () {
-          // reserved for future use
-        },
+        onPressed: () {},
       ),
     ];
   }
@@ -664,9 +654,113 @@ class _OrigamiPageState extends State<OrigamiPage> {
               ),
             ],
           ),
-          onTap: () => _confirmLogout(),
+          onTap: () => fetchLogout(),
         ),
       ),
+    );
+  }
+
+  Future<void> fetchLogout() async {
+    print('กำลังออกจากระบบ...');
+    try {
+      showCustomDialog();
+      final response = await http.post(
+        Uri.parse('$host/api/origami/signout.php'),
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'auth_password': authorization,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status'] == 200) {
+        } else {
+          throw Exception('ไม่สามารถออกจากระบบ: ${jsonResponse['message']}');
+        }
+      } else {
+        throw Exception('การเชื่อมต่อล้มเหลว: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Logout Error: $e');
+    }
+  }
+
+  void showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Login', // Title of the dialog
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 22,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Do you want to log out?',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Flexible(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Flexible(
+              child: TextButton(
+                onPressed: () {
+                  if (mounted) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            LoginPage(num: 1, popPage: 0, company_id: 0),
+                      ),
+                          (route) => false,
+                    );
+                  }
+                },
+                child: Text(
+                  'Ok',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
     );
   }
 
@@ -707,4 +801,5 @@ class _OrigamiPageState extends State<OrigamiPage> {
       },
     );
   }
+
 }

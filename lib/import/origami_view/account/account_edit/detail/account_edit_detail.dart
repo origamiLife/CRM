@@ -6,11 +6,11 @@ import '../../../Contact/contact_edit/contact_edit_detail.dart';
 
 class AccountEditDetail extends StatefulWidget {
   const AccountEditDetail({
-    Key? key, required this.employee, required this.pageInput, required this.Authorization,
+    Key? key, required this.employee, required this.pageInput,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
+
   @override
   _AccountEditDetailState createState() => _AccountEditDetailState();
 }

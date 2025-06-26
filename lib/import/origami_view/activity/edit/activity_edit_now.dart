@@ -11,12 +11,12 @@ class ActivityEditNow extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.skoopDetail,
-    required this.Authorization,
+
     required this.activity_id,
   }) : super(key: key);
   final Employee employee;
   final GetSkoopDetail? skoopDetail;
-  final String Authorization;
+
   final String activity_id;
   @override
   _ActivityEditNowState createState() => _ActivityEditNowState();
@@ -568,7 +568,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                           MaterialPageRoute(
                             builder: (context) => SkoopScreen(
                               employee: widget.employee,
-                              Authorization: widget.Authorization,
+                              Authorization: authorization,
                               activity_id: widget.activity_id,
                             ),
                           ),
@@ -590,7 +590,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     flex: 1,
                     child: GestureDetector(
                       onTap: () {
-                        // _fetchDeleteActivity();
+                        _fetchDeleteActivity();
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
@@ -2187,7 +2187,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
 
     final response = await http.get(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
     );
 
     if (response.statusCode == 200) {
@@ -2209,11 +2209,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   //   try {
   //     final response = await http.post(
   //       uri,
-  //       headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+  //       headers: {'Authorization': 'Bearer ${authorization}'},
   //       body: {
   //         'comp_id': widget.employee.comp_id,
   //         'emp_id': widget.employee.emp_id,
-  //         'Authorization': widget.Authorization,
+  //         'Authorization': authorization,
   //         'type': 'project',
   //       },
   //     );
@@ -2242,11 +2242,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $authorization'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -2274,11 +2274,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $authorization'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -2306,11 +2306,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -2338,11 +2338,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
         },
       );
       if (response.statusCode == 200) {
@@ -2371,11 +2371,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'index': '0',
         },
       );
@@ -2402,11 +2402,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     final uri = Uri.parse("$host/crm/ios_activity_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': authorization,
         'index': '0',
       },
     );
@@ -2422,17 +2422,17 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
 
   String skoop_detail = '';
   Future<void> _fetchUpDateActivity() async {
-    // final uri =
-    //     Uri.parse('$host/crm/ios_update_activity.php');
-    final uri = Uri.parse('$host/test');
+    final uri =
+        Uri.parse('$host/crm/ios_update_activity.php');
+    // final uri = Uri.parse('$host/test');
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'activity_id': widget.skoopDetail?.activity_id,
           'type_id': type_id,
           'project_id': project_id,
@@ -2473,11 +2473,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'start_date': widget.skoopDetail?.start_date,
           'start_time': widget.skoopDetail?.time_start,
           'end_date': widget.skoopDetail?.end_date,
@@ -2501,11 +2501,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': authorization,
           'activity_id': widget.skoopDetail?.activity_id ?? '',
         },
       );

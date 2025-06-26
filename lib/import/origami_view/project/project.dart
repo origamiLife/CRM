@@ -10,11 +10,10 @@ class ProjectScreen extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
+
   @override
   _ProjectScreenState createState() => _ProjectScreenState();
 }
@@ -69,7 +68,6 @@ class _ProjectScreenState extends State<ProjectScreen> {
       MaterialPageRoute(
         builder: (context) => ProjectAdd(
           employee: widget.employee,
-          Authorization: widget.Authorization,
           pageInput: widget.pageInput,
           saleData: non_sale,
         ),
@@ -92,168 +90,179 @@ class _ProjectScreenState extends State<ProjectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext dialogContext) {
-              return AlertDialog(
-                elevation: 0,
-                title: Column(
-                  children: [
-                    Text(
-                      'Sale Project',
-                      style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          color: Color(0xFFFF9900),
-                        fontWeight: FontWeight.w700,
+    return (widget.pageInput != 'origami')
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            body: bodyBuild(),
+          )
+        : Scaffold(
+            backgroundColor: Colors.white,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext dialogContext) {
+                    return AlertDialog(
+                      elevation: 0,
+                      title: Column(
+                        children: [
+                          Text(
+                            'Sale Project',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 16,
+                              color: Color(0xFFFF9900),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  color: Colors.orange.shade50,
+                                  child: Container(
+                                    height: 120,
+                                    child: TextButton(
+                                      style: ButtonStyle(),
+                                      onPressed: () {
+                                        Navigator.pop(dialogContext);
+                                        addProject('0');
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.network(
+                                            'https://images.icon-icons.com/2069/PNG/512/hand_coin_dollar_finance_icon_125506.png',
+                                            fit: BoxFit.fill,
+                                            height: 50,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container();
+                                            },
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            'Sale Project',
+                                            style: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFFFF9900),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Card(
+                                  color: Colors.white70,
+                                  child: Container(
+                                    height: 120,
+                                    child: TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(dialogContext);
+                                        addProject('1');
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.network(
+                                            'https://images.icon-icons.com/1238/PNG/512/nodollarsaccepted_83793.png',
+                                            fit: BoxFit.fill,
+                                            height: 50,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container();
+                                            },
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            'Non Sale Project',
+                                            style: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF555555),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Card(
-                            color: Colors.orange.shade50,
-                            child: Container(
-                              height: 120,
-                              child: TextButton(
-                                style: ButtonStyle(),
-                                onPressed: () {
-                                  Navigator.pop(dialogContext);
-                                  addProject('0');
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.network(
-                                      'https://images.icon-icons.com/2069/PNG/512/hand_coin_dollar_finance_icon_125506.png',
-                                      fit: BoxFit.fill,
-                                      height: 50,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Container();
-                                      },
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Sale Project',
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFFFF9900),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Card(
-                            color: Colors.white70,
-                            child: Container(
-                              height: 120,
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.pop(dialogContext);
-                                  addProject('1');
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.network(
-                                      'https://images.icon-icons.com/1238/PNG/512/nodollarsaccepted_83793.png',
-                                      fit: BoxFit.fill,
-                                      height: 50,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Container();
-                                      },
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Non Sale Project',
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF555555),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    );
+                  },
+                );
+              },
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(100),
+                  bottomLeft: Radius.circular(100),
+                  bottomRight: Radius.circular(100),
+                  topLeft: Radius.circular(100),
                 ),
-              );
-            },
+              ),
+              elevation: 0,
+              backgroundColor: Color(0xFFFF9900),
+            ),
+            body: bodyBuild(),
           );
-        },
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(100),
-            bottomLeft: Radius.circular(100),
-            bottomRight: Radius.circular(100),
-            topLeft: Radius.circular(100),
+  }
+
+  Widget bodyBuild() {
+    return Column(
+      children: [
+        _Header(),
+        if (filter)
+          Column(
+            children: [
+              _buildDropdownFilter(
+                  'All Project',
+                  _modelProject,
+                  selectedProject,
+                  (value) => setState(() => selectedProject = value)),
+              _buildDropdownFilter(
+                  'All Raised By',
+                  _modelRaisedBy,
+                  selectedRaisedBy,
+                  (value) => setState(() => selectedRaisedBy = value)),
+              _buildDropdownFilter(
+                  'All In-Charge',
+                  _modelInCharge,
+                  selectedInCharge,
+                  (value) => setState(() => selectedInCharge = value)),
+              _buildDropdownFilter(
+                  'All Priority',
+                  _modelPriority,
+                  selectedPriority,
+                  (value) => setState(() => selectedPriority = value)),
+              _buildDropdownFilter('All Status', _modelStatus, selectedStatus,
+                  (value) => setState(() => selectedStatus = value)),
+            ],
+          ),
+        // Divider(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: _getContentWidget(context),
           ),
         ),
-        elevation: 0,
-        backgroundColor: Color(0xFFFF9900),
-      ),
-      body: Column(
-        children: [
-          _Header(),
-          if (filter)
-            Column(
-              children: [
-                _buildDropdownFilter(
-                    'All Project',
-                    _modelProject,
-                    selectedProject,
-                    (value) => setState(() => selectedProject = value)),
-                _buildDropdownFilter(
-                    'All Raised By',
-                    _modelRaisedBy,
-                    selectedRaisedBy,
-                    (value) => setState(() => selectedRaisedBy = value)),
-                _buildDropdownFilter(
-                    'All In-Charge',
-                    _modelInCharge,
-                    selectedInCharge,
-                    (value) => setState(() => selectedInCharge = value)),
-                _buildDropdownFilter(
-                    'All Priority',
-                    _modelPriority,
-                    selectedPriority,
-                    (value) => setState(() => selectedPriority = value)),
-                _buildDropdownFilter('All Status', _modelStatus, selectedStatus,
-                    (value) => setState(() => selectedStatus = value)),
-              ],
-            ),
-          // Divider(),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: _getContentWidget(),
-            ),
-          ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -346,7 +355,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
     );
   }
 
-  Widget _getContentWidget() {
+  Widget _getContentWidget(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: ListView.builder(
@@ -366,12 +375,29 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     decoration: BoxDecoration(color: Colors.white),
                     child: InkWell(
                       onTap: () {
+                        // context.pushNamed(
+                        //   'project',
+                        //   extra: {
+                        //     'employee': widget.employee,
+                        //     'Authorization': widget.Authorization,
+                        //     'project': project,
+                        //     'pageInput': widget.pageInput,
+                        //   },
+                        // ).then((value) {
+                        //   // เมื่อกลับจากหน้า ProjectListUpdate
+                        //   setState(() {
+                        //     indexItems = 0;
+                        //     isAtEnd = false;
+                        //     modelProjectList.clear();
+                        //     fetchModelProject();
+                        //   });
+                        // });
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProjectListUpdate(
                               employee: widget.employee,
-                              Authorization: widget.Authorization,
                               project: project,
                               pageInput: widget.pageInput,
                             ),
@@ -441,14 +467,20 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                         horizontal:
                                             8), // ระยะห่างจาก IconButton
                                   ),
-                                  InkWell(
-                                    onTap: () {},
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.grey,
-                                      size: 18,
-                                    ),
-                                  ),
+                                  (project.can_delete == 'Y')
+                                      ? InkWell(
+                                          onTap: () {},
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                            size: 20,
+                                          ),
+                                        )
+                                      : Icon(
+                                          Icons.delete,
+                                          color: Colors.grey,
+                                          size: 20,
+                                        ),
                                 ],
                               ),
                             ),
@@ -655,7 +687,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -708,7 +740,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'idemp': widget.employee.emp_id,

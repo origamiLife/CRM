@@ -13,12 +13,10 @@ class ContactEditView extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
     required this.contact,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
   final ModelContact contact;
   @override
   _ContactEditViewState createState() => _ContactEditViewState();
@@ -92,7 +90,6 @@ class _ContactEditViewState extends State<ContactEditView> {
                     MaterialPageRoute(
                       builder: (context) => ContactEditDetail(
                         employee: widget.employee,
-                        Authorization: widget.Authorization,
                       ),
                     ),
                   );
@@ -139,13 +136,11 @@ class _ContactEditViewState extends State<ContactEditView> {
       case 1:
         return ProjectScreen(
           employee: widget.employee,
-          Authorization: widget.Authorization,
           pageInput: widget.pageInput,
         );
       case 2:
         return ActivityScreen(
           employee: widget.employee,
-          Authorization: widget.Authorization,
           pageInput: widget.pageInput,
         );
       default:
