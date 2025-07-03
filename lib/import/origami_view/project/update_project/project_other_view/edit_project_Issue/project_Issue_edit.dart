@@ -2,9 +2,6 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
-
-
-
 class EditProjectIssue extends StatefulWidget {
   const EditProjectIssue({
     Key? key,

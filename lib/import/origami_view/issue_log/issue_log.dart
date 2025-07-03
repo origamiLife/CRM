@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
-import '../project/update_project/join_user/join_user.dart';
+import '../project/update_project/join_user/project_join_user.dart';
 
 class IssueLogScreen extends StatefulWidget {
   const IssueLogScreen({

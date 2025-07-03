@@ -37,34 +37,34 @@ class _WorkPageState extends State<WorkPage> {
       length: 2,
       child: Scaffold(
         backgroundColor: Colors.grey.shade50,
-        // floatingActionButton: FloatingActionButton(
-        //   // tooltip: 'Increment',
-        //   onPressed: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => WorkApplyAdd(
-        //           employee: widget.employee,
-        //           Authorization: authorization,
-        //         ),
-        //       ),
-        //     );
-        //   },
-        //   child: const Icon(
-        //     Icons.add,
-        //     color: Colors.white,
-        //   ),
-        //   shape: const RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.only(
-        //       topRight: Radius.circular(100),
-        //       bottomLeft: Radius.circular(100),
-        //       bottomRight: Radius.circular(100),
-        //       topLeft: Radius.circular(100),
-        //     ),
-        //   ),
-        //   elevation: 0,
-        //   backgroundColor: Color(0xFFFF9900),
-        // ),
+        floatingActionButton: FloatingActionButton(
+          // tooltip: 'Increment',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WorkApplyAdd(
+                  employee: widget.employee,
+                  Authorization: authorization,
+                ),
+              ),
+            );
+          },
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(100),
+              bottomLeft: Radius.circular(100),
+              bottomRight: Radius.circular(100),
+              topLeft: Radius.circular(100),
+            ),
+          ),
+          elevation: 0,
+          backgroundColor: Color(0xFFFF9900),
+        ),
         body: Column(
           children: [
             Container(

@@ -20,7 +20,6 @@ class AccountAddView extends StatefulWidget {
 class _AccountAddViewState extends State<AccountAddView> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
-  String _search = "";
   final _controllerOwner = ValueNotifier<bool>(false);
   final _controllerActivity = ValueNotifier<bool>(false);
 
@@ -43,7 +42,6 @@ class _AccountAddViewState extends State<AccountAddView> {
       }
     });
     _searchController.addListener(() {
-      _search = _searchController.text;
       print("Current text: ${_searchController.text}");
     });
   }
@@ -59,30 +57,28 @@ class _AccountAddViewState extends State<AccountAddView> {
   List<TabItem> items = [
     TabItem(
       icon: Icons.info,
-      title: 'Detail',
+      title: 'Information',
     ),
     TabItem(
-      icon: Icons.send_rounded,
+      icon: Icons.location_history,
       title: 'Location',
     ),
-    TabItem(
-      icon: Icons.person_add_alt_1_rounded,
-      title: 'JoinUser',
-    ),
+    // TabItem(
+    //   icon: Icons.person_add_alt_1_rounded,
+    //   title: 'JoinUser',
+    // ),
   ];
 
   int _selectedIndex = 0;
 
-  String page = "Detail";
+  String page = "Information";
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       if (index == 0) {
-        page = "Account Detail";
+        page = "Information";
       } else if (index == 1) {
         page = "Location";
-      } else if (index == 2) {
-        page = "Join User";
       }
     });
   }
@@ -96,7 +92,7 @@ class _AccountAddViewState extends State<AccountAddView> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '${page}',
+            '',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 24,
@@ -112,7 +108,28 @@ class _AccountAddViewState extends State<AccountAddView> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [],
+        actions: [
+          InkWell(
+            onTap: () {
+              // Navigator.pop(context);
+              // _formKey.currentState?.validate();
+            },
+            child: Row(
+              children: [
+                Text(
+                  'DONE',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 16)
+              ],
+            ),
+          ),
+        ],
       ),
       body: _getContentWidget(),
       bottomNavigationBar: BottomBarDefault(
@@ -138,8 +155,8 @@ class _AccountAddViewState extends State<AccountAddView> {
         return AccountAddDetail();
       case 1:
         return AccountAddLocation();
-      case 2:
-        return JoinUser();
+      // case 2:
+      //   return JoinUser();
       default:
         return Container();
     }
@@ -587,28 +604,6 @@ class _AccountAddViewState extends State<AccountAddView> {
                                   itemBuilder: (context, index) {
                                     return InkWell(
                                       onTap: () {
-                                        // bool isAlreadyAdded = addNewContactList.any(
-                                        //         (existingContact) =>
-                                        //     existingContact.contact_first ==
-                                        //         contact.contact_first &&
-                                        //         existingContact.contact_last ==
-                                        //             contact.contact_last);
-                                        //
-                                        // if (!isAlreadyAdded) {
-                                        //   setState(() {
-                                        //     addNewContactList.add(
-                                        //         contact); // เพิ่มรายการที่เลือกลงใน list
-                                        //   });
-                                        // } else {
-                                        //   // แจ้งเตือนว่ามีชื่ออยู่แล้ว
-                                        //   ScaffoldMessenger.of(context).showSnackBar(
-                                        //     SnackBar(
-                                        //       content: Text(
-                                        //           'This name has already joined the list!'),
-                                        //       duration: Duration(seconds: 2),
-                                        //     ),
-                                        //   );
-                                        // }
                                         Navigator.pop(context);
                                       },
                                       child: Column(

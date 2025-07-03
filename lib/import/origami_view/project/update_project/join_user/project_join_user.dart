@@ -5,23 +5,21 @@ import 'package:origamilift/import/import.dart';
 import '../../../Contact/contact_edit/contact_edit_detail.dart';
 import '../../project.dart';
 
-class JoinUser extends StatefulWidget {
-  JoinUser({
+class ProjectJoinUser extends StatefulWidget {
+  ProjectJoinUser({
     Key? key,
     required this.employee,
     required this.pageInput,
-
     required this.project,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-
   final ModelProject project;
   @override
-  _JoinUserState createState() => _JoinUserState();
+  _ProjectJoinUserState createState() => _ProjectJoinUserState();
 }
 
-class _JoinUserState extends State<JoinUser> {
+class _ProjectJoinUserState extends State<ProjectJoinUser> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
 
@@ -112,23 +110,57 @@ class _JoinUserState extends State<JoinUser> {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.grey.shade400,
-                              child: CircleAvatar(
-                                radius: 31,
-                                backgroundColor: Colors.white,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.network(
-                                    join_user.emp_pic,
-                                    fit: BoxFit.fill,
+                            Expanded(
+                              child: Center(
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.grey.shade400,
+                                  child: CircleAvatar(
+                                    radius: 31,
+                                    backgroundColor: Colors.white,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Image.network(
+                                        join_user.emp_pic,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                             SizedBox(width: 8),
-                            _switch(join_user),
+                            Expanded(flex: 5, child: _switch(join_user)),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  join_user.emp_code,
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 12,
+                                    color: Color(0xFF555555),
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              flex: 5,
+                              child: Text(
+                                '',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  color: Color(0xFFFF9900),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         Row(
@@ -171,26 +203,24 @@ class _JoinUserState extends State<JoinUser> {
   }
 
   Widget _switch(ModelEmployee join_user) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            join_user.emp_name,
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 16,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.w700,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          join_user.emp_name,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 16,
+            color: Color(0xFF555555),
+            fontWeight: FontWeight.w700,
           ),
-          _description(Icons.apartment, '${join_user.posi_description}'),
-          _description(Icons.work, '${join_user.dept_description}'),
-          SizedBox(height: 8),
-        ],
-      ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        _description(Icons.apartment, '${join_user.posi_description}'),
+        _description(Icons.work, '${join_user.dept_description}'),
+        SizedBox(height: 8),
+      ],
     );
   }
 

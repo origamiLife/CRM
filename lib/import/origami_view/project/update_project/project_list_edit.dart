@@ -9,7 +9,7 @@ import '../../activity/skoop/skoop.dart';
 import '../../calendar/calendar.dart';
 import '../../contact/contact.dart';
 import '../project.dart';
-import 'join_user/join_user.dart';
+import 'join_user/project_join_user.dart';
 
 class ProjectListUpdate extends StatefulWidget {
   const ProjectListUpdate({
@@ -143,7 +143,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       case 0:
         return _ProjectDetail(context);
       case 1:
-        return JoinUser(
+        return ProjectJoinUser(
           employee: widget.employee,
           pageInput: widget.pageInput,
           project: project,
@@ -354,16 +354,16 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                   _subData('Account', project.account_name),
                   _subData('Type', project.project_type_name),
                   _subData('Description', project.project_description),
-                  _subData('Sale Status', project.project_sale_nonsale_name),
+                  _subData('Sub Status', (project.sub_status_name == '')?'-':project.sub_status_name),
                   _subData('Source', project.project_source_name),
                   _subData('Process', project.project_process_name),
-                  _subData('Sales', project.project_status_name),
+                  _subData('Sales', project.project_sale_nonsale_name),
                   _subData('Priority', project.project_priority_name),
-                  _OpportunitySection([
-                    project.opportunity_line1,
-                    project.opportunity_line2,
-                    project.opportunity_line3,
-                  ]),
+                  // _OpportunitySection([
+                  //   project.opportunity_line1,
+                  //   project.opportunity_line2,
+                  //   project.opportunity_line3,
+                  // ]),
                   Container(
                     decoration: BoxDecoration(
                       color: (project.can_edit == 'Y')

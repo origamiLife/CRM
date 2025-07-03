@@ -2,14 +2,14 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
-import '../../project/update_project/join_user/join_user.dart';
+import '../../project/update_project/join_user/project_join_user.dart';
 import '../activity.dart';
 import '../signature_page/signature_page.dart';
 import '../skoop/skoop.dart';
 import 'activity_edit_now.dart';
 
-class ActivityEditList extends StatefulWidget {
-  const ActivityEditList({
+class ActivityEditView extends StatefulWidget {
+  const ActivityEditView({
     Key? key,
     required this.employee,
     required this.activity,
@@ -20,10 +20,10 @@ class ActivityEditList extends StatefulWidget {
   final int index;
 
   @override
-  _ActivityEditListState createState() => _ActivityEditListState();
+  _ActivityEditViewState createState() => _ActivityEditViewState();
 }
 
-class _ActivityEditListState extends State<ActivityEditList> {
+class _ActivityEditViewState extends State<ActivityEditView> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _telController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
@@ -131,7 +131,6 @@ class _ActivityEditListState extends State<ActivityEditList> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
         title: Text(
@@ -202,73 +201,71 @@ class _ActivityEditListState extends State<ActivityEditList> {
         // paddingVertical: 25,
         onTap: _onItemTapped,
       ),
-      body: Container(
-        child: (skoopDetail != null)
-            ? SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                            Colors.white,
-                            BlendMode
-                                .saturation, // ใช้ BlendMode.saturation สำหรับ Grayscale
-                          ),
-                          child: Image.asset(
-                            'assets/images/busienss1.jpg',
-                            fit: BoxFit.cover,
-                            height: 60,
-                            width: double.infinity,
-                          ),
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: CircleAvatar(
-                              radius: 57,
-                              backgroundColor: Colors.grey.shade400,
-                              child: CircleAvatar(
-                                radius: 55,
-                                backgroundColor: Colors.white,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.network(
-                                    widget.employee.emp_avatar,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    _BodySwitch(),
-                  ],
-                ),
-              )
-            : Center(
-                child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: SingleChildScrollView(
+        child: Container(
+          child: (skoopDetail != null)
+              ? Column(
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  CircularProgressIndicator(
-                    color: Color(0xFFFF9900),
+                  Image.asset(
+                    'assets/images/busienss1.jpg',
+                    fit: BoxFit.cover,
+                    height: 150,
+                    width: double.infinity,
                   ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Text(
-                    '$Loading...',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF555555),
+                  Positioned(
+                    bottom: -55,
+                    left: 0,
+                    right: 0,
+                    child: CircleAvatar(
+                      radius: 57,
+                      backgroundColor: Colors.grey.shade400,
+                      child: CircleAvatar(
+                        radius: 55,
+                        backgroundColor: Colors.white,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.network(
+                            widget.employee.emp_avatar,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(Icons.person, size: 50);
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
-              )),
+              ),
+              SizedBox(height: 60), // ให้เว้นที่ไว้ใต้ Avatar
+              _BodySwitch(),
+            ],
+          )
+              : Center(
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: Color(0xFFFF9900),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Text(
+                      '$Loading...',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF555555),
+                      ),
+                    ),
+                  ],
+                )),
+        ),
       ),
     );
   }

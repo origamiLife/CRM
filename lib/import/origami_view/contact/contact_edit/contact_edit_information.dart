@@ -2,37 +2,21 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
+import '../../activity/add/activity_add.dart';
+
 class ContactEditInformation extends StatefulWidget {
   const ContactEditInformation({
     Key? key,
+    required this.employee,
   }) : super(key: key);
+  final Employee employee;
 
   @override
   _ContactEditInformationState createState() => _ContactEditInformationState();
 }
 
 class _ContactEditInformationState extends State<ContactEditInformation> {
-  TextEditingController _searchController = TextEditingController();
-  TextEditingController _NoAddressController = TextEditingController();
-  TextEditingController _LaneController = TextEditingController();
-  TextEditingController _RoadController = TextEditingController();
-  TextEditingController _BuildingController = TextEditingController();
-  TextEditingController _ProvinceController = TextEditingController();
-  TextEditingController _DistrictController = TextEditingController();
-  TextEditingController _SubDistrictController = TextEditingController();
-  TextEditingController _PostCodeController = TextEditingController();
-
-  TextEditingController _HobbyController = TextEditingController();
-  TextEditingController _FavoriteSportController = TextEditingController();
-  TextEditingController _FavoriteEventController = TextEditingController();
-  TextEditingController _FavoriteCarController = TextEditingController();
-  TextEditingController _FavoriteBrandController = TextEditingController();
-  TextEditingController _CarPersonalController = TextEditingController();
-  TextEditingController _PlaceofWorkController = TextEditingController();
-  TextEditingController _AppearanceController = TextEditingController();
-  TextEditingController _DisUnlikeController = TextEditingController();
-  TextEditingController _HeightController = TextEditingController();
-  TextEditingController _WeightController = TextEditingController();
+  TextEditingController _searchfilterController = TextEditingController();
 
   String _search = "";
   int _page = 0;
@@ -40,14 +24,15 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(() {
-      _search = _searchController.text;
-      print("Current text: ${_searchController.text}");
+    _searchfilterController.addListener(() {
+      // _addfilter = _searchfilterController.text;
+      print("Current text: ${_searchfilterController.text}");
     });
   }
 
   @override
   void dispose() {
+    _searchfilterController.dispose();
     super.dispose();
   }
 
@@ -55,442 +40,568 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _getInformation(),
+      body: _information3(),
     );
   }
 
-  Widget _getInformation() {
+  Widget _information3() {
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: (_page == 0)
-                  ? Column(
-                      children: [
-                        //   Align(
-                        //     alignment: Alignment.centerLeft,
-                        //     child: Text(
-                        //       'Address Information',
-                        //       style: TextStyle(
-                        // fontFamily: 'Arial',
-                        //         fontSize: 22,
-                        //         color: Colors.grey,
-                        //         fontWeight: FontWeight.w700,
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   SizedBox(height: 16),
-                        _AddressInformation(),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        // Align(
-                        //   alignment: Alignment.centerLeft,
-                        //   child: Text(
-                        //     'Other Information',
-                        //     style: TextStyle(
-                        //       fontFamily: 'Arial',
-                        //       fontSize: 22,
-                        //       color: Colors.grey,
-                        //       fontWeight: FontWeight.w700,
-                        //     ),
-                        //   ),
-                        // ),
-                        // SizedBox(height: 16),
-                        _OtherInformation()
-                      ],
-                    ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Name Card',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 22,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-          _pageController(),
+          SizedBox(height: 8),
+          Column(
+            children: [
+              Column(
+                children: [
+                  _showImagePhoto('top'),
+                  SizedBox(height: 8),
+                  // Text(
+                  //   'Front Name card',
+                  //   style: TextStyle(
+                  //     fontFamily: 'Arial',
+                  //     fontSize: 14,
+                  //     color: Color(0xFF555555),
+                  //     fontWeight: FontWeight.w500,
+                  //   ),
+                  // ),
+                ],
+              ),
+              // SizedBox(width: 8),
+              // Column(
+              //   children: [
+              //     _showImagePhoto('down'),
+              //     SizedBox(height: 8),
+              //     // Text(
+              //     //   'Back Name card',
+              //     //   style: TextStyle(
+              //     //     fontFamily: 'Arial',
+              //     //     fontSize: 14,
+              //     //     color: Color(0xFF555555),
+              //     //     fontWeight: FontWeight.w500,
+              //     //   ),
+              //     // ),
+              //   ],
+              // ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Divider(),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Owner contact',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 22,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          // SizedBox(height: 16),
+          SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
+              children: List.generate(addNewContactList.length, (index) {
+                final contact = addNewContactList[index];
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        // addNewContactList.add(contact);
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 4, right: 8),
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.grey,
+                                child: CircleAvatar(
+                                  radius: 19,
+                                  backgroundColor: Colors.white,
+                                  child: ClipRRect(
+                                    borderRadius:
+                                    BorderRadius.circular(100),
+                                    child: Image.network(
+                                      (contact.contact_image == '')
+                                          ? 'https://dev.origami.life/images/default.png'
+                                          : '$host//crm/${contact.contact_image}',
+                                      height: 100,
+                                      width: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${contact.contact_first} ${contact.contact_last}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16,
+                                      color: Color(0xFFFF9900),
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${contact.customer_en} (${contact.customer_th})',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Divider(color: Colors.grey.shade300),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+          TextButton(
+            onPressed: _addOtherContact,
+            child: Text(
+              'Add Other Contact',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFFFF9900),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _AddressInformation() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
+  void _addOtherContact() {
+    showModalBottomSheet<void>(
+      barrierColor: Colors.black87,
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (BuildContext context) {
+        return _getOtherContact();
+      },
+    );
+  }
+
+  Widget _getOtherContact() {
+    return FutureBuilder<List<ActivityContact>>(
+      future: fetchAddContact(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
               child: Text(
-                'Same Account',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                '$Empty',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
-                  color: Color(0xFF555555),
                   fontWeight: FontWeight.w500,
+                  color: Colors.grey,
                 ),
+              ));
+        } else {
+          // กรองข้อมูลตามคำค้นหา
+          List<ActivityContact> filteredContacts =
+          snapshot.data!.where((contact) {
+            String searchTerm = _searchfilterController.text.toLowerCase();
+            String fullName = '${contact.contact_first} ${contact.contact_last}'
+                .toLowerCase();
+            return fullName.contains(searchTerm);
+          }).toList();
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(10),
               ),
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Column(
                 children: [
-                  Checkbox(
-                    value: _isChecked,
-                    checkColor: Colors.white,
-                    activeColor: Color(0xFFFF9900),
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _isChecked = value ?? false;
-                      });
-                    },
-                  ),
-                  Flexible(
-                    child: Text(
-                      'Same Account',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _searchfilterController,
+                      keyboardType: TextInputType.text,
                       style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555),
-                        fontWeight: FontWeight.w500,
+                          fontFamily: 'Arial',
+                          color: Color(0xFF555555),
+                          fontSize: 14),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 12),
+                        hintText: 'Search',
+                        hintStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Color(0xFF555555)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Color(0xFFFF9900),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFFFF9900),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFFFF9900),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {}); // รีเฟรช UI เมื่อค้นหา
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: ListView.builder(
+                        itemCount: filteredContacts.length,
+                        itemBuilder: (context, index) {
+                          final contact = filteredContacts[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: InkWell(
+                              onTap: () {
+                                bool isAlreadyAdded = addNewContactList.any(
+                                        (existingContact) =>
+                                    existingContact.contact_first ==
+                                        contact.contact_first &&
+                                        existingContact.contact_last ==
+                                            contact.contact_last);
+
+                                if (!isAlreadyAdded) {
+                                  setState(() {
+                                    addNewContactList.add(
+                                        contact); // เพิ่มรายการที่เลือกลงใน list
+                                    // contact_list.add(contact.contact_id ?? '');
+                                  });
+                                } else {
+                                  // แจ้งเตือนว่ามีชื่ออยู่แล้ว
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'This name has already joined the list!'),
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                                Navigator.pop(context);
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 4, right: 8),
+                                        child: CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor: Colors.grey,
+                                          child: CircleAvatar(
+                                            radius: 19,
+                                            backgroundColor: Colors.white,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(100),
+                                              child: Image.network(
+                                                (contact.contact_image ==
+                                                    null ||
+                                                    contact.contact_image ==
+                                                        '')
+                                                    ? 'https://dev.origami.life/images/default.png'
+                                                    : '$host//crm/${contact.contact_image}',
+                                                height: 100,
+                                                width: 100,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${contact.contact_first} ${contact.contact_last}',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 16,
+                                                color: Color(0xFFFF9900),
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${contact.customer_en} (${contact.customer_th})',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 14,
+                                                color: Color(0xFF555555),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Divider(
+                                                color: Colors.grey.shade300),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _showImagePhoto(String s) {
+    return _image != null
+        ? Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.transparent,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Center(
+                    child: Image.file(
+                      File(_image!.path),
+                      height: 200,
+                      // width: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          _image = null;
+                        });
+                      },
+                      child: Stack(
+                        children: [
+                          Icon(
+                            Icons.cancel_outlined,
+                            color: Colors.white,
+                          ),
+                          Icon(
+                            Icons.cancel,
+                            color: Colors.red,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    )
+        : InkWell(
+      onTap: () => _pickImage('top'),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Column(
+          children: [
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.grey.shade300,
+                  width: 1.0,
+                ),
+              ),
+              child: Center(
+                child:
+                Icon(Icons.photo, color: Colors.grey, size: 100),
+              ),
+            ),
           ],
         ),
-        _AccountTextColumn('No', _NoAddressController),
-        _AccountTextColumn('Lane', _LaneController),
-        _AccountTextColumn('Road', _RoadController),
-        _AccountTextColumn('Building', _BuildingController),
-        _DropdownProject('Country'),
-        _AccountTextColumn('Province', _ProvinceController),
-        _AccountTextColumn('District', _DistrictController),
-        _AccountTextColumn('Sub District', _SubDistrictController),
-        _AccountTextColumn('Post Code', _PostCodeController),
-      ],
-    );
-  }
-
-  bool _isChecked = false;
-  Widget _OtherInformation() {
-    return Column(
-      children: [
-        _AccountTextColumn('Hobby', _HobbyController),
-        _AccountTextColumn('Favorite Sport', _FavoriteSportController),
-        _AccountTextColumn('Favorite Event', _FavoriteEventController),
-        _AccountTextColumn('Favorite Car', _FavoriteCarController),
-        _AccountTextColumn('Favorite Brand', _FavoriteBrandController),
-        _AccountTextColumn('Car Personal', _CarPersonalController),
-        _DropdownProject('Marital'),
-        _AccountTextColumn('Place of Work', _PlaceofWorkController),
-        _AccountTextColumn('Appearance', _AppearanceController),
-        _AccountTextColumn('Dis-like/Un-like', _DisUnlikeController),
-        _AccountTextColumn('Height', _HeightController),
-        _AccountTextColumn('Weight', _WeightController),
-      ],
-    );
-  }
-
-  Widget _pageController() {
-    return (_page == 0)
-        ? Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _page = 1;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Next >>',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Color(0xFFFF9900),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _page = 0;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '<< Back',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Color(0xFFFF9900),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _page = 0;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Icon(Icons.save, size: 20, color: Color(0xFFFF9900)),
-                      SizedBox(width: 4),
-                      Text(
-                        'SAVE',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          color: Color(0xFFFF9900),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          );
-  }
-
-  Widget _DropdownProject(String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.grey.shade300,
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<ModelType>(
-            isExpanded: true,
-            hint: Text(
-              value,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-            ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Colors.grey,
-              fontSize: 14,
-            ),
-            items: _modelType
-                .map((ModelType type) => DropdownMenuItem<ModelType>(
-                      value: type,
-                      child: Text(
-                        type.name,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedItem,
-            onChanged: (value) {
-              setState(() {
-                selectedItem = value;
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 33,
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _AccountTextColumn(String title, controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          maxLines: 1,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 8),
-        _AccountText(title, controller),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _AccountText(String title, controller) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: TextInputType.text,
-      style: TextStyle(
-        fontFamily: 'Arial',
-        color: Color(0xFF555555),
-        fontSize: 14,
-      ),
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        hintText: title,
-        hintStyle:
-            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
       ),
     );
   }
 
-  Widget _AccountNumber(String title, controller) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: TextInputType.number,
-      style: TextStyle(
-        fontFamily: 'Arial',
-        color: Color(0xFF555555),
-        fontSize: 14,
-      ),
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        hintText: title,
-        hintStyle:
-            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
+  final ImagePicker _picker = ImagePicker();
+  File? _image;
+  File? _image2;
+
+  Future<void> _pickImage(String top) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        if(top == 'top'){
+          _image = File(image.path);
+        }else{
+          _image2 = File(image.path);
+        }
+      });
+    }
   }
 
-  ModelType? selectedItem;
-  List<ModelType> _modelType = [
-    ModelType(id: '001', name: 'All'),
-    ModelType(id: '002', name: 'Advance'),
-    ModelType(id: '003', name: 'Asset'),
-    ModelType(id: '004', name: 'Change'),
-    ModelType(id: '005', name: 'Expense'),
-    ModelType(id: '006', name: 'Purchase'),
-    ModelType(id: '007', name: 'Product'),
-  ];
+  ActivityContact? selectedContact;
+  List<ActivityContact> contactList = [];
+  List<ActivityContact> addNewContactList = [];
+  Future<void> fetchActivityContact() async {
+    final uri = Uri.parse('$host/crm/ios_activity_contact.php');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer ${authorization}'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'Authorization': authorization,
+          'index': '0',
+        },
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final List<dynamic> dataJson = jsonResponse['data'];
+        setState(() {
+          contactList =
+              dataJson.map((json) => ActivityContact.fromJson(json)).toList();
+          if (contactList.isNotEmpty && selectedContact == null) {
+            selectedContact = contactList[0];
+          }
+        });
+      } else {
+        throw Exception('Failed to load status data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
+    }
+  }
 
-  TitleDown? selectedItemJoin;
-  List<TitleDown> titleDownJoin = [
-    TitleDown(status_id: '001', status_name: 'DEV'),
-    TitleDown(status_id: '002', status_name: 'SEAL'),
-    TitleDown(status_id: '003', status_name: 'CAL'),
-    TitleDown(status_id: '004', status_name: 'DES'),
-  ];
+  Future<List<ActivityContact>> fetchAddContact() async {
+    final uri = Uri.parse("$host/crm/ios_activity_contact.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'Authorization': authorization,
+        'index': '0',
+      },
+    );
 
-  double total = 0.0;
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'];
+      return dataJson.map((json) => ActivityContact.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load contacts');
+    }
+  }
+
 }
 
 class ModelType {

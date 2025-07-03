@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../activity/add/activity_add.dart';
-import '../project/update_project/join_user/join_user.dart';
+import '../project/update_project/join_user/project_join_user.dart';
 import '../project/update_project/project_other_view/project_budgeting.dart';
 import 'package:origamilift/import/import.dart';
 
@@ -69,13 +69,13 @@ class _IdocEditState extends State<IdocEdit> {
     super.dispose();
   }
 
-  TitleDown? selectedItemJoin;
-  List<TitleDown> titleDownJoin = [
-    TitleDown(status_id: '001', status_name: 'DEV'),
-    TitleDown(status_id: '002', status_name: 'SEAL'),
-    TitleDown(status_id: '003', status_name: 'CAL'),
-    TitleDown(status_id: '004', status_name: 'DES'),
-  ];
+  // TitleDown? selectedItemJoin;
+  // List<TitleDown> titleDownJoin = [
+  //   TitleDown(status_id: '001', status_name: 'DEV'),
+  //   TitleDown(status_id: '002', status_name: 'SEAL'),
+  //   TitleDown(status_id: '003', status_name: 'CAL'),
+  //   TitleDown(status_id: '004', status_name: 'DES'),
+  // ];
   int _selectedIndex = 0;
   void _onItemTapped(int index) {
     setState(() {
@@ -1186,124 +1186,124 @@ class _IdocEditState extends State<IdocEdit> {
                             ),
                           ),
                           SizedBox(height: 8),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: ListView.builder(
-                                itemCount: titleDownJoin.length,
-                                itemBuilder: (context, index) {
-                                  return InkWell(
-                                    onTap: () {
-                                      // bool isAlreadyAdded = addNewContactList.any(
-                                      //         (existingContact) =>
-                                      //     existingContact.contact_first ==
-                                      //         contact.contact_first &&
-                                      //         existingContact.contact_last ==
-                                      //             contact.contact_last);
-                                      //
-                                      // if (!isAlreadyAdded) {
-                                      //   setState(() {
-                                      //     addNewContactList.add(
-                                      //         contact); // เพิ่มรายการที่เลือกลงใน list
-                                      //   });
-                                      // } else {
-                                      //   // แจ้งเตือนว่ามีชื่ออยู่แล้ว
-                                      //   ScaffoldMessenger.of(context).showSnackBar(
-                                      //     SnackBar(
-                                      //       content: Text(
-                                      //           'This name has already joined the list!'),
-                                      //       duration: Duration(seconds: 2),
-                                      //     ),
-                                      //   );
-                                      // }
-                                      Navigator.pop(context);
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 4, right: 8),
-                                              child: CircleAvatar(
-                                                radius: 22,
-                                                backgroundColor: Colors.grey,
-                                                child: CircleAvatar(
-                                                  radius: 21,
-                                                  backgroundColor: Colors.white,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            100),
-                                                    child: Image.network(
-                                                      'https://dev.origami.life/images/default.png',
-                                                      height: 100,
-                                                      width: 100,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Jirapat Jangsawang',
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 16,
-                                                      color: Color(0xFFFF9900),
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8),
-                                                  Text(
-                                                    'Development (Mobile Application)',
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 14,
-                                                      color: Color(0xFF555555),
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  Divider(
-                                                      color:
-                                                          Colors.grey.shade300),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
+                          // Expanded(
+                          //   child: Padding(
+                          //     padding:
+                          //         const EdgeInsets.symmetric(horizontal: 15),
+                          //     child: ListView.builder(
+                          //       itemCount: titleDownJoin.length,
+                          //       itemBuilder: (context, index) {
+                          //         return InkWell(
+                          //           onTap: () {
+                          //             // bool isAlreadyAdded = addNewContactList.any(
+                          //             //         (existingContact) =>
+                          //             //     existingContact.contact_first ==
+                          //             //         contact.contact_first &&
+                          //             //         existingContact.contact_last ==
+                          //             //             contact.contact_last);
+                          //             //
+                          //             // if (!isAlreadyAdded) {
+                          //             //   setState(() {
+                          //             //     addNewContactList.add(
+                          //             //         contact); // เพิ่มรายการที่เลือกลงใน list
+                          //             //   });
+                          //             // } else {
+                          //             //   // แจ้งเตือนว่ามีชื่ออยู่แล้ว
+                          //             //   ScaffoldMessenger.of(context).showSnackBar(
+                          //             //     SnackBar(
+                          //             //       content: Text(
+                          //             //           'This name has already joined the list!'),
+                          //             //       duration: Duration(seconds: 2),
+                          //             //     ),
+                          //             //   );
+                          //             // }
+                          //             Navigator.pop(context);
+                          //           },
+                          //           child: Column(
+                          //             mainAxisAlignment:
+                          //                 MainAxisAlignment.center,
+                          //             crossAxisAlignment:
+                          //                 CrossAxisAlignment.start,
+                          //             children: [
+                          //               Row(
+                          //                 mainAxisAlignment:
+                          //                     MainAxisAlignment.start,
+                          //                 crossAxisAlignment:
+                          //                     CrossAxisAlignment.center,
+                          //                 children: [
+                          //                   Padding(
+                          //                     padding: const EdgeInsets.only(
+                          //                         bottom: 4, right: 8),
+                          //                     child: CircleAvatar(
+                          //                       radius: 22,
+                          //                       backgroundColor: Colors.grey,
+                          //                       child: CircleAvatar(
+                          //                         radius: 21,
+                          //                         backgroundColor: Colors.white,
+                          //                         child: ClipRRect(
+                          //                           borderRadius:
+                          //                               BorderRadius.circular(
+                          //                                   100),
+                          //                           child: Image.network(
+                          //                             'https://dev.origami.life/images/default.png',
+                          //                             height: 100,
+                          //                             width: 100,
+                          //                             fit: BoxFit.cover,
+                          //                           ),
+                          //                         ),
+                          //                       ),
+                          //                     ),
+                          //                   ),
+                          //                   const SizedBox(width: 10),
+                          //                   Expanded(
+                          //                     child: Column(
+                          //                       mainAxisAlignment:
+                          //                           MainAxisAlignment.start,
+                          //                       crossAxisAlignment:
+                          //                           CrossAxisAlignment.start,
+                          //                       children: [
+                          //                         Text(
+                          //                           'Jirapat Jangsawang',
+                          //                           maxLines: 1,
+                          //                           overflow:
+                          //                               TextOverflow.ellipsis,
+                          //                           style: TextStyle(
+                          //                             fontFamily: 'Arial',
+                          //                             fontSize: 16,
+                          //                             color: Color(0xFFFF9900),
+                          //                             fontWeight:
+                          //                                 FontWeight.w700,
+                          //                           ),
+                          //                         ),
+                          //                         SizedBox(height: 8),
+                          //                         Text(
+                          //                           'Development (Mobile Application)',
+                          //                           maxLines: 1,
+                          //                           overflow:
+                          //                               TextOverflow.ellipsis,
+                          //                           style: TextStyle(
+                          //                             fontFamily: 'Arial',
+                          //                             fontSize: 14,
+                          //                             color: Color(0xFF555555),
+                          //                             fontWeight:
+                          //                                 FontWeight.w500,
+                          //                           ),
+                          //                         ),
+                          //                         Divider(
+                          //                             color:
+                          //                                 Colors.grey.shade300),
+                          //                       ],
+                          //                     ),
+                          //                   ),
+                          //                 ],
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         );
+                          //       },
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -1344,92 +1344,93 @@ class _IdocEditState extends State<IdocEdit> {
           ),
         ],
       ),
-      child: DropdownButton2<TitleDown>(
-        isExpanded: true,
-        hint: Text(
-          'DEV',
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Color(0xFF555555),
-          ),
-        ),
-        style: TextStyle(
-          fontFamily: 'Arial',
-          color: Color(0xFF555555),
-        ),
-        items: titleDownJoin
-            .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-                  value: item,
-                  child: Text(
-                    item.status_name,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                    ),
-                  ),
-                ))
-            .toList(),
-        value: selectedItemJoin,
-        onChanged: (value) {
-          setState(() {
-            selectedItemJoin = value;
-          });
-        },
-        underline: SizedBox.shrink(),
-        iconStyleData: IconStyleData(
-          icon: Icon(Icons.arrow_drop_down, color: Colors.black, size: 30),
-          iconSize: 30,
-        ),
-        buttonStyleData: ButtonStyleData(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-        ),
-        dropdownStyleData: DropdownStyleData(
-          maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          height: 40, // Height for each menu item
-        ),
-        dropdownSearchData: DropdownSearchData(
-          searchController: _searchController,
-          searchInnerWidgetHeight: 50,
-          searchInnerWidget: Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _searchController,
-              keyboardType: TextInputType.text,
-              style: TextStyle(
-                  fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                hintText: '$Search...',
-                hintStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555)),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          ),
-          searchMatchFn: (item, searchValue) {
-            return item.value!.status_name
-                .toLowerCase()
-                .contains(searchValue.toLowerCase());
-          },
-        ),
-        onMenuStateChange: (isOpen) {
-          if (!isOpen) {
-            _searchController
-                .clear(); // Clear the search field when the menu closes
-          }
-        },
-      ),
+      child: Container()
+      // DropdownButton2<TitleDown>(
+      //   isExpanded: true,
+      //   hint: Text(
+      //     'DEV',
+      //     style: TextStyle(
+      //       fontFamily: 'Arial',
+      //       color: Color(0xFF555555),
+      //     ),
+      //   ),
+      //   style: TextStyle(
+      //     fontFamily: 'Arial',
+      //     color: Color(0xFF555555),
+      //   ),
+      //   items: titleDownJoin
+      //       .map((TitleDown item) => DropdownMenuItem<TitleDown>(
+      //             value: item,
+      //             child: Text(
+      //               item.status_name,
+      //               style: TextStyle(
+      //                 fontFamily: 'Arial',
+      //                 fontSize: 14,
+      //               ),
+      //             ),
+      //           ))
+      //       .toList(),
+      //   value: selectedItemJoin,
+      //   onChanged: (value) {
+      //     setState(() {
+      //       selectedItemJoin = value;
+      //     });
+      //   },
+      //   underline: SizedBox.shrink(),
+      //   iconStyleData: IconStyleData(
+      //     icon: Icon(Icons.arrow_drop_down, color: Colors.black, size: 30),
+      //     iconSize: 30,
+      //   ),
+      //   buttonStyleData: ButtonStyleData(
+      //     padding: const EdgeInsets.symmetric(vertical: 2),
+      //   ),
+      //   dropdownStyleData: DropdownStyleData(
+      //     maxHeight:
+      //         200, // Height for displaying up to 5 lines (adjust as needed)
+      //   ),
+      //   menuItemStyleData: MenuItemStyleData(
+      //     height: 40, // Height for each menu item
+      //   ),
+      //   dropdownSearchData: DropdownSearchData(
+      //     searchController: _searchController,
+      //     searchInnerWidgetHeight: 50,
+      //     searchInnerWidget: Padding(
+      //       padding: const EdgeInsets.all(8),
+      //       child: TextFormField(
+      //         controller: _searchController,
+      //         keyboardType: TextInputType.text,
+      //         style: TextStyle(
+      //             fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
+      //         decoration: InputDecoration(
+      //           isDense: true,
+      //           contentPadding: const EdgeInsets.symmetric(
+      //             horizontal: 10,
+      //             vertical: 8,
+      //           ),
+      //           hintText: '$Search...',
+      //           hintStyle: TextStyle(
+      //               fontFamily: 'Arial',
+      //               fontSize: 14,
+      //               color: Color(0xFF555555)),
+      //           border: OutlineInputBorder(
+      //             borderRadius: BorderRadius.circular(8),
+      //           ),
+      //         ),
+      //       ),
+      //     ),
+      //     searchMatchFn: (item, searchValue) {
+      //       return item.value!.status_name
+      //           .toLowerCase()
+      //           .contains(searchValue.toLowerCase());
+      //     },
+      //   ),
+      //   onMenuStateChange: (isOpen) {
+      //     if (!isOpen) {
+      //       _searchController
+      //           .clear(); // Clear the search field when the menu closes
+      //     }
+      //   },
+      // ),
     );
   }
 

@@ -188,7 +188,6 @@ class _AccountScreenState extends State<AccountScreen> {
           controller: _scrollController,
           itemCount: accountScreen.length,
           itemBuilder: (context, index) {
-            accountAll = accountScreen;
             // AccountScreen.sort((a, b) => b.cus_id.compareTo(a.cus_id));
             final account = accountScreen[index];
             print('AccountScreen.length : ${accountScreen.length}');
@@ -199,7 +198,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   MaterialPageRoute(
                     builder: (context) => AccountEditView(
                       employee: widget.employee,
-                      pageInput: widget.pageInput,
+                      pageInput: widget.pageInput, account: account,
                     ),
                   ),
                 ).then((value) {
@@ -416,7 +415,6 @@ class _AccountScreenState extends State<AccountScreen> {
   bool _isFirstTime = true;
   int indexItems = 0;
   List<ModelAccount> accountScreen = [];
-  List<ModelAccount> accountAll = [];
   Future<void> fetchModelAccountVoid() async {
     final uri = Uri.parse(
         "$host/api/origami/crm/account/list-account.php?search=$_search");

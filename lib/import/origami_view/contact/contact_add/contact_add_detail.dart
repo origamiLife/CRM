@@ -18,30 +18,32 @@ class ContactAddDetail extends StatefulWidget {
 }
 
 class _ContactAddDetailState extends State<ContactAddDetail> {
-  TextEditingController _FirstnameController = TextEditingController();
-  TextEditingController _LastnameController = TextEditingController();
-  TextEditingController _NicknameController = TextEditingController();
-  TextEditingController _MobileController = TextEditingController();
-  TextEditingController _EmailController = TextEditingController();
-  TextEditingController _TelController = TextEditingController();
-  TextEditingController _ExtController = TextEditingController();
-  TextEditingController _SocialController = TextEditingController();
-  TextEditingController _LinkController = TextEditingController();
-  TextEditingController _PositionController = TextEditingController();
-  TextEditingController _SpouseNameController = TextEditingController();
-  TextEditingController _DescriptionController = TextEditingController();
+  TextEditingController _firstnameController = TextEditingController();
+  TextEditingController _lastnameController = TextEditingController();
+  TextEditingController _nicknameController = TextEditingController();
+  TextEditingController _mobileController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _positionController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
-  int _page = 0;
+  TextEditingController dropdownSearchController = TextEditingController();
+
+  // GlobalKey<FormState> _formKey = GlobalKey();
+  FocusNode focusNode = FocusNode();
+  String _tellphone = '';
 
   @override
   void initState() {
     super.initState();
-    _showDate();
-    fetchActivityContact();
-    _FirstnameController.addListener(() {
+    // _showDate();
+    // fetchActivityContact();
+    _firstnameController.addListener(() {
       // _search = _FirstnameController.text;
-      print("Current text: ${_FirstnameController.text}");
+      print("Current text: ${_firstnameController.text}");
     });
+  }
+
+  void getController() {
+    return;
   }
 
   @override
@@ -59,766 +61,270 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
 
   Widget _logoInformation(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  if (_page == 0)
-                    Column(
-                      children: [
-                        SizedBox(height: 16),
-                        _showImagePhoto('upload account detail', 0),
-                        SizedBox(height: 16),
-                        _information(),
-                      ],
-                    )
-                  else if (_page == 1)
-                    _information2()
-                  else
-                    _information3(),
-                ],
-              ),
-            ),
-          ),
-          _pageController(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildImagePickerPlaceholder(String comment, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              border: Border.all(color: Colors.grey.shade300, width: 4),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.cloud_upload, color: Colors.grey, size: 45),
-                  Text(
-                    comment,
-                    style: const TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _information() {
-    return Column(
-      children: [
-        _AccountTextColumn('Firstname', _FirstnameController),
-        _AccountTextColumn('Lastname', _LastnameController),
-        _DropdownProject('Title'),
-        _AccountTextColumn('Nickname', _NicknameController),
-        _DropdownProject('Gender'),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      padding: EdgeInsets.all(14),
+      child: SingleChildScrollView(
+        child: Column(
           children: [
-            Text(
-              'Birthday',
-              maxLines: 1,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555),
-                fontWeight: FontWeight.w500,
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Detail Information',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 22,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             SizedBox(height: 8),
-            _AccountCalendar('Birthday', 0, false),
+            _buildDropdown<ModelType>(
+              label: 'Title',
+              items: _modelType,
+              selectedValue: selectedType,
+              getLabel: (item) => item.name,
+              onChanged: (value) {
+                setState(() {
+                  selectedType = value;
+                  type_id = value?.id ?? '';
+                });
+              },
+            ),
+            _textController(
+                'Firstname', _firstnameController, false, Icons.numbers),
+            _textController(
+                'Lastname', _lastnameController, false, Icons.numbers),
+            _textController(
+                'Nickname', _nicknameController, false, Icons.numbers),
+            _buildDropdown<ModelType>(
+              label: 'Gender',
+              items: _modelType,
+              selectedValue: selectedType,
+              getLabel: (item) => item.name,
+              onChanged: (value) {
+                setState(() {
+                  selectedType = value;
+                  type_id = value?.id ?? '';
+                });
+              },
+            ),
+            _buildDropdown<ModelType>(
+              label: 'Account',
+              items: _modelType,
+              selectedValue: selectedType,
+              getLabel: (item) => item.name,
+              onChanged: (value) {
+                setState(() {
+                  selectedType = value;
+                  type_id = value?.id ?? '';
+                });
+              },
+            ),
+            _textController('Email', _emailController, false, Icons.numbers),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 6),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Tel',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  IntlPhoneField(
+                    controller: _mobileController,
+                    focusNode: focusNode,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      labelStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        color: Color(0xFF555555),
+                        fontSize: 14,
+                      ),
+                      hintText: '',
+                      hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        color: Color(0xFF555555),
+                        fontSize: 14,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey.shade400,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.orange.shade100,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      filled: true,
+                    ),
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14,
+                    ),
+                    languageCode: "en",
+                    onChanged: (phone) {
+                      _tellphone = phone.completeNumber;
+                      print('\ntell : $_tellphone \nmobile : ${_mobileController.text}');
+                    },
+                    onCountryChanged: (country) {
+                      print('Country changed to: ' + country.name);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            _buildDropdown<ModelType>(
+              label: 'Occupation',
+              items: _modelType,
+              selectedValue: selectedType,
+              getLabel: (item) => item.name,
+              onChanged: (value) {
+                setState(() {
+                  selectedType = value;
+                  type_id = value?.id ?? '';
+                });
+              },
+            ),
+            _textController(
+                'Position', _positionController, false, Icons.numbers),
+            _buildDropdown<ModelType>(
+              label: 'Role',
+              items: _modelType,
+              selectedValue: selectedType,
+              getLabel: (item) => item.name,
+              onChanged: (value) {
+                setState(() {
+                  selectedType = value;
+                  type_id = value?.id ?? '';
+                });
+              },
+            ),
+            _buildDropdown<ModelType>(
+              label: 'Emotion',
+              items: _modelType,
+              selectedValue: selectedType,
+              getLabel: (item) => item.name,
+              onChanged: (value) {
+                setState(() {
+                  selectedType = value;
+                  type_id = value?.id ?? '';
+                });
+              },
+            ),
+            _buildDropdown<ModelType>(
+              label: 'Marital',
+              items: _modelType,
+              selectedValue: selectedType,
+              getLabel: (item) => item.name,
+              onChanged: (value) {
+                setState(() {
+                  selectedType = value;
+                  type_id = value?.id ?? '';
+                });
+              },
+            ),
             SizedBox(height: 16),
           ],
         ),
-        _DropdownProject('Religion'),
-        SizedBox(height: 8),
-        _DropdownProject('Account'),
-      ],
+      ),
     );
   }
 
-  Widget _information2() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(flex: 1, child: _DropdownProject('Mobile')),
-            SizedBox(width: 8),
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '',
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  _AccountNumber('', _MobileController),
-                  SizedBox(height: 8),
-                ],
-              ),
-            ),
-          ],
-        ),
-        _AccountTextColumn('Email', _EmailController),
-        Row(
-          children: [
-            Expanded(child: _DropdownProject('Tel')),
-            SizedBox(width: 8),
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '',
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  _AccountNumber('', _TelController),
-                  SizedBox(height: 8),
-                ],
-              ),
-            ),
-            SizedBox(width: 8),
-            Expanded(child: _AccountTextColumn('Ext', _ExtController)),
-          ],
-        ),
-        Column(
-          children: [
-            _DropdownProject('Social'),
-            _AccountTextColumn('Social', _SocialController),
-            Row(
-              children: [
-                Expanded(child: _AccountText('Link', _LinkController)),
-                TextButton(
-                    onPressed: () {}, child: Icon(Icons.insert_link_sharp))
-              ],
-            )
-          ],
-        ),
-        _DropdownProject('Occupation'),
-        _AccountTextColumn('Position', _PositionController),
-        Row(
-          children: [
-            Expanded(flex: 2, child: _DropdownProject('Role')),
-            SizedBox(width: 8),
-            Expanded(
-              flex: 1,
-              child: _DropdownEmotion('Emotion'),
-            ),
-          ],
-        ),
-        _DropdownProject('Marital'),
-        _AccountTextColumn('Spouse name', _SpouseNameController),
-        _AccountTextDetail('Description', _DescriptionController),
-      ],
-    );
-  }
-
-  Widget _information3() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Name Card',
+  Widget _textController(String text, controller, bool key, IconData numbers) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
             style: TextStyle(
               fontFamily: 'Arial',
-              fontSize: 22,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-        Column(
-          children: [
-            Column(
-              children: [
-                _showImagePhoto('upload front card', 1),
-                SizedBox(height: 8),
-                // Text(
-                //   'Front Name card',
-                //   style: TextStyle(
-                //     fontFamily: 'Arial',
-                //     fontSize: 14,
-                //     color: Color(0xFF555555),
-                //     fontWeight: FontWeight.w500,
-                //   ),
-                // ),
-              ],
-            ),
-            SizedBox(width: 8),
-            Column(
-              children: [
-                _showImagePhoto('upload back card', 2),
-                SizedBox(height: 8),
-                // Text(
-                //   'Back Name card',
-                //   style: TextStyle(
-                //     fontFamily: 'Arial',
-                //     fontSize: 14,
-                //     color: Color(0xFF555555),
-                //     fontWeight: FontWeight.w500,
-                //   ),
-                // ),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(height: 16),
-        Divider(),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Owner contact',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 22,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        // SizedBox(height: 16),
-        SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: List.generate(addNewContactList.length, (index) {
-              final contact = addNewContactList[index];
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      // addNewContactList.add(contact);
-                    });
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4, right: 8),
-                            child: CircleAvatar(
-                              radius: 20,
-                              backgroundColor: Colors.grey,
-                              child: CircleAvatar(
-                                radius: 19,
-                                backgroundColor: Colors.white,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image.network(
-                                    (contact.contact_image == null ||
-                                            contact.contact_image == '')
-                                        ? 'https://dev.origami.life/images/default.png'
-                                        : '$host//crm/${contact.contact_image}',
-                                    height: 100,
-                                    width: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${contact.contact_first} ${contact.contact_last}',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    color: Color(0xFFFF9900),
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                Text(
-                                  '${contact.customer_en} (${contact.customer_th})',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 14,
-                                    color: Color(0xFF555555),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Divider(color: Colors.grey.shade300),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-          ),
-        ),
-        TextButton(
-          onPressed: _addOtherContact,
-          child: Text(
-            'Add Other Contact',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontFamily: 'Arial',
+              color: Color(0xFF555555),
               fontSize: 14,
-              color: Color(0xFFFF9900),
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _pageController() {
-    TextStyle buttonStyle = const TextStyle(
-      fontFamily: 'Arial',
-      fontSize: 16,
-      color: Color(0xFFFF9900),
-      fontWeight: FontWeight.w700,
-    );
-
-    Widget _navButton(String text, VoidCallback onTap) {
-      return InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(text, style: buttonStyle),
-        ),
-      );
-    }
-
-    Widget _saveButton(VoidCallback onTap) {
-      return InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              const Icon(Icons.save, size: 20, color: Color(0xFFFF9900)),
-              const SizedBox(width: 4),
-              Text('SAVE', style: buttonStyle),
-            ],
-          ),
-        ),
-      );
-    }
-
-    if (_page == 0) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          _navButton('Next >>', () => setState(() => _page = 1)),
-        ],
-      );
-    } else if (_page == 1) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _navButton('<< Back', () => setState(() => _page = 0)),
-          _navButton('Next >>', () => setState(() => _page = 2)),
-        ],
-      );
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _navButton('<< Back', () => setState(() => _page = 1)),
-          _saveButton(
-              () => setState(() => _page = 0)), // ปรับตรงนี้ตาม logic ของคุณ
-        ],
-      );
-    }
-  }
-
-  Widget _DropdownProject(String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.grey.shade300,
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<ModelType>(
-            isExpanded: true,
-            hint: Text(
-              value,
+          SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            child: TextFormField(
+              controller: controller,
+              readOnly: key,
+              maxLines: null,
+              autofocus: false,
+              obscureText: false,
+              decoration: InputDecoration(
+                isDense: true,
+                fillColor:
+                    key == false ? Colors.grey.shade50 : Colors.grey.shade300,
+                labelStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                hintText: '',
+                hintStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade400,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: key == false
+                        ? Colors.orange.shade300
+                        : Colors.grey.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                // prefixIcon: Icon(numbers, color: Colors.black54),
+              ),
               style: TextStyle(
                 fontFamily: 'Arial',
-                color: Colors.grey,
+                color: key ? Colors.black87 : Color(0xFF555555),
                 fontSize: 14,
               ),
             ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Colors.grey,
-              fontSize: 14,
-            ),
-            items: _modelType
-                .map((ModelType type) => DropdownMenuItem<ModelType>(
-                      value: type,
-                      child: Text(
-                        type.name,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedItem,
-            onChanged: (value) {
-              setState(() {
-                selectedItem = value;
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 33,
-            ),
           ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _AccountTextColumn(String title, controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          maxLines: 1,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 8),
-        _AccountText(title, controller),
-        SizedBox(height: 16),
-      ],
-    );
-  }
-
-  Widget _AccountText(String title, controller) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: TextInputType.text,
-      style: TextStyle(
-        fontFamily: 'Arial',
-        color: Color(0xFF555555),
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-      ),
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        hintText: title,
-        hintStyle:
-            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-        border: InputBorder.none, // เอาขอบปกติออก
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _AccountNumber(String title, controller) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: TextInputType.number,
-      style: TextStyle(
-        fontFamily: 'Arial',
-        color: Color(0xFF555555),
-        fontSize: 14,
-      ),
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        hintText: title,
-        hintStyle:
-            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
-  }
-
-  Widget _AccountTextDetail(String title, controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Description',
-          maxLines: 1,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 16),
-        TextFormField(
-          minLines: 2,
-          maxLines: null,
-          controller: controller,
-          keyboardType: TextInputType.text,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Color(0xFF555555),
-            fontSize: 14,
-          ),
-          decoration: InputDecoration(
-            isDense: true,
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            hintText: title,
-            hintStyle: TextStyle(
-                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-        SizedBox(height: 16),
-      ],
-    );
-  }
-
-  Widget _AccountCalendar(String title, int checkTitle, bool ifTime) {
-    final now = DateTime.now();
-    String currentTime =
-        "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
-    return InkWell(
-      onTap: () {
-        _requestDateEnd(checkTitle);
-      },
-      child: Container(
-        height: 40,
-        child: TextFormField(
-          enabled: false,
-          keyboardType: TextInputType.number,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Color(0xFF555555),
-            fontSize: 14,
-          ),
-          decoration: InputDecoration(
-            isDense: false,
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            hintText: (ifTime == true) ? '${title} $currentTime' : title,
-            hintStyle: TextStyle(
-                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            suffixIcon: Container(
-              alignment: Alignment.centerRight,
-              width: 10,
-              child: Center(
-                child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.calendar_month),
-                    // color: Color(0xFFFF9900),
-                    iconSize: 22),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _DropdownEmotion(String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Emotion',
+  Widget _buildDropdown<T>({
+    required String label,
+    required List<T> items,
+    required T? selectedValue,
+    required String Function(T) getLabel,
+    required void Function(T?) onChanged,
+  }) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 14,
@@ -826,70 +332,104 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
               fontWeight: FontWeight.w500,
             ),
           ),
-        ),
-        SizedBox(height: 16),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.grey.shade300,
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<String>(
-            isExpanded: true,
-            hint: Text(
-              value,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.grey,
-                fontSize: 14,
+          SizedBox(height: 4),
+          InputDecorator(
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.only(top: 12, bottom: 12),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade400),
               ),
             ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Colors.grey,
-              fontSize: 14,
-            ),
-            items: _emotions
-                .map((String emotions) => DropdownMenuItem<String>(
-                      value: emotions,
-                      child: Text(
-                        emotions,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 24,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<T>(
+                isExpanded: true,
+                hint: Text(
+                  '',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555),
+                  ),
+                ),
+                value: selectedValue,
+                items: items
+                    .map((item) => DropdownMenuItem<T>(
+                          value: item,
+                          child: Text(
+                            getLabel(item),
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFF555555),
+                            ),
+                          ),
+                        ))
+                    .toList(),
+                onChanged: onChanged,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                  color: Color(0xFF555555),
+                ),
+                iconStyleData: IconStyleData(
+                  icon: Icon(Icons.arrow_drop_down,
+                      color: Color(0xFF555555), size: 24),
+                  iconSize: 24,
+                ),
+                buttonStyleData: ButtonStyleData(
+                  height: 24,
+                  padding: EdgeInsets.only(right: 12),
+                ),
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                menuItemStyleData: MenuItemStyleData(
+                  height: 40,
+                ),
+                /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
+                dropdownSearchData: DropdownSearchData(
+                  searchController: dropdownSearchController,
+                  searchInnerWidget: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      bottom: 4,
+                      right: 8,
+                      left: 8,
+                    ),
+                    child: TextField(
+                      controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        hintText: 'search...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ))
-                .toList(),
-            value: _selectedEmotion,
-            onChanged: (value) {
-              setState(() {
-                _selectedEmotion = value;
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 33,
+                    ),
+                  ),
+                  searchInnerWidgetHeight: 50,
+                  searchMatchFn: (item, searchValue) {
+                    return getLabel(item.value!)
+                        .toLowerCase()
+                        .contains(searchValue.toLowerCase());
+                  },
+                ),
+                onMenuStateChange: (isOpen) {
+                  if (!isOpen) {
+                    dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
+                  }
+                },
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 16),
-      ],
+        ],
+      ),
     );
   }
 
@@ -901,372 +441,6 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
     startDate = formatter.format(_selectedDateEnd);
     endDate = formatter.format(_selectedDateEnd);
   }
-
-  Future<void> _requestDateEnd(int check) async {
-    await showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Theme(
-          data: ThemeData(
-            primaryColor: Colors.teal,
-            colorScheme: ColorScheme.light(
-              primary: Color(0xFFFF9900),
-              onPrimary: Colors.white,
-              onSurface: Colors.teal,
-            ),
-            dialogBackgroundColor: Colors.teal[50],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CalendarDatePicker(
-                  initialDate: _selectedDateEnd,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                  onDateChanged: (DateTime newDate) {
-                    setState(() {
-                      _selectedDateEnd = newDate;
-                      DateFormat formatter = DateFormat('yyyy/MM/dd');
-                      if (check == 0) {
-                        startDate = formatter.format(_selectedDateEnd);
-                      } else {
-                        endDate = formatter.format(_selectedDateEnd);
-                      }
-
-                      // start_date = startDate;
-                      // end_date = startDate;
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _showImagePhoto(String comment, int index) {
-    File? currentImage;
-    if (index == 0)
-      currentImage = _imagelogo;
-    else if (index == 1)
-      currentImage = _imagefront;
-    else
-      currentImage = _imageback;
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: currentImage != null
-          ? _buildImagePreview(currentImage, () {
-              setState(() {
-                if (index == 0)
-                  _imagelogo = null;
-                else if (index == 1)
-                  _imagefront = null;
-                else
-                  _imageback = null;
-              });
-            })
-          : _buildImagePickerPlaceholder(comment, () => _pickImage(index)),
-    );
-  }
-
-  Widget _buildImagePreview(File imageFile, VoidCallback onRemove) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.transparent,
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.file(
-              imageFile,
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Positioned(
-            top: 4,
-            right: 4,
-            child: InkWell(
-              onTap: onRemove,
-              child: Stack(
-                children: const [
-                  Icon(Icons.cancel_outlined, color: Colors.white),
-                  Icon(Icons.cancel, color: Colors.red),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _addOtherContact() {
-    showModalBottomSheet<void>(
-      barrierColor: Colors.black87,
-      backgroundColor: Colors.transparent,
-      context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (BuildContext context) {
-        return _getOtherContact();
-      },
-    );
-  }
-
-  Widget _getOtherContact() {
-    return FutureBuilder<List<ActivityContact>>(
-      future: fetchAddContact(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-              child: Text(
-            '$Empty',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
-            ),
-          ));
-        } else {
-          // กรองข้อมูลตามคำค้นหา
-          List<ActivityContact> filteredContacts =
-              snapshot.data!.where((contact) {
-            String searchTerm = _searchfilterController.text.toLowerCase();
-            String fullName = '${contact.contact_first} ${contact.contact_last}'
-                .toLowerCase();
-            return fullName.contains(searchTerm);
-          }).toList();
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.7,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(10),
-              ),
-            ),
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: _searchfilterController,
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(
-                          fontFamily: 'Arial',
-                          color: Color(0xFF555555),
-                          fontSize: 14),
-                      decoration: InputDecoration(
-                        isDense: true,
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 12),
-                        hintText: 'Search',
-                        hintStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Color(0xFF555555)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Color(0xFFFF9900),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFFF9900),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFFF9900),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {}); // รีเฟรช UI เมื่อค้นหา
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: ListView.builder(
-                        itemCount: filteredContacts.length,
-                        itemBuilder: (context, index) {
-                          final contact = filteredContacts[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: InkWell(
-                              onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        'This name has already joined the list!'),
-                                    duration: Duration(seconds: 2),
-                                  ),
-                                );
-                                Navigator.pop(context);
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 4, right: 8),
-                                        child: CircleAvatar(
-                                          radius: 20,
-                                          backgroundColor: Colors.grey,
-                                          child: CircleAvatar(
-                                            radius: 19,
-                                            backgroundColor: Colors.white,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              child: Image.network(
-                                                (contact.contact_image ==
-                                                            null ||
-                                                        contact.contact_image ==
-                                                            '')
-                                                    ? 'https://dev.origami.life/images/default.png'
-                                                    : '$host//crm/${contact.contact_image}',
-                                                height: 100,
-                                                width: 100,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${contact.contact_first} ${contact.contact_last}',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 16,
-                                                color: Color(0xFFFF9900),
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${contact.customer_en} (${contact.customer_th})',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14,
-                                                color: Color(0xFF555555),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            Divider(
-                                                color: Colors.grey.shade300),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-      },
-    );
-  }
-
-  final ImagePicker _picker = ImagePicker();
-  File? _imagelogo;
-  File? _imagefront;
-  File? _imageback;
-  List<String> _addImagelogo = [];
-  List<String> _addImagefront = [];
-  List<String> _addImageback = [];
-
-  Future<void> _pickImage(int index) async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        if (index == 0) {
-          _imagelogo = File(image.path);
-          _addImagelogo.add(_imagelogo!.path);
-        } else if (index == 1) {
-          _imagefront = File(image.path);
-          _addImagefront.add(_imagefront!.path);
-        } else {
-          _imageback = File(image.path);
-          _addImageback.add(_imageback!.path);
-        }
-      });
-    }
-  }
-
-  final List<String> _emotions = ["😊", "😢", "😡", "😂", "😎", "😍"];
-  String? _selectedEmotion;
-
-  ModelType? selectedItem;
-  List<ModelType> _modelType = [
-    ModelType(id: '001', name: 'All'),
-    ModelType(id: '002', name: 'Advance'),
-    ModelType(id: '003', name: 'Asset'),
-    ModelType(id: '004', name: 'Change'),
-    ModelType(id: '005', name: 'Expense'),
-    ModelType(id: '006', name: 'Purchase'),
-    ModelType(id: '007', name: 'Product'),
-  ];
-
-  TitleDown? selectedItemJoin;
-  List<TitleDown> titleDownJoin = [
-    TitleDown(status_id: '001', status_name: 'DEV'),
-    TitleDown(status_id: '002', status_name: 'SEAL'),
-    TitleDown(status_id: '003', status_name: 'CAL'),
-    TitleDown(status_id: '004', status_name: 'DES'),
-  ];
 
   ActivityContact? selectedContact;
   List<ActivityContact> contactList = [];
@@ -1323,6 +497,26 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
       throw Exception('Failed to load contacts');
     }
   }
+
+  final List<String> _emotions = ["😊", "😢", "😡", "😂", "😎", "😍"];
+  String? _selectedEmotion;
+
+  ModelType? selectedType;
+  String type_id = '';
+  final List<ModelType> _modelType = [
+    ModelType(id: '1', name: 'รายการ A'),
+    ModelType(id: '2', name: 'รายการ B'),
+    ModelType(id: '3', name: 'รายการ C'),
+    ModelType(id: '4', name: 'รายการ D'),
+  ];
+
+  TitleDown? selectedItemJoin;
+  List<TitleDown> titleDownJoin = [
+    TitleDown(status_id: '001', status_name: 'DEV'),
+    TitleDown(status_id: '002', status_name: 'SEAL'),
+    TitleDown(status_id: '003', status_name: 'CAL'),
+    TitleDown(status_id: '004', status_name: 'DES'),
+  ];
 }
 
 class ModelType {

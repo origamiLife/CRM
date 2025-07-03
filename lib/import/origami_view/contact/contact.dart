@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:origamilift/import/origami_view/contact/recent_screen.dart';
 import '../../import.dart';
+import '../Contact/contact_edit/contact_edit_detail.dart';
 import 'contact_add/contact_add_view.dart';
 import 'contact_edit/contact_edit_view.dart';
 
@@ -219,22 +220,14 @@ class _ContactScreenState extends State<ContactScreen> {
             // print('ContactScreen.length : ${ContactScreen.length}');
             return InkWell(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ContactEditView(
-                //       employee: widget.employee,
-                //       pageInput: widget.pageInput,
-                //       contact: contact,
-                //     ),
-                //   ),
-                // ).then((value) {
-                //   // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-                //   setState(() {
-                //     indexItems = 0;
-                //     // fetchModelContactVoid(); // เรียกฟังก์ชันโหลด API ใหม่
-                //   });
-                // });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ContactEditView(
+                      employee: widget.employee, pageInput: 'contact', contact: contact,
+                    ),
+                  ),
+                );
               },
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 5),

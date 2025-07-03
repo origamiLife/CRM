@@ -7,17 +7,22 @@ import '../../IDOC/idoc_view.dart';
 import '../../activity/activity.dart';
 import '../../contact/contact.dart';
 import '../../project/project.dart';
+import '../account_screen.dart';
 import 'detail/account_edit_detail.dart';
+import 'join_user/account_join_user.dart';
 import 'location/account_edit_location.dart';
 
 class AccountEditView extends StatefulWidget {
   const AccountEditView({
-    Key? key,
+    super.key,
     required this.employee,
-    required this.pageInput
-  }) : super(key: key);
+    required this.pageInput,
+    required this.account,
+  });
   final Employee employee;
   final String pageInput;
+  final ModelAccount account;
+
   @override
   _AccountEditViewState createState() => _AccountEditViewState();
 }
@@ -67,24 +72,12 @@ class _AccountEditViewState extends State<AccountEditView> {
       title: 'Detail',
     ),
     TabItem(
-      icon: Icons.send_rounded,
+      icon: Icons.location_history,
       title: 'Location',
     ),
     TabItem(
       icon: Icons.person_add_alt_1_rounded,
       title: 'JoinUser',
-    ),
-    TabItem(
-      icon: Icons.person,
-      title: 'Contact',
-    ),
-    TabItem(
-      icon: FontAwesomeIcons.projectDiagram,
-      title: 'Project',
-    ),
-    TabItem(
-      icon: Icons.accessibility_new,
-      title: 'Activity',
     ),
   ];
 
@@ -100,12 +93,6 @@ class _AccountEditViewState extends State<AccountEditView> {
         page = "Account Location";
       } else if (index == 2) {
         page = "Join User";
-      } else if (index == 3) {
-        page = "Account Contact";
-      }  else if (index == 4) {
-        page = "Account Project";
-      } else if (index == 5) {
-        page = "Account Activity";
       }
     });
   }
@@ -119,9 +106,9 @@ class _AccountEditViewState extends State<AccountEditView> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '${page}',
+            '',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -135,7 +122,28 @@ class _AccountEditViewState extends State<AccountEditView> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [],
+        actions: [
+          InkWell(
+            onTap: () {
+              // Navigator.pop(context);
+              // _formKey.currentState?.validate();
+            },
+            child: Row(
+              children: [
+                Text(
+                  'DONE',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 16)
+              ],
+            ),
+          ),
+        ],
       ),
       body: _getContentWidget(),
       bottomNavigationBar: BottomBarDefault(
@@ -143,7 +151,8 @@ class _AccountEditViewState extends State<AccountEditView> {
         iconSize: 18,
         animated: true,
         titleStyle: TextStyle(
-                fontFamily: 'Arial',),
+          fontFamily: 'Arial',
+        ),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
@@ -163,16 +172,17 @@ class _AccountEditViewState extends State<AccountEditView> {
         return AccountEditLocation(
             employee: widget.employee, pageInput: widget.pageInput);
       case 2:
-        return JoinUser();
+        return AccountJoinUser(
+            employee: widget.employee, account: widget.account);
       case 3:
         return ContactScreen(
             employee: widget.employee, pageInput: widget.pageInput);
       case 4:
         return ProjectScreen(
-            employee: widget.employee,pageInput: widget.pageInput);
+            employee: widget.employee, pageInput: widget.pageInput);
       case 5:
         return ActivityScreen(
-            employee: widget.employee,pageInput: widget.pageInput);
+            employee: widget.employee, pageInput: widget.pageInput);
       default:
         return Container();
     }
@@ -189,7 +199,7 @@ class _AccountEditViewState extends State<AccountEditView> {
               child: Text(
                 'Join User',
                 style: TextStyle(
-                fontFamily: 'Arial',
+                  fontFamily: 'Arial',
                   fontSize: 18,
                   color: Colors.grey,
                   fontWeight: FontWeight.w700,
@@ -252,7 +262,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w700,
@@ -266,7 +276,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w500,
@@ -284,7 +294,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                fontFamily: 'Arial',
+                                          fontFamily: 'Arial',
                                           fontSize: 14,
                                           color: Color(0xFF555555),
                                           fontWeight: FontWeight.w700,
@@ -294,12 +304,14 @@ class _AccountEditViewState extends State<AccountEditView> {
                                         activeChild: Text(
                                           'ON',
                                           style: TextStyle(
-                fontFamily: 'Arial',),
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
                                         inactiveChild: Text(
                                           'OFF',
                                           style: TextStyle(
-                fontFamily: 'Arial',),
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(100),
@@ -314,7 +326,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                fontFamily: 'Arial',
+                                            fontFamily: 'Arial',
                                             fontSize: 14,
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w700,
@@ -325,12 +337,14 @@ class _AccountEditViewState extends State<AccountEditView> {
                                         activeChild: Text(
                                           'ON',
                                           style: TextStyle(
-                fontFamily: 'Arial',),
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
                                         inactiveChild: Text(
                                           'OFF',
                                           style: TextStyle(
-                fontFamily: 'Arial',),
+                                            fontFamily: 'Arial',
+                                          ),
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(100),
@@ -353,7 +367,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.w700,
@@ -378,7 +392,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                 child: Text(
                   'Tap here to select an Join User.',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -415,12 +429,12 @@ class _AccountEditViewState extends State<AccountEditView> {
         hint: Text(
           'DEV',
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
         ),
         style: TextStyle(
-                fontFamily: 'Arial',
+          fontFamily: 'Arial',
           color: Color(0xFF555555),
         ),
         items: titleDownJoin
@@ -429,7 +443,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                   child: Text(
                     item.status_name,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                     ),
                   ),
@@ -464,9 +478,8 @@ class _AccountEditViewState extends State<AccountEditView> {
             child: TextFormField(
               controller: _searchController,
               keyboardType: TextInputType.text,
-              style:
-                  TextStyle(
-                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
+              style: TextStyle(
+                  fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(
@@ -475,8 +488,9 @@ class _AccountEditViewState extends State<AccountEditView> {
                 ),
                 hintText: '$Search...',
                 hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                    fontSize: 14, color: Color(0xFF555555)),
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -565,8 +579,9 @@ class _AccountEditViewState extends State<AccountEditView> {
                                 controller: _searchfilterController,
                                 keyboardType: TextInputType.text,
                                 style: TextStyle(
-                fontFamily: 'Arial',
-                                    color: Color(0xFF555555), fontSize: 14),
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontSize: 14),
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
@@ -575,8 +590,9 @@ class _AccountEditViewState extends State<AccountEditView> {
                                       horizontal: 12, vertical: 12),
                                   hintText: 'Search',
                                   hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                                      fontSize: 14, color: Color(0xFF555555)),
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555)),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(100),
                                   ),
@@ -687,11 +703,11 @@ class _AccountEditViewState extends State<AccountEditView> {
                                                       maxLines: 1,
                                                       overflow:
                                                           TextOverflow.ellipsis,
-                                                      style:
-                                                          TextStyle(
-                fontFamily: 'Arial',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Arial',
                                                         fontSize: 16,
-                                                        color: Color(0xFFFF9900),
+                                                        color:
+                                                            Color(0xFFFF9900),
                                                         fontWeight:
                                                             FontWeight.w700,
                                                       ),
@@ -702,9 +718,8 @@ class _AccountEditViewState extends State<AccountEditView> {
                                                       maxLines: 1,
                                                       overflow:
                                                           TextOverflow.ellipsis,
-                                                      style:
-                                                          TextStyle(
-                fontFamily: 'Arial',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Arial',
                                                         fontSize: 14,
                                                         color:
                                                             Color(0xFF555555),

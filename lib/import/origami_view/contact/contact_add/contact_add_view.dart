@@ -17,7 +17,7 @@ class ContactAddView extends StatefulWidget {
 }
 
 class _ContactAddViewState extends State<ContactAddView> {
-
+  GlobalKey<FormState> _formKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -31,11 +31,7 @@ class _ContactAddViewState extends State<ContactAddView> {
   List<TabItem> items = [
     TabItem(
       icon: Icons.perm_contact_cal_outlined,
-      title: 'Detail',
-    ),
-    TabItem(
-      icon: Icons.info,
-      title: 'Infomation',
+      title: 'Contact Detail',
     ),
   ];
 
@@ -62,7 +58,7 @@ class _ContactAddViewState extends State<ContactAddView> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '${page}',
+            '',
             style: TextStyle(
                 fontFamily: 'Arial',
               fontSize: 24,
@@ -78,22 +74,43 @@ class _ContactAddViewState extends State<ContactAddView> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [],
+        actions: [
+          InkWell(
+            onTap: () {
+              // Navigator.pop(context);
+              _formKey.currentState?.validate();
+            },
+            child: Row(
+              children: [
+                Text(
+                  'DONE',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 16)
+              ],
+            ),
+          ),
+        ],
       ),
-      body: _getContentWidget(),
-      bottomNavigationBar: BottomBarDefault(
-        items: items,
-        iconSize: 18,
-        animated: true,
-        titleStyle: TextStyle(
-                fontFamily: 'Arial',),
-        backgroundColor: Colors.white,
-        color: Colors.grey.shade400,
-        colorSelected: Color(0xFFFF9900),
-        indexSelected: _selectedIndex,
-        // paddingVertical: 25,
-        onTap: _onItemTapped,
-      ),
+      body: ContactAddDetail(employee: widget.employee, Authorization: widget.Authorization),
+      // bottomNavigationBar: BottomBarDefault(
+      //   items: items,
+      //   iconSize: 18,
+      //   animated: true,
+      //   titleStyle: TextStyle(
+      //           fontFamily: 'Arial',),
+      //   backgroundColor: Colors.white,
+      //   color: Colors.grey.shade400,
+      //   colorSelected: Color(0xFFFF9900),
+      //   indexSelected: _selectedIndex,
+      //   // paddingVertical: 25,
+      //   onTap: _onItemTapped,
+      // ),
     );
   }
 

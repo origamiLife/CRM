@@ -18,6 +18,7 @@ class SkoopScreen extends StatefulWidget {
 
 class _SkoopScreenState extends State<SkoopScreen> {
   TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
   String description = '';
   LatLng? _selectedLocation; // สำหรับเก็บตำแหน่งที่เลือก
   final ImagePicker _picker = ImagePicker();
@@ -94,7 +95,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
         title: Text(
           'Skoop',
           style: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             fontSize: 30,
             color: Color(0xFFFF9900),
             fontWeight: FontWeight.bold,
@@ -126,7 +127,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
                 Text(
                   'DONE',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -156,10 +157,10 @@ class _SkoopScreenState extends State<SkoopScreen> {
             future: _fetchSkoopDetail(),
             builder: (context, snapshot) {
               return Column(
-                  children: List.generate(snapshot.data?.length??0, (index) {
+                  children: List.generate(snapshot.data?.length ?? 0, (index) {
                 if (isSkoop == false) {
                   _descriptionController.text =
-                      snapshot.data?[index].skoop_detail??'';
+                      snapshot.data?[index].skoop_detail ?? '';
                   isSkoop = true;
                 }
                 return SafeArea(
@@ -169,70 +170,11 @@ class _SkoopScreenState extends State<SkoopScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Description',
-                            maxLines: 1,
-                            style: TextStyle(
-                fontFamily: 'Arial',
-                              fontSize: 14,
-                              color: Color(0xFF555555),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          TextFormField(
-                            minLines: 3,
-                            maxLines: null,
-                            controller: _descriptionController,
-                            keyboardType: TextInputType.text,
-                            style: TextStyle(
-                fontFamily: 'Arial',
-                                color: Color(0xFF555555), fontSize: 14),
-                            decoration: InputDecoration(
-                              isDense: true,
-                              filled: true,
-                              fillColor: Colors.white,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 12),
-                              hintText: '',
-                              hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                                  fontSize: 14, color: Color(0xFF555555)),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFFFF9900),
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                  color: Color(
-                                      0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
-                                  width: 1,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(
-                                      0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color:
-                                      Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          _locationGM(),
+                          _textController(
+                              'Description', _descriptionController, false, Icons.paste),
+                          _textController(
+                              'Activity Lication', _locationController, true, Icons.location_history),
+
                           _showImagePhoto(),
                         ],
                       ),
@@ -241,6 +183,75 @@ class _SkoopScreenState extends State<SkoopScreen> {
                 );
               }));
             }),
+      ),
+    );
+  }
+
+  Widget _textController(String text, controller, bool key, IconData numbers) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            child: TextFormField(
+              controller: controller,
+              readOnly: key,
+              maxLines: null,
+              autofocus: false,
+              obscureText: false,
+              decoration: InputDecoration(
+                isDense: true,
+                fillColor:
+                key == false ? Colors.grey.shade50 : Colors.grey.shade300,
+                labelStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                hintText: '',
+                hintStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade400,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: key == false
+                        ? Colors.orange.shade300
+                        : Colors.grey.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                // prefixIcon: Icon(numbers, color: Colors.black54),
+              ),
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: key ? Colors.black87 : Color(0xFF555555),
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -315,7 +326,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
                 Text(
                   'Tap here to select an image.',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -334,7 +345,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
                     'Images',
                     maxLines: 1,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.bold,
@@ -359,7 +370,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
                 Text(
                   'Tap here to select an image.',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFFFF9900),
                     fontWeight: FontWeight.w500,
@@ -368,72 +379,6 @@ class _SkoopScreenState extends State<SkoopScreen> {
               ],
             ),
           );
-  }
-
-  Widget _locationGM() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Activity Lication',
-          maxLines: 1,
-          style: TextStyle(
-                fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8),
-        InkWell(
-          onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => LocationGoogleMap(
-            //       latLng: (LatLng? value) {
-            //         setState(() {
-            //           _selectedLocation = value;
-            //         });
-            //       },
-            //     ),
-            //   ),
-            // );
-          },
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.grey.shade300,
-              border: Border.all(
-                color: Colors.grey.shade400,
-                width: 1.0,
-              ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    (_selectedLocation == null)
-                        ? ''
-                        : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
-                    maxLines: 1,
-                    style: TextStyle(
-                fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                    ),
-                  ),
-                ),
-                Icon(Icons.location_on, color: Color(0xFF555555), size: 20),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
   }
 
   Future<List<GetSkoopDetail>> _fetchSkoopDetail() async {
@@ -452,7 +397,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       // ตรวจสอบว่ามีคีย์ 'academy_data' และไม่เป็น null
-      final List<dynamic> challengeJson = jsonResponse['data'];
+      final List<dynamic> challengeJson = jsonResponse['data'] ?? [];
       return challengeJson
           .map((json) => GetSkoopDetail.fromJson(json))
           .toList();
@@ -621,7 +566,7 @@ class GetSkoopDetail {
       cost: json['cost'] ?? '',
       is_ticket: json['is_ticket'] ?? '',
       activity_status: json['activity_status'] ?? '',
-      is_join: json['is_join'].toString()??'',
+      is_join: json['is_join'].toString() ?? '',
       is_main_activity: json['is_main_activity'] ?? '',
       status: json['status'] ?? '',
       stamp_in: json['stamp_in'] ?? '',

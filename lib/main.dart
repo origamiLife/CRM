@@ -2,9 +2,8 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
 import 'import/import.dart';
-
+import 'package:geolocator/geolocator.dart';
 String hostDev = 'https://dev.origami.life';
 String host = 'https://www.origami.life';
 String authorization = 'ori20#17gami';
@@ -19,7 +18,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // รอการ initialize
   // เตรียมข้อมูลสำหรับ Locale ภาษาไทย
   await initializeDateFormatting('th', null);
-
+  getLocation();
   // ตั้งค่า Hive
   var appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
@@ -29,6 +28,43 @@ void main() async {
     debugShowCheckedModeBanner: false,
     home: MyApp(),
   ));
+}
+
+Position? userPosition;
+
+Future<void> getLocation() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // ตรวจสอบว่าเปิดบริการ location หรือยัง
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // ถ้ายังไม่เปิด
+    print('Location services are disabled.');
+    return;
+  }
+
+  // ขอสิทธิ์ location
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      print('Location permissions are denied');
+      return;
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    print('Location permissions are permanently denied');
+    return;
+  }
+
+  // ได้สิทธิ์แล้ว อ่านตำแหน่ง
+  userPosition = await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.high,
+  );
+
+  print(userPosition?.latitude);
 }
 
 class MyApp extends StatelessWidget {
@@ -161,105 +197,6 @@ class _LoginPageState extends State<LoginPage> {
     // print('Password: $password');
   }
 
-  // Future<void> checkDeviceType(BuildContext? context) async {
-  //   try {
-  //     // รีเซ็ตค่าตัวแปรทั้งหมด
-  //     isAndroid = false;
-  //     isTablet = false;
-  //     isIPad = false;
-  //     isIPhone = false;
-  //
-  //     if (Platform.isAndroid) {
-  //       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  //       isAndroid = true;
-  //
-  //       final shortestSide = context != null
-  //           ? MediaQuery.of(context).size.shortestSide
-  //           : WidgetsBinding.instance.platformDispatcher.views.first
-  //                   .physicalSize.shortestSide /
-  //               WidgetsBinding
-  //                   .instance.platformDispatcher.views.first.devicePixelRatio;
-  //
-  //       isTablet = shortestSide >= 600; // เช็คว่าเป็น Tablet หรือไม่
-  //
-  //       if (isTablet) {
-  //         isAndroid = false; // ถ้าเป็น Tablet ให้ reset ค่า isAndroid
-  //       }
-  //     } else if (Platform.isIOS) {
-  //       final deviceInfo = DeviceInfoPlugin();
-  //       final iosInfo = await deviceInfo.iosInfo;
-  //       final model = iosInfo.model?.toLowerCase() ?? '';
-  //
-  //       if (model.contains("ipad")) {
-  //         isIPad = true;
-  //         isTablet = true; // ถ้าเป็น iPad ให้ตั้งค่า isTablet = true
-  //       } else if (model.contains("iphone")) {
-  //         isIPhone = true;
-  //       }
-  //     }
-  //
-  //     // ถ้าเป็น iPad ให้ตั้งค่าอื่นๆ เป็น false
-  //     if (isIPad) {
-  //       isAndroid = false;
-  //       isIPhone = false;
-  //       isTablet = false; // ทำให้ตัวแปรอื่นๆ เป็น false เมื่อเป็น iPad
-  //     }
-  //
-  //     print(
-  //         'isAndroid: $isAndroid, isIPhone: $isIPhone, isTablet: $isTablet, isIPad: $isIPad');
-  //   } catch (e) {
-  //     print("Error checking device type: $e");
-  //   }
-  // }
-
-  // Future<void> getDeviceInfo({BuildContext? context}) async {
-  //   try {
-  //     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  //
-  //     if (Platform.isAndroid) {
-  //       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-  //
-  //       // ใช้ MediaQuery ถ้ามี context
-  //       bool isTablet = false;
-  //       if (context != null) {
-  //         isTablet = MediaQuery.of(context).size.shortestSide >= 600;
-  //       } else {
-  //         // ใช้ WidgetsBinding ถ้าไม่มี context (เช่นเรียกใน initState)
-  //         final shortestSide =
-  //             WidgetsBinding.instance.window.physicalSize.shortestSide /
-  //                 WidgetsBinding.instance.window.devicePixelRatio;
-  //         isTablet = shortestSide >= 600;
-  //       }
-  //
-  //       debugPrint("📱 Android Device Info:");
-  //       debugPrint("Brand: ${androidInfo.brand}");
-  //       debugPrint("Model: ${androidInfo.model}");
-  //       debugPrint("Android Version: ${androidInfo.version.release}");
-  //       debugPrint(isTablet ? "📲 เป็น Tablet" : "📱 เป็น Phone");
-  //     } else if (Platform.isIOS) {
-  //       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-  //
-  //       // ตรวจสอบว่าเป็น iPad
-  //       bool isIPad = iosInfo.model.toLowerCase().contains("ipad");
-  //
-  //       debugPrint("🍏 iOS Device Info:");
-  //       debugPrint("Model: ${iosInfo.model}");
-  //       debugPrint("System Name: ${iosInfo.systemName}");
-  //       debugPrint("iOS Version: ${iosInfo.systemVersion}");
-  //       debugPrint(isIPad ? "📲 เป็น iPad🍏" : "📲 เป็น iPhone🍏");
-  //       if (isAndroid == true || isIPhone == true) {
-  //         isMobile = true;
-  //       } else {
-  //         isMobile = false;
-  //       }
-  //     } else {
-  //       debugPrint("❌ ไม่รองรับอุปกรณ์นี้");
-  //     }
-  //   } catch (e) {
-  //     debugPrint("⚠️ Error checking device type: $e");
-  //   }
-  // }
-
   Future<void> _loadBegin() async {
     await Future.delayed(Duration(seconds: 5));
     _begin = true;
@@ -292,7 +229,6 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-
                   Image.asset(
                     'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
                     width: MediaQuery.of(context).size.width * 0.3,
@@ -331,8 +267,8 @@ class _LoginPageState extends State<LoginPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    '$exitApp2TS',
-                    style: TextStyle(fontFamily: 'Arial', color: Colors.white),
+                    exitApp2TS,
+                    style: const TextStyle(fontFamily: 'Arial', color: Colors.white),
                   ),
                   duration: maxDuration,
                 ),
@@ -350,6 +286,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Container(
                   decoration: BoxDecoration(
+                    color: Colors.white,
                     image: backgroudComponent.isNotEmpty
                         ? DecorationImage(
                       image: NetworkImage(backgroudComponent),
@@ -441,7 +378,7 @@ class _LoginPageState extends State<LoginPage> {
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    color: Colors.transparent,
+                    // color: Colors.transparent,
                     child: Center(
                       child: LoadingAnimationWidget.horizontalRotatingDots(
                         size: 65,

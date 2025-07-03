@@ -22,31 +22,27 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _groupController = TextEditingController();
-  TextEditingController _telController = TextEditingController();
-  TextEditingController _faxController = TextEditingController();
-  TextEditingController _mobileController = TextEditingController();
-  TextEditingController _capitalController = TextEditingController();
-  TextEditingController _staffController = TextEditingController();
-  TextEditingController _taxIdController = TextEditingController();
-  TextEditingController _oldCodeController = TextEditingController();
-  TextEditingController _socialController = TextEditingController();
+  TextEditingController dropdownSearchController = TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey();
 
-  String _search = "";
-  int _infomationPage = 0;
+  FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     showDate();
     _searchController.addListener(() {
-      _search = _searchController.text;
-      print("Current text: ${_searchController.text}");
+
     });
   }
 
   @override
   void dispose() {
-    // _scrollController.dispose();
+    _nameTHController.dispose();
+    _nameENController.dispose();
+    _descriptionController.dispose();
+    _emailController.dispose();
+    _groupController.dispose();
     super.dispose();
   }
 
@@ -60,725 +56,379 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
 
   Widget _logoInformation() {
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(14),
       child: SingleChildScrollView(
-        child: (_infomationPage == 0)
-            ? Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Information',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 22,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Logo',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          color: Color(0xFF555555),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      _showImagePhoto(),
-                      SizedBox(height: 8),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  _information(),
-                ],
-              )
-            : _information2(),
+        child: _informationTop(),
       ),
     );
   }
 
-  Widget _showImagePhoto() {
-    return _addImage.isNotEmpty
-        ? InkWell(
-            onTap: () => _pickImage(),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GridView.builder(
-                        itemCount: _addImage.length,
-                        shrinkWrap: true, // ทำให้ GridView มีขนาดพอดีกับเนื้อหา
-                        physics:
-                            NeverScrollableScrollPhysics(), // ปิดการเลื่อนของ GridView
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // ตั้งค่าให้มี 2 รูปต่อ 1 แถว
-                          crossAxisSpacing: 2, // ระยะห่างระหว่างรูปแนวนอน
-                          mainAxisSpacing: 2, // ระยะห่างระหว่างรูปแนวตั้ง
-                        ),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Stack(
-                              children: [
-                                Image.file(
-                                  File(_addImage[index]),
-                                  height: 200,
-                                  width: 200,
-                                  fit: BoxFit.cover,
-                                ),
-                                Positioned(
-                                  top: 4,
-                                  right: 4,
-                                  child: InkWell(
-                                    onTap: () {},
-                                    child: Stack(
-                                      children: [
-                                        Icon(
-                                          Icons.cancel_outlined,
-                                          color: Colors.white,
-                                        ),
-                                        Icon(
-                                          Icons.cancel,
-                                          color: Colors.red,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    'Tap here to select an image.',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFFFF9900),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        : InkWell(
-            onTap: () => _pickImage(),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Color(0xFFFF9900),
-                    width: 1.0,
-                  ),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.cloud_upload, color: Colors.grey, size: 45),
-                      Text(
-                        'upload accoount logo',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-  }
-
-  Widget _information() {
+  Widget _informationTop() {
     return Column(
       children: [
-        _AccountTextColumn('Customer Name (TH)', _nameTHController),
-        _AccountTextColumn('Customer Name (EN)', _nameENController),
-        Row(
-          children: [
-            Expanded(flex: 1, child: _DropdownProject('Tel')),
-            SizedBox(width: 8),
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '',
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  _AccountNumber('', _telController),
-                  SizedBox(height: 8),
-                ],
-              ),
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Detail Information',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.grey,
+              fontWeight: FontWeight.w700,
             ),
-          ],
+          ),
         ),
-        Row(
-          children: [
-            Expanded(flex: 1, child: _DropdownProject('Fax')),
-            SizedBox(width: 8),
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '',
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  _AccountNumber('', _faxController),
-                  SizedBox(height: 8),
-                ],
-              ),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(flex: 1, child: _DropdownProject('Mobile')),
-            SizedBox(width: 8),
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '',
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  _AccountNumber('', _mobileController),
-                  SizedBox(height: 8),
-                ],
-              ),
-            ),
-          ],
-        ),
-        _AccountTextColumn('Email', _emailController),
-        _DropdownProject('Account Helpdesk'),
-        _DropdownProject('Class'),
         SizedBox(height: 8),
-        if (_infomationPage == 0)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              InkWell(
-                onTap: () {
+        Row(
+          children: [
+            Expanded(
+              child: _buildDropdown<ModelType>(
+                label: 'Group',
+                items: _modelType,
+                selectedValue: selectedItem,
+                getLabel: (item) => item.name,
+                onChanged: (value) {
                   setState(() {
-                    _infomationPage = 1;
+                    selectedItem = value;
+                    // project_id = value?.id ?? '';
                   });
                 },
-                child: Text(
-                  'Next >>',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16,
-                    color: Color(0xFFFF9900),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
               ),
-            ],
-          ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _information2() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(child: _DropdownProject('Group')),
+            ),
             SizedBox(width: 8),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '',
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  _AccountNumber('', _groupController),
-                  SizedBox(height: 8),
-                ],
-              ),
+              child: _textController(
+                  '', _groupController, false, Icons.numbers),
             ),
           ],
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: _DropdownProject('Type')),
+            Expanded(child: _buildDropdown<ModelType>(
+              label: 'Type',
+              items: _modelType,
+              selectedValue: selectedItem,
+              getLabel: (item) => item.name,
+              onChanged: (value) {
+                setState(() {
+                  selectedItem = value;
+                  // project_id = value?.id ?? '';
+                });
+              },
+            ),),
             SizedBox(width: 8),
-            Expanded(child: _DropdownProject('')),
+            Expanded(child: _buildDropdown<ModelType>(
+              label: '',
+              items: _modelType,
+              selectedValue: selectedItem,
+              getLabel: (item) => item.name,
+              onChanged: (value) {
+                setState(() {
+                  selectedItem = value;
+                  // project_id = value?.id ?? '';
+                });
+              },
+            ),),
           ],
         ),
-        SizedBox(height: 8),
-        _DropdownProject('Company Size'),
-        _DropdownProject('Registration'),
-        _AccountTextColumn('Registered Capital', _capitalController),
-        _AccountTextColumn('Number of Staff', _staffController),
-        _DropdownProject('Payment term'),
-        _AccountTextColumn('Tax ID', _taxIdController),
-        _AccountTextColumn('Old Code', _oldCodeController),
-        Column(
-          children: [
-            _AccountTextColumn('Social', _socialController),
-            _AccountTextColumn('Social', _socialController),
-          ],
+        _lineWidget(),
+        _textController(
+            'Customer Name (TH)', _nameTHController, false, Icons.paste),
+        _textController(
+            'Customer Name (EN)', _nameENController, false, Icons.paste),
+        _buildDropdown<ModelType>(
+          label: 'Registration',
+          items: _modelType,
+          selectedValue: selectedItem,
+          getLabel: (item) => item.name,
+          onChanged: (value) {
+            setState(() {
+              selectedItem = value;
+              // project_id = value?.id ?? '';
+            });
+          },
         ),
-        _DropdownProject('Source'),
-        _AccountTextDetail('Description', _descriptionController),
-        SizedBox(height: 8),
-        if (_infomationPage == 1)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          child: Divider(thickness: 10, color: Colors.grey.shade400),
+        ),
+        _buildDropdown<ModelType>(
+          label: 'Source',
+          items: _modelType,
+          selectedValue: selectedItem,
+          getLabel: (item) => item.name,
+          onChanged: (value) {
+            setState(() {
+              selectedItem = value;
+              // project_id = value?.id ?? '';
+            });
+          },
+        ),
+        _textController(
+            'Description', _descriptionController, false, Icons.paste),
+        _textController('Email', _emailController, false, Icons.mail),
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 6),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _infomationPage = 0;
-                  });
-                },
-                child: Text(
-                  '<< Back',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16,
-                    color: Color(0xFFFF9900),
-                    fontWeight: FontWeight.w700,
-                  ),
+              Text(
+                'Tel',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    _infomationPage = 0;
-                  });
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.save, size: 20, color: Color(0xFFFF9900)),
-                    SizedBox(width: 4),
-                    Text(
-                      'SAVE',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16,
-                        color: Color(0xFFFF9900),
-                        fontWeight: FontWeight.w700,
-                      ),
+              SizedBox(height: 4),
+              IntlPhoneField(
+                focusNode: focusNode,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  isDense: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade100,
+                      width: 1.0,
                     ),
-                  ],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.orange.shade300,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  filled: true,
                 ),
+                languageCode: "en",
+                onChanged: (phone) {
+                  print(phone.completeNumber);
+                },
+                onCountryChanged: (country) {
+                  print('Country changed to: ' + country.name);
+                },
               ),
             ],
           ),
-        SizedBox(height: 8),
+        ),
+        SizedBox(height: 16),
       ],
     );
   }
 
-  Widget _DropdownProject(String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
+  Widget _lineWidget() {
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade300,
+            height: 3,
+            width: double.infinity,
           ),
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
+          SizedBox(height: 2),
+          Container(
+            color: Colors.orange.shade300,
+            height: 3,
+            width: double.infinity,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _textController(String text, controller, bool key, IconData numbers) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          child: DropdownButton2<ModelType>(
-            isExpanded: true,
-            hint: Text(
-              value,
+          SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            child: TextFormField(
+              controller: controller,
+              readOnly: key,
+              minLines: controller == _descriptionController?3:1,
+              maxLines: null,
+              autofocus: false,
+              obscureText: false,
+              decoration: InputDecoration(
+                isDense: true,
+                fillColor:
+                key == false ? Colors.grey.shade100 : Colors.grey.shade300,
+                labelStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                hintText: '',
+                hintStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: key == false
+                        ? Colors.orange.shade300
+                        : Colors.grey.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                // prefixIcon: Icon(numbers, color: Colors.black54),
+              ),
               style: TextStyle(
                 fontFamily: 'Arial',
-                color: Colors.grey,
+                // color: Color(0xFF555555),
                 fontSize: 14,
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDropdown<T>({
+    required String label,
+    required List<T> items,
+    required T? selectedValue,
+    required String Function(T) getLabel,
+    required void Function(T?) onChanged,
+  }) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
             style: TextStyle(
               fontFamily: 'Arial',
-              color: Colors.grey,
               fontSize: 14,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
             ),
-            items: _modelType
-                .map((ModelType type) => DropdownMenuItem<ModelType>(
-                      value: type,
-                      child: Text(
-                        type.name,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
+          ),
+          SizedBox(height: 4),
+          InputDecorator(
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.only(top: 12, bottom: 12, right: 12),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<T>(
+                isExpanded: true,
+                hint: Text(
+                  '',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555),
+                  ),
+                ),
+                value: selectedValue,
+                items: items
+                    .map((item) => DropdownMenuItem<T>(
+                  value: item,
+                  child: Text(
+                    getLabel(item),
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                    ),
+                  ),
+                ))
+                    .toList(),
+                onChanged: onChanged,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                  color: Color(0xFF555555),
+                ),
+                iconStyleData: IconStyleData(
+                  icon: Icon(Icons.arrow_drop_down,
+                      color: Color(0xFF555555), size: 24),
+                  iconSize: 24,
+                ),
+                buttonStyleData: ButtonStyleData(
+                  height: 24,
+                ),
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                menuItemStyleData: MenuItemStyleData(
+                  height: 40,
+                ),
+                /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
+                dropdownSearchData: DropdownSearchData(
+                  searchController: dropdownSearchController,
+                  searchInnerWidget: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      bottom: 4,
+                      right: 8,
+                      left: 8,
+                    ),
+                    child: TextField(
+                      controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        hintText: 'search...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ))
-                .toList(),
-            value: selectedItem,
-            onChanged: (value) {
-              setState(() {
-                selectedItem = value;
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 33,
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _AccountTextColumn(String title, controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          maxLines: 1,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        SizedBox(height: 8),
-        _AccountText(title, controller),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _AccountText(String title, controller) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: TextInputType.text,
-      style: TextStyle(
-        fontFamily: 'Arial',
-        color: Color(0xFF555555),
-        fontSize: 14,
-      ),
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        hintText: title,
-        hintStyle:
-            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900),
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
-            width: 1,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
-  }
-
-  Widget _AccountNumber(String title, controller) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: TextInputType.number,
-      style: TextStyle(
-        fontFamily: 'Arial',
-        color: Color(0xFF555555),
-        fontSize: 14,
-      ),
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        hintText: title,
-        hintStyle:
-            TextStyle(fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900),
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
-            width: 1,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
-  }
-
-  Widget _AccountTextDetail(String title, controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Description',
-          maxLines: 1,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        SizedBox(height: 8),
-        TextFormField(
-          minLines: 2,
-          maxLines: null,
-          controller: controller,
-          keyboardType: TextInputType.text,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Color(0xFF555555),
-            fontSize: 14,
-          ),
-          decoration: InputDecoration(
-            isDense: true,
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            hintText: title,
-            hintStyle: TextStyle(
-                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900),
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
-                width: 1,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _AccountCalendar(String title, String ifTitle, bool ifTime) {
-    final now = DateTime.now();
-    String currentTime =
-        "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
-    return InkWell(
-      onTap: () {
-        _requestDateEnd(ifTitle);
-      },
-      child: Container(
-        height: 40,
-        child: TextFormField(
-          enabled: false,
-          keyboardType: TextInputType.number,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Color(0xFF555555),
-            fontSize: 14,
-          ),
-          decoration: InputDecoration(
-            isDense: false,
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            hintText: (ifTime == true) ? '${title} $currentTime' : title,
-            hintStyle: TextStyle(
-                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900),
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ตั้งสีขอบเมื่อตัวเลือกถูกปิดใช้งาน
-                width: 1,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            suffixIcon: Container(
-              alignment: Alignment.centerRight,
-              width: 10,
-              child: Center(
-                child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.calendar_month),
-                    // color: Color(0xFFFF9900),
-                    iconSize: 22),
+                    ),
+                  ),
+                  searchInnerWidgetHeight: 50,
+                  searchMatchFn: (item, searchValue) {
+                    return getLabel(item.value!)
+                        .toLowerCase()
+                        .contains(searchValue.toLowerCase());
+                  },
+                ),
+                onMenuStateChange: (isOpen) {
+                  if (!isOpen) {
+                    dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
+                  }
+                },
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -792,78 +442,15 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
     endDate = formatter.format(_selectedDateEnd);
   }
 
-  Future<void> _requestDateEnd(String title) async {
-    await showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Theme(
-          data: ThemeData(
-            primaryColor: Colors.teal,
-            colorScheme: ColorScheme.light(
-              primary: Color(0xFFFF9900),
-              onPrimary: Colors.white,
-              onSurface: Colors.teal,
-            ),
-            dialogBackgroundColor: Colors.teal[50],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CalendarDatePicker(
-                  initialDate: _selectedDateEnd,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                  onDateChanged: (DateTime newDate) {
-                    setState(() {
-                      _selectedDateEnd = newDate;
-                      DateFormat formatter = DateFormat('yyyy/MM/dd');
-                      if (title == 'startDate') {
-                        startDate = formatter.format(_selectedDateEnd);
-                      } else {
-                        endDate = formatter.format(_selectedDateEnd);
-                      }
-
-                      // start_date = startDate;
-                      // end_date = startDate;
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  final ImagePicker _picker = ImagePicker();
-  File? _image;
-  List<String> _addImage = [];
-
-  Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _image = File(image.path);
-        _addImage.add(_image!.path);
-      });
-    }
-  }
 
   ModelType? selectedItem;
   final List<ModelType> _modelType = [
-    ModelType(id: '001', name: 'All'),
-    ModelType(id: '002', name: 'Advance'),
-    ModelType(id: '003', name: 'Asset'),
-    ModelType(id: '004', name: 'Change'),
-    ModelType(id: '005', name: 'Expense'),
-    ModelType(id: '006', name: 'Purchase'),
-    ModelType(id: '007', name: 'Product'),
+    ModelType(id: '1', name: 'รายการ A'),
+    ModelType(id: '2', name: 'รายการ B'),
+    ModelType(id: '3', name: 'รายการ C'),
+    ModelType(id: '4', name: 'รายการ D'),
   ];
 
-  double total = 0.0;
 }
 
 class ModelType {

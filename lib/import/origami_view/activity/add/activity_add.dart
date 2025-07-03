@@ -8,10 +8,12 @@ import '../../need/need_view/need_detail.dart';
 class activityAdd extends StatefulWidget {
   const activityAdd({
     Key? key,
-    required this.employee,
+    required this.employee, required this.dataType, required this.listType,
 
   }) : super(key: key);
   final Employee employee;
+  final ActivityType dataType;
+  final List<ActivityType> listType;
 
   @override
   _activityAddState createState() => _activityAddState();
@@ -22,25 +24,28 @@ class _activityAddState extends State<activityAdd> {
   TextEditingController _subjectController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _costController = TextEditingController();
-  // TextEditingController _searchProjectController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
   TextEditingController _searchController = TextEditingController();
+  TextEditingController dropdownSearchController = TextEditingController();
   LatLng? _selectedLocation; // สำหรับเก็บตำแหน่งที่เลือก
   Timer? _debounce;
   String _search = '';
+  ActivityType? selectedType;
+  List<ActivityType> _modelType = [];
 
   @override
   void initState() {
     super.initState();
+    selectedType = widget.dataType;
+    _modelType = widget.listType;
     showDate();
     fetchGetProject();
     fetchActivityAccount();
-    fetchActivityType();
     fetchActivityStatus();
     fetchActivityPriority();
     fetchActivityContact();
     _typeController.addListener(() {
-      // _search = _typeController.text;
       print("Current text: ${_typeController.text}");
     });
     _subjectController.addListener(() {
@@ -177,31 +182,6 @@ class _activityAddState extends State<activityAdd> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          InkWell(
-            onTap: () {
-              setState(() {
-                _Done();
-              });
-
-              Navigator.pop(context);
-            },
-            child: Row(
-              children: [
-                Text(
-                  'DONE',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(width: 16)
-              ],
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -210,26 +190,86 @@ class _activityAddState extends State<activityAdd> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _DownProject(),
-                _DownContact(),
-                _DownAccount(),
-                _DownStatus(),
-                _DownPriority(),
-                _TextController('Subject', _subjectController),
-                _TextController(
-                    'Owner Activity Description', _descriptionController),
-                Column(
-                  children: [
-                    SizedBox(height: 18),
-                    Container(
-                      color: Colors.grey,
-                      height: 2,
-                      width: double.infinity,
-                    ),
-                    SizedBox(height: 18),
-                  ],
+                _buildDropdown<ActivityType>(
+                  label: 'Type',
+                  hint: selectedType?.type_name??'',
+                  items: _modelType,
+                  selectedValue: selectedType,
+                  getLabel: (item) => item?.type_name??'',
+                  onChanged: (value) {
+                    setState(() {
+                      selectedType = value;
+                      type_id = value?.type_id ?? '';
+                    });
+                  },
                 ),
-                _DownType(),
+                _buildDropdown<ActivityProject>(
+                  label: 'Project',
+                  items: _modelProject,
+                  selectedValue: selectedProject,
+                  getLabel: (item) => item?.project_name??'',
+                  onChanged: (value) {
+                    setState(() {
+                      selectedProject = value;
+                      project_id = value?.project_id??'';
+                    });
+                  },
+                ),
+
+                _buildDropdown<ActivityContact>(
+                  label: 'Contact',
+                  items: _modelContact,
+                  selectedValue: selectedContact,
+                  getLabel: (item) => item?.contact_first??'',
+                  onChanged: (value) {
+                    setState(() {
+                      selectedContact = value;
+                      contact_id = value?.contact_id??'';
+                    });
+                  },
+                ),
+
+                _buildDropdown<AccountData>(
+                  label: 'Account',
+                  items: _modelAccount,
+                  selectedValue: selectedAccount,
+                  getLabel: (item) => item?.account_name??'',
+                  onChanged: (value) {
+                    setState(() {
+                      selectedAccount = value;
+                      account_id = value?.account_id ?? '';
+                    });
+                  },
+                ),
+                _lineWidget(),
+                _buildDropdown<ActivityStatus>(
+                  label: 'Status',
+                  items: _modelStatus,
+                  selectedValue: selectedStatus,
+                  getLabel: (item) => item?.status_name??'',
+                  onChanged: (value) {
+                    setState(() {
+                      selectedStatus = value;
+                      status_id = value?.status_id ?? '';
+                    });
+                  },
+                ),
+                _buildDropdown<ActivityPriority>(
+                  label: 'Priority',
+                  items: _modelPriority,
+                  selectedValue: selectedPriority,
+                  getLabel: (item) => item?.priority_name??'',
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPriority = value;
+                      project_id = value?.priority_id ?? '';
+                    });
+                  },
+                ),
+                _textController(
+                    'Subject', _subjectController, false, Icons.numbers),
+                _textController(
+                    'Owner Activity Description', _descriptionController, false, Icons.numbers),
                 Row(
                   children: [
                     Expanded(
@@ -254,68 +294,23 @@ class _activityAddState extends State<activityAdd> {
                   ],
                 ),
                 SizedBox(height: 8),
-                _DownPlace('Place'),
-                _locationGM(),
-                Text(
-                  'Cost',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555),
-                    fontWeight: FontWeight.bold,
-                  ),
+                _buildDropdown<ActivityPlace>(
+                  label: 'Place',
+                  items: _modelPlace,
+                  selectedValue: selectedPlace,
+                  getLabel: (item) => item?.place_name??'',
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPlace = value;
+                      project_id = value?.place_id ?? '';
+                    });
+                  },
                 ),
-                SizedBox(height: 8),
-                TextFormField(
-                  controller: _costController,
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 12),
-                    hintText: '0.00',
-                    hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                Column(
-                  children: [
-                    SizedBox(height: 16),
-                    Container(
-                      color: Colors.grey,
-                      height: 16,
-                      width: double.infinity,
-                    ),
-                    SizedBox(height: 16),
-                  ],
-                ),
+                _textController(
+                    'Location', _locationController, true, Icons.location_history),
+                _textController(
+                    'Cost', _costController, false, Icons.numbers),
+                _lineWidget(),
                 Text(
                   'Other Contact',
                   maxLines: 1,
@@ -431,10 +426,56 @@ class _activityAddState extends State<activityAdd> {
                     ),
                   ),
                 ),
+                SizedBox(height: 8),
+                Padding(
+                  padding:
+                  const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFFFF9900),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                    onPressed: _saveAddActivity,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          Save,
+                          style: TextStyle(
+                              fontFamily: 'Arial', fontSize: 16.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _lineWidget(){
+    return Padding(
+      padding: EdgeInsets.only(top: 18,bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade300,
+            height: 3,
+            width: double.infinity,
+          ),
+          SizedBox(height: 2),
+          Container(
+            color: Colors.orange.shade300,
+            height: 3,
+            width: double.infinity,
+          ),
+        ],
       ),
     );
   }
@@ -665,882 +706,197 @@ class _activityAddState extends State<activityAdd> {
     );
   }
 
-  Widget _TextController(String title, TextEditingController textController) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 8),
-            Text(
-              '*',
-              style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        TextFormField(
-          minLines: (textController == _descriptionController) ? 3 : 1,
-          maxLines: null,
-          controller: textController,
-          keyboardType: TextInputType.text,
-          style: TextStyle(
-              fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
-          decoration: InputDecoration(
-            isDense: true,
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            hintText: '',
-            hintStyle: TextStyle(
-                fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(100),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
 
-  Widget _DownProject() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Project',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555),
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(width: 8),
-            Text(
-              '*',
-              style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<ActivityProject>(
-            isExpanded: true,
-            hint: Text(
-              'Select Status',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Color(0xFF555555),
-              ),
-            ),
+  Widget _textController(String text, controller, bool key, IconData numbers) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
             style: TextStyle(
               fontFamily: 'Arial',
               color: Color(0xFF555555),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
-            items: projectList
-                .map((item) => DropdownMenuItem<ActivityProject>(
-              value: item,
-              child: Text(
-                item.project_name,
+          ),
+          SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            child: TextFormField(
+              controller: controller,
+              readOnly: key,
+              minLines: controller == _descriptionController?3:1,
+              maxLines: null,
+              autofocus: false,
+              obscureText: false,
+              decoration: InputDecoration(
+                isDense: true,
+                fillColor:
+                key == false ? Colors.grey.shade50 : Colors.grey.shade300,
+                labelStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                hintText: '',
+                hintStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade400,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: key == false
+                        ? Colors.orange.shade300
+                        : Colors.grey.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                // prefixIcon: Icon(numbers, color: Colors.black54),
+              ),
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: key ? Colors.black87 : Color(0xFF555555),
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDropdown<T>({
+    required String label,
+    String? hint,
+    required List<T> items,
+    required T? selectedValue,
+    required String Function(T) getLabel,
+    required void Function(T?) onChanged,
+  }) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 4),
+          InputDecorator(
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.only(top: 12, bottom: 12),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade400),
+              ),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<T>(
+                isExpanded: true,
+                hint: Text(
+                  hint??'',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555),
+                  ),
+                ),
+                value: selectedValue,
+                items: items
+                    .map((item) => DropdownMenuItem<T>(
+                  value: item,
+                  child: Text(
+                    getLabel(item),
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                    ),
+                  ),
+                ))
+                    .toList(),
+                onChanged: onChanged,
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
+                  color: Color(0xFF555555),
                 ),
-              ),
-            ))
-                .toList(),
-            value: selectedProject,
-            onChanged: (value) {
-              setState(() {
-                selectedProject = value;
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight: 200,
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40,
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                iconStyleData: IconStyleData(
+                  icon: Icon(Icons.arrow_drop_down,
+                      color: Color(0xFF555555), size: 24),
+                  iconSize: 24,
+                ),
+                buttonStyleData: ButtonStyleData(
+                  height: 24,
+                  padding: EdgeInsets.only(right: 12),
+                ),
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.project_name
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController.clear();
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _DownContact() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Contact',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 8),
-            Text(
-              '*',
-              style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<ActivityContact>(
-            isExpanded: true,
-            hint: Text(
-              'Select Status',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Color(0xFF555555),
-              ),
-            ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Color(0xFF555555),
-            ),
-            items: contactList
-                .map((item) => DropdownMenuItem<ActivityContact>(
-                      value: item,
-                      child: Text(
-                        item.contact_first ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
+                menuItemStyleData: MenuItemStyleData(
+                  height: 40,
+                ),
+                /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
+                dropdownSearchData: DropdownSearchData(
+                  searchController: dropdownSearchController,
+                  searchInnerWidget: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      bottom: 4,
+                      right: 8,
+                      left: 8,
+                    ),
+                    child: TextField(
+                      controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        hintText: 'search...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ))
-                .toList(),
-            value: selectedContact,
-            onChanged: (value) {
-              setState(() {
-                selectedContact = value;
-                contact_id = value?.contact_id ?? '';
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
+                  searchInnerWidgetHeight: 50,
+                  searchMatchFn: (item, searchValue) {
+                    return getLabel(item.value!)
+                        .toLowerCase()
+                        .contains(searchValue.toLowerCase());
+                  },
                 ),
+                onMenuStateChange: (isOpen) {
+                  if (!isOpen) {
+                    dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
+                  }
+                },
               ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.contact_first!
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _DownAccount() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Account',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
             ),
           ),
-          child: DropdownButton2<AccountData>(
-            isExpanded: true,
-            hint: Text(
-              'Select Status',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Color(0xFF555555),
-              ),
-            ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Color(0xFF555555),
-            ),
-            items: accountList
-                .map((item) => DropdownMenuItem<AccountData>(
-                      value: item,
-                      child: Text(
-                        item.account_name ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedAccount,
-            onChanged: (value) {
-              setState(() {
-                selectedAccount = value;
-                account_id = value?.account_id ?? '';
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.account_name!
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _DownStatus() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Status',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 8),
-            Text(
-              '*',
-              style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<ActivityStatus>(
-            isExpanded: true,
-            hint: Text(
-              'Select Status',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Color(0xFF555555),
-              ),
-            ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Color(0xFF555555),
-            ),
-            items: statusList
-                .map((item) => DropdownMenuItem<ActivityStatus>(
-                      value: item,
-                      child: Text(
-                        item.status_name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedStatus,
-            onChanged: (value) {
-              setState(() {
-                selectedStatus = value;
-                status_id = value?.status_id ?? '';
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.status_name
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _DownPriority() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Priority',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 8),
-            Text(
-              '*',
-              style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<ActivityPriority>(
-            isExpanded: true,
-            hint: Text(
-              'Select Status',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Color(0xFF555555),
-              ),
-            ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Color(0xFF555555),
-            ),
-            items: priorityList
-                .map((item) => DropdownMenuItem<ActivityPriority>(
-                      value: item,
-                      child: Text(
-                        item.priority_name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedPriority,
-            onChanged: (value) {
-              setState(() {
-                selectedPriority = value;
-                priority_id = value?.priority_id ?? '';
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.priority_name
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
-  Widget _DownType() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Type',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 8),
-            Text(
-              '*',
-              style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<ActivityType>(
-            isExpanded: true,
-            hint: Text(
-              'Select Status',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Color(0xFF555555),
-              ),
-            ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Color(0xFF555555),
-            ),
-            items: typeList
-                .map((item) => DropdownMenuItem<ActivityType>(
-                      value: item,
-                      child: Text(
-                        item.type_name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedType,
-            onChanged: (value) {
-              setState(() {
-                selectedType = value;
-                type_id = value?.type_id ?? '';
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.type_name
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
+        ],
+      ),
     );
   }
 
@@ -1559,7 +915,7 @@ class _activityAddState extends State<activityAdd> {
                   fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               SizedBox(width: 8),
@@ -1568,20 +924,20 @@ class _activityAddState extends State<activityAdd> {
                 style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     color: Colors.red),
               ),
             ],
           ),
           SizedBox(height: 8),
           Container(
-            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            height: 48,
+            padding: const EdgeInsets.only(right: 8, left: 8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: (ontap == true) ? Colors.white : Colors.grey.shade300,
               border: Border.all(
-                color:
-                    (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
+                color: Colors.grey.shade300,
                 width: 1.0,
               ),
             ),
@@ -1632,7 +988,7 @@ class _activityAddState extends State<activityAdd> {
                   fontFamily: 'Arial',
                   fontSize: 14,
                   color: Color(0xFF555555),
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               SizedBox(width: 8),
@@ -1641,19 +997,20 @@ class _activityAddState extends State<activityAdd> {
                 style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     color: Colors.red),
               ),
             ],
           ),
           SizedBox(height: 8),
           Container(
-            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            height: 48,
+            padding: const EdgeInsets.only(right: 8, left: 8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
               border: Border.all(
-                color: Color(0xFFFF9900),
+                color: Colors.grey.shade300,
                 width: 1.0,
               ),
             ),
@@ -1685,217 +1042,9 @@ class _activityAddState extends State<activityAdd> {
     );
   }
 
-  Widget _DownPlace(String title) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 8),
-            Text(
-              '*',
-              style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Color(0xFFFF9900),
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<TitleDown>(
-            isExpanded: true,
-            hint: Text(
-              placeDown[0].status_name,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Color(0xFF555555),
-              ),
-            ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Color(0xFF555555),
-            ),
-            items: placeDown
-                .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-                      value: item,
-                      child: Text(
-                        item.status_name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: selectedItem,
-            onChanged: (value) {
-              setState(() {
-                selectedItem = value;
-                place_id = value?.status_id ?? '';
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 40, // Height for each menu item
-            ),
-            dropdownSearchData: DropdownSearchData(
-              searchController: _searchController,
-              searchInnerWidgetHeight: 50,
-              searchInnerWidget: Padding(
-                padding: const EdgeInsets.all(8),
-                child: TextFormField(
-                  controller: _searchController,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 8,
-                    ),
-                    hintText: '$Search...',
-                    hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              searchMatchFn: (item, searchValue) {
-                return item.value!.status_name
-                    .toLowerCase()
-                    .contains(searchValue.toLowerCase());
-              },
-            ),
-            onMenuStateChange: (isOpen) {
-              if (!isOpen) {
-                _searchController
-                    .clear(); // Clear the search field when the menu closes
-              }
-            },
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
 
-  Widget _locationGM() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Lication',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 14,
-            color: Color(0xFF555555),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8),
-        InkWell(
-          onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => LocationGoogleMap(
-            //       latLng: (LatLng? value) {
-            //         setState(() {
-            //           _selectedLocation = value;
-            //         });
-            //       },
-            //     ),
-            //   ),
-            // );
-          },
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.grey.shade300,
-              border: Border.all(
-                color: Colors.grey.shade400,
-                width: 1.0,
-              ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    (_selectedLocation == null)
-                        ? ''
-                        : '${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                    ),
-                  ),
-                ),
-                Icon(Icons.location_on, color: Color(0xFF555555), size: 20),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
 
-  TitleDown? selectedItem;
-  List<TitleDown> placeDown = [
-    TitleDown(status_id: 'in', status_name: 'Indoor'),
-    TitleDown(status_id: 'out', status_name: 'Outdoor'),
-  ];
+
   String type_id = '';
   String project_id = '';
   String account_id = '';
@@ -1912,7 +1061,7 @@ class _activityAddState extends State<activityAdd> {
   String cost = '0';
   List<String> contact_list = [];
 
-  void _Done() {
+  void _saveAddActivity() {
     if (type_id == '') {
       type_id = selectedType?.type_id ?? '';
     }
@@ -1932,7 +1081,7 @@ class _activityAddState extends State<activityAdd> {
       priority_id = selectedPriority?.priority_id ?? '';
     }
     if (place_id == '') {
-      place_id = placeDown[0].status_id;
+      place_id = selectedPlace?.place_id??'';
     }
     if (activity_name == '') {
       // แจ้งเตือน
@@ -1982,7 +1131,7 @@ class _activityAddState extends State<activityAdd> {
           'status_id': status_id,
           'priority_id': priority_id,
           'place_id': place_id,
-          'location': '',
+          'location': _locationController.text,
           'location_lat': '',
           'location_long': '',
           'activity_name': activity_name,
@@ -1997,6 +1146,7 @@ class _activityAddState extends State<activityAdd> {
       );
       if (response.statusCode == 200) {
         print('true: ${response.statusCode}');
+        Navigator.pop(context);
       } else {
         throw Exception('Failed to load status data');
       }
@@ -2009,47 +1159,8 @@ class _activityAddState extends State<activityAdd> {
     return text.replaceAll(RegExp(r'(\r\n|\r)'), '\n');
   }
 
-  // ActivityProject? selectedProject;
-  // List<ActivityProject> projectList = [];
-  // int indexItems = 0;
-  // int sumroject = 0;
-  // int maxproject = 0;
-  // Future<void> fetchActivityProject() async {
-  //   final uri = Uri.parse('$host/crm/project.php');
-  //   try {
-  //     final response = await http.post(
-  //       uri,
-  //       headers: {'Authorization': 'Bearer ${authorization}'},
-  //       body: {
-  //         'comp_id': widget.employee.comp_id,
-  //         'idemp': widget.employee.emp_id,
-  //         'index': (_search != '') ? '0' : indexItems.toString(),
-  //         'txt_search': _search,
-  //       },
-  //     );
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-  //       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-  //       maxproject = jsonResponse['max'];
-  //       sumroject = jsonResponse['sum'];
-  //       print('sum : $sumroject');
-  //       setState(() {
-  //         projectList =
-  //             dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-  //         if (projectList.isNotEmpty) {
-  //           selectedProject = projectList.first;
-  //         }
-  //       });
-  //     } else {
-  //       throw Exception('Failed to load status data');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Failed to load personal data: $e');
-  //   }
-  // }
-
   AccountData? selectedAccount;
-  List<AccountData> accountList = [];
+  List<AccountData> _modelAccount = [];
   Future<void> fetchActivityAccount() async {
     final uri = Uri.parse('$host/api/origami/need/account.php?page&search');
     try {
@@ -2066,42 +1177,10 @@ class _activityAddState extends State<activityAdd> {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> dataJson = jsonResponse['account_data'];
         setState(() {
-          accountList =
+          _modelAccount =
               dataJson.map((json) => AccountData.fromJson(json)).toList();
-          if (accountList.isNotEmpty && selectedAccount == null) {
-            selectedAccount = accountList[0];
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
-  }
-
-  ActivityType? selectedType;
-  List<ActivityType> typeList = [];
-  Future<void> fetchActivityType() async {
-    final uri = Uri.parse('$host/crm/ios_activity_type.php');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
-        setState(() {
-          typeList =
-              dataJson.map((json) => ActivityType.fromJson(json)).toList();
-          if (typeList.isNotEmpty && selectedType == null) {
-            selectedType = typeList[0];
+          if (_modelAccount.isNotEmpty && selectedAccount == null) {
+            selectedAccount = _modelAccount[0];
           }
         });
       } else {
@@ -2113,7 +1192,7 @@ class _activityAddState extends State<activityAdd> {
   }
 
   ActivityStatus? selectedStatus;
-  List<ActivityStatus> statusList = [];
+  List<ActivityStatus> _modelStatus = [];
   Future<void> fetchActivityStatus() async {
     final uri = Uri.parse('$host/crm/ios_activity_status.php');
     try {
@@ -2130,10 +1209,10 @@ class _activityAddState extends State<activityAdd> {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> dataJson = jsonResponse['data'];
         setState(() {
-          statusList =
+          _modelStatus =
               dataJson.map((json) => ActivityStatus.fromJson(json)).toList();
-          if (statusList.isNotEmpty && selectedStatus == null) {
-            selectedStatus = statusList[0];
+          if (_modelStatus.isNotEmpty && selectedStatus == null) {
+            selectedStatus = _modelStatus[0];
           }
         });
       } else {
@@ -2145,7 +1224,7 @@ class _activityAddState extends State<activityAdd> {
   }
 
   ActivityPriority? selectedPriority;
-  List<ActivityPriority> priorityList = [];
+  List<ActivityPriority> _modelPriority = [];
   Future<void> fetchActivityPriority() async {
     final uri = Uri.parse('$host/crm/ios_activity_priority.php');
     try {
@@ -2162,10 +1241,10 @@ class _activityAddState extends State<activityAdd> {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> dataJson = jsonResponse['data'];
         setState(() {
-          priorityList =
+          _modelPriority =
               dataJson.map((json) => ActivityPriority.fromJson(json)).toList();
-          if (priorityList.isNotEmpty && selectedPriority == null) {
-            selectedPriority = priorityList[0];
+          if (_modelPriority.isNotEmpty && selectedPriority == null) {
+            selectedPriority = _modelPriority[0];
           }
         });
       } else {
@@ -2177,7 +1256,7 @@ class _activityAddState extends State<activityAdd> {
   }
 
   ActivityContact? selectedContact;
-  List<ActivityContact> contactList = [];
+  List<ActivityContact> _modelContact = [];
   List<ActivityContact> addNewContactList = [];
   Future<void> fetchActivityContact() async {
     final uri = Uri.parse('$host/crm/ios_activity_contact.php');
@@ -2196,10 +1275,10 @@ class _activityAddState extends State<activityAdd> {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> dataJson = jsonResponse['data'];
         setState(() {
-          contactList =
+          _modelContact =
               dataJson.map((json) => ActivityContact.fromJson(json)).toList();
-          if (contactList.isNotEmpty && selectedContact == null) {
-            selectedContact = contactList[0];
+          if (_modelContact.isNotEmpty && selectedContact == null) {
+            selectedContact = _modelContact[0];
           }
         });
       } else {
@@ -2233,7 +1312,7 @@ class _activityAddState extends State<activityAdd> {
   }
 
   ActivityProject? selectedProject;
-  List<ActivityProject> projectList = [];
+  List<ActivityProject> _modelProject = [];
   Future<void> fetchGetProject() async {
     String comp_id = widget.employee.comp_id;
     String emp_id = widget.employee.emp_id;
@@ -2255,25 +1334,32 @@ class _activityAddState extends State<activityAdd> {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final List<dynamic> dataJson = jsonResponse['data']??[];
       setState(() {
-        projectList =
+        _modelProject =
             dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-        if (projectList.isNotEmpty && selectedProject == null) {
-          selectedProject = projectList[0];
+        if (_modelProject.isNotEmpty && selectedProject == null) {
+          selectedProject = _modelProject[0];
         }
       });
     } else {
       throw Exception('Failed to load challenges');
     }
   }
+
+  ActivityPlace? selectedPlace;
+  List<ActivityPlace>  _modelPlace = [
+    ActivityPlace(place_id: 'in', place_name: 'Indoor'),
+    ActivityPlace(place_id: 'out', place_name: 'Outdoor'),
+  ];
+
 }
 
-class TitleDown {
-  String status_id;
-  String status_name;
+class ActivityPlace {
+  String place_id;
+  String place_name;
 
-  TitleDown({
-    required this.status_id,
-    required this.status_name,
+  ActivityPlace({
+    required this.place_id,
+    required this.place_name,
   });
 }
 
@@ -2369,84 +1455,6 @@ class ActivityPriority {
     );
   }
 }
-
-// class ActivityProject {
-//   String project_id;
-//   String project_name;
-//   String project_latitude;
-//   String project_longtitude;
-//   String project_start;
-//   String project_end;
-//   String project_all_total;
-//   String m_company;
-//   String project_create_date;
-//   String emp_id;
-//   String project_value;
-//   String project_type_name;
-//   String project_description;
-//   String project_sale_status_name;
-//   String project_oppo_reve;
-//   String comp_id;
-//   String typeIds;
-//   String salestatusIds;
-//   String main_contact;
-//   String cont_id;
-//   String projct_location;
-//   String cus_id;
-//
-//   ActivityProject({
-//     required this.project_id,
-//     required this.project_name,
-//     required this.project_latitude,
-//     required this.project_longtitude,
-//     required this.project_start,
-//     required this.project_end,
-//     required this.project_all_total,
-//     required this.m_company,
-//     required this.project_create_date,
-//     required this.emp_id,
-//     required this.project_value,
-//     required this.project_type_name,
-//     required this.project_description,
-//     required this.project_sale_status_name,
-//     required this.project_oppo_reve,
-//     required this.comp_id,
-//     required this.typeIds,
-//     required this.salestatusIds,
-//     required this.main_contact,
-//     required this.cont_id,
-//     required this.projct_location,
-//     required this.cus_id,
-//   });
-//
-//   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
-//   factory ActivityProject.fromJson(Map<String, dynamic> json) {
-//     return ActivityProject(
-//       project_id: json['project_id'] ?? '',
-//       project_name: json['project_name'] ?? '',
-//       project_latitude: json['project_latitude'] ?? '',
-//       project_longtitude: json['project_longtitude'] ?? '',
-//       project_start: json['project_start'] ?? '',
-//       project_end: json['project_end'] ?? '',
-//       project_all_total: json['project_all_total'] ?? '',
-//       m_company: json['m_company'] ?? '',
-//       project_create_date: json['project_create_date'] ?? '',
-//       emp_id: json['emp_id'] ?? '',
-//       project_value: json['project_value'] ?? '',
-//       project_type_name: json['project_type_name'] ?? '',
-//       project_description: json['project_description'] ?? '',
-//       project_sale_status_name: json['project_sale_status_name'] ?? '',
-//       project_oppo_reve: json['project_oppo_reve'] ?? '',
-//       comp_id: json['comp_id'] ?? '',
-//       typeIds: json['typeIds'] ?? '',
-//       salestatusIds: json['salestatusIds'] ?? '',
-//       main_contact: json['main_contact'] ?? '',
-//       cont_id: json['cont_id'] ?? '',
-//       projct_location: json['projct_location'] ?? '',
-//       cus_id: json['cus_id'] ?? '',
-//     );
-//   }
-// }
 
 class ActivityContact {
   final String contact_id;

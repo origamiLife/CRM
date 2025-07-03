@@ -41,3 +41,10 @@ export 'package:carousel_slider/carousel_slider.dart';
 export 'package:video_player_android/video_player_android.dart';
 export 'package:shimmer/shimmer.dart';
 export 'package:go_router/go_router.dart';
+export 'package:intl_phone_field/intl_phone_field.dart';
+export 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+
+
+
+
+

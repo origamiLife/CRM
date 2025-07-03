@@ -3,9 +3,10 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'dart:math' show cos, sqrt, asin;
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:origamilift/import/import.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:geolocator/geolocator.dart';
 
 class TimeSample extends StatefulWidget {
   const TimeSample({
@@ -33,8 +34,8 @@ class _TimeSampleState extends State<TimeSample> {
   Color strokeColor = Color.fromRGBO(0, 185, 0, 1);
   LatLng? _tappedLocation; // ตัวแปรเก็บตำแหน่งที่ผู้ใช้แตะบนแผนที่
   late GoogleMapController _mapController;
-  late Location _location;
-  LocationData? _userLocation;
+  // late Location _location;
+  // LocationData? _userLocation;
   DateTime _currentTime = DateTime.now();
   Set<Marker> _markers = {};
   String _checkPlatform = '';
@@ -56,13 +57,15 @@ class _TimeSampleState extends State<TimeSample> {
         });
       }
     });
-    _location = Location();
+    // _location = Location();
+    // getLocation();
     requestLocationPermission();
   }
 
   @override
   void dispose() {
     _mounted = false;
+    _positionStream?.cancel(); // ✅ หยุดฟังเมื่อปิด widget
     super.dispose();
   }
 
@@ -79,14 +82,20 @@ class _TimeSampleState extends State<TimeSample> {
     });
   }
 
+  StreamSubscription<Position>? _positionStream;
   void requestLocationPermission() async {
     var status = await Permission.location.request();
     if (status.isGranted) {
-      _location.onLocationChanged.listen((locationData) {
+      _positionStream = Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 10,
+        ),
+      ).listen((Position position) {
         if (_mounted) {
           setState(() {
-            _userLocation = locationData;
-            _checkUserInRadius();
+            userPosition = position;
+            _checkUserInRadius(); // เรียกฟังก์ชันของคุณเอง
           });
         }
       });
@@ -96,7 +105,7 @@ class _TimeSampleState extends State<TimeSample> {
   }
 
   void _checkUserInRadius() {
-    if (_userLocation == null || widget.timestamp == null) return;
+    if (userPosition == null || widget.timestamp == null) return;
 
     final double branchLat =
         double.tryParse(widget.timestamp!.branch_lat) ?? 0.0;
@@ -105,9 +114,8 @@ class _TimeSampleState extends State<TimeSample> {
     final double radius =
         double.tryParse(widget.timestamp!.branch_radius) ?? 0.0;
 
-    final double userLat = _userLocation!.latitude!;
-    final double userLng = _userLocation!.longitude!;
-
+    final double userLat = userPosition!.latitude!;
+    final double userLng = userPosition!.longitude!;
     final double distance =
         _calculateDistance(branchLat, branchLng, userLat, userLng);
 
@@ -125,7 +133,6 @@ class _TimeSampleState extends State<TimeSample> {
 
       strokeColor = isInsideRadius ? Color.fromRGBO(0, 185, 0, 1) : Colors.red;
     });
-
     _createCustomMarker();
   }
 
@@ -252,6 +259,27 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
+  // void _onMapTapped(LatLng latLng) {
+  //   setState(() {
+  //     _tappedLocation = latLng;
+  //     // สร้าง Position จาก LatLng
+  //     userPosition = Position(
+  //       longitude: latLng.longitude,
+  //       latitude: latLng.latitude,
+  //       timestamp: DateTime.now(),
+  //       accuracy: 0,
+  //       altitude: 0,
+  //       heading: 0,
+  //       speed: 0,
+  //       speedAccuracy: 0, altitudeAccuracy: 0.0, headingAccuracy: 0.0,
+  //     );
+  //
+  //     _mapController.animateCamera(
+  //       CameraUpdate.newLatLng(latLng),
+  //     );
+  //   });
+  // }
+
   Widget _buildGoogleMap(GetTimeStampSim branch, LatLng center) {
     return GoogleMap(
       onMapCreated: (controller) => _mapController = controller,
@@ -275,10 +303,10 @@ class _TimeSampleState extends State<TimeSample> {
             },
       // onTap: (LatLng latLng) {
       //   // เมื่อผู้ใช้แตะที่แผนที่
-      //   setState(() {
-      //     _tappedLocation = latLng; // เก็บตำแหน่งที่แตะไว้ใน state
-      //   });
-      //
+      //   // setState(() {
+      //   //   _tappedLocation = latLng; // เก็บตำแหน่งที่แตะไว้ใน state
+      //   // });
+      //   _onMapTapped(latLng);
       //   // แสดงพิกัดใน console
       //   print('Tapped location: ${latLng.latitude}, ${latLng.longitude}');
       // },
@@ -462,8 +490,8 @@ class _TimeSampleState extends State<TimeSample> {
 
         setState(() {
           _base64Image = base64String;
-          latitude = '${_userLocation?.latitude}';
-          longitude = '${_userLocation?.longitude}';
+          latitude = '${userPosition?.latitude}';
+          longitude = '${userPosition?.longitude}';
           stamp_type = (b.stamp_in == '') ? 'in' : 'out';
         });
 
@@ -534,7 +562,10 @@ class _TimeSampleState extends State<TimeSample> {
           13.73409854731179;
       branchLng ??= double.tryParse(branchData['branch_lng'].toString()) ??
           100.62710791826248;
-
+      // _mapController.animateCamera(
+      //   CameraUpdate.newLatLng(LatLng(double.parse(branchData['branch_lat'].toString() ?? ''),
+      //       double.parse(branchData['branch_lng'].toString() ?? ''))),
+      // );
       isFirst = true;
       return GetTimeStampSim.fromJson(branchData);
     } else {

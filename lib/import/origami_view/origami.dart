@@ -7,6 +7,9 @@ import 'package:origamilift/import/origami_view/sample/time_stamp.dart';
 import 'package:origamilift/import/origami_view/work/work_page.dart';
 
 import '../Call/call_phone.dart';
+import '../OCRScreen/OCRScreen.dart';
+import '../OCRScreen/OcrTessdata.dart';
+import '../OCRScreen/OCRScreen2.dart';
 import '../job/job.dart';
 import 'IDOC/idoc_view.dart';
 import 'about-profile/profile.dart';
@@ -74,7 +77,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
   void initState() {
     super.initState();
     _index = widget.popPage;
-    if(_index == 0){
+    if (_index == 0) {
       _index = 5;
     }
     fetchBranch();
@@ -121,7 +124,9 @@ class _OrigamiPageState extends State<OrigamiPage> {
               color: Color(0xFFFF9900),
             ),
           ),
-          actions: (_index == 5) ? _buildAppBarTimeStamp() : null,
+          actions: (_index == 5)
+              ? _buildAppBarTimeStamp()
+              : null,//_buildOCRScreen(),
         ),
         drawer: Container(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -589,6 +594,29 @@ class _OrigamiPageState extends State<OrigamiPage> {
     }
   }
 
+  List<Widget> _buildOCRScreen() {
+    return [
+      IconButton(
+        icon: const Icon(Icons.document_scanner_outlined, color: Colors.orange),
+        onPressed: () {Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TesseractOCRThaiPage(),
+          ),
+        );},
+      ),
+      IconButton(
+        icon: const Icon(Icons.document_scanner_rounded, color: Colors.orange),
+        onPressed: () {Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OcrScreen2(),
+          ),
+        );},
+      ),
+    ];
+  }
+
   List<Widget> _buildAppBarTimeStamp() {
     return [
       IconButton(
@@ -743,7 +771,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                         builder: (context) =>
                             LoginPage(num: 1, popPage: 0, company_id: 0),
                       ),
-                          (route) => false,
+                      (route) => false,
                     );
                   }
                 },
@@ -792,7 +820,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   MaterialPageRoute(
                     builder: (_) => LoginPage(num: 1, popPage: 0),
                   ),
-                      (route) => false,
+                  (route) => false,
                 );
               },
             ),
@@ -801,5 +829,4 @@ class _OrigamiPageState extends State<OrigamiPage> {
       },
     );
   }
-
 }
