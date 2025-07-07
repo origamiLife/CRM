@@ -2,16 +2,16 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
-class ContactAddInformation extends StatefulWidget {
-  const ContactAddInformation({
+class ContactAddOwner extends StatefulWidget {
+  const ContactAddOwner({
     Key? key,
   }) : super(key: key);
 
   @override
-  _ContactAddInformationState createState() => _ContactAddInformationState();
+  _ContactAddOwnerState createState() => _ContactAddOwnerState();
 }
 
-class _ContactAddInformationState extends State<ContactAddInformation> {
+class _ContactAddOwnerState extends State<ContactAddOwner> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _NoAddressController = TextEditingController();
   TextEditingController _LaneController = TextEditingController();

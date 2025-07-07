@@ -278,27 +278,22 @@ class _AccountScreenState extends State<AccountScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 4, bottom: 4, right: 8),
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.grey,
-                            child: CircleAvatar(
-                              radius: 24,
-                              backgroundColor: Colors.white,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                  account.cus_logo,
-                                  fit: BoxFit.fill,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.network(
-                                      'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                                      width: double.infinity, // ความกว้างเต็มจอ
-                                      fit: BoxFit.contain,
-                                    );
-                                  },
-                                ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 4, bottom: 4, right: 8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.network(
+                                account.cus_logo,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                    'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -307,6 +302,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           width: 10,
                         ),
                         Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
 import 'contact_add_detail.dart';
-import 'contact_add_information.dart';
+import 'contact_add_owner.dart';
 
 class ContactAddView extends StatefulWidget {
   const ContactAddView({
@@ -119,7 +119,7 @@ class _ContactAddViewState extends State<ContactAddView> {
       case 0:
         return ContactAddDetail(employee: widget.employee, Authorization: widget.Authorization);
       case 1:
-        return ContactAddInformation();
+        return ContactAddOwner();
       default:
         return Container();
     }

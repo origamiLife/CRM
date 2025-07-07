@@ -4,8 +4,8 @@ import 'package:origamilift/import/import.dart';
 import '../../activity/add/activity_add.dart';
 import '../contact_screen.dart';
 
-class ContactEditInformation extends StatefulWidget {
-  const ContactEditInformation({
+class ContactEditOwner extends StatefulWidget {
+  const ContactEditOwner({
     Key? key,
     required this.employee,
     required this.contact,
@@ -14,10 +14,10 @@ class ContactEditInformation extends StatefulWidget {
   final ModelContact contact;
 
   @override
-  _ContactEditInformationState createState() => _ContactEditInformationState();
+  _ContactEditOwnerState createState() => _ContactEditOwnerState();
 }
 
-class _ContactEditInformationState extends State<ContactEditInformation> {
+class _ContactEditOwnerState extends State<ContactEditOwner> {
   TextEditingController _searchfilterController = TextEditingController();
 
   String _search = "";

@@ -28,8 +28,6 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   TextEditingController _telephoneController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
 
-  FocusNode focusNode = FocusNode();
-
   String _telePhone(ModelAccount account) {
     String telephone = '';
     if (account.cus_tel_no != '') {
@@ -87,6 +85,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     _emailController.dispose();
     _groupController.dispose();
     _telephoneController.dispose();
+    PaintingBinding.instance.imageCache.clear();
     super.dispose();
   }
 
@@ -274,53 +273,122 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             ),
           )
         : Padding(
-            padding: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        // height: 48,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.grey.shade300,
+            width: 1.0,
+          ),
+        ),
+        child: GestureDetector(
+          onTap: _imageDialog,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
             child: Container(
-              // height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
+                width: double.infinity,
+                child: Icon(
+                  Icons.camera_alt,
+                  color: Colors.grey,
+                )),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _imageDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          elevation: 0,
+          title: Column(
+            children: [
+              Text(
+                'Camera / Gallery',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  color: Color(0xFFFF9900),
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              child: Row(
+              SizedBox(height: 8),
+              Row(
                 children: [
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () => _pickImage(ImageSource.camera),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Container(
-                            child: Icon(Icons.camera_alt,
-                                color: Colors.grey, size: 45)),
+                    child: Card(
+                      color: Colors.orange.shade50,
+                      child: Container(
+                        height: 120,
+                        child: TextButton(
+                          style: ButtonStyle(),
+                          onPressed: () {
+                            Navigator.pop(dialogContext);
+                            _pickImage(ImageSource.camera);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.camera, color: Colors.grey, size: 50),
+                              SizedBox(height: 8),
+                              Text(
+                                'Camera',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFFFF9900),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: VerticalDivider(
-                      color: Colors.grey.shade300,
-                      thickness: 1,
-                      width: 20,
-                    ),
-                  ),
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () => _pickImage(ImageSource.gallery),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Container(
-                            child: Icon(Icons.image,
-                                color: Colors.grey, size: 45)),
+                    child: Card(
+                      color: Colors.white70,
+                      child: Container(
+                        height: 120,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(dialogContext);
+                            _pickImage(ImageSource.gallery);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.photo_library_outlined,
+                                  color: Colors.grey, size: 50),
+                              SizedBox(height: 8),
+                              Text(
+                                'Gallery',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF555555),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-          );
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _informationTop(ModelAccount account) {

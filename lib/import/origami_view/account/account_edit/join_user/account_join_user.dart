@@ -40,50 +40,48 @@ class _AccountJoinUserState extends State<AccountJoinUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.orange.shade50,
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Join User',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 22,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              SizedBox(height: 8),
-              modelEmployee == []
-                  ? Center(
-                      child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(
-                          color: Color(0xFFFF9900),
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        Text(
-                          '$Loading...',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF555555),
-                          ),
-                        ),
-                      ],
-                    ))
-                  : JoinUser(),
-            ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addJoinUser,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(100),
+            bottomLeft: Radius.circular(100),
+            bottomRight: Radius.circular(100),
+            topLeft: Radius.circular(100),
           ),
         ),
+        elevation: 0,
+        backgroundColor: Color(0xFFFF9900),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: modelEmployee == []
+            ? Center(
+                child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Color(0xFFFF9900),
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  Text(
+                    '$Loading...',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF555555),
+                    ),
+                  ),
+                ],
+              ))
+            : JoinUser(),
       ),
     );
   }
@@ -91,125 +89,126 @@ class _AccountJoinUserState extends State<AccountJoinUser> {
   Widget JoinUser() {
     return Column(
       children: [
-        Column(
-            children: List.generate(modelEmployee.length, (index) {
-          final join_user = modelEmployee[index];
-          String owner = '';
-          if (join_user.approve_activity == '0') {
-            owner = 'Y';
-          } else {
-            owner = 'N';
-          }
-          return Padding(
-            padding: const EdgeInsets.all(4),
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset: Offset(1, 3), // x, y
+        if(modelEmployee.isEmpty)
+        SingleChildScrollView(
+          child: Column(
+              children: List.generate(modelEmployee.length, (index) {
+            final join_user = modelEmployee[index];
+            String owner = '';
+            if (join_user.approve_activity == '0') {
+              owner = 'Y';
+            } else {
+              owner = 'N';
+            }
+            return Padding(
+              padding: const EdgeInsets.all(4),
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
                       ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Center(
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Colors.grey.shade400,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0,
+                          blurRadius: 0,
+                          offset: Offset(1, 3), // x, y
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Center(
                                   child: CircleAvatar(
-                                    radius: 31,
-                                    backgroundColor: Colors.white,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: Image.network(
-                                        join_user.emp_pic,
-                                        fit: BoxFit.fill,
+                                    radius: 30,
+                                    backgroundColor: Colors.grey.shade400,
+                                    child: CircleAvatar(
+                                      radius: 31,
+                                      backgroundColor: Colors.white,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Image.network(
+                                          join_user.emp_pic,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(flex: 5, child: _switch(join_user)),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  join_user.emp_code,
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 12,
-                                    color: Color(0xFF555555),
-                                    fontWeight: FontWeight.w700,
+                              SizedBox(width: 8),
+                              Expanded(flex: 5, child: _switch(join_user)),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    join_user.emp_code,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Color(0xFF555555),
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              flex: 5,
-                              child: Text(
-                                '',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  color: Color(0xFFFF9900),
-                                  fontWeight: FontWeight.w500,
+                              SizedBox(width: 8),
+                              Expanded(
+                                flex: 5,
+                                child: Text(
+                                  '',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14,
+                                    color: Color(0xFFFF9900),
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                                child: _checkBox('Owner', join_user.is_owner)),
-                            Expanded(
-                                child: _checkBox('Approve Activity', owner)),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: _checkBox('Owner', join_user.is_owner)),
+                              Expanded(
+                                  child: _checkBox('Approve Activity', owner)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Divider(),
-              ],
-            ),
-          );
-        })),
-        SizedBox(
-          height: 8,
-        ),
+                  Divider(),
+                ],
+              ),
+            );
+          })),
+        )
+        else
         Container(
           alignment: Alignment.centerLeft,
-          child: TextButton(
-            onPressed: _addJoinUser,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Tap here to select an Join User.',
+              'ไม่พบข้อมูลในตาราง.',
               style: TextStyle(
                 fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFFFF9900),
+                fontSize: 16,
+                color: Colors.grey,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -505,8 +504,15 @@ class _AccountJoinUserState extends State<AccountJoinUser> {
               dataJson.map((json) => ModelEmployee.fromJson(json)).toList();
         });
       } else {
-        throw Exception(
-            'Failed to load personal data: ${jsonResponse['message']}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Failed to load personal data: ${jsonResponse['message']}',
+              style: const TextStyle(fontFamily: 'Arial', color: Colors.white),
+            ),
+            backgroundColor: Colors.black87,
+          ),
+        );
       }
     } else {
       throw Exception('Failed to load personal data: ${response.reasonPhrase}');

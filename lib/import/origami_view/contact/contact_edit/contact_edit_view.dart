@@ -1,7 +1,7 @@
 import '../../../import.dart';
 import '../../contact/contact_screen.dart';
 import '../../contact/contact_edit/contact_edit_detail.dart';
-import '../../contact/contact_edit/contact_edit_information.dart';
+import '../../contact/contact_edit/contact_edit_owner.dart';
 
 class ContactView extends StatefulWidget {
   const ContactView({
@@ -105,20 +105,6 @@ class _ContactViewState extends State<ContactView> {
         ],
       ),
       body: SafeArea(child: _viewDetail(widget.contact)),
-      bottomNavigationBar: BottomBarDefault(
-        items: items,
-        iconSize: 18,
-        animated: true,
-        titleStyle: TextStyle(
-          fontFamily: 'Arial',
-        ),
-        backgroundColor: Colors.white,
-        color: Colors.grey.shade400,
-        colorSelected: Color(0xFFFF9900),
-        indexSelected: _selectedIndex,
-        // paddingVertical: 25,
-        onTap: _onItemTapped,
-      ),
     );
   }
 
@@ -183,8 +169,8 @@ class _ContactViewState extends State<ContactView> {
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.network(
-                        'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                        width: MediaQuery.of(context).size.width * 0.2,
+                        'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                        height: 150,
                         fit: BoxFit.fill,
                       );
                     },
@@ -376,23 +362,23 @@ class _ContactViewState extends State<ContactView> {
                       Colors.grey.shade400),
                   _subDetail(
                       'Nickname',
-                      "${contact.cus_cont_nick} ${contact.lastname}",
+                      "${contact.cus_cont_nick}",
                       Icons.person,
                       Colors.grey.shade400),
                   _subDetail('Title', "${contact.gender_name}",
                       Icons.merge_type, Colors.grey.shade400),
                   _subDetail('Account', contact.cus_name, Icons.account_circle,
                       Colors.grey.shade400),
-                  _subDetail('Tel', _telView(contact),
-                      Icons.phone_android_outlined, Colors.grey.shade400),
                   _subDetail('Email', contact.cont_email, Icons.email,
                       Colors.grey.shade400),
-                  _subDetail('Position', contact.cus_id,
-                      Icons.workspaces_outline, Colors.grey.shade400),
+                  _subDetail('Tel', _telView(contact),
+                      Icons.phone_android_outlined, Colors.grey.shade400),
+                  _subDetail('Position', contact.cus_posi_id,
+                      Icons.work_history_outlined, Colors.grey.shade400),
                   _subDetail('Role', contact.role_name,
                       Icons.workspaces_outline, Colors.grey.shade400),
-                  _subDetail('Emotion', contact.status,
-                      Icons.workspaces_outline, Colors.grey.shade400),
+                  _subDetail('Emotion', contact.cus_cont_emo,
+                      Icons.donut_large_rounded, Colors.grey.shade400),
                   // _subDetail('Operation', contact.cus_cont_emo,
                   //     Icons.workspaces_outline, Colors.grey.shade400),
                   // _subDetail('Marital', contact.status, Icons.source,

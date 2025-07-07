@@ -1,16 +1,9 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-
-import '../../Contact/contact_edit/contact_edit_detail.dart';
-import '../../IDOC/idoc_view.dart';
-import '../../activity/activity.dart';
-import '../../contact/contact_screen.dart';
-import '../../project/project.dart';
 import '../account_screen.dart';
 import 'detail/account_edit_detail.dart';
 import 'join_user/account_join_user.dart';
-import 'location/account_edit_location.dart';
 
 class AccountEditView extends StatefulWidget {
   const AccountEditView({
@@ -99,7 +92,7 @@ class _AccountEditViewState extends State<AccountEditView> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '',
+            (_selectedIndex == 1) ? 'Join User' : '',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 24,
@@ -231,11 +224,11 @@ class _AccountEditViewState extends State<AccountEditView> {
                   alignment: Alignment.center,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(2),
                       child: Image.network(
                         account.cus_logo,
                         height: 160,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.contain,
                         color: Colors.grey.shade100,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.network(
@@ -247,11 +240,11 @@ class _AccountEditViewState extends State<AccountEditView> {
                       ),
                     ),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(2),
                       child: Image.network(
                         account.cus_logo,
                         height: 150,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.network(
                             'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
@@ -417,16 +410,6 @@ class _AccountEditViewState extends State<AccountEditView> {
                 padding: EdgeInsets.zero,
                 children: [
                   SizedBox(height: 4),
-                  _subDetail('Name (TH)', account.account_name_th,
-                      Icons.account_circle, Colors.grey.shade400),
-                  _subDetail('Name (EN)', account.account_name_en,
-                      Icons.account_circle, Colors.grey.shade400),
-                  _subDetail('Tel', _telView(account),
-                      Icons.phone_android_outlined, Colors.grey.shade400),
-                  _subDetail('Email', account.cus_email, Icons.email,
-                      Colors.grey.shade400),
-                  _subDetail('Class', account.cus_class_name, Icons.lan,
-                      Colors.grey.shade400),
                   _subDetail(
                       'Group',
                       "${account.cus_group_name} (${account.cus_code})",
@@ -439,13 +422,13 @@ class _AccountEditViewState extends State<AccountEditView> {
                       "${account.account_name_th} (${account.registration_name})",
                       Icons.app_registration,
                       Colors.grey.shade400),
-                  // _subDetail('Payment term', account.account_name_th,
-                  //     Icons.subject, Colors.red),
-                  // _subDetail('Tax ID', account.account_name_th, Icons.subject,
-                  //     Colors.red),
-                  // _subDetail('Social', account.account_status_icon, Icons.subject,
-                  //     Colors.orange),
                   _subDetail('Source', account.source_name, Icons.source,
+                      Colors.grey.shade400),
+                  _subDetail('Tel', _telView(account),
+                      Icons.phone_android_outlined, Colors.grey.shade400),
+                  _subDetail('Email', account.cus_email, Icons.email,
+                      Colors.grey.shade400),
+                  _subDetail('Class', account.cus_class_name, Icons.lan,
                       Colors.grey.shade400),
                   _subDetail('DESCRIPTION', account.cus_description,
                       Icons.subject, Colors.grey.shade400),

@@ -1,6 +1,7 @@
 import 'package:origamilift/import/origami_view/contact/recent_screen.dart';
 import 'package:http/http.dart' as http;
 import '../../import.dart';
+import '../account/account_screen.dart';
 import '../contact/contact_add/contact_add_view.dart';
 import '../contact/contact_edit/contact_edit_view.dart';
 
@@ -50,35 +51,19 @@ class _ContactScreenState extends State<ContactScreen> {
     super.dispose();
   }
 
-  // String page = "Contact";
-  // int _selectedIndex = 0;
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //     if (index == 0) {
-  //       page = "Contact";
-  //     } else if (index == 1) {
-  //       page = "Call";
-  //     } else if (index == 2) {
-  //       page = "Recent";
-  //     }
-  //   });
-  // }
-  //
-  // List<TabItem> items = [
-  //   TabItem(
-  //     icon: Icons.perm_contact_cal_sharp,
-  //     title: 'Contact',
-  //   ),
-  //   TabItem(
-  //     icon: Icons.call,
-  //     title: 'Call',
-  //   ),
-  //   TabItem(
-  //     icon: Icons.history,
-  //     title: 'Recent',
-  //   ),
-  // ];
+  String telView = '';
+  String _telView(ModelContact contact) {
+    if (contact.cont_tel != '') {
+      telView = contact.cont_tel;
+      return telView;
+    } else if (contact.cont_mobile != '') {
+      telView = contact.cont_mobile;
+      return telView;
+    } else {
+      telView = contact.cont_tel_ext;
+      return telView;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -297,27 +282,22 @@ class _ContactScreenState extends State<ContactScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 4, bottom: 4, right: 8),
-                          child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.grey,
-                            child: CircleAvatar(
-                              radius: 24,
-                              backgroundColor: Colors.white,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                  '${contact.cus_cont_photo}',
-                                  fit: BoxFit.fill,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.network(
-                                      'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                                      width: double.infinity, // ความกว้างเต็มจอ
-                                      fit: BoxFit.contain,
-                                    );
-                                  },
-                                ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 4, bottom: 4, right: 8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.network(
+                                '${contact.cus_cont_photo}',
+                                height: 100,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                    'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -326,6 +306,7 @@ class _ContactScreenState extends State<ContactScreen> {
                           width: 10,
                         ),
                         Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,6 +370,26 @@ class _ContactScreenState extends State<ContactScreen> {
                               ),
                               Text(
                                 'Birthday : ${(contact.cont_birthday == '') ? 'ไม่ระบุ' : contact.cont_birthday}',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                'Tel : ${_telView(contact)}',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                'Email : ${contact.cont_email}',
                                 maxLines: 1,
                                 style: TextStyle(
                                   fontFamily: 'Arial',

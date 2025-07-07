@@ -1,7 +1,10 @@
 import 'package:intl/intl.dart';
+import 'package:origamilift/import/origami_view/contact/contact_edit/contact_edit_owner.dart';
 import '../../../import.dart';
 import '../../contact/contact_screen.dart';
 import 'package:http/http.dart' as http;
+
+
 
 class ContactEditDetail extends StatefulWidget {
   const ContactEditDetail({
@@ -25,9 +28,6 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   TextEditingController _positionController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
 
-  FocusNode focusNode = FocusNode();
-  String _tellphone = '';
-
   @override
   void initState() {
     super.initState();
@@ -38,10 +38,24 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   void _getUpdateText() {
     _firstnameController.text = widget.contact.firstname;
     _lastnameController.text = widget.contact.lastname;
-    _nicknameController.text = widget.contact.firstname;
-    _mobileController.text = widget.contact.cont_tel;
+    _nicknameController.text = widget.contact.cus_cont_nick;
+    _mobileController.text = _telView(widget.contact);
     _emailController.text = widget.contact.cont_email;
     _positionController.text = widget.contact.cus_posi_id;
+  }
+
+  String telView = '';
+  String _telView(ModelContact contact) {
+    if (contact.cont_tel != '') {
+      telView = contact.cont_tel;
+      return telView;
+    } else if (contact.cont_mobile != '') {
+      telView = contact.cont_mobile;
+      return telView;
+    } else {
+      telView = contact.cont_tel_ext;
+      return telView;
+    }
   }
 
   Future<void> _downloadImage() async {
@@ -71,221 +85,91 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     _mobileController.dispose();
     _emailController.dispose();
     _positionController.dispose();
+    PaintingBinding.instance.imageCache.clear();
     super.dispose();
   }
+
+  int _selectedIndex = 0;
+  String page = "Account Detail";
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (index == 0) {
+        page = "Contact Detail";
+      } else if (index == 1) {
+        page = "Contact Owner";
+      }
+    });
+  }
+
+  List<TabItem> items = [
+    TabItem(
+      icon: Icons.info,
+      title: 'Detail',
+    ),
+    TabItem(
+      icon: Icons.location_history,
+      title: 'Owner',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(child: _logoInformation(widget.contact)),
+      appBar: AppBar(
+        // elevation: 0,
+        backgroundColor: Colors.orange,
+        title: Text(
+          '',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 24,
+            color: Colors.orange,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: SafeArea(child: _getContentWidget(widget.contact)),
+      bottomNavigationBar: BottomBarDefault(
+        items: items,
+        iconSize: 18,
+        animated: true,
+        titleStyle: TextStyle(
+          fontFamily: 'Arial',
+        ),
+        backgroundColor: Colors.white,
+        color: Colors.grey.shade400,
+        colorSelected: Color(0xFFFF9900),
+        indexSelected: _selectedIndex,
+        // paddingVertical: 25,
+        onTap: _onItemTapped,
+      ),
     );
   }
 
-  final ImagePicker _picker = ImagePicker();
-  File? _image;
-  String _base64Image = '';
-  bool _isStamping = false;
-
-  Future<void> _pickImage(ImageSource source) async {
-    if (_isStamping) return;
-    _isStamping = true;
-    try {
-      final XFile? image = await _picker.pickImage(source: source);
-      if (image == null) return;
-
-      // final directory = await getApplicationDocumentsDirectory();
-      // final filePath = path.join(
-      //   directory.path,
-      //   'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
-      // );
-      final file = File(image.path);
-      final imageBytes = await file.readAsBytes();
-      _base64Image = base64Encode(imageBytes);
-      setState(() {
-        _image = file;
-      });
-    } catch (e) {
-      print('Error picking image: $e');
-    } finally {
-      _isStamping = false;
+  Widget _getContentWidget(ModelContact contact) {
+    switch (_selectedIndex) {
+      case 0:
+        return _getDetailWidget(contact);
+      case 1:
+        return ContactEditOwner(
+          employee: widget.employee,
+          contact: contact,
+        );
+      default:
+        return _getDetailWidget(contact);
     }
   }
 
-  Widget _showImagePhoto(ModelContact contact) {
-    return _image != null
-        ? Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.file(
-                          _image!,
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.contain,
-                        ),
-                        Positioned(
-                          top: 4,
-                          right: 4,
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _image = null;
-                              });
-                            },
-                            child: Stack(
-                              children: [
-                                Icon(
-                                  Icons.cancel_outlined,
-                                  color: Colors.white,
-                                ),
-                                Icon(
-                                  Icons.cancel,
-                                  color: Colors.red,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        : Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Container(
-              // height: 48,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
-                ),
-              ),
-              child: GestureDetector(
-                onTap: _imageDialog,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Container(
-                    width: double.infinity,
-                      child: Icon(
-                    Icons.camera_alt,
-                    color: Colors.grey,
-                  )),
-                ),
-              ),
-            ),
-          );
-  }
-
-  void _imageDialog(){
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          elevation: 0,
-          title: Column(
-            children: [
-              Text(
-                'Camera / Gallery',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  color: Color(0xFFFF9900),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Colors.orange.shade50,
-                      child: Container(
-                        height: 120,
-                        child: TextButton(
-                          style: ButtonStyle(),
-                          onPressed: () {
-                            Navigator.pop(dialogContext);
-                            _pickImage(ImageSource.camera);
-                          },
-                          child: Column(
-                            mainAxisAlignment:
-                            MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.camera,color:Colors.grey,size: 50),
-                              SizedBox(height: 8),
-                              Text(
-                                'Camera',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFFFF9900),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Card(
-                      color: Colors.white70,
-                      child: Container(
-                        height: 120,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(dialogContext);
-                            _pickImage(ImageSource.gallery);
-                          },
-                          child: Column(
-                            mainAxisAlignment:
-                            MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.photo_library_outlined,color:Colors.grey,size: 50),
-                              SizedBox(height: 8),
-                              Text(
-                                'Gallery',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF555555),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _logoInformation(ModelContact contact) {
+  Widget _getDetailWidget(ModelContact contact) {
     return Padding(
       padding: EdgeInsets.all(14),
       child: SingleChildScrollView(
@@ -606,6 +490,208 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           ),
         ],
       ),
+    );
+  }
+
+  final ImagePicker _picker = ImagePicker();
+  File? _image;
+  String _base64Image = '';
+  bool _isStamping = false;
+
+  Future<void> _pickImage(ImageSource source) async {
+    if (_isStamping) return;
+    _isStamping = true;
+    try {
+      final XFile? image = await _picker.pickImage(source: source);
+      if (image == null) return;
+
+      // final directory = await getApplicationDocumentsDirectory();
+      // final filePath = path.join(
+      //   directory.path,
+      //   'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      // );
+      final file = File(image.path);
+      final imageBytes = await file.readAsBytes();
+      _base64Image = base64Encode(imageBytes);
+      setState(() {
+        _image = file;
+      });
+    } catch (e) {
+      print('Error picking image: $e');
+    } finally {
+      _isStamping = false;
+    }
+  }
+
+  Widget _showImagePhoto(ModelContact contact) {
+    return _image != null
+        ? Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.file(
+                          _image!,
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _image = null;
+                              });
+                            },
+                            child: Stack(
+                              children: [
+                                Icon(
+                                  Icons.cancel_outlined,
+                                  color: Colors.white,
+                                ),
+                                Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Container(
+              // height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.grey.shade300,
+                  width: 1.0,
+                ),
+              ),
+              child: GestureDetector(
+                onTap: _imageDialog,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Container(
+                      width: double.infinity,
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: Colors.grey,
+                      )),
+                ),
+              ),
+            ),
+          );
+  }
+
+  void _imageDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          elevation: 0,
+          title: Column(
+            children: [
+              Text(
+                'Camera / Gallery',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  color: Color(0xFFFF9900),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      color: Colors.orange.shade50,
+                      child: Container(
+                        height: 120,
+                        child: TextButton(
+                          style: ButtonStyle(),
+                          onPressed: () {
+                            Navigator.pop(dialogContext);
+                            _pickImage(ImageSource.camera);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.camera, color: Colors.grey, size: 50),
+                              SizedBox(height: 8),
+                              Text(
+                                'Camera',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFFFF9900),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Card(
+                      color: Colors.white70,
+                      child: Container(
+                        height: 120,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(dialogContext);
+                            _pickImage(ImageSource.gallery);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.photo_library_outlined,
+                                  color: Colors.grey, size: 50),
+                              SizedBox(height: 8),
+                              Text(
+                                'Gallery',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF555555),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
