@@ -22,8 +22,8 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _groupController = TextEditingController();
+  TextEditingController _telephoneController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey();
 
   FocusNode focusNode = FocusNode();
 
@@ -50,7 +50,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _logoInformation(),
+      body: SafeArea(child: _logoInformation()),
     );
   }
 
@@ -149,10 +149,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             });
           },
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
-          child: Divider(thickness: 10, color: Colors.grey.shade400),
-        ),
+        _lineWidget(),
         _buildDropdown<ModelType>(
           label: 'Source',
           items: _modelType,
@@ -165,57 +162,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             });
           },
         ),
-        _textController(
-            'Description', _descriptionController, false, Icons.paste),
-        _textController('Email', _emailController, false, Icons.mail),
-        Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 6),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Tel',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: Color(0xFF555555),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 4),
-              IntlPhoneField(
-                focusNode: focusNode,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  isDense: true,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey.shade100,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.orange.shade300,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  filled: true,
-                ),
-                languageCode: "en",
-                onChanged: (phone) {
-                  print(phone.completeNumber);
-                },
-                onCountryChanged: (country) {
-                  print('Country changed to: ' + country.name);
-                },
-              ),
-            ],
-          ),
-        ),
+        _textController('Tel', _telephoneController, false, Icons.phone_android_rounded),
         SizedBox(height: 16),
       ],
     );
@@ -227,13 +174,13 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade300,
+            color: Colors.orange.shade50,
             height: 3,
             width: double.infinity,
           ),
-          SizedBox(height: 2),
+          SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade300,
+            color: Colors.orange.shade100,
             height: 3,
             width: double.infinity,
           ),

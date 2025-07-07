@@ -131,7 +131,7 @@ class _AccountAddViewState extends State<AccountAddView> {
           ),
         ],
       ),
-      body: _getContentWidget(),
+      body: SafeArea(child: _getContentWidget()),
       bottomNavigationBar: BottomBarDefault(
         items: items,
         iconSize: 18,

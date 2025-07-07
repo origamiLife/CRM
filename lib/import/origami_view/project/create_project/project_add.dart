@@ -182,12 +182,33 @@ class _ProjectAddState extends State<ProjectAdd> {
             child: Column(
               children: [
                 topProject(),
-                Divider(thickness: 5,color: Colors.grey,),
+                _lineWidget(),
                 bottomProject(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _lineWidget() {
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade50,
+            height: 3,
+            width: double.infinity,
+          ),
+          SizedBox(height: 1),
+          Container(
+            color: Colors.orange.shade100,
+            height: 3,
+            width: double.infinity,
+          ),
+        ],
       ),
     );
   }

@@ -97,7 +97,7 @@ class _ContactAddViewState extends State<ContactAddView> {
           ),
         ],
       ),
-      body: ContactAddDetail(employee: widget.employee, Authorization: widget.Authorization),
+      body: SafeArea(child: ContactAddDetail(employee: widget.employee, Authorization: widget.Authorization)),
       // bottomNavigationBar: BottomBarDefault(
       //   items: items,
       //   iconSize: 18,

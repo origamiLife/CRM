@@ -191,8 +191,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.orange.shade50,
-      // backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
         title: Align(
@@ -224,19 +222,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      // ColorFiltered(
-                      //   colorFilter: ColorFilter.mode(
-                      //     Colors.grey,
-                      //     BlendMode
-                      //         .saturation, // ใช้ BlendMode.saturation สำหรับ Grayscale
-                      //   ),
-                      //   child: Image.asset(
-                      //     'assets/images/busienss1.jpg',
-                      //     fit: BoxFit.cover,
-                      //     height: 60,
-                      //     width: double.infinity,
-                      //   ),
-                      // ),
                       Container(
                         color: Colors.white,
                         child: Padding(
@@ -246,6 +231,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                             children: [
                               _buildDropdown<ActivityType>(
                                 label: 'Type',
+                                hint: widget.skoopDetail?.type_name ?? '',
                                 items: _modelType,
                                 selectedValue: selectedType,
                                 getLabel: (item) => item.type_name ?? '',
@@ -258,6 +244,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               ),
                               _buildDropdown<ActivityProject>(
                                 label: 'Project',
+                                hint: widget.skoopDetail?.project_name ?? '',
                                 items: _modelProject,
                                 selectedValue: selectedProject,
                                 getLabel: (item) => item.project_name,
@@ -270,6 +257,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               ),
                               _buildDropdown<ActivityContact>(
                                 label: 'Contact',
+                                hint:
+                                    "${widget.skoopDetail?.contact_first ?? ''} ${widget.skoopDetail?.contact_last ?? ''}",
                                 items: _modelContact,
                                 selectedValue: selectedContact,
                                 getLabel: (item) => item.contact_first,
@@ -282,6 +271,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               ),
                               _buildDropdown<AccountData>(
                                 label: 'Account',
+                                hint: widget.skoopDetail?.account_en ?? '',
                                 items: _modelAccount,
                                 selectedValue: selectedAccount,
                                 getLabel: (item) => item.account_name ?? '',
@@ -295,6 +285,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               _lineWidget(),
                               _buildDropdown<ActivityStatus>(
                                 label: 'Status',
+                                hint: widget.skoopDetail?.status ?? '',
                                 items: _modelStatus,
                                 selectedValue: selectedStatus,
                                 getLabel: (item) => item.status_name ?? '',
@@ -307,6 +298,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               ),
                               _buildDropdown<ActivityPriority>(
                                 label: 'Priority',
+                                hint: widget.skoopDetail?.priority_name ?? '',
                                 items: _modelPriority,
                                 selectedValue: selectedPriority,
                                 getLabel: (item) => item.priority_name ?? '',
@@ -351,6 +343,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               SizedBox(height: 8),
                               _buildDropdown<ActivityPlace>(
                                 label: 'Place',
+                                hint: widget.skoopDetail?.place ?? '',
                                 items: _modelPlace,
                                 selectedValue: selectedPlace,
                                 getLabel: (item) => item.place_name ?? '',
@@ -610,13 +603,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade300,
+            color: Colors.orange.shade50,
             height: 3,
             width: double.infinity,
           ),
-          SizedBox(height: 2),
+          SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade300,
+            color: Colors.orange.shade100,
             height: 3,
             width: double.infinity,
           ),
@@ -872,7 +865,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             child: TextFormField(
               controller: controller,
               readOnly: key,
-              minLines: controller == _descriptionController?3:1,
+              minLines: controller == _descriptionController ? 3 : 1,
               maxLines: null,
               autofocus: false,
               obscureText: false,
@@ -922,6 +915,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
 
   Widget _buildDropdown<T>({
     required String label,
+    required String hint,
     required List<T> items,
     required T? selectedValue,
     required String Function(T) getLabel,
@@ -945,17 +939,17 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           InputDecorator(
             decoration: InputDecoration(
               isDense: true,
-              contentPadding: EdgeInsets.only(top: 12, bottom: 12, right: 12),
+              contentPadding: EdgeInsets.only(top: 12, bottom: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey.shade300),
+                borderSide: BorderSide(color: Colors.grey.shade400),
               ),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  '',
+                  hint ?? '',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -989,6 +983,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                 ),
                 buttonStyleData: ButtonStyleData(
                   height: 24,
+                  padding: EdgeInsets.only(right: 12),
                 ),
                 dropdownStyleData: DropdownStyleData(
                   maxHeight: 200,
@@ -1299,9 +1294,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       setState(() {
         _modelProject =
             dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-        if (_modelProject.isNotEmpty && selectedProject == null) {
-          selectedProject = _modelProject[0];
-        }
+        // if (_modelProject.isNotEmpty && selectedProject == null) {
+        //   selectedProject = _modelProject[0];
+        // }
       });
     } else {
       throw Exception('Failed to load challenges');
@@ -1328,9 +1323,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         setState(() {
           _modelAccount =
               dataJson.map((json) => AccountData.fromJson(json)).toList();
-          if (_modelAccount.isNotEmpty && selectedAccount == null) {
-            selectedAccount = _modelAccount[0];
-          }
+          // if (_modelAccount.isNotEmpty && selectedAccount == null) {
+          //   selectedAccount = _modelAccount[0];
+          // }
         });
       } else {
         throw Exception('Failed to load status data');
@@ -1360,9 +1355,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         setState(() {
           _modelType =
               dataJson.map((json) => ActivityType.fromJson(json)).toList();
-          if (_modelType.isNotEmpty && selectedType == null) {
-            selectedType = _modelType[0];
-          }
+          // if (_modelType.isNotEmpty && selectedType == null) {
+          //   selectedType = _modelType[0];
+          // }
         });
       } else {
         throw Exception('Failed to load status data');
@@ -1392,9 +1387,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         setState(() {
           _modelStatus =
               dataJson.map((json) => ActivityStatus.fromJson(json)).toList();
-          if (_modelStatus.isNotEmpty && selectedStatus == null) {
-            selectedStatus = _modelStatus[0];
-          }
+          // if (_modelStatus.isNotEmpty && selectedStatus == null) {
+          //   selectedStatus = _modelStatus[0];
+          // }
         });
       } else {
         throw Exception('Failed to load status data');
@@ -1424,9 +1419,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         setState(() {
           _modelPriority =
               dataJson.map((json) => ActivityPriority.fromJson(json)).toList();
-          if (_modelPriority.isNotEmpty && selectedPriority == null) {
-            selectedPriority = _modelPriority[0];
-          }
+          // if (_modelPriority.isNotEmpty && selectedPriority == null) {
+          //   selectedPriority = _modelPriority[0];
+          // }
         });
       } else {
         throw Exception('Failed to load status data');
@@ -1461,10 +1456,10 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             return ActivityContact.fromJson(json);
           }).toList();
 
-          first = dataJson
-              .map((item) =>
-                  item.contact_first = widget.skoopDetail?.contact_first ?? '')
-              .join(', ');
+          // first = dataJson
+          //     .map((item) =>
+          //         item.contact_first = widget.skoopDetail?.contact_first ?? '')
+          //     .join(', ');
 
           // if (_modelContact.isNotEmpty && selectedContact == null) {
           //   selectedContact = _modelContact[0];

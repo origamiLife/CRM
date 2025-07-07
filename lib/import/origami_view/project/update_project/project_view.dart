@@ -7,7 +7,7 @@ import '../../account/account_screen.dart';
 import '../../activity/activity.dart';
 import '../../activity/skoop/skoop.dart';
 import '../../calendar/calendar.dart';
-import '../../contact/contact.dart';
+import '../../contact/contact_screen.dart';
 import '../project.dart';
 import 'join_user/project_join_user.dart';
 

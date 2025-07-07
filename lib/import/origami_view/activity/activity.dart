@@ -55,7 +55,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: activityAll.isEmpty ? Colors.white : Colors.grey.shade50,
+      // backgroundColor: Colors.white,
+      // backgroundColor: activityAll.isEmpty ? Colors.white : Colors.grey.shade50,
       floatingActionButton: FloatingActionButton(
         onPressed: _cardType,
         child: const Icon(

@@ -9,8 +9,8 @@ import '../../account_screen.dart';
 class AccountJoinUser extends StatefulWidget {
   AccountJoinUser({
     Key? key,
-    required this.employee, required this.account,
-
+    required this.employee,
+    required this.account,
   }) : super(key: key);
   final Employee employee;
   final ModelAccount account;
@@ -60,26 +60,26 @@ class _AccountJoinUserState extends State<AccountJoinUser> {
               SizedBox(height: 8),
               modelEmployee == []
                   ? Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        color: Color(0xFFFF9900),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        '$Loading...',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF555555),
+                      child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          color: Color(0xFFFF9900),
                         ),
-                      ),
-                    ],
-                  ))
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          '$Loading...',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF555555),
+                          ),
+                        ),
+                      ],
+                    ))
                   : JoinUser(),
             ],
           ),
@@ -93,110 +93,110 @@ class _AccountJoinUserState extends State<AccountJoinUser> {
       children: [
         Column(
             children: List.generate(modelEmployee.length, (index) {
-              final join_user = modelEmployee[index];
-              String owner = '';
-              if (join_user.approve_activity == '0') {
-                owner = 'Y';
-              } else {
-                owner = 'N';
-              }
-              return Padding(
-                padding: const EdgeInsets.all(4),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 0,
-                            blurRadius: 0,
-                            offset: Offset(1, 3), // x, y
-                          ),
-                        ],
+          final join_user = modelEmployee[index];
+          String owner = '';
+          if (join_user.approve_activity == '0') {
+            owner = 'Y';
+          } else {
+            owner = 'N';
+          }
+          return Padding(
+            padding: const EdgeInsets.all(4),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: Offset(1, 3), // x, y
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Column(
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Center(
-                                    child: CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: Colors.grey.shade400,
-                                      child: CircleAvatar(
-                                        radius: 31,
-                                        backgroundColor: Colors.white,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(50),
-                                          child: Image.network(
-                                            join_user.emp_pic,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
+                            Expanded(
+                              child: Center(
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.grey.shade400,
+                                  child: CircleAvatar(
+                                    radius: 31,
+                                    backgroundColor: Colors.white,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Image.network(
+                                        join_user.emp_pic,
+                                        fit: BoxFit.fill,
                                       ),
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 8),
-                                Expanded(flex: 5, child: _switch(join_user)),
-                              ],
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      join_user.emp_code,
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 12,
-                                        color: Color(0xFF555555),
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
+                            SizedBox(width: 8),
+                            Expanded(flex: 5, child: _switch(join_user)),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  join_user.emp_code,
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 12,
+                                    color: Color(0xFF555555),
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  flex: 5,
-                                  child: Text(
-                                    '',
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14,
-                                      color: Color(0xFFFF9900),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: _checkBox('Owner', join_user.is_owner)),
-                                Expanded(
-                                    child: _checkBox('Approve Activity', owner)),
-                              ],
+                            SizedBox(width: 8),
+                            Expanded(
+                              flex: 5,
+                              child: Text(
+                                '',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  color: Color(0xFFFF9900),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: _checkBox('Owner', join_user.is_owner)),
+                            Expanded(
+                                child: _checkBox('Approve Activity', owner)),
+                          ],
+                        ),
+                      ],
                     ),
-                    Divider(),
-                  ],
+                  ),
                 ),
-              );
-            })),
+                Divider(),
+              ],
+            ),
+          );
+        })),
         SizedBox(
           height: 8,
         ),
@@ -286,7 +286,7 @@ class _AccountJoinUserState extends State<AccountJoinUser> {
                 children: [
                   Padding(
                     padding:
-                    const EdgeInsets.only(left: 16, right: 16, top: 16),
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.7,
                       decoration: BoxDecoration(
@@ -491,7 +491,7 @@ class _AccountJoinUserState extends State<AccountJoinUser> {
       headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'project_id': widget.employee.emp_id,
+        'project_id': '',
         'index': '',
       },
     );

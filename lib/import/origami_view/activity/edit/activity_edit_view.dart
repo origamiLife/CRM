@@ -6,7 +6,7 @@ import '../../project/update_project/join_user/project_join_user.dart';
 import '../activity.dart';
 import '../signature_page/signature_page.dart';
 import '../skoop/skoop.dart';
-import 'activity_edit_now.dart';
+import 'activity_edit_detail.dart';
 
 class ActivityEditView extends StatefulWidget {
   const ActivityEditView({
@@ -1355,105 +1355,6 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            // Expanded(
-                            //   child: Padding(
-                            //     padding:
-                            //     const EdgeInsets.symmetric(horizontal: 15),
-                            //     child: ListView.builder(
-                            //       itemCount: titleDown.length,
-                            //       itemBuilder: (context, index) {
-                            //         return InkWell(
-                            //           onTap: () {
-                            //             Navigator.pop(context);
-                            //           },
-                            //           child: Column(
-                            //             mainAxisAlignment:
-                            //             MainAxisAlignment.center,
-                            //             crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //             children: [
-                            //               Row(
-                            //                 mainAxisAlignment:
-                            //                 MainAxisAlignment.start,
-                            //                 crossAxisAlignment:
-                            //                 CrossAxisAlignment.center,
-                            //                 children: [
-                            //                   Padding(
-                            //                     padding: const EdgeInsets.only(
-                            //                         bottom: 4, right: 8),
-                            //                     child: CircleAvatar(
-                            //                       radius: 22,
-                            //                       backgroundColor: Colors.grey,
-                            //                       child: CircleAvatar(
-                            //                         radius: 21,
-                            //                         backgroundColor:
-                            //                         Colors.white,
-                            //                         child: ClipRRect(
-                            //                           borderRadius:
-                            //                           BorderRadius.circular(
-                            //                               100),
-                            //                           child: Image.network(
-                            //                             'https://dev.origami.life/images/default.png',
-                            //                             height: 100,
-                            //                             width: 100,
-                            //                             fit: BoxFit.cover,
-                            //                           ),
-                            //                         ),
-                            //                       ),
-                            //                     ),
-                            //                   ),
-                            //                   const SizedBox(width: 10),
-                            //                   Expanded(
-                            //                     child: Column(
-                            //                       mainAxisAlignment:
-                            //                       MainAxisAlignment.start,
-                            //                       crossAxisAlignment:
-                            //                       CrossAxisAlignment.start,
-                            //                       children: [
-                            //                         Text(
-                            //                           'Jirapat Jangsawang',
-                            //                           maxLines: 1,
-                            //                           overflow:
-                            //                           TextOverflow.ellipsis,
-                            //                           style: TextStyle(
-                            //                             fontFamily: 'Arial',
-                            //                             fontSize: 16,
-                            //                             color:
-                            //                             Color(0xFFFF9900),
-                            //                             fontWeight:
-                            //                             FontWeight.w700,
-                            //                           ),
-                            //                         ),
-                            //                         SizedBox(height: 8),
-                            //                         Text(
-                            //                           'Development (Mobile Application)',
-                            //                           maxLines: 1,
-                            //                           overflow:
-                            //                           TextOverflow.ellipsis,
-                            //                           style: TextStyle(
-                            //                             fontFamily: 'Arial',
-                            //                             fontSize: 14,
-                            //                             color:
-                            //                             Color(0xFF555555),
-                            //                             fontWeight:
-                            //                             FontWeight.w500,
-                            //                           ),
-                            //                         ),
-                            //                         Divider(
-                            //                             color: Colors
-                            //                                 .grey.shade300),
-                            //                       ],
-                            //                     ),
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //             ],
-                            //           ),
-                            //         );
-                            //       },
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
@@ -1524,32 +1425,6 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     }
   }
 
-//   Future<void> fetchSkoopActivity() async {
-//   final uri = Uri.parse("$host/crm/ios_upload_activity.php");
-//   try {
-//     final response = await http.post(
-//       uri, headers: {'Authorization': 'Bearer ${authorization}'},
-//       body: {
-//         'comp_id': widget.employee.comp_id,
-//         'emp_id': widget.employee.emp_id,
-//         'pass': widget.employee.auth_password,
-//         'activity_id': widget.activity.activity_id,
-//         'image_name': image_name,
-//         'image_type': image_type,
-//         'base64': base64,
-//       },
-//     );
-//     if (response.statusCode == 200) {
-//       print('true: ${response.statusCode}');
-//     } else {
-//       throw Exception('Failed to load status data');
-//     }
-//   } catch (e) {
-//     throw Exception('Failed to load personal data: $e');
-//   }
-// }
-
-  ///////////////////////////////////////////////////////////////////////
   List<ModelEmployee> modelEmployee = [];
   Future<void> fetchModelEmployee() async {
     final uri = Uri.parse(

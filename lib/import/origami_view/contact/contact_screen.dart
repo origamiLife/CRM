@@ -1,10 +1,8 @@
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:origamilift/import/origami_view/contact/recent_screen.dart';
+import 'package:http/http.dart' as http;
 import '../../import.dart';
-import '../Contact/contact_edit/contact_edit_detail.dart';
-import 'contact_add/contact_add_view.dart';
-import 'contact_edit/contact_edit_view.dart';
+import '../contact/contact_add/contact_add_view.dart';
+import '../contact/contact_edit/contact_edit_view.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({
@@ -137,7 +135,7 @@ class _ContactScreenState extends State<ContactScreen> {
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: EdgeInsets.only(bottom: 8.0),
           child: Column(
             children: [
               _buildSearchField(),
@@ -211,26 +209,27 @@ class _ContactScreenState extends State<ContactScreen> {
 
   Widget _getContentListWidget() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.symmetric(horizontal: 15),
       child: ListView.builder(
           controller: _scrollController,
           itemCount: ContactScreen.length,
           itemBuilder: (context, index) {
-            final contact = ContactScreen[index];
+            ModelContact contact = ContactScreen[index];
             // print('ContactScreen.length : ${ContactScreen.length}');
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ContactEditView(
-                      employee: widget.employee, pageInput: 'contact', contact: contact,
+            return Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ContactView(
+                        employee: widget.employee,
+                        contact: contact,
+                      ),
                     ),
-                  ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 5),
+                  );
+                },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,

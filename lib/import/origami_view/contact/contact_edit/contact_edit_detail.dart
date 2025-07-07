@@ -1,17 +1,16 @@
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-import 'package:origamilift/import/origami_view/project/update_project/join_user/project_join_user.dart';
-
 import '../../../import.dart';
-import '../../activity/add/activity_add.dart';
-import 'contact_edit_information.dart';
+import '../../contact/contact_screen.dart';
+import 'package:http/http.dart' as http;
 
 class ContactEditDetail extends StatefulWidget {
   const ContactEditDetail({
-    Key? key,
+    super.key,
     required this.employee,
-  }) : super(key: key);
+    required this.contact,
+  });
   final Employee employee;
+  final ModelContact contact;
 
   @override
   _ContactEditDetailState createState() => _ContactEditDetailState();
@@ -26,23 +25,52 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   TextEditingController _positionController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey();
   FocusNode focusNode = FocusNode();
   String _tellphone = '';
 
   @override
   void initState() {
     super.initState();
-    // _showDate();
-    // fetchActivityContact();
-    _firstnameController.addListener(() {
-      // _search = _FirstnameController.text;
-      print("Current text: ${_firstnameController.text}");
-    });
+    _getUpdateText();
+    _downloadImage();
+  }
+
+  void _getUpdateText() {
+    _firstnameController.text = widget.contact.firstname;
+    _lastnameController.text = widget.contact.lastname;
+    _nicknameController.text = widget.contact.firstname;
+    _mobileController.text = widget.contact.cont_tel;
+    _emailController.text = widget.contact.cont_email;
+    _positionController.text = widget.contact.cus_posi_id;
+  }
+
+  Future<void> _downloadImage() async {
+    try {
+      final response = await http.get(Uri.parse(widget.contact.cus_cont_photo));
+      if (response.statusCode == 200) {
+        final tempDir = await getTemporaryDirectory();
+        final filePath = '${tempDir.path}/downloaded_image.png';
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+        setState(() {
+          _image = file;
+        });
+      } else {
+        print('ไม่สามารถโหลดรูปได้: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('เกิดข้อผิดพลาดในการโหลดรูป: $e');
+    }
   }
 
   @override
   void dispose() {
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _nicknameController.dispose();
+    _mobileController.dispose();
+    _emailController.dispose();
+    _positionController.dispose();
     super.dispose();
   }
 
@@ -50,82 +78,97 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _logoInformation(context),
+      body: SafeArea(child: _logoInformation(widget.contact)),
     );
   }
 
   final ImagePicker _picker = ImagePicker();
   File? _image;
+  String _base64Image = '';
+  bool _isStamping = false;
 
-  Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+  Future<void> _pickImage(ImageSource source) async {
+    if (_isStamping) return;
+    _isStamping = true;
+    try {
+      final XFile? image = await _picker.pickImage(source: source);
+      if (image == null) return;
+
+      // final directory = await getApplicationDocumentsDirectory();
+      // final filePath = path.join(
+      //   directory.path,
+      //   'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      // );
+      final file = File(image.path);
+      final imageBytes = await file.readAsBytes();
+      _base64Image = base64Encode(imageBytes);
       setState(() {
-        _image = File(image.path);
+        _image = file;
       });
+    } catch (e) {
+      print('Error picking image: $e');
+    } finally {
+      _isStamping = false;
     }
   }
 
-  Widget _showImagePhoto() {
+  Widget _showImagePhoto(ModelContact contact) {
     return _image != null
         ? Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.transparent,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Image.file(
-                    File(_image!.path),
-                    height: 200,
-                    width: 200,
-                    fit: BoxFit.cover,
+            padding: const EdgeInsets.only(top: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent,
                   ),
-                  Positioned(
-                    top: 4,
-                    right: 4,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          _image = null;
-                        });
-                      },
-                      child: Stack(
-                        children: [
-                          Icon(
-                            Icons.cancel_outlined,
-                            color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.file(
+                          _image!,
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _image = null;
+                              });
+                            },
+                            child: Stack(
+                              children: [
+                                Icon(
+                                  Icons.cancel_outlined,
+                                  color: Colors.white,
+                                ),
+                                Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                ),
+                              ],
+                            ),
                           ),
-                          Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    )
-        : InkWell(
-      onTap: () => _pickImage(),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Column(
-          children: [
-            Container(
-              height: 200,
+          )
+        : Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Container(
+              // height: 48,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
@@ -134,18 +177,115 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                   width: 1.0,
                 ),
               ),
-              child: Center(
-                child:
-                Icon(Icons.photo, color: Colors.grey, size: 100),
+              child: GestureDetector(
+                onTap: _imageDialog,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Container(
+                    width: double.infinity,
+                      child: Icon(
+                    Icons.camera_alt,
+                    color: Colors.grey,
+                  )),
+                ),
               ),
             ),
-          ],
-        ),
-      ),
+          );
+  }
+
+  void _imageDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          elevation: 0,
+          title: Column(
+            children: [
+              Text(
+                'Camera / Gallery',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  color: Color(0xFFFF9900),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      color: Colors.orange.shade50,
+                      child: Container(
+                        height: 120,
+                        child: TextButton(
+                          style: ButtonStyle(),
+                          onPressed: () {
+                            Navigator.pop(dialogContext);
+                            _pickImage(ImageSource.camera);
+                          },
+                          child: Column(
+                            mainAxisAlignment:
+                            MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.camera,color:Colors.grey,size: 50),
+                              SizedBox(height: 8),
+                              Text(
+                                'Camera',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFFFF9900),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Card(
+                      color: Colors.white70,
+                      child: Container(
+                        height: 120,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(dialogContext);
+                            _pickImage(ImageSource.gallery);
+                          },
+                          child: Column(
+                            mainAxisAlignment:
+                            MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.photo_library_outlined,color:Colors.grey,size: 50),
+                              SizedBox(height: 8),
+                              Text(
+                                'Gallery',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF555555),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _logoInformation(BuildContext context) {
+  Widget _logoInformation(ModelContact contact) {
     return Padding(
       padding: EdgeInsets.all(14),
       child: SingleChildScrollView(
@@ -164,10 +304,11 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               ),
             ),
             SizedBox(height: 8),
-            _showImagePhoto(),
+            _showImagePhoto(contact),
             SizedBox(height: 16),
             _buildDropdown<ModelType>(
               label: 'Title',
+              hint: contact.role_name,
               items: _modelType,
               selectedValue: selectedType,
               getLabel: (item) => item.name,
@@ -186,6 +327,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 'Nickname', _nicknameController, false, Icons.numbers),
             _buildDropdown<ModelType>(
               label: 'Gender',
+              hint: contact.gender_name,
               items: _modelType,
               selectedValue: selectedType,
               getLabel: (item) => item.name,
@@ -196,97 +338,40 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 });
               },
             ),
-            _buildDropdown<ModelType>(
-              label: 'Account',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
-                });
-              },
-            ),
+            // _buildDropdown<ModelType>(
+            //   label: 'Account',
+            //   hint: contact.cont_name,
+            //   items: _modelType,
+            //   selectedValue: selectedType,
+            //   getLabel: (item) => item.name,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       selectedType = value;
+            //       type_id = value?.id ?? '';
+            //     });
+            //   },
+            // ),
+            _textController('Email', _emailController, false, Icons.numbers),
             _textController(
-                'Email', _emailController, false, Icons.numbers),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 6),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Tel',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  IntlPhoneField(
-                    controller: _mobileController,
-                    focusNode: focusNode,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      labelStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        color: Color(0xFF555555),
-                        fontSize: 14,
-                      ),
-                      hintText: '',
-                      hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        color: Color(0xFF555555),
-                        fontSize: 14,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade100,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.orange.shade300,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      filled: true,
-                    ),
-                    languageCode: "en",
-                    onChanged: (phone) {
-                      _tellphone = phone.completeNumber;
-                      print('\ntell : $_tellphone \nmobile : ${_mobileController.text}');
-                    },
-                    onCountryChanged: (country) {
-                      print('Country changed to: ' + country.name);
-                    },
-                  ),
-                ],
-              ),
-            ),
-            _buildDropdown<ModelType>(
-              label: 'Occupation',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
-                });
-              },
-            ),
+                'Tel', _mobileController, false, Icons.phone_android_rounded),
+            // _buildDropdown<ModelType>(
+            //   label: 'Occupation',
+            //   hint: contact.role_name,
+            //   items: _modelType,
+            //   selectedValue: selectedType,
+            //   getLabel: (item) => item.name,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       selectedType = value;
+            //       type_id = value?.id ?? '';
+            //     });
+            //   },
+            // ),
             _textController(
                 'Position', _positionController, false, Icons.numbers),
             _buildDropdown<ModelType>(
               label: 'Role',
+              hint: contact.role_name,
               items: _modelType,
               selectedValue: selectedType,
               getLabel: (item) => item.name,
@@ -299,6 +384,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             ),
             _buildDropdown<ModelType>(
               label: 'Emotion',
+              hint: contact.cus_cont_emo,
               items: _modelType,
               selectedValue: selectedType,
               getLabel: (item) => item.name,
@@ -309,18 +395,19 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 });
               },
             ),
-            _buildDropdown<ModelType>(
-              label: 'Marital',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
-                });
-              },
-            ),
+            // _buildDropdown<ModelType>(
+            //   label: 'Marital',
+            //   hint: contact.role_name,
+            //   items: _modelType,
+            //   selectedValue: selectedType,
+            //   getLabel: (item) => item.name,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       selectedType = value;
+            //       type_id = value?.id ?? '';
+            //     });
+            //   },
+            // ),
             SizedBox(height: 16),
           ],
         ),
@@ -356,7 +443,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               decoration: InputDecoration(
                 isDense: true,
                 fillColor:
-                key == false ? Colors.grey.shade50 : Colors.grey.shade300,
+                    key == false ? Colors.grey.shade50 : Colors.grey.shade300,
                 labelStyle: TextStyle(
                   fontFamily: 'Arial',
                   color: Color(0xFF555555),
@@ -399,6 +486,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
 
   Widget _buildDropdown<T>({
     required String label,
+    required String hint,
     required List<T> items,
     required T? selectedValue,
     required String Function(T) getLabel,
@@ -432,7 +520,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  '',
+                  hint,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -442,16 +530,16 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 value: selectedValue,
                 items: items
                     .map((item) => DropdownMenuItem<T>(
-                  value: item,
-                  child: Text(
-                    getLabel(item),
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                    ),
-                  ),
-                ))
+                          value: item,
+                          child: Text(
+                            getLabel(item),
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFF555555),
+                            ),
+                          ),
+                        ))
                     .toList(),
                 onChanged: onChanged,
                 style: TextStyle(
@@ -477,6 +565,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 menuItemStyleData: MenuItemStyleData(
                   height: 40,
                 ),
+
                 /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
                 dropdownSearchData: DropdownSearchData(
                   searchController: dropdownSearchController,
@@ -491,7 +580,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                       controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -542,7 +632,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             filled: true,
             fillColor: Colors.white,
             contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             hintText: (ifTime == true) ? '${title} $currentTime' : title,
             hintStyle: TextStyle(
                 fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
@@ -634,15 +724,15 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             ),
             items: _emotions
                 .map((String emotions) => DropdownMenuItem<String>(
-              value: emotions,
-              child: Text(
-                emotions,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 24,
-                ),
-              ),
-            ))
+                      value: emotions,
+                      child: Text(
+                        emotions,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 24,
+                        ),
+                      ),
+                    ))
                 .toList(),
             value: _selectedEmotion,
             onChanged: (value) {
@@ -661,7 +751,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
+                  200, // Height for displaying up to 5 lines (adjust as needed)
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 33,
@@ -739,7 +829,6 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     ModelType(id: '3', name: 'รายการ C'),
     ModelType(id: '4', name: 'รายการ D'),
   ];
-
 }
 
 class ModelType {

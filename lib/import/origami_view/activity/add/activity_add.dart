@@ -8,8 +8,9 @@ import '../../need/need_view/need_detail.dart';
 class activityAdd extends StatefulWidget {
   const activityAdd({
     Key? key,
-    required this.employee, required this.dataType, required this.listType,
-
+    required this.employee,
+    required this.dataType,
+    required this.listType,
   }) : super(key: key);
   final Employee employee;
   final ActivityType dataType;
@@ -159,8 +160,6 @@ class _activityAddState extends State<activityAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      // backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
         title: Align(
@@ -184,294 +183,316 @@ class _activityAddState extends State<activityAdd> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildDropdown<ActivityType>(
-                  label: 'Type',
-                  hint: selectedType?.type_name??'',
-                  items: _modelType,
-                  selectedValue: selectedType,
-                  getLabel: (item) => item?.type_name??'',
-                  onChanged: (value) {
-                    setState(() {
-                      selectedType = value;
-                      type_id = value?.type_id ?? '';
-                    });
-                  },
-                ),
-                _buildDropdown<ActivityProject>(
-                  label: 'Project',
-                  items: _modelProject,
-                  selectedValue: selectedProject,
-                  getLabel: (item) => item?.project_name??'',
-                  onChanged: (value) {
-                    setState(() {
-                      selectedProject = value;
-                      project_id = value?.project_id??'';
-                    });
-                  },
-                ),
-
-                _buildDropdown<ActivityContact>(
-                  label: 'Contact',
-                  items: _modelContact,
-                  selectedValue: selectedContact,
-                  getLabel: (item) => item?.contact_first??'',
-                  onChanged: (value) {
-                    setState(() {
-                      selectedContact = value;
-                      contact_id = value?.contact_id??'';
-                    });
-                  },
-                ),
-
-                _buildDropdown<AccountData>(
-                  label: 'Account',
-                  items: _modelAccount,
-                  selectedValue: selectedAccount,
-                  getLabel: (item) => item?.account_name??'',
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAccount = value;
-                      account_id = value?.account_id ?? '';
-                    });
-                  },
-                ),
-                _lineWidget(),
-                _buildDropdown<ActivityStatus>(
-                  label: 'Status',
-                  items: _modelStatus,
-                  selectedValue: selectedStatus,
-                  getLabel: (item) => item?.status_name??'',
-                  onChanged: (value) {
-                    setState(() {
-                      selectedStatus = value;
-                      status_id = value?.status_id ?? '';
-                    });
-                  },
-                ),
-                _buildDropdown<ActivityPriority>(
-                  label: 'Priority',
-                  items: _modelPriority,
-                  selectedValue: selectedPriority,
-                  getLabel: (item) => item?.priority_name??'',
-                  onChanged: (value) {
-                    setState(() {
-                      selectedPriority = value;
-                      project_id = value?.priority_id ?? '';
-                    });
-                  },
-                ),
-                _textController(
-                    'Subject', _subjectController, false, Icons.numbers),
-                _textController(
-                    'Owner Activity Description', _descriptionController, false, Icons.numbers),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _DateBody('Start Date', true),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: _TimeBody('Start Time', 'start'),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _DateBody('End Date', false),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: _TimeBody('End Time', 'end'),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                _buildDropdown<ActivityPlace>(
-                  label: 'Place',
-                  items: _modelPlace,
-                  selectedValue: selectedPlace,
-                  getLabel: (item) => item?.place_name??'',
-                  onChanged: (value) {
-                    setState(() {
-                      selectedPlace = value;
-                      project_id = value?.place_id ?? '';
-                    });
-                  },
-                ),
-                _textController(
-                    'Location', _locationController, true, Icons.location_history),
-                _textController(
-                    'Cost', _costController, false, Icons.numbers),
-                _lineWidget(),
-                Text(
-                  'Other Contact',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
-                    children: List.generate(addNewContactList.length, (index) {
-                      final contact = addNewContactList[index];
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              // addNewContactList.add(contact);
-                            });
-                          },
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              _buildDropdown<ActivityType>(
+                                label: 'Type',
+                                hint: selectedType?.type_name ?? '',
+                                items: _modelType,
+                                selectedValue: selectedType,
+                                getLabel: (item) => item?.type_name ?? '',
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedType = value;
+                                    type_id = value?.type_id ?? '';
+                                  });
+                                },
+                              ),
+                              _buildDropdown<ActivityProject>(
+                                label: 'Project',
+                                items: _modelProject,
+                                selectedValue: selectedProject,
+                                getLabel: (item) => item?.project_name ?? '',
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedProject = value;
+                                    project_id = value?.project_id ?? '';
+                                  });
+                                },
+                              ),
+                              _buildDropdown<ActivityContact>(
+                                label: 'Contact',
+                                items: _modelContact,
+                                selectedValue: selectedContact,
+                                getLabel: (item) => item?.contact_first ?? '',
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedContact = value;
+                                    contact_id = value?.contact_id ?? '';
+                                  });
+                                },
+                              ),
+                              _buildDropdown<AccountData>(
+                                label: 'Account',
+                                items: _modelAccount,
+                                selectedValue: selectedAccount,
+                                getLabel: (item) => item?.account_name ?? '',
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedAccount = value;
+                                    account_id = value?.account_id ?? '';
+                                  });
+                                },
+                              ),
+                              _lineWidget(),
+                              _buildDropdown<ActivityStatus>(
+                                label: 'Status',
+                                items: _modelStatus,
+                                selectedValue: selectedStatus,
+                                getLabel: (item) => item?.status_name ?? '',
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedStatus = value;
+                                    status_id = value?.status_id ?? '';
+                                  });
+                                },
+                              ),
+                              _buildDropdown<ActivityPriority>(
+                                label: 'Priority',
+                                items: _modelPriority,
+                                selectedValue: selectedPriority,
+                                getLabel: (item) => item?.priority_name ?? '',
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedPriority = value;
+                                    project_id = value?.priority_id ?? '';
+                                  });
+                                },
+                              ),
+                              _textController(
+                                  'Subject', _subjectController, false, Icons.numbers),
+                              _textController('Owner Activity Description',
+                                  _descriptionController, false, Icons.numbers),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 4, right: 8),
-                                    child: CircleAvatar(
-                                      radius: 20,
-                                      backgroundColor: Colors.grey,
-                                      child: CircleAvatar(
-                                        radius: 19,
-                                        backgroundColor: Colors.white,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: Image.network(
-                                            (contact.contact_image == '')
-                                                ? 'https://dev.origami.life/images/default.png'
-                                                : '$host//crm/${contact.contact_image}',
-                                            height: 100,
-                                            width: 100,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
                                   Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${contact.contact_first} ${contact.contact_last}',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16,
-                                            color: Color(0xFFFF9900),
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${contact.customer_en} (${contact.customer_th})',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 14,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Divider(color: Colors.grey.shade300),
-                                      ],
-                                    ),
+                                    child: _DateBody('Start Date', true),
+                                  ),
+                                  SizedBox(width: 16),
+                                  Expanded(
+                                    child: _TimeBody('Start Time', 'start'),
                                   ),
                                 ],
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _DateBody('End Date', false),
+                                  ),
+                                  SizedBox(width: 16),
+                                  Expanded(
+                                    child: _TimeBody('End Time', 'end'),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8),
+                              _buildDropdown<ActivityPlace>(
+                                label: 'Place',
+                                items: _modelPlace,
+                                selectedValue: selectedPlace,
+                                getLabel: (item) => item?.place_name ?? '',
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedPlace = value;
+                                    project_id = value?.place_id ?? '';
+                                  });
+                                },
+                              ),
+                              _textController('Location', _locationController, true,
+                                  Icons.location_history),
+                              _textController('Cost', _costController, false, Icons.numbers),
+                              _lineWidget(),
+                              Text(
+                                'Other Contact',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  color: Color(0xFF555555),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Padding(
+                                padding:
+                                const EdgeInsets.symmetric(horizontal: 15),
+                                child: Column(
+                                  children: List.generate(
+                                      addNewContactList.length, (index) {
+                                    final contact = addNewContactList[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 4, right: 8),
+                                                child: CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundColor: Colors.grey,
+                                                  child: CircleAvatar(
+                                                    radius: 19,
+                                                    backgroundColor:
+                                                    Colors.white,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          100),
+                                                      child: Image.network(
+                                                        (contact.contact_image ==
+                                                            null)
+                                                            ? 'https://dev.origami.life/images/default.png'
+                                                            : '$host//crm/${contact.contact_image}',
+                                                        height: 100,
+                                                        width: 100,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '${contact.contact_first} ${contact.contact_last}',
+                                                      maxLines: 1,
+                                                      overflow:
+                                                      TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 16,
+                                                        color:
+                                                        Color(0xFFFF9900),
+                                                        fontWeight:
+                                                        FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${contact.customer_en} (${contact.customer_th})',
+                                                      maxLines: 1,
+                                                      overflow:
+                                                      TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 14,
+                                                        color:
+                                                        Color(0xFF555555),
+                                                        fontWeight:
+                                                        FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    Divider(
+                                                        color: Colors
+                                                            .grey.shade300),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: _addOtherContact,
+                                child: Text(
+                                  'Add Other Contact',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14,
+                                    color: Color(0xFFFF9900),
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      );
-                    }),
-                  ),
-                ),
-                TextButton(
-                  onPressed: _addOtherContact,
-                  child: Text(
-                    'Add Other Contact',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFFFF9900),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 8),
-                Padding(
-                  padding:
-                  const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Color(0xFFFF9900),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
                       ),
-                    ),
-                    onPressed: _saveAddActivity,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Center(
-                        child: Text(
-                          Save,
-                          style: TextStyle(
-                              fontFamily: 'Arial', fontSize: 16.0),
+                      SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Color(0xFFFF9900),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                          onPressed: _saveAddActivity,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Center(
+                              child: Text(
+                                Save,
+                                style: TextStyle(fontFamily: 'Arial', fontSize: 16.0),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              SizedBox(height: 8),
+              Container(),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _lineWidget(){
+  Widget _lineWidget() {
     return Padding(
-      padding: EdgeInsets.only(top: 18,bottom: 18),
+      padding: EdgeInsets.only(top: 18, bottom: 18),
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade300,
+            color: Colors.orange.shade50,
             height: 3,
             width: double.infinity,
           ),
-          SizedBox(height: 2),
+          SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade300,
+            color: Colors.orange.shade100,
             height: 3,
             width: double.infinity,
           ),
@@ -706,7 +727,6 @@ class _activityAddState extends State<activityAdd> {
     );
   }
 
-
   Widget _textController(String text, controller, bool key, IconData numbers) {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
@@ -729,14 +749,14 @@ class _activityAddState extends State<activityAdd> {
             child: TextFormField(
               controller: controller,
               readOnly: key,
-              minLines: controller == _descriptionController?3:1,
+              minLines: controller == _descriptionController ? 3 : 1,
               maxLines: null,
               autofocus: false,
               obscureText: false,
               decoration: InputDecoration(
                 isDense: true,
                 fillColor:
-                key == false ? Colors.grey.shade50 : Colors.grey.shade300,
+                    key == false ? Colors.grey.shade50 : Colors.grey.shade300,
                 labelStyle: TextStyle(
                   fontFamily: 'Arial',
                   color: Color(0xFF555555),
@@ -813,7 +833,7 @@ class _activityAddState extends State<activityAdd> {
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  hint??'',
+                  hint ?? '',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -823,16 +843,16 @@ class _activityAddState extends State<activityAdd> {
                 value: selectedValue,
                 items: items
                     .map((item) => DropdownMenuItem<T>(
-                  value: item,
-                  child: Text(
-                    getLabel(item),
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                    ),
-                  ),
-                ))
+                          value: item,
+                          child: Text(
+                            getLabel(item),
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFF555555),
+                            ),
+                          ),
+                        ))
                     .toList(),
                 onChanged: onChanged,
                 style: TextStyle(
@@ -858,6 +878,7 @@ class _activityAddState extends State<activityAdd> {
                 menuItemStyleData: MenuItemStyleData(
                   height: 40,
                 ),
+
                 /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
                 dropdownSearchData: DropdownSearchData(
                   searchController: dropdownSearchController,
@@ -872,7 +893,8 @@ class _activityAddState extends State<activityAdd> {
                       controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -1042,9 +1064,6 @@ class _activityAddState extends State<activityAdd> {
     );
   }
 
-
-
-
   String type_id = '';
   String project_id = '';
   String account_id = '';
@@ -1066,7 +1085,7 @@ class _activityAddState extends State<activityAdd> {
       type_id = selectedType?.type_id ?? '';
     }
     if (project_id == '') {
-      project_id = selectedProject?.project_id.toString()??'';
+      project_id = selectedProject?.project_id.toString() ?? '';
     }
     if (account_id == '') {
       account_id = selectedAccount?.account_id ?? '';
@@ -1081,7 +1100,7 @@ class _activityAddState extends State<activityAdd> {
       priority_id = selectedPriority?.priority_id ?? '';
     }
     if (place_id == '') {
-      place_id = selectedPlace?.place_id??'';
+      place_id = selectedPlace?.place_id ?? '';
     }
     if (activity_name == '') {
       // แจ้งเตือน
@@ -1332,7 +1351,7 @@ class _activityAddState extends State<activityAdd> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> dataJson = jsonResponse['data']??[];
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       setState(() {
         _modelProject =
             dataJson.map((json) => ActivityProject.fromJson(json)).toList();
@@ -1346,11 +1365,10 @@ class _activityAddState extends State<activityAdd> {
   }
 
   ActivityPlace? selectedPlace;
-  List<ActivityPlace>  _modelPlace = [
+  List<ActivityPlace> _modelPlace = [
     ActivityPlace(place_id: 'in', place_name: 'Indoor'),
     ActivityPlace(place_id: 'out', place_name: 'Outdoor'),
   ];
-
 }
 
 class ActivityPlace {
@@ -1478,13 +1496,13 @@ class ActivityContact {
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityContact.fromJson(Map<String, dynamic> json) {
     return ActivityContact(
-      contact_id: json['contact_id']??'',
-      contact_first: json['contact_first']??'',
-      contact_last: json['contact_last']??'',
-      contact_image: json['contact_image']??'',
-      customer_id: json['customer_id']??'',
-      customer_en: json['customer_en']??'',
-      customer_th: json['customer_th']??'',
+      contact_id: json['contact_id'] ?? '',
+      contact_first: json['contact_first'] ?? '',
+      contact_last: json['contact_last'] ?? '',
+      contact_image: json['contact_image'] ?? '',
+      customer_id: json['customer_id'] ?? '',
+      customer_en: json['customer_en'] ?? '',
+      customer_th: json['customer_th'] ?? '',
     );
   }
 }

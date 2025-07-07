@@ -36,7 +36,7 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _logoInformation(),
+      body: SafeArea(child: _logoInformation()),
     );
   }
 

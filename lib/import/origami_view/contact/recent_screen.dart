@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../../import.dart';
-import 'contact.dart';
+import 'contact_screen.dart';
 
 class LocalCallLog {
   final String contactId;

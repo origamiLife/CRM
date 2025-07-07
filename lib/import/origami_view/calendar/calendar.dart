@@ -47,129 +47,131 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Theme(
-        data: ThemeData(
-          primaryColor: Colors.teal,
-          colorScheme: ColorScheme.light(
-            primary: Color(0xFFFF9900),
-            onPrimary: Colors.white,
-            onSurface: Colors.teal,
-          ),
-          dialogBackgroundColor: Colors.teal[50],
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: SfCalendar(
-                    cellBorderColor:Colors.transparent,
-                    view: CalendarView.month,
-                    dataSource: MeetingDataSource(getAppointments()),
-                    monthViewSettings: const MonthViewSettings(
-                      appointmentDisplayMode: MonthAppointmentDisplayMode
-                          .appointment, // แสดงเหตุการณ์ในเดือน
-                        // showAgenda: true
-                    ),
-                    appointmentTextStyle: const TextStyle(
-                      fontFamily: 'Arial',
-                      color: Colors.white, // สีของข้อความในเหตุการณ์
-                      fontSize: 14,
-                    ),
-                      onTap: (CalendarTapDetails details) {
-                        if (details.targetElement == CalendarElement.calendarCell) {
-                          final DateTime selectedDate = details.date!;
-                          final List<Appointment> appointments = getAppointments();
-                          final List<String> events = appointments
-                              .where((appointment) =>
-                              isSameDate(appointment.startTime, selectedDate))
-                              .map((appointment) => appointment.subject)
-                              .toList();
-
-                          // 👉 เลื่อนไปยังวันที่ที่ถูกกดใน schedule view
-                          _scheduleController.displayDate = selectedDate;
-                        }}
-                  ),
-                ),
-              ),
+      body: SafeArea(
+        child: Theme(
+          data: ThemeData(
+            primaryColor: Colors.teal,
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFFFF9900),
+              onPrimary: Colors.white,
+              onSurface: Colors.teal,
             ),
-            Expanded(
-              child: Container(
-                color: Colors.orange.shade50,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 4, bottom: 4),
-                  child: Container(
-                    color: Colors.white,
+            dialogBackgroundColor: Colors.teal[50],
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
                     child: SfCalendar(
-                      view: CalendarView.schedule,
-                      controller: _scheduleController, // เชื่อม controller ตรงนี้
+                      cellBorderColor:Colors.transparent,
+                      view: CalendarView.month,
                       dataSource: MeetingDataSource(getAppointments()),
-                      monthViewSettings: MonthViewSettings(
+                      monthViewSettings: const MonthViewSettings(
                         appointmentDisplayMode: MonthAppointmentDisplayMode
                             .appointment, // แสดงเหตุการณ์ในเดือน
+                          // showAgenda: true
                       ),
-                      appointmentTextStyle: TextStyle(
+                      appointmentTextStyle: const TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 16,
-                        color: Color(0xFF555555),
-                        fontWeight: FontWeight.w500,
+                        color: Colors.white, // สีของข้อความในเหตุการณ์
+                        fontSize: 14,
                       ),
-                      onTap: (CalendarTapDetails details) {
-                        if (details.targetElement ==
-                            CalendarElement.calendarCell) {
-                          final DateTime selectedDate = details.date!;
-                          final List<Appointment> appointments =
-                              getAppointments();
-                          final List<String> events = appointments
-                              .where((appointment) => isSameDate(
-                                  appointment.startTime, selectedDate))
-                              .map((appointment) => appointment.subject)
-                              .toList();
-
-                          if (events.isNotEmpty) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text(
-                                    'เหตุการณ์ในวันที่ ${selectedDate.toLocal()}',
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  content: Text(events.join('\n')),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: Text(
-                                        'ปิด',
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 16,
-                                          color: Color(0xFF555555),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        }
-                      },
+                        onTap: (CalendarTapDetails details) {
+                          if (details.targetElement == CalendarElement.calendarCell) {
+                            final DateTime selectedDate = details.date!;
+                            final List<Appointment> appointments = getAppointments();
+                            final List<String> events = appointments
+                                .where((appointment) =>
+                                isSameDate(appointment.startTime, selectedDate))
+                                .map((appointment) => appointment.subject)
+                                .toList();
+        
+                            // 👉 เลื่อนไปยังวันที่ที่ถูกกดใน schedule view
+                            _scheduleController.displayDate = selectedDate;
+                          }}
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Container(
+                  color: Colors.orange.shade50,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4, bottom: 4),
+                    child: Container(
+                      color: Colors.white,
+                      child: SfCalendar(
+                        view: CalendarView.schedule,
+                        controller: _scheduleController, // เชื่อม controller ตรงนี้
+                        dataSource: MeetingDataSource(getAppointments()),
+                        monthViewSettings: MonthViewSettings(
+                          appointmentDisplayMode: MonthAppointmentDisplayMode
+                              .appointment, // แสดงเหตุการณ์ในเดือน
+                        ),
+                        appointmentTextStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          color: Color(0xFF555555),
+                          fontWeight: FontWeight.w500,
+                        ),
+                        onTap: (CalendarTapDetails details) {
+                          if (details.targetElement ==
+                              CalendarElement.calendarCell) {
+                            final DateTime selectedDate = details.date!;
+                            final List<Appointment> appointments =
+                                getAppointments();
+                            final List<String> events = appointments
+                                .where((appointment) => isSameDate(
+                                    appointment.startTime, selectedDate))
+                                .map((appointment) => appointment.subject)
+                                .toList();
+        
+                            if (events.isNotEmpty) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      'เหตุการณ์ในวันที่ ${selectedDate.toLocal()}',
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16,
+                                        color: Color(0xFF555555),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    content: Text(events.join('\n')),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text(
+                                          'ปิด',
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

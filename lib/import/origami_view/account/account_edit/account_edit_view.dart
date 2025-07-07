@@ -5,7 +5,7 @@ import 'package:origamilift/import/import.dart';
 import '../../Contact/contact_edit/contact_edit_detail.dart';
 import '../../IDOC/idoc_view.dart';
 import '../../activity/activity.dart';
-import '../../contact/contact.dart';
+import '../../contact/contact_screen.dart';
 import '../../project/project.dart';
 import '../account_screen.dart';
 import 'detail/account_edit_detail.dart';
@@ -72,10 +72,6 @@ class _AccountEditViewState extends State<AccountEditView> {
       title: 'Detail',
     ),
     TabItem(
-      icon: Icons.location_history,
-      title: 'Location',
-    ),
-    TabItem(
       icon: Icons.person_add_alt_1_rounded,
       title: 'JoinUser',
     ),
@@ -90,8 +86,6 @@ class _AccountEditViewState extends State<AccountEditView> {
       if (index == 0) {
         page = "Account Detail";
       } else if (index == 1) {
-        page = "Account Location";
-      } else if (index == 2) {
         page = "Join User";
       }
     });
@@ -100,7 +94,6 @@ class _AccountEditViewState extends State<AccountEditView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
         title: Align(
@@ -125,18 +118,25 @@ class _AccountEditViewState extends State<AccountEditView> {
         actions: [
           InkWell(
             onTap: () {
-              // Navigator.pop(context);
-              // _formKey.currentState?.validate();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AccountEditDetail(
+                    employee: widget.employee,
+                    account: widget.account,
+                  ),
+                ),
+              );
             },
             child: Row(
               children: [
                 Text(
-                  'DONE',
+                  'Edit',
                   style: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 14,
+                    fontSize: 18,
                     color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 SizedBox(width: 16)
@@ -145,7 +145,7 @@ class _AccountEditViewState extends State<AccountEditView> {
           ),
         ],
       ),
-      body: _getContentWidget(),
+      body: _getContentWidget(widget.account),
       bottomNavigationBar: BottomBarDefault(
         items: items,
         iconSize: 18,
@@ -163,612 +163,367 @@ class _AccountEditViewState extends State<AccountEditView> {
     );
   }
 
-  Widget _getContentWidget() {
+  Widget _getContentWidget(ModelAccount account) {
     switch (_selectedIndex) {
       case 0:
-        return AccountEditDetail(
-            employee: widget.employee, pageInput: widget.pageInput);
+        return SafeArea(child: _viewDetail(account));
       case 1:
-        return AccountEditLocation(
-            employee: widget.employee, pageInput: widget.pageInput);
-      case 2:
-        return AccountJoinUser(
-            employee: widget.employee, account: widget.account);
-      case 3:
-        return ContactScreen(
-            employee: widget.employee, pageInput: widget.pageInput);
-      case 4:
-        return ProjectScreen(
-            employee: widget.employee, pageInput: widget.pageInput);
-      case 5:
-        return ActivityScreen(
-            employee: widget.employee, pageInput: widget.pageInput);
+        return AccountJoinUser(employee: widget.employee, account: account);
       default:
-        return Container();
+        return SafeArea(child: _viewDetail(account));
     }
   }
 
-  Widget JoinUser() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: Column(
+  // โทรออก
+  Future<void> _makePhoneCall(String tel) async {
+    if (tel.isEmpty || !RegExp(r'^[0-9+]+$').hasMatch(tel)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('เบอร์โทรไม่ถูกต้อง'),
+          backgroundColor: Colors.black87,
+        ),
+      );
+      return;
+    }
+
+    final Uri url = Uri(scheme: 'tel', path: tel);
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'ไม่สามารถโทรออกไปยัง $tel ได้',
+            style: const TextStyle(fontFamily: 'Arial', color: Colors.white),
+          ),
+          backgroundColor: Colors.black87,
+        ),
+      );
+      print('ไม่สามารถโทรออกไปยัง $tel ได้');
+    }
+  }
+
+  String telView = '';
+  String _telView(ModelAccount account) {
+    if (account.cus_tel_no != '') {
+      telView = account.cus_tel_no;
+      return telView;
+    } else if (account.cus_mob_no != '') {
+      telView = account.cus_mob_no;
+      return telView;
+    } else {
+      telView = account.cus_tax_no;
+      return telView;
+    }
+  }
+
+  Widget _viewDetail(ModelAccount account) {
+    return Column(
+      children: [
+        Row(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Join User',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 18,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w700,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 16, right: 8, bottom: 16, top: 8),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        account.cus_logo,
+                        height: 160,
+                        fit: BoxFit.fill,
+                        color: Colors.grey.shade100,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            fit: BoxFit.fill,
+                          );
+                        },
+                      ),
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        account.cus_logo,
+                        height: 150,
+                        fit: BoxFit.fill,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            fit: BoxFit.fill,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            SizedBox(height: 8),
-            Column(
-                children: List.generate(1, (index) {
-              return Padding(
+            Expanded(
+              child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset: Offset(1, 3), // x, y
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
+                child: Column(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 22,
-                              backgroundColor: Colors.grey.shade400,
-                              child: CircleAvatar(
-                                radius: 21,
-                                backgroundColor: Colors.white,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.network(
-                                    '$host/uploads/employee/5/employee/19777.jpg?v=1730343291',
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          'Jirapat Jangsawang',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 14,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 8),
-                                      Flexible(
-                                        child: Text(
-                                          '(Mobile Application)',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 14,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Owner : ',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14,
-                                          color: Color(0xFF555555),
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      AdvancedSwitch(
-                                        activeChild: Text(
-                                          'ON',
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                          ),
-                                        ),
-                                        inactiveChild: Text(
-                                          'OFF',
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                          ),
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        height: 25,
-                                        controller: _controllerOwner,
-                                        enabled: true,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Flexible(
-                                        child: Text(
-                                          'Approve Activity : ',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 14,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                      AdvancedSwitch(
-                                        activeChild: Text(
-                                          'ON',
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                          ),
-                                        ),
-                                        inactiveChild: Text(
-                                          'OFF',
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                          ),
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        height: 25,
-                                        controller: _controllerActivity,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 8),
-                                ],
-                              ),
-                            ),
-                          ],
+                        Text(
+                          account.owner_name,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 20,
+                            color: Colors.grey.shade800,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text(
-                              'Role : ',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Expanded(child: _DropdownUser()),
-                          ],
+                        SizedBox(height: 2),
+                        Text(
+                          account.cus_code,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w900),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          account.account_name,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Start Date : ${account.create_date}',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'End Date : ${account.last_activity_date}',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
-                  ),
-                ),
-              );
-            })),
-            SizedBox(
-              height: 8,
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: _addJoinUser,
-                child: Text(
-                  'Tap here to select an Join User.',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFFFF9900),
-                    fontWeight: FontWeight.w500,
-                  ),
+                  ],
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _DropdownUser() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.grey,
-          width: 1.0,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 0,
-            blurRadius: 0,
-            offset: Offset(1, 3), // x, y
-          ),
-        ],
-      ),
-      child: DropdownButton2<TitleDown>(
-        isExpanded: true,
-        hint: Text(
-          'DEV',
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Color(0xFF555555),
-          ),
-        ),
-        style: TextStyle(
-          fontFamily: 'Arial',
-          color: Color(0xFF555555),
-        ),
-        items: titleDownJoin
-            .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-                  value: item,
-                  child: Text(
-                    item.status_name,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                    ),
+        Padding(
+          padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade100,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                ))
-            .toList(),
-        value: selectedItemJoin,
-        onChanged: (value) {
-          setState(() {
-            selectedItemJoin = value;
-          });
-        },
-        underline: SizedBox.shrink(),
-        iconStyleData: IconStyleData(
-          icon: Icon(Icons.arrow_drop_down, color: Colors.black, size: 30),
-          iconSize: 30,
-        ),
-        buttonStyleData: ButtonStyleData(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-        ),
-        dropdownStyleData: DropdownStyleData(
-          maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          height: 40, // Height for each menu item
-        ),
-        dropdownSearchData: DropdownSearchData(
-          searchController: _searchController,
-          searchInnerWidgetHeight: 50,
-          searchInnerWidget: Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextFormField(
-              controller: _searchController,
-              keyboardType: TextInputType.text,
-              style: TextStyle(
-                  fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(Icons.mail, color: Colors.orange.shade400),
+                  ),
                 ),
-                hintText: '$Search...',
-                hintStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555)),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          // _makePhoneCall(_telView(account));
+                          _makePhoneCall(account.cus_tel_no);
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Icon(Icons.call, color: Colors.red.shade400),
+                      ),
+                    )),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Icon(Icons.camera_alt, color: Colors.grey),
+                    )),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Icon(Icons.location_history,
+                          color: Colors.green.shade400),
+                    )),
+              ),
+            ],
+          ),
+        ),
+        Flexible(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  SizedBox(height: 4),
+                  _subDetail('Name (TH)', account.account_name_th,
+                      Icons.account_circle, Colors.grey.shade400),
+                  _subDetail('Name (EN)', account.account_name_en,
+                      Icons.account_circle, Colors.grey.shade400),
+                  _subDetail('Tel', _telView(account),
+                      Icons.phone_android_outlined, Colors.grey.shade400),
+                  _subDetail('Email', account.cus_email, Icons.email,
+                      Colors.grey.shade400),
+                  _subDetail('Class', account.cus_class_name, Icons.lan,
+                      Colors.grey.shade400),
+                  _subDetail(
+                      'Group',
+                      "${account.cus_group_name} (${account.cus_code})",
+                      Icons.groups,
+                      Colors.grey.shade400),
+                  _subDetail('Type Name', account.cus_type_name,
+                      Icons.merge_type, Colors.grey.shade400),
+                  _subDetail(
+                      'Registered Capital',
+                      "${account.account_name_th} (${account.registration_name})",
+                      Icons.app_registration,
+                      Colors.grey.shade400),
+                  // _subDetail('Payment term', account.account_name_th,
+                  //     Icons.subject, Colors.red),
+                  // _subDetail('Tax ID', account.account_name_th, Icons.subject,
+                  //     Colors.red),
+                  // _subDetail('Social', account.account_status_icon, Icons.subject,
+                  //     Colors.orange),
+                  _subDetail('Source', account.source_name, Icons.source,
+                      Colors.grey.shade400),
+                  _subDetail('DESCRIPTION', account.cus_description,
+                      Icons.subject, Colors.grey.shade400),
+                ],
               ),
             ),
           ),
-          searchMatchFn: (item, searchValue) {
-            return item.value!.status_name
-                .toLowerCase()
-                .contains(searchValue.toLowerCase());
-          },
         ),
-        onMenuStateChange: (isOpen) {
-          if (!isOpen) {
-            _searchController
-                .clear(); // Clear the search field when the menu closes
-          }
-        },
+      ],
+    );
+  }
+
+  Widget _lineWidget() {
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade50,
+            height: 3,
+            width: double.infinity,
+          ),
+          SizedBox(height: 1),
+          Container(
+            color: Colors.orange.shade100,
+            height: 3,
+            width: double.infinity,
+          ),
+        ],
       ),
     );
   }
 
-  void _addJoinUser() {
-    showModalBottomSheet<void>(
-      barrierColor: Colors.black87,
-      backgroundColor: Colors.transparent,
-      context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (BuildContext context) {
-        return _getJoinUser();
-      },
-    );
-  }
-
-  Widget _getJoinUser() {
-    return FutureBuilder<List<Object>>(
-      future: null,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        // else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-        //   return Center(
-        //       child: Text(
-        //         '$Empty',
-        //         style: TextStyle(
-        //         fontFamily: 'Arial',
-        //           color: Color(0xFF555555),
-        //         ),
-        //       ));
-        // }
-        else {
-          // กรองข้อมูลตามคำค้นหา
-          // List<ActivityContact> filteredContacts =
-          // snapshot.data!.where((contact) {
-          //   String searchTerm = _searchfilterController.text.toLowerCase();
-          //   String fullName = '${contact.contact_first} ${contact.contact_last}'
-          //       .toLowerCase();
-          //   return fullName.contains(searchTerm);
-          // }).toList();
-          return Column(
-            children: [
-              Expanded(child: SizedBox()),
-              Stack(
+  Widget _subDetail(
+      String title, String accountData, IconData icon, Color CIcon) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              color: CIcon,
+              size: 28,
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 16),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(10),
-                        ),
-                      ),
-                      child: Scaffold(
-                        backgroundColor: Colors.transparent,
-                        body: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                controller: _searchfilterController,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    color: Color(0xFF555555),
-                                    fontSize: 14),
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 12),
-                                  hintText: 'Search',
-                                  hintStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14,
-                                      color: Color(0xFF555555)),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Color(0xFFFF9900),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFFF9900),
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFFF9900),
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  setState(() {}); // รีเฟรช UI เมื่อค้นหา
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: ListView.builder(
-                                  itemCount: titleDownJoin.length,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        // bool isAlreadyAdded = addNewContactList.any(
-                                        //         (existingContact) =>
-                                        //     existingContact.contact_first ==
-                                        //         contact.contact_first &&
-                                        //         existingContact.contact_last ==
-                                        //             contact.contact_last);
-                                        //
-                                        // if (!isAlreadyAdded) {
-                                        //   setState(() {
-                                        //     addNewContactList.add(
-                                        //         contact); // เพิ่มรายการที่เลือกลงใน list
-                                        //   });
-                                        // } else {
-                                        //   // แจ้งเตือนว่ามีชื่ออยู่แล้ว
-                                        //   ScaffoldMessenger.of(context).showSnackBar(
-                                        //     SnackBar(
-                                        //       content: Text(
-                                        //           'This name has already joined the list!'),
-                                        //       duration: Duration(seconds: 2),
-                                        //     ),
-                                        //   );
-                                        // }
-                                        Navigator.pop(context);
-                                      },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 4, right: 8),
-                                                child: CircleAvatar(
-                                                  radius: 22,
-                                                  backgroundColor: Colors.grey,
-                                                  child: CircleAvatar(
-                                                    radius: 21,
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                      child: Image.network(
-                                                        'https://dev.origami.life/images/default.png',
-                                                        height: 100,
-                                                        width: 100,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Jirapat Jangsawang',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 16,
-                                                        color:
-                                                            Color(0xFFFF9900),
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 8),
-                                                    Text(
-                                                      'Development (Mobile Application)',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF555555),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    Divider(
-                                                        color: Colors
-                                                            .grey.shade300),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  Text(
+                    (title == '') ? '-' : title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(child: Container()),
-                      IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: Icon(Icons.cancel, color: Colors.red)),
-                    ],
+                  SizedBox(height: 4),
+                  Text(
+                    (accountData == '') ? '-' : accountData,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFFFF9900),
+                    ),
                   ),
                 ],
               ),
-            ],
-          );
-        }
-      },
+            ),
+          ],
+        ),
+        _lineWidget(),
+      ],
     );
   }
-
-  TitleDown? selectedItemJoin;
-  List<TitleDown> titleDownJoin = [
-    TitleDown(status_id: '001', status_name: 'DEV'),
-    TitleDown(status_id: '002', status_name: 'SEAL'),
-    TitleDown(status_id: '003', status_name: 'CAL'),
-    TitleDown(status_id: '004', status_name: 'DES'),
-  ];
 }

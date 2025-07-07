@@ -18,7 +18,7 @@ import 'account/account_screen.dart';
 import 'activity/activity.dart';
 import 'calendar/calendar.dart';
 import 'chat/chat.dart';
-import 'contact/contact.dart';
+import 'contact/contact_screen.dart';
 import 'helpdesk/chat_ui/chat_ui.dart';
 import 'helpdesk/deflep/deflep.dart';
 import 'helpdesk/helpdesk.dart';
@@ -126,7 +126,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
           ),
           actions: (_index == 5)
               ? _buildAppBarTimeStamp()
-              : null,//_buildOCRScreen(),
+              : (widget.employee.emp_id == '19777')?_buildOCRScreen():null,
         ),
         drawer: Container(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -610,7 +610,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
         onPressed: () {Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OcrScreen2(),
+            builder: (context) => TesseractOCRThaiPage(),
           ),
         );},
       ),

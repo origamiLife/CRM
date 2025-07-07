@@ -121,82 +121,20 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
               },
             ),
             _textController('Email', _emailController, false, Icons.numbers),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 6),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Tel',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  IntlPhoneField(
-                    controller: _mobileController,
-                    focusNode: focusNode,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      labelStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        color: Color(0xFF555555),
-                        fontSize: 14,
-                      ),
-                      hintText: '',
-                      hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        color: Color(0xFF555555),
-                        fontSize: 14,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade400,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.orange.shade100,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      filled: true,
-                    ),
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14,
-                    ),
-                    languageCode: "en",
-                    onChanged: (phone) {
-                      _tellphone = phone.completeNumber;
-                      print('\ntell : $_tellphone \nmobile : ${_mobileController.text}');
-                    },
-                    onCountryChanged: (country) {
-                      print('Country changed to: ' + country.name);
-                    },
-                  ),
-                ],
-              ),
-            ),
-            _buildDropdown<ModelType>(
-              label: 'Occupation',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
-                });
-              },
-            ),
+            _textController(
+                'Tel', _mobileController, false, Icons.phone_android_rounded),
+            // _buildDropdown<ModelType>(
+            //   label: 'Occupation',
+            //   items: _modelType,
+            //   selectedValue: selectedType,
+            //   getLabel: (item) => item.name,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       selectedType = value;
+            //       type_id = value?.id ?? '';
+            //     });
+            //   },
+            // ),
             _textController(
                 'Position', _positionController, false, Icons.numbers),
             _buildDropdown<ModelType>(
@@ -223,18 +161,18 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                 });
               },
             ),
-            _buildDropdown<ModelType>(
-              label: 'Marital',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
-                });
-              },
-            ),
+            // _buildDropdown<ModelType>(
+            //   label: 'Marital',
+            //   items: _modelType,
+            //   selectedValue: selectedType,
+            //   getLabel: (item) => item.name,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       selectedType = value;
+            //       type_id = value?.id ?? '';
+            //     });
+            //   },
+            // ),
             SizedBox(height: 16),
           ],
         ),

@@ -1,15 +1,17 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-
 import '../../activity/add/activity_add.dart';
+import '../contact_screen.dart';
 
 class ContactEditInformation extends StatefulWidget {
   const ContactEditInformation({
     Key? key,
     required this.employee,
+    required this.contact,
   }) : super(key: key);
   final Employee employee;
+  final ModelContact contact;
 
   @override
   _ContactEditInformationState createState() => _ContactEditInformationState();
@@ -40,11 +42,28 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _information3(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addOtherContact,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(100),
+            bottomLeft: Radius.circular(100),
+            bottomRight: Radius.circular(100),
+            topLeft: Radius.circular(100),
+          ),
+        ),
+        elevation: 0,
+        backgroundColor: Color(0xFFFF9900),
+      ),
+      body: SafeArea(child: _information()),
     );
   }
 
-  Widget _information3() {
+  Widget _information() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -137,8 +156,8 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 4, right: 8),
+                              padding:
+                                  const EdgeInsets.only(bottom: 4, right: 8),
                               child: CircleAvatar(
                                 radius: 20,
                                 backgroundColor: Colors.grey,
@@ -146,8 +165,7 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                                   radius: 19,
                                   backgroundColor: Colors.white,
                                   child: ClipRRect(
-                                    borderRadius:
-                                    BorderRadius.circular(100),
+                                    borderRadius: BorderRadius.circular(100),
                                     child: Image.network(
                                       (contact.contact_image == '')
                                           ? 'https://dev.origami.life/images/default.png'
@@ -163,10 +181,8 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.start,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     '${contact.contact_first} ${contact.contact_last}',
@@ -203,20 +219,6 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
               }),
             ),
           ),
-          TextButton(
-            onPressed: _addOtherContact,
-            child: Text(
-              'Add Other Contact',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFFFF9900),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -227,9 +229,9 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
       barrierColor: Colors.black87,
       backgroundColor: Colors.transparent,
       context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
+      // isScrollControlled: true,
+      // isDismissible: false,
+      // enableDrag: false,
       builder: (BuildContext context) {
         return _getOtherContact();
       },
@@ -245,18 +247,18 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
               child: Text(
-                '$Empty',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                ),
-              ));
+            '$Empty',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
+          ));
         } else {
           // กรองข้อมูลตามคำค้นหา
           List<ActivityContact> filteredContacts =
-          snapshot.data!.where((contact) {
+              snapshot.data!.where((contact) {
             String searchTerm = _searchfilterController.text.toLowerCase();
             String fullName = '${contact.contact_first} ${contact.contact_last}'
                 .toLowerCase();
@@ -334,9 +336,9 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                             child: InkWell(
                               onTap: () {
                                 bool isAlreadyAdded = addNewContactList.any(
-                                        (existingContact) =>
-                                    existingContact.contact_first ==
-                                        contact.contact_first &&
+                                    (existingContact) =>
+                                        existingContact.contact_first ==
+                                            contact.contact_first &&
                                         existingContact.contact_last ==
                                             contact.contact_last);
 
@@ -365,7 +367,7 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -378,12 +380,9 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                                             backgroundColor: Colors.white,
                                             child: ClipRRect(
                                               borderRadius:
-                                              BorderRadius.circular(100),
+                                                  BorderRadius.circular(100),
                                               child: Image.network(
-                                                (contact.contact_image ==
-                                                    null ||
-                                                    contact.contact_image ==
-                                                        '')
+                                                (contact.contact_image == '')
                                                     ? 'https://dev.origami.life/images/default.png'
                                                     : '$host//crm/${contact.contact_image}',
                                                 height: 100,
@@ -398,9 +397,9 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
                                       Expanded(
                                         child: Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               '${contact.contact_first} ${contact.contact_last}',
@@ -451,82 +450,81 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
   Widget _showImagePhoto(String s) {
     return _image != null
         ? Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.transparent,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Center(
-                    child: Image.file(
-                      File(_image!.path),
-                      height: 200,
-                      // width: 200,
-                      fit: BoxFit.cover,
+            padding: const EdgeInsets.only(top: 8),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Center(
+                          child: Image.file(
+                            File(_image!.path),
+                            height: 200,
+                            // width: 200,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _image = null;
+                              });
+                            },
+                            child: Stack(
+                              children: [
+                                Icon(
+                                  Icons.cancel_outlined,
+                                  color: Colors.white,
+                                ),
+                                Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Positioned(
-                    top: 4,
-                    right: 4,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          _image = null;
-                        });
-                      },
-                      child: Stack(
-                        children: [
-                          Icon(
-                            Icons.cancel_outlined,
-                            color: Colors.white,
-                          ),
-                          Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                          ),
-                        ],
+                ),
+              ],
+            ),
+          )
+        : InkWell(
+            onTap: () => _pickImage('top'),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Column(
+                children: [
+                  Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.grey.shade300,
+                        width: 1.0,
                       ),
+                    ),
+                    child: Center(
+                      child: Icon(Icons.photo, color: Colors.grey, size: 100),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    )
-        : InkWell(
-      onTap: () => _pickImage('top'),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Column(
-          children: [
-            Container(
-              height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
-                ),
-              ),
-              child: Center(
-                child:
-                Icon(Icons.photo, color: Colors.grey, size: 100),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   final ImagePicker _picker = ImagePicker();
@@ -537,9 +535,9 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        if(top == 'top'){
+        if (top == 'top') {
           _image = File(image.path);
-        }else{
+        } else {
           _image2 = File(image.path);
         }
       });
@@ -601,7 +599,6 @@ class _ContactEditInformationState extends State<ContactEditInformation> {
       throw Exception('Failed to load contacts');
     }
   }
-
 }
 
 class ModelType {

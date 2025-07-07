@@ -701,7 +701,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showFullScreenImage(List<Employee> employeeList) {
+  void _showFullScreenImage(List<Employee> employeeList)
+  {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -775,61 +776,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-  // void _showFullScreenImage(List<Employee> employee) {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     barrierColor: Colors.black87,
-  //     builder: (context) {
-  //       return Dialog(
-  //           backgroundColor: Colors.white,
-  //           insetPadding: EdgeInsets.all(18), // ขยายเต็มจอ
-  //           child: GridView.builder(
-  //               padding: const EdgeInsets.all(8),
-  //               shrinkWrap: true,
-  //               physics: const NeverScrollableScrollPhysics(),
-  //               itemCount: employee.length,
-  //               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //                 crossAxisCount: 2, // 2 รูปต่อแถว
-  //                 crossAxisSpacing: 8,
-  //                 mainAxisSpacing: 8,
-  //                 childAspectRatio: 1, // อัตราส่วนกว้าง/สูง (ปรับได้ตามต้องการ)
-  //               ),
-  //               itemBuilder: (context, index) {
-  //                 return GestureDetector(
-  //                     onTap: () async {
-  //                       await Future.delayed(Duration(seconds: 1));
-  //                       Navigator.pushReplacement(
-  //                         context,
-  //                         MaterialPageRoute(
-  //                           builder: (context) => OrigamiPage(
-  //                             employee: employee[index],
-  //                             Authorization: authorization,
-  //                             popPage: widget.popPage,
-  //                             company_id: index,
-  //                           ),
-  //                         ),
-  //                       );
-  //                       // Navigator.pop(context); // ปิด Dialog เมื่อแตะที่รูป
-  //                     },
-  //                     child: Card(
-  //                       child: Image.network(
-  //                         employee[index].comp_logo,
-  //                         fit: BoxFit.contain,
-  //                         width: 50,
-  //                         height: 50,
-  //                         errorBuilder: (context, error, stackTrace) {
-  //                           return Icon(Icons.error);
-  //                         },
-  //                       ),
-  //                     ),
-  //                 );
-  //               }));
-  //     },
-  //   );
-  // }
-
   Future<void> _login() async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
@@ -852,7 +798,7 @@ class _LoginPageState extends State<LoginPage> {
             errorMessage,
             style: const TextStyle(fontFamily: 'Arial', color: Colors.white),
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black87,
         ),
       );
       return;
@@ -861,7 +807,6 @@ class _LoginPageState extends State<LoginPage> {
     // เรียก API login
     await _fetchLogin(username, password);
   }
-
 
   Future<void> _fetchLogin(String username, String password) async {
     final uri = Uri.parse('$host/api/origami/signin.php');
@@ -952,41 +897,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
-  // String logoComponent = '';
-  // String titleComponent = '';
   String backgroudComponent = '';
-  // Future<void> _fetchComponent() async {
-  //   final uri = Uri.parse("$host/api/origami/e-learning/component.php");
-  //
-  //   try {
-  //     final response = await http.post(
-  //       uri,
-  //       body: {
-  //         'auth_password': authorization,
-  //       },
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       final jsonResponse = jsonDecode(response.body);
-  //
-  //       if (jsonResponse['status'] == 200) {
-  //         setState(() {
-  //           logoComponent = jsonResponse['logo'] ?? '';
-  //           titleComponent = jsonResponse['title'] ?? '';
-  //           backgroudComponent = jsonResponse['backgroud'] ?? '';
-  //         });
-  //       } else {
-  //         _showErrorSnackbar(jsonResponse['message'] ?? 'Component not found.');
-  //       }
-  //     } else {
-  //       throw Exception('Server returned status ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error in _fetchComponent: $e');
-  //     _showErrorSnackbar('Failed to load components. Please try again.');
-  //   }
-  // }
 
   void _showErrorSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(

@@ -3,15 +3,16 @@ import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 import 'package:path/path.dart' as path;
 import 'package:geolocator/geolocator.dart';
+
+import '../../account_screen.dart';
 class AccountEditLocation extends StatefulWidget {
   const AccountEditLocation({
     Key? key,
-    required this.employee,
-    required this.pageInput,
+    required this.employee, required this.account,
 
   }) : super(key: key);
   final Employee employee;
-  final String pageInput;
+  final ModelAccount account;
 
   @override
   _AccountEditLocationState createState() => _AccountEditLocationState();
@@ -39,7 +40,7 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _logoInformation(),
+      body: SafeArea(child: _logoInformation()),
     );
   }
 
@@ -94,7 +95,7 @@ class _AccountEditLocationState extends State<AccountEditLocation> {
                           alignment: Alignment.center,
                           children: [
                             Image.file(
-                              File(_image!.path),
+                              _image!,
                               height: 200,
                               width: 200,
                               fit: BoxFit.cover,

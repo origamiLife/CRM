@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-import 'package:origamilift/import/origami_view/project/update_project/project_list_edit.dart';
+import 'package:origamilift/import/origami_view/project/update_project/project_view.dart';
 
 import '../issue_log/issue_log.dart';
 import 'create_project/project_add.dart';

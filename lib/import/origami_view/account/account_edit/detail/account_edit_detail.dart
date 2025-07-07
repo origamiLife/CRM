@@ -1,17 +1,19 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-
+import 'package:path/path.dart' as path;
 import '../../../Contact/contact_edit/contact_edit_detail.dart';
+import '../../account_screen.dart';
+import '../location/account_edit_location.dart';
 
 class AccountEditDetail extends StatefulWidget {
   const AccountEditDetail({
-    Key? key,
+    super.key,
     required this.employee,
-    required this.pageInput,
-  }) : super(key: key);
+    required this.account,
+  });
   final Employee employee;
-  final String pageInput;
+  final ModelAccount account;
 
   @override
   _AccountEditDetailState createState() => _AccountEditDetailState();
@@ -23,15 +25,58 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _groupController = TextEditingController();
+  TextEditingController _telephoneController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey();
 
   FocusNode focusNode = FocusNode();
 
+  String _telePhone(ModelAccount account) {
+    String telephone = '';
+    if (account.cus_tel_no != '') {
+      telephone = account.cus_tel_no;
+    } else if (account.cus_mob_no != '') {
+      telephone = account.cus_mob_no;
+    } else {
+      telephone = account.cus_tax_no;
+    }
+    return telephone;
+  }
+
+  String cus_logo = '';
   @override
   void initState() {
     super.initState();
     showDate();
+    _getUpdateText();
+    _downloadImage();
+  }
+
+  void _getUpdateText() {
+    _nameTHController.text = widget.account.account_name_th;
+    _nameENController.text = widget.account.account_name_en;
+    _descriptionController.text = widget.account.cus_description;
+    _emailController.text = widget.account.cus_email;
+    _groupController.text = widget.account.owner_group;
+    _telephoneController.text = _telePhone(widget.account);
+  }
+
+  Future<void> _downloadImage() async {
+    try {
+      final response = await http.get(Uri.parse(widget.account.cus_logo));
+      if (response.statusCode == 200) {
+        final tempDir = await getTemporaryDirectory();
+        final filePath = '${tempDir.path}/downloaded_image.png';
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+        setState(() {
+          _image = file;
+        });
+      } else {
+        print('ไม่สามารถโหลดรูปได้: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('เกิดข้อผิดพลาดในการโหลดรูป: $e');
+    }
   }
 
   @override
@@ -41,18 +86,91 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     _descriptionController.dispose();
     _emailController.dispose();
     _groupController.dispose();
+    _telephoneController.dispose();
     super.dispose();
   }
+
+  int _selectedIndex = 0;
+  String page = "Account Detail";
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (index == 0) {
+        page = "Account Detail";
+      } else if (index == 1) {
+        page = "Account Location";
+      }
+    });
+  }
+
+  List<TabItem> items = [
+    TabItem(
+      icon: Icons.info,
+      title: 'Detail',
+    ),
+    TabItem(
+      icon: Icons.location_history,
+      title: 'Location',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _logoInformation(),
+      appBar: AppBar(
+        // elevation: 0,
+        backgroundColor: Colors.orange,
+        title: Text(
+          '',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 24,
+            color: Colors.orange,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: _getContentWidget(widget.account),
+      bottomNavigationBar: BottomBarDefault(
+        items: items,
+        iconSize: 18,
+        animated: true,
+        titleStyle: TextStyle(
+          fontFamily: 'Arial',
+        ),
+        backgroundColor: Colors.white,
+        color: Colors.grey.shade400,
+        colorSelected: Color(0xFFFF9900),
+        indexSelected: _selectedIndex,
+        // paddingVertical: 25,
+        onTap: _onItemTapped,
+      ),
     );
   }
 
-  Widget _logoInformation() {
+  Widget _getContentWidget(ModelAccount account) {
+    switch (_selectedIndex) {
+      case 0:
+        return SafeArea(child: _logoInformation(account));
+      case 1:
+        return AccountEditLocation(
+          employee: widget.employee,
+          account: account,
+        );
+      default:
+        return SafeArea(child: _logoInformation(account));
+    }
+  }
+
+  Widget _logoInformation(ModelAccount account) {
     return Padding(
       padding: EdgeInsets.all(14),
       child: SingleChildScrollView(
@@ -71,9 +189,9 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
               ),
             ),
             SizedBox(height: 8),
-            _showImagePhoto(),
+            _showImagePhoto(account),
             SizedBox(height: 16),
-            _informationTop(),
+            _informationTop(account),
           ],
         ),
       ),
@@ -86,13 +204,13 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade300,
+            color: Colors.orange.shade50,
             height: 3,
             width: double.infinity,
           ),
-          SizedBox(height: 2),
+          SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade300,
+            color: Colors.orange.shade100,
             height: 3,
             width: double.infinity,
           ),
@@ -101,11 +219,12 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     );
   }
 
-  Widget _showImagePhoto() {
+  Widget _showImagePhoto(ModelAccount account) {
     return _image != null
         ? Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   decoration: BoxDecoration(
@@ -118,10 +237,10 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                       alignment: Alignment.center,
                       children: [
                         Image.file(
-                          File(_image!.path),
+                          _image!,
                           height: 200,
-                          width: 200,
-                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
                         ),
                         Positioned(
                           top: 4,
@@ -130,6 +249,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                             onTap: () {
                               setState(() {
                                 _image = null;
+                                cus_logo = '';
                               });
                             },
                             child: Stack(
@@ -153,25 +273,48 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
               ],
             ),
           )
-        : InkWell(
-            onTap: () => _pickImage(),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Column(
+        : Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Container(
+              // height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.grey.shade300,
+                  width: 1.0,
+                ),
+              ),
+              child: Row(
                 children: [
-                  Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.grey.shade300,
-                        width: 1.0,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => _pickImage(ImageSource.camera),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Container(
+                            child: Icon(Icons.camera_alt,
+                                color: Colors.grey, size: 45)),
                       ),
                     ),
-                    child: Center(
-                      child:
-                          Icon(Icons.camera_alt, color: Colors.grey, size: 100),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VerticalDivider(
+                      color: Colors.grey.shade300,
+                      thickness: 1,
+                      width: 20,
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => _pickImage(ImageSource.gallery),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Container(
+                            child: Icon(Icons.image,
+                                color: Colors.grey, size: 45)),
+                      ),
                     ),
                   ),
                 ],
@@ -180,7 +323,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
           );
   }
 
-  Widget _informationTop() {
+  Widget _informationTop(ModelAccount account) {
     return Column(
       children: [
         Row(
@@ -188,6 +331,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             Expanded(
               child: _buildDropdown<ModelType>(
                 label: 'Group',
+                hint: account.cus_group_name,
                 items: _modelType,
                 selectedValue: selectedItem,
                 getLabel: (item) => item.name,
@@ -208,31 +352,37 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: _buildDropdown<ModelType>(
-              label: 'Type',
-              items: _modelType,
-              selectedValue: selectedItem,
-              getLabel: (item) => item.name,
-              onChanged: (value) {
-                setState(() {
-                  selectedItem = value;
-                  // project_id = value?.id ?? '';
-                });
-              },
-            ),),
+            Expanded(
+              child: _buildDropdown<ModelType>(
+                label: 'Type',
+                hint: account.cus_type_name,
+                items: _modelType,
+                selectedValue: selectedItem,
+                getLabel: (item) => item.name,
+                onChanged: (value) {
+                  setState(() {
+                    selectedItem = value;
+                    // project_id = value?.id ?? '';
+                  });
+                },
+              ),
+            ),
             SizedBox(width: 8),
-            Expanded(child: _buildDropdown<ModelType>(
-              label: '',
-              items: _modelType,
-              selectedValue: selectedItem,
-              getLabel: (item) => item.name,
-              onChanged: (value) {
-                setState(() {
-                  selectedItem = value;
-                  // project_id = value?.id ?? '';
-                });
-              },
-            ),),
+            Expanded(
+              child: _buildDropdown<ModelType>(
+                label: '',
+                hint: account.cus_type,
+                items: _modelType,
+                selectedValue: selectedItem,
+                getLabel: (item) => item.name,
+                onChanged: (value) {
+                  setState(() {
+                    selectedItem = value;
+                    // project_id = value?.id ?? '';
+                  });
+                },
+              ),
+            ),
           ],
         ),
         _lineWidget(),
@@ -242,6 +392,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             'Customer Name (EN)', _nameENController, false, Icons.paste),
         _buildDropdown<ModelType>(
           label: 'Registration',
+          hint: account.registration_name,
           items: _modelType,
           selectedValue: selectedItem,
           getLabel: (item) => item.name,
@@ -255,6 +406,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         _lineWidget(),
         _buildDropdown<ModelType>(
           label: 'Source',
+          hint: account.source_name,
           items: _modelType,
           selectedValue: selectedItem,
           getLabel: (item) => item.name,
@@ -266,56 +418,10 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
           },
         ),
         _textController(
-            'Description', _descriptionController, false, Icons.paste),
+            'Description', _descriptionController, false, Icons.subject),
         _textController('Email', _emailController, false, Icons.mail),
-        Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 6),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Tel',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: Color(0xFF555555),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 4),
-              IntlPhoneField(
-                focusNode: focusNode,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  isDense: true,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey.shade100,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.orange.shade300,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  filled: true,
-                ),
-                languageCode: "en",
-                onChanged: (phone) {
-                  print(phone.completeNumber);
-                },
-                onCountryChanged: (country) {
-                  print('Country changed to: ' + country.name);
-                },
-              ),
-            ],
-          ),
-        ),
+        _textController(
+            'Tel', _telephoneController, false, Icons.phone_android_rounded),
         SizedBox(height: 16),
       ],
     );
@@ -343,14 +449,14 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             child: TextFormField(
               controller: controller,
               readOnly: key,
-              minLines: controller == _descriptionController?3:1,
+              minLines: controller == _descriptionController ? 3 : 1,
               maxLines: null,
               autofocus: false,
               obscureText: false,
               decoration: InputDecoration(
                 isDense: true,
                 fillColor:
-                key == false ? Colors.grey.shade100 : Colors.grey.shade300,
+                    key == false ? Colors.grey.shade100 : Colors.grey.shade300,
                 labelStyle: TextStyle(
                   fontFamily: 'Arial',
                   color: Color(0xFF555555),
@@ -393,6 +499,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
 
   Widget _buildDropdown<T>({
     required String label,
+    required String hint,
     required List<T> items,
     required T? selectedValue,
     required String Function(T) getLabel,
@@ -426,7 +533,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  '',
+                  hint,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -436,16 +543,16 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                 value: selectedValue,
                 items: items
                     .map((item) => DropdownMenuItem<T>(
-                  value: item,
-                  child: Text(
-                    getLabel(item),
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                    ),
-                  ),
-                ))
+                          value: item,
+                          child: Text(
+                            getLabel(item),
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFF555555),
+                            ),
+                          ),
+                        ))
                     .toList(),
                 onChanged: onChanged,
                 style: TextStyle(
@@ -470,6 +577,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                 menuItemStyleData: MenuItemStyleData(
                   height: 40,
                 ),
+
                 /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
                 dropdownSearchData: DropdownSearchData(
                   searchController: dropdownSearchController,
@@ -484,7 +592,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                       controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -515,6 +624,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   DateTime _selectedDateEnd = DateTime.now();
   String startDate = '';
   String endDate = '';
+
   void showDate() {
     DateFormat formatter = DateFormat('yyyy/MM/dd');
     startDate = formatter.format(_selectedDateEnd);
@@ -523,13 +633,32 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
 
   final ImagePicker _picker = ImagePicker();
   File? _image;
+  String _base64Image = '';
+  bool _isStamping = false;
 
-  Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+  Future<void> _pickImage(ImageSource source) async {
+    if (_isStamping) return;
+    _isStamping = true;
+    try {
+      final XFile? image = await _picker.pickImage(source: source);
+      if (image == null) return;
+
+      // final directory = await getApplicationDocumentsDirectory();
+      // final filePath = path.join(
+      //   directory.path,
+      //   'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      // );
+
+      final file = File(image.path);
+      final imageBytes = await file.readAsBytes();
+      _base64Image = base64Encode(imageBytes);
       setState(() {
-        _image = File(image.path);
+        _image = file;
       });
+    } catch (e) {
+      print('Error picking image: $e');
+    } finally {
+      _isStamping = false;
     }
   }
 

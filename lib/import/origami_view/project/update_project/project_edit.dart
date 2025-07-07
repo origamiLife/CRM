@@ -210,18 +210,33 @@ class _ProjectEditState extends State<ProjectEdit> {
             child: Column(
               children: [
                 topProject(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  child: Divider(
-                    thickness: 14,
-                    color: Colors.grey.shade300,
-                  ),
-                ),
+                _lineWidget(),
                 bottomProject(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _lineWidget() {
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade50,
+            height: 3,
+            width: double.infinity,
+          ),
+          SizedBox(height: 1),
+          Container(
+            color: Colors.orange.shade100,
+            height: 3,
+            width: double.infinity,
+          ),
+        ],
       ),
     );
   }
