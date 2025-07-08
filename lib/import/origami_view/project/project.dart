@@ -30,7 +30,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
   void initState() {
     super.initState();
     fetchModelProject();
-    _scrollController.addListener(_scrollListener);
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+    fetchModelProject(); // โหลดครั้งแรก
     _searchController.addListener(_filterActivityList);
     filteredProjectList = List.from(modelProjectList);
     _searchController.addListener(() {
@@ -52,6 +54,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   @override
   void dispose() {
     super.dispose();
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _searchController.dispose();
   }
@@ -366,7 +369,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
             modelProjectList
                 .sort((a, b) => b.project_id.compareTo(a.project_id));
             final project = filteredProjectList[index];
-            print('activityList.length : ${modelProjectList.length}');
+            print('activityList.length : ${filteredProjectList.length}');
             return Padding(
               padding: const EdgeInsets.only(bottom: 5),
               child: Column(
@@ -657,34 +660,34 @@ class _ProjectScreenState extends State<ProjectScreen> {
     );
   }
 
-  void _scrollListener() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent) {
-      if (!isAtEnd) {
-        // ป้องกันการโหลดซ้ำ
-        setState(() {
-          isAtEnd = true;
-        });
-        fetchModelProject();
-      }
-    } else {
-      setState(() {
-        isAtEnd = false; // ยังไม่ถึงสุดท้าย
-      });
+  void _onScroll() {
+    if (!_scrollController.hasClients || isAtEnd) return;
+
+    final threshold = 200.0; // ระยะก่อนถึงล่างสุด (pixels)
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+
+    if (maxScroll - currentScroll <= threshold) {
+      // ถึงล่างสุด (หรือใกล้ถึง)
+      fetchModelProject();
     }
   }
 
+
   bool _isFirstTime = true;
+  bool _isLoading = false;
   bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
   int indexItems = 0;
   int sum = 0;
   List<ModelProject> modelProjectList = [];
   List<ModelProject> modelProjectAll = [];
   Future<void> fetchModelProject() async {
-    fetchModelProjectGetSum();
-    final uri =
-        Uri.parse("$host/api/origami/crm/project/get.php?search=${_search}");
+    if (_isLoading || isAtEnd) return;
+    _isLoading = true;
     try {
+      await fetchModelProjectGetSum();
+      final uri =
+      Uri.parse("$host/api/origami/crm/project/get.php?search=${_search}");
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer ${authorization}'},
@@ -701,28 +704,36 @@ class _ProjectScreenState extends State<ProjectScreen> {
         int max = jsonResponse['limit'];
         List<ModelProject> newActivities =
             activityJson.map((json) => ModelProject.fromJson(json)).toList();
-
         setState(() {
-          // กรอง id ที่ซ้ำ
-          Set<String> seenIds =
-              modelProjectList.map((e) => e.project_id).toSet();
-          newActivities =
-              newActivities.where((a) => seenIds.add(a.project_id)).toList();
+          // สร้าง set id เดิม
+          Set<String> seenIds = modelProjectList.map((e) => e.project_id).toSet();
 
+          // กรอง newActivities ที่ซ้ำออก
+          newActivities = newActivities.where((a) => seenIds.add(a.project_id)).toList();
+
+          // เพิ่มข้อมูลใหม่เข้า list หลัก
           modelProjectList.addAll(newActivities);
+
+          // เรียงลำดับ project_id แบบลดหลั่น (ใหญ่ไปเล็ก)
           modelProjectList.sort((a, b) => b.project_id.compareTo(a.project_id));
+
+          // กำหนด filteredProjectList ครั้งแรกเท่านั้น
           if (_isFirstTime) {
-            filteredProjectList = modelProjectList;
-            _isFirstTime = false; // ป้องกันการรันซ้ำ
+            filteredProjectList = List.from(modelProjectList);
+            _isFirstTime = false;
           }
+
+          // คำนวณ indexItems สำหรับ pagination
           int check = indexItems + max;
+          print("indexItems : $indexItems ,max : $max");
           if ((check - sum) >= max) {
             indexItems = sum - 1;
+            isAtEnd = true;  // ถึงจุดสิ้นสุดข้อมูล
           } else {
-            indexItems += max;
+            indexItems += 1;
+            filteredProjectList = List.from(modelProjectList);
+            isAtEnd = false;
           }
-
-          isAtEnd = false; // โหลดเสร็จแล้ว
         });
 
         print("Total activities: ${modelProjectList.length}");
@@ -732,6 +743,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
       }
     } catch (e) {
       print('Error fetching data: $e');
+    } finally {
+      _isLoading = false;
     }
   }
 
