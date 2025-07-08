@@ -65,14 +65,14 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Detail Information',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 22,
-                  color: Colors.grey,
+                 color: Colors.grey.shade700,
                   fontWeight: FontWeight.w700,
                 ),
               ),

@@ -103,14 +103,8 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   }
 
   List<TabItem> items = [
-    TabItem(
-      icon: Icons.info,
-      title: 'Detail',
-    ),
-    TabItem(
-      icon: Icons.location_history,
-      title: 'Location',
-    ),
+    TabItem(icon: Icons.info, title: 'Detail'),
+    TabItem(icon: Icons.location_history, title: 'Location'),
   ];
 
   @override
@@ -130,10 +124,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-          ),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -142,9 +133,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         items: items,
         iconSize: 18,
         animated: true,
-        titleStyle: TextStyle(
-          fontFamily: 'Arial',
-        ),
+        titleStyle: TextStyle(fontFamily: 'Arial'),
         backgroundColor: Colors.white,
         color: Colors.grey.shade400,
         colorSelected: Color(0xFFFF9900),
@@ -160,10 +149,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       case 0:
         return SafeArea(child: _logoInformation(account));
       case 1:
-        return AccountEditLocation(
-          employee: widget.employee,
-          account: account,
-        );
+        return AccountEditLocation(employee: widget.employee, account: account);
       default:
         return SafeArea(child: _logoInformation(account));
     }
@@ -221,83 +207,72 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   Widget _showImagePhoto(ModelAccount account) {
     return _image != null
         ? Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.file(
-                          _image!,
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.contain,
-                        ),
-                        Positioned(
-                          top: 4,
-                          right: 4,
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _image = null;
-                                cus_logo = '';
-                              });
-                            },
-                            child: Stack(
-                              children: [
-                                Icon(
-                                  Icons.cancel_outlined,
-                                  color: Colors.white,
-                                ),
-                                Icon(
-                                  Icons.cancel,
-                                  color: Colors.red,
-                                ),
-                              ],
-                            ),
+          padding: const EdgeInsets.only(top: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image.file(
+                        _image!,
+                        height: 200,
+                        width: double.infinity,
+                        fit: BoxFit.contain,
+                      ),
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _image = null;
+                              cus_logo = '';
+                            });
+                          },
+                          child: Stack(
+                            children: [
+                              Icon(Icons.cancel_outlined, color: Colors.white),
+                              Icon(Icons.cancel, color: Colors.red),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          )
+              ),
+            ],
+          ),
+        )
         : Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Container(
-        // height: 48,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          border: Border.all(
-            color: Colors.grey.shade300,
-            width: 1.0,
+          padding: const EdgeInsets.only(top: 8),
+          child: Container(
+            // height: 48,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.shade300, width: 1.0),
+            ),
+            child: GestureDetector(
+              onTap: _imageDialog,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Container(
+                  width: double.infinity,
+                  child: Icon(Icons.camera_alt, color: Colors.grey),
+                ),
+              ),
+            ),
           ),
-        ),
-        child: GestureDetector(
-          onTap: _imageDialog,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Container(
-                width: double.infinity,
-                child: Icon(
-                  Icons.camera_alt,
-                  color: Colors.grey,
-                )),
-          ),
-        ),
-      ),
-    );
+        );
   }
 
   void _imageDialog() {
@@ -334,7 +309,14 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.camera, color: Colors.grey, size: 50),
+                              Image.asset(
+                                'assets/images/icons_cam.png',
+                                width: 50,
+                                height: 50,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container();
+                                },
+                              ),
                               SizedBox(height: 8),
                               Text(
                                 'Camera',
@@ -364,8 +346,14 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.photo_library_outlined,
-                                  color: Colors.grey, size: 50),
+                              Image.asset(
+                                'assets/images/icons_img.png',
+                                width: 50,
+                                height: 50,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container();
+                                },
+                              ),
                               SizedBox(height: 8),
                               Text(
                                 'Gallery',
@@ -455,9 +443,17 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         ),
         _lineWidget(),
         _textController(
-            'Customer Name (TH)', _nameTHController, false, Icons.paste),
+          'Customer Name (TH)',
+          _nameTHController,
+          false,
+          Icons.paste,
+        ),
         _textController(
-            'Customer Name (EN)', _nameENController, false, Icons.paste),
+          'Customer Name (EN)',
+          _nameENController,
+          false,
+          Icons.paste,
+        ),
         _buildDropdown<ModelType>(
           label: 'Registration',
           hint: account.registration_name,
@@ -486,10 +482,18 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
           },
         ),
         _textController(
-            'Description', _descriptionController, false, Icons.subject),
+          'Description',
+          _descriptionController,
+          false,
+          Icons.subject,
+        ),
         _textController('Email', _emailController, false, Icons.mail),
         _textController(
-            'Tel', _telephoneController, false, Icons.phone_android_rounded),
+          'Tel',
+          _telephoneController,
+          false,
+          Icons.phone_android_rounded,
+        ),
         SizedBox(height: 16),
       ],
     );
@@ -537,16 +541,15 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   fontSize: 14,
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.grey.shade100,
-                  ),
+                  borderSide: BorderSide(color: Colors.grey.shade100),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: key == false
-                        ? Colors.orange.shade300
-                        : Colors.grey.shade100,
+                    color:
+                        key == false
+                            ? Colors.orange.shade300
+                            : Colors.grey.shade100,
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -609,19 +612,22 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   ),
                 ),
                 value: selectedValue,
-                items: items
-                    .map((item) => DropdownMenuItem<T>(
-                          value: item,
-                          child: Text(
-                            getLabel(item),
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14,
-                              color: Color(0xFF555555),
+                items:
+                    items
+                        .map(
+                          (item) => DropdownMenuItem<T>(
+                            value: item,
+                            child: Text(
+                              getLabel(item),
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14,
+                                color: Color(0xFF555555),
+                              ),
                             ),
                           ),
-                        ))
-                    .toList(),
+                        )
+                        .toList(),
                 onChanged: onChanged,
                 style: TextStyle(
                   fontFamily: 'Arial',
@@ -629,22 +635,21 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   color: Color(0xFF555555),
                 ),
                 iconStyleData: IconStyleData(
-                  icon: Icon(Icons.arrow_drop_down,
-                      color: Color(0xFF555555), size: 24),
+                  icon: Icon(
+                    Icons.arrow_drop_down,
+                    color: Color(0xFF555555),
+                    size: 24,
+                  ),
                   iconSize: 24,
                 ),
-                buttonStyleData: ButtonStyleData(
-                  height: 24,
-                ),
+                buttonStyleData: ButtonStyleData(height: 24),
                 dropdownStyleData: DropdownStyleData(
                   maxHeight: 200,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                menuItemStyleData: MenuItemStyleData(
-                  height: 40,
-                ),
+                menuItemStyleData: MenuItemStyleData(height: 40),
 
                 /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
                 dropdownSearchData: DropdownSearchData(
@@ -660,8 +665,10 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                       controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 8,
+                        ),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -671,9 +678,9 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   ),
                   searchInnerWidgetHeight: 50,
                   searchMatchFn: (item, searchValue) {
-                    return getLabel(item.value!)
-                        .toLowerCase()
-                        .contains(searchValue.toLowerCase());
+                    return getLabel(
+                      item.value!,
+                    ).toLowerCase().contains(searchValue.toLowerCase());
                   },
                 ),
                 onMenuStateChange: (isOpen) {

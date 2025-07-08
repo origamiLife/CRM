@@ -130,6 +130,8 @@ flutter:
     - assets/company-scaled.jpg
     - assets/ogm_logo2.png
     - assets/origami_logo.png
+    - assets/images/icons_cam.png
+    - assets/images/icons_img.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

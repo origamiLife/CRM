@@ -4,8 +4,6 @@ import '../../../import.dart';
 import '../../contact/contact_screen.dart';
 import 'package:http/http.dart' as http;
 
-
-
 class ContactEditDetail extends StatefulWidget {
   const ContactEditDetail({
     super.key,
@@ -175,14 +173,14 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Detail Information',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 22,
-                  color: Colors.grey,
+                  color: Colors.grey.shade700,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -638,7 +636,14 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.camera, color: Colors.grey, size: 50),
+                              Image.asset(
+                                'assets/images/icons_cam.png',
+                                width: 50,
+                                height: 50,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container();
+                                },
+                              ),
                               SizedBox(height: 8),
                               Text(
                                 'Camera',
@@ -668,8 +673,14 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.photo_library_outlined,
-                                  color: Colors.grey, size: 50),
+                              Image.asset(
+                                'assets/images/icons_img.png',
+                                width: 50,
+                                height: 50,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container();
+                                },
+                              ),
                               SizedBox(height: 8),
                               Text(
                                 'Gallery',

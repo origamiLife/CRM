@@ -821,7 +821,7 @@
 //     QuickAlert.show(
 //       context: context,
 //       type: QuickAlertType.confirm,
-//       // customAsset: 'assets/images/learning/img.png',
+//       // customAsset: 'assets/images/learning/icons_img.png',
 //       width: MediaQuery.of(context).size.width > 600 ? 590 : 400,
 //       title: '$AreYouReadyTS',
 //       confirmBtnText: '$startTS',

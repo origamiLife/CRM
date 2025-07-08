@@ -98,7 +98,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -174,6 +174,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
             pageInput: widget.pageInput);
     }
   }
+
 
   Widget _ProjectDetail(BuildContext context) {
     return Column(
@@ -344,11 +345,11 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
           child: Container(
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  SizedBox(height: 4),
+                  SizedBox(height: 22),
                   _subData('Main Owner', project.owner_name),
                   _subData('Contact', project.contact_name),
                   _subData('Account', project.account_name),
@@ -481,7 +482,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 12, bottom: 12),
+          padding: const EdgeInsets.only(top: 4,bottom: 4),
           child: Row(
             children: [
               _buildText('$label : ', 14, Color(0xFF555555), FontWeight.w700),
@@ -491,8 +492,29 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
             ],
           ),
         ),
-        Divider(),
+        _lineWidget(),
       ],
+    );
+  }
+
+  Widget _lineWidget() {
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade50,
+            height: 3,
+            width: double.infinity,
+          ),
+          SizedBox(height: 1),
+          Container(
+            color: Colors.orange.shade100,
+            height: 3,
+            width: double.infinity,
+          ),
+        ],
+      ),
     );
   }
 

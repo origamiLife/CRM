@@ -445,9 +445,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                       Color(0xFF555555)),
                 ],
               ),
-              Divider(
-                color: Colors.grey.shade300,
-              ),
+              _lineWidget(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -853,7 +851,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                     ),
                   ),
                 ),
-                Divider(),
+                _lineWidget()
               ],
             ),
           );
@@ -899,6 +897,27 @@ class _ActivityEditViewState extends State<ActivityEditView> {
           _description(Icons.apartment, '${join_user.posi_description}'),
           _description(Icons.work, '${join_user.dept_description}'),
           SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+
+  Widget _lineWidget() {
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade50,
+            height: 3,
+            width: double.infinity,
+          ),
+          SizedBox(height: 1),
+          Container(
+            color: Colors.orange.shade100,
+            height: 3,
+            width: double.infinity,
+          ),
         ],
       ),
     );

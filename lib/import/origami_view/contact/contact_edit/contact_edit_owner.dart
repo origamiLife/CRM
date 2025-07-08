@@ -76,8 +76,8 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
               style: TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 22,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
@@ -126,7 +126,7 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
               style: TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 22,
-                color: Colors.grey,
+                color: Colors.grey.shade700,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -135,89 +135,104 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
           SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              children: List.generate(addNewContactList.length, (index) {
-                final contact = addNewContactList[index];
+            child: (addNewContactList.isEmpty)
+                ? const Text(
+                    'ไม่พบข้อมูลในตาราง.',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  )
+                : Column(
+                    children: List.generate(addNewContactList.length, (index) {
+                      final contact = addNewContactList[index];
 
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        // addNewContactList.add(contact);
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 4, right: 8),
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Colors.grey,
-                                child: CircleAvatar(
-                                  radius: 19,
-                                  backgroundColor: Colors.white,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: Image.network(
-                                      (contact.contact_image == '')
-                                          ? 'https://dev.origami.life/images/default.png'
-                                          : '$host//crm/${contact.contact_image}',
-                                      height: 100,
-                                      width: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              // addNewContactList.add(contact);
+                            });
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    '${contact.contact_first} ${contact.contact_last}',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16,
-                                      color: Color(0xFFFF9900),
-                                      fontWeight: FontWeight.w700,
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 4, right: 8),
+                                    child: CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Colors.grey,
+                                      child: CircleAvatar(
+                                        radius: 19,
+                                        backgroundColor: Colors.white,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: Image.network(
+                                            (contact.contact_image == '')
+                                                ? 'https://dev.origami.life/images/default.png'
+                                                : '$host//crm/${contact.contact_image}',
+                                            height: 100,
+                                            width: 100,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  Text(
-                                    '${contact.customer_en} (${contact.customer_th})',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.w500,
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${contact.contact_first} ${contact.contact_last}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16,
+                                            color: Color(0xFFFF9900),
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        Text(
+                                          '${contact.customer_en} (${contact.customer_th})',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Divider(color: Colors.grey.shade300),
+                                      ],
                                     ),
                                   ),
-                                  Divider(color: Colors.grey.shade300),
                                 ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      );
+                    }),
                   ),
-                );
-              }),
-            ),
           ),
         ],
       ),

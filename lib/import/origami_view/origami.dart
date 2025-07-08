@@ -126,7 +126,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
           ),
           actions: (_index == 5)
               ? _buildAppBarTimeStamp()
-              : (widget.employee.emp_id == '19777')?_buildOCRScreen():null,
+              : (widget.employee.emp_id == '19776')?_buildOCRScreen():null,
         ),
         drawer: Container(
           width: MediaQuery.of(context).size.width * 0.8,
