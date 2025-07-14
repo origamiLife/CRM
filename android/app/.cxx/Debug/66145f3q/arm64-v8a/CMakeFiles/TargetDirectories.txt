@@ -1,0 +1,2 @@
+/Users/kridsadamac/StudioProjects/origamilift/android/app/.cxx/Debug/66145f3q/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/kridsadamac/StudioProjects/origamilift/android/app/.cxx/Debug/66145f3q/arm64-v8a/CMakeFiles/rebuild_cache.dir
