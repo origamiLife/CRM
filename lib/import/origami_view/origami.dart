@@ -7,6 +7,7 @@ import 'package:origamilift/import/origami_view/sample/time_stamp.dart';
 import 'package:origamilift/import/origami_view/work/work_page.dart';
 
 import '../Call/call_phone.dart';
+import '../EmailSender/email_sender.dart';
 import '../OCRScreen/OCRScreen.dart';
 import '../OCRScreen/OcrTessdata.dart';
 import '../OCRScreen/OCRScreen2.dart';
@@ -126,7 +127,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
           ),
           actions: (_index == 5)
               ? _buildAppBarTimeStamp()
-              : (widget.employee.emp_id == '19776')?_buildOCRScreen():null,
+              : (widget.employee.emp_id == '19777')?_buildOCRScreen():null,
         ),
         drawer: Container(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -597,11 +598,11 @@ class _OrigamiPageState extends State<OrigamiPage> {
   List<Widget> _buildOCRScreen() {
     return [
       IconButton(
-        icon: const Icon(Icons.document_scanner_outlined, color: Colors.orange),
+        icon: const Icon(Icons.mark_email_read_rounded, color: Colors.orange),
         onPressed: () {Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TesseractOCRThaiPage(),
+            builder: (context) => EmailSenderPage(),
           ),
         );},
       ),

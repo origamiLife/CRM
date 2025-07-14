@@ -224,14 +224,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
         color: Colors.amber,
       ),
       Appointment(
-        startTime: DateTime(2025, 7, 13, 9, 0, 0),
-        endTime: DateTime(2025, 7, 13, 10, 0, 0),
+        startTime: DateTime(2025, 7, 10, 9, 0, 0),
+        endTime: DateTime(2025, 7, 10, 10, 0, 0),
         subject: 'วันอาสาฬหบูชา',
         color: Colors.brown,
       ),
       Appointment(
-        startTime: DateTime(2025, 7, 14, 9, 0, 0),
-        endTime: DateTime(2025, 7, 14, 10, 0, 0),
+        startTime: DateTime(2025, 7, 11, 9, 0, 0),
+        endTime: DateTime(2025, 7, 11, 10, 0, 0),
         subject: 'วันเข้าพรรษา',
         color: Colors.redAccent,
       ),
