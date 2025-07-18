@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 import 'package:path/path.dart' as path;
 import '../../../Contact/contact_edit/contact_edit_detail.dart';
+import '../../account_add/account_add_detail.dart';
 import '../../account_screen.dart';
 import '../location/account_edit_location.dart';
 
@@ -207,72 +208,73 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   Widget _showImagePhoto(ModelAccount account) {
     return _image != null
         ? Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.transparent,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Image.file(
-                        _image!,
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.contain,
-                      ),
-                      Positioned(
-                        top: 4,
-                        right: 4,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              _image = null;
-                              cus_logo = '';
-                            });
-                          },
-                          child: Stack(
-                            children: [
-                              Icon(Icons.cancel_outlined, color: Colors.white),
-                              Icon(Icons.cancel, color: Colors.red),
-                            ],
+            padding: const EdgeInsets.only(top: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.file(
+                          _image!,
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _image = null;
+                                cus_logo = '';
+                              });
+                            },
+                            child: Stack(
+                              children: [
+                                Icon(Icons.cancel_outlined,
+                                    color: Colors.white),
+                                Icon(Icons.cancel, color: Colors.red),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Container(
+              // height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade300, width: 1.0),
+              ),
+              child: GestureDetector(
+                onTap: _imageDialog,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Container(
+                    width: double.infinity,
+                    child: Icon(Icons.camera_alt, color: Colors.grey),
                   ),
                 ),
               ),
-            ],
-          ),
-        )
-        : Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Container(
-            // height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              border: Border.all(color: Colors.grey.shade300, width: 1.0),
             ),
-            child: GestureDetector(
-              onTap: _imageDialog,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Container(
-                  width: double.infinity,
-                  child: Icon(Icons.camera_alt, color: Colors.grey),
-                ),
-              ),
-            ),
-          ),
-        );
+          );
   }
 
   void _imageDialog() {
@@ -385,23 +387,26 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         Row(
           children: [
             Expanded(
-              child: _buildDropdown<ModelType>(
+              child: _buildDropdown<GroupAccount>(
                 label: 'Group',
-                hint: account.cus_group_name,
-                items: _modelType,
-                selectedValue: selectedItem,
-                getLabel: (item) => item.name,
+                items: groupList,
+                selectedValue: selectedGroup,
+                getLabel: (item) => item.cus_group_name,
                 onChanged: (value) {
                   setState(() {
-                    selectedItem = value;
-                    // project_id = value?.id ?? '';
+                    selectedGroup = value;
+                    cus_group_id = value?.cus_group_id ?? '';
+                    group_shcode = value?.cus_group_shcode ?? '';
+                    group_gen = value?.cus_group_gen ?? '';
                   });
                 },
+                hint: account.cus_group_name,
               ),
             ),
             SizedBox(width: 8),
             Expanded(
-              child: _textController('', _groupController, true, Icons.numbers),
+              child: _textController('$group_shcode-${formatNumber(group_gen)}',
+                  _groupController, false, Icons.numbers),
             ),
           ],
         ),
@@ -409,91 +414,75 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: _buildDropdown<ModelType>(
+              child: _buildDropdown<CustomerType>(
                 label: 'Type',
-                hint: account.cus_type_name,
                 items: _modelType,
-                selectedValue: selectedItem,
-                getLabel: (item) => item.name,
+                selectedValue: selectedType,
+                getLabel: (item) => item.selected_name,
                 onChanged: (value) {
                   setState(() {
-                    selectedItem = value;
-                    // project_id = value?.id ?? '';
+                    selectedType = value;
+                    cus_type = value?.cus_type ?? '';
                   });
                 },
+                hint: account.cus_type_name,
               ),
             ),
             SizedBox(width: 8),
             Expanded(
-              child: _buildDropdown<ModelType>(
+              child: _buildDropdown<StatusAccount>(
                 label: '',
-                hint: account.cus_type,
-                items: _modelType,
-                selectedValue: selectedItem,
-                getLabel: (item) => item.name,
+                items: statusList,
+                selectedValue: selectedStatus,
+                getLabel: (item) => item.cus_status_name,
                 onChanged: (value) {
                   setState(() {
-                    selectedItem = value;
-                    // project_id = value?.id ?? '';
+                    selectedStatus = value;
+                    cus_status_id = value?.cus_status_id ?? '';
                   });
                 },
+                hint: account.cus_type_name,
               ),
             ),
           ],
         ),
         _lineWidget(),
         _textController(
-          'Customer Name (TH)',
-          _nameTHController,
-          false,
-          Icons.paste,
-        ),
+            'Customer Name (TH)', _nameTHController, false, Icons.paste),
         _textController(
-          'Customer Name (EN)',
-          _nameENController,
-          false,
-          Icons.paste,
-        ),
-        _buildDropdown<ModelType>(
+            'Customer Name (EN)', _nameENController, false, Icons.paste),
+        _buildDropdown<RegistrationAccount>(
           label: 'Registration',
-          hint: account.registration_name,
-          items: _modelType,
-          selectedValue: selectedItem,
-          getLabel: (item) => item.name,
+          items: registrationList,
+          selectedValue: selectedRegistration,
+          getLabel: (item) => item.cus_type_name,
           onChanged: (value) {
             setState(() {
-              selectedItem = value;
-              // project_id = value?.id ?? '';
+              selectedRegistration = value;
+              cus_type_id = value?.cus_type_id ?? '';
             });
           },
+          hint: account.registration_name,
         ),
         _lineWidget(),
-        _buildDropdown<ModelType>(
+        _buildDropdown<SourceAccount>(
           label: 'Source',
-          hint: account.source_name,
-          items: _modelType,
-          selectedValue: selectedItem,
-          getLabel: (item) => item.name,
+          items: sourceList,
+          selectedValue: selectedSource,
+          getLabel: (item) => item.project_comefrom_name,
           onChanged: (value) {
             setState(() {
-              selectedItem = value;
-              // project_id = value?.id ?? '';
+              selectedSource = value;
+              source_id = value?.project_comefrom_id ?? '';
             });
           },
+          hint: account.source_name,
         ),
         _textController(
-          'Description',
-          _descriptionController,
-          false,
-          Icons.subject,
-        ),
+            'Description', _descriptionController, false, Icons.subject),
         _textController('Email', _emailController, false, Icons.mail),
         _textController(
-          'Tel',
-          _telephoneController,
-          false,
-          Icons.phone_android_rounded,
-        ),
+            'Tel', _telephoneController, false, Icons.phone_android_rounded),
         SizedBox(height: 16),
       ],
     );
@@ -546,10 +535,9 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color:
-                        key == false
-                            ? Colors.orange.shade300
-                            : Colors.grey.shade100,
+                    color: key == false
+                        ? Colors.orange.shade300
+                        : Colors.grey.shade100,
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -612,22 +600,21 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   ),
                 ),
                 value: selectedValue,
-                items:
-                    items
-                        .map(
-                          (item) => DropdownMenuItem<T>(
-                            value: item,
-                            child: Text(
-                              getLabel(item),
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14,
-                                color: Color(0xFF555555),
-                              ),
-                            ),
+                items: items
+                    .map(
+                      (item) => DropdownMenuItem<T>(
+                        value: item,
+                        child: Text(
+                          getLabel(item),
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Color(0xFF555555),
                           ),
-                        )
-                        .toList(),
+                        ),
+                      ),
+                    )
+                    .toList(),
                 onChanged: onChanged,
                 style: TextStyle(
                   fontFamily: 'Arial',
@@ -737,17 +724,135 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     }
   }
 
-  ModelType? selectedItem;
-  final List<ModelType> _modelType = [
-    ModelType(id: '1', name: 'รายการ A'),
-    ModelType(id: '2', name: 'รายการ B'),
-    ModelType(id: '3', name: 'รายการ C'),
-    ModelType(id: '4', name: 'รายการ D'),
-  ];
-}
+  String cus_group_id = '';
+  String cus_code = '';
+  String cus_type_id = '';
+  String cus_type = '';
+  String cus_status_id = '';
+  String cus_name_th = '';
+  String cus_name_en = '';
+  String cus_tel_no = '';
+  String cus_email = '';
+  String source_id = '';
+  String cus_create_user = ''; // emp_id
 
-class ModelType {
-  String id;
-  String name;
-  ModelType({required this.id, required this.name});
+  GroupAccount? selectedGroup;
+  List<GroupAccount> groupList = [];
+  Future<void> _fetchGroup() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/account/component/group.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        groupList =
+            dataJson.map((json) => GroupAccount.fromJson(json)).toList();
+        if (groupList.isNotEmpty && selectedGroup == null) {
+          selectedGroup = groupList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
+  StatusAccount? selectedStatus;
+  List<StatusAccount> statusList = [];
+  Future<void> _fetchStatusType() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/account/component/status_type.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        statusList =
+            dataJson.map((json) => StatusAccount.fromJson(json)).toList();
+        if (statusList.isNotEmpty && selectedStatus == null) {
+          selectedStatus = statusList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
+  RegistrationAccount? selectedRegistration;
+  List<RegistrationAccount> registrationList = [];
+  Future<void> _fetchRegistration() async {
+    final uri = Uri.parse(
+        "$hostDev/api/origami/crm/account/component/registration.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        registrationList =
+            dataJson.map((json) => RegistrationAccount.fromJson(json)).toList();
+        if (registrationList.isNotEmpty && selectedRegistration == null) {
+          selectedRegistration = registrationList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
+  SourceAccount? selectedSource;
+  List<SourceAccount> sourceList = [];
+  Future<void> _fetchSource() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/account/component/source.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        sourceList =
+            dataJson.map((json) => SourceAccount.fromJson(json)).toList();
+        if (sourceList.isNotEmpty && selectedSource == null) {
+          selectedSource = sourceList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
+  String group_shcode = '';
+  String group_gen = '';
+  String formatNumber(String input) {
+    return input.padLeft(6, '0');
+  }
+
+  CustomerType? selectedType;
+  final List<CustomerType> _modelType = [
+    CustomerType(cus_type: '0', selected_name: 'Customer'),
+    CustomerType(cus_type: '1', selected_name: 'Supplier'),
+  ];
 }

@@ -152,7 +152,7 @@ class _AccountAddViewState extends State<AccountAddView> {
   Widget _getContentWidget() {
     switch (_selectedIndex) {
       case 0:
-        return AccountAddDetail();
+        return AccountAddDetail(employee: widget.employee);
       case 1:
         return AccountAddLocation();
       // case 2:

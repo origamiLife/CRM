@@ -509,4 +509,29 @@ class _AccountEditViewState extends State<AccountEditView> {
       ],
     );
   }
+
+  Future<void> _fetchDeleteAccount() async {
+    final uri = Uri.parse('$hostDev/api/origami/crm/account/dele.php');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer ${authorization}'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'cus_id': widget.account.cus_id,
+        },
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        // final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+        throw Exception('Delete Activity Now.');
+      } else {
+        throw Exception('Failed to load status data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
+    }
+  }
+
 }

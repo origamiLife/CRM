@@ -1,0 +1,2 @@
+/Users/kridsadamac/StudioProjects/origamilift/android/app/.cxx/RelWithDebInfo/6f6x152o/x86/CMakeFiles/edit_cache.dir
+/Users/kridsadamac/StudioProjects/origamilift/android/app/.cxx/RelWithDebInfo/6f6x152o/x86/CMakeFiles/rebuild_cache.dir

@@ -108,18 +108,6 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                 });
               },
             ),
-            _buildDropdown<ModelType>(
-              label: 'Account',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
-                });
-              },
-            ),
             _textController('Email', _emailController, false, Icons.numbers),
             _textController(
                 'Tel', _mobileController, false, Icons.phone_android_rounded),

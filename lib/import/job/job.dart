@@ -3,9 +3,11 @@ import '../import.dart';
 import 'information_job.dart';
 
 class JobPage extends StatefulWidget {
-  JobPage({super.key, required this.employee, required this.Authorization});
+  JobPage({super.key, required this.employee, required this.Authorization, required this.compid, required this.empid});
   final Employee employee;
   final String Authorization;
+  final String compid;
+  final String empid;
   @override
   _JobPageState createState() => _JobPageState();
 }
@@ -88,6 +90,24 @@ class _JobPageState extends State<JobPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+        (widget.compid == '2')?'Trandar':'Allable',
+          style: GoogleFonts.openSans(
+            fontSize: 22,
+            color: Colors.orange,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.orange,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: _getContentWidget(),
       bottomNavigationBar: BottomBarDefault(
         items: items,
@@ -290,8 +310,8 @@ class _JobPageState extends State<JobPage> {
       uri,
       headers: {'Authorization': 'Bearer ${widget.Authorization}'},
       body: {
-        'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
+        'comp_id': widget.compid,
+        'emp_id': widget.empid,
       },
     );
 

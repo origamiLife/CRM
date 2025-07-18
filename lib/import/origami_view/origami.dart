@@ -127,7 +127,9 @@ class _OrigamiPageState extends State<OrigamiPage> {
           ),
           actions: (_index == 5)
               ? _buildAppBarTimeStamp()
-              : (widget.employee.emp_id == '19777')?_buildOCRScreen():null,
+              : (widget.employee.emp_id == '19777')
+                  ? _buildOCRScreen()
+                  : null,
         ),
         drawer: Container(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -389,6 +391,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
       19: JobPage(
         employee: widget.employee,
         Authorization: widget.Authorization,
+        compid: '',
+        empid: '',
       ),
     };
     return pages[_index] ??
@@ -595,26 +599,64 @@ class _OrigamiPageState extends State<OrigamiPage> {
     }
   }
 
+  String compid = ''; // 19807, 19777
+  String empid = ''; // 2, 5
   List<Widget> _buildOCRScreen() {
     return [
       IconButton(
-        icon: const Icon(Icons.mark_email_read_rounded, color: Colors.orange),
-        onPressed: () {Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EmailSenderPage(),
-          ),
-        );},
+        icon: const Icon(Icons.filter_2, color: Colors.orange),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => JobPage(
+                employee: widget.employee,
+                Authorization: authorization,
+                compid: '2',
+                empid: '19807',
+              ),
+            ),
+          );
+        },
       ),
       IconButton(
-        icon: const Icon(Icons.document_scanner_rounded, color: Colors.orange),
-        onPressed: () {Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TesseractOCRThaiPage(),
-          ),
-        );},
+        icon: const Icon(Icons.filter_5, color: Colors.orange),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => JobPage(
+                employee: widget.employee,
+                Authorization: authorization,
+                compid: '5',
+                empid: '19777',
+              ),
+            ),
+          );
+        },
       ),
+      // IconButton(
+      //   icon: const Icon(Icons.mark_email_read_rounded, color: Colors.orange),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => EmailSenderPage(),
+      //       ),
+      //     );
+      //   },
+      // ),
+      // IconButton(
+      //   icon: const Icon(Icons.document_scanner_rounded, color: Colors.orange),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => TesseractOCRThaiPage(),
+      //       ),
+      //     );
+      //   },
+      // ),
     ];
   }
 
