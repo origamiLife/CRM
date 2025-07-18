@@ -620,8 +620,8 @@ class _ContactScreenState extends State<ContactScreen> {
         uri,
         headers: {'Authorization': 'Bearer $authorization'},
         body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
+          'comp_id': '2',//widget.employee.comp_id,
+          'emp_id': '2',//widget.employee.emp_id,
           'index': indexItems.toString(),
         },
       );
@@ -666,14 +666,14 @@ class _ContactScreenState extends State<ContactScreen> {
   List<ModelContact> ContactCallScreen = [];
   Future<void> fetchModelContactCall() async {
     final uri = Uri.parse(
-        "$host/api/origami/crm/contact/list-contact.php?search=$_search");
+        "$hostDev/api/origami/crm/contact/list-contact.php?search=$_search");
     try {
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
+          'comp_id': '2',//widget.employee.comp_id,
+          'emp_id': '2',//widget.employee.emp_id,
           'index': indexItems.toString(),
         },
       );

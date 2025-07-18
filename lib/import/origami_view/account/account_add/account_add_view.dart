@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
+import '../../Contact/contact_add/contact_add_detail.dart';
 import '../../Contact/contact_edit/contact_edit_detail.dart';
 import 'account_add_detail.dart';
 import 'account_add_location.dart';
@@ -87,50 +88,50 @@ class _AccountAddViewState extends State<AccountAddView> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            '',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          InkWell(
-            onTap: () {
-              // Navigator.pop(context);
-              // _formKey.currentState?.validate();
-            },
-            child: Row(
-              children: [
-                Text(
-                  'DONE',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(width: 16)
-              ],
-            ),
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Color(0xFFFF9900),
+      //   title: Align(
+      //     alignment: Alignment.centerLeft,
+      //     child: Text(
+      //       '',
+      //       style: TextStyle(
+      //         fontFamily: 'Arial',
+      //         fontSize: 24,
+      //         color: Colors.white,
+      //         fontWeight: FontWeight.w500,
+      //       ),
+      //     ),
+      //   ),
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.arrow_back_ios,
+      //       color: Colors.white,
+      //     ),
+      //     onPressed: () => Navigator.pop(context),
+      //   ),
+      //   actions: [
+      //     InkWell(
+      //       onTap: () {
+      //         // Navigator.pop(context);
+      //         // _formKey.currentState?.validate();
+      //       },
+      //       child: Row(
+      //         children: [
+      //           Text(
+      //             'DONE',
+      //             style: TextStyle(
+      //               fontFamily: 'Arial',
+      //               fontSize: 14,
+      //               color: Colors.white,
+      //               fontWeight: FontWeight.w500,
+      //             ),
+      //           ),
+      //           SizedBox(width: 16)
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
       body: SafeArea(child: _getContentWidget()),
       bottomNavigationBar: BottomBarDefault(
         items: items,

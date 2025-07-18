@@ -46,6 +46,58 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
+        title: const Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            '',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          InkWell(
+            onTap: () async {
+              if (cus_code != '' &&
+                  cus_type_id != '' &&
+                  cus_type != '' &&
+                  cus_status_id != '' &&
+                  _nameTHController.text.trim() != '' &&
+                  _nameENController.text.trim() != '' &&
+                  _telephoneController.text.trim() != '' &&
+                  _emailController.text.trim() != '') {
+                await _fetchAddAccount();
+              }
+            },
+            child: const Row(
+              children: [
+                Text(
+                  'DONE',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 16)
+              ],
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(child: _logoInformation()),
     );
   }
@@ -95,8 +147,8 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             ),
             SizedBox(width: 8),
             Expanded(
-              child:
-                  _textController(formaCuscode(group_gen), _groupController, false, Icons.numbers),
+              child: _textController(formaCuscode(group_gen), _groupController,
+                  false, Icons.numbers),
             ),
           ],
         ),
@@ -398,11 +450,11 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
   String source_id = '';
   String cus_create_user = ''; // emp_id
 
-  void _getAPI() {
-    _fetchGroup();
-    _fetchStatusType();
-    _fetchRegistration();
-    _fetchSource();
+  Future<void> _getAPI() async {
+    await _fetchGroup();
+    await _fetchStatusType();
+    await _fetchRegistration();
+    await _fetchSource();
   }
 
   GroupAccount? selectedGroup;
@@ -436,7 +488,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
   List<StatusAccount> statusList = [];
   Future<void> _fetchStatusType() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/account/component/status_type.php");
+        Uri.parse("$hostDev/api/origami/crm/account/component/status_type.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
@@ -462,8 +514,8 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
   RegistrationAccount? selectedRegistration;
   List<RegistrationAccount> registrationList = [];
   Future<void> _fetchRegistration() async {
-    final uri =
-    Uri.parse("$hostDev/api/origami/crm/account/component/registration.php");
+    final uri = Uri.parse(
+        "$hostDev/api/origami/crm/account/component/registration.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
@@ -490,7 +542,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
   List<SourceAccount> sourceList = [];
   Future<void> _fetchSource() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/account/component/source.php");
+        Uri.parse("$hostDev/api/origami/crm/account/component/source.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
@@ -532,18 +584,30 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
       },
     );
     if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-      setState(() {
-        groupList =
-            dataJson.map((json) => GroupAccount.fromJson(json)).toList();
-        if (groupList.isNotEmpty && selectedGroup == null) {
-          selectedGroup = groupList[0];
-        }
-      });
+      // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final jsonResponse = jsonDecode(response.body);
+      final message = jsonResponse['message'];
+      if (jsonResponse['status'] == true) {
+        Navigator.pop(context);
+      }
+      showSnackBar(message);
     } else {
-      throw Exception('Failed to load instructors');
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
     }
+  }
+
+  void showSnackBar(String message){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 
   String group_shcode = '';

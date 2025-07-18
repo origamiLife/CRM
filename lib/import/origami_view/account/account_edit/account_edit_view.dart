@@ -523,15 +523,32 @@ class _AccountEditViewState extends State<AccountEditView> {
         },
       );
       if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        // final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-        throw Exception('Delete Activity Now.');
+        // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+        if (jsonResponse['status'] == true) {
+          Navigator.pop(context);
+        }
+        showSnackBar(message);
       } else {
-        throw Exception('Failed to load status data');
+        throw Exception('Failed to load personal data: ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
     }
+  }
+  void showSnackBar(String message){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 
 }

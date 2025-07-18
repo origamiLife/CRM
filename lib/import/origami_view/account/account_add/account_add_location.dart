@@ -36,6 +36,47 @@ class _AccountAddLocationState extends State<AccountAddLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            '',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          InkWell(
+            onTap: () async {},
+            child: const Row(
+              children: [
+                Text(
+                  'DONE',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 16)
+              ],
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(child: _logoInformation()),
     );
   }

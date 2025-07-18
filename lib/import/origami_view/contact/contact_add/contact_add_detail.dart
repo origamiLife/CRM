@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
+import '../../account/account_add/account_add_detail.dart';
 import '../../activity/add/activity_add.dart';
 
 class ContactAddDetail extends StatefulWidget {
@@ -34,16 +35,11 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
   @override
   void initState() {
     super.initState();
-    // _showDate();
-    // fetchActivityContact();
+    _getAPI();
     _firstnameController.addListener(() {
       // _search = _FirstnameController.text;
       print("Current text: ${_firstnameController.text}");
     });
-  }
-
-  void getController() {
-    return;
   }
 
   @override
@@ -78,15 +74,16 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
               ),
             ),
             SizedBox(height: 8),
-            _buildDropdown<ModelType>(
+
+            _buildDropdown<groupnameContact>(
               label: 'Title',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
+              items: groupnameList,
+              selectedValue: selectedGroupname,
+              getLabel: (item) => item.cont_group_name,
               onChanged: (value) {
                 setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
+                  selectedGroupname = value;
+                  cont_group_id = value?.cont_group_id ?? '';
                 });
               },
             ),
@@ -96,71 +93,48 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                 'Lastname', _lastnameController, false, Icons.numbers),
             _textController(
                 'Nickname', _nicknameController, false, Icons.numbers),
-            _buildDropdown<ModelType>(
+            _buildDropdown<genderContact>(
               label: 'Gender',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
+              items: genderList,
+              selectedValue: selectedGender,
+              getLabel: (item) => item.gender_name,
               onChanged: (value) {
                 setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
+                  selectedGender = value;
+                  gender_id = value?.gender_id ?? '';
                 });
               },
             ),
             _textController('Email', _emailController, false, Icons.numbers),
             _textController(
                 'Tel', _mobileController, false, Icons.phone_android_rounded),
-            // _buildDropdown<ModelType>(
-            //   label: 'Occupation',
-            //   items: _modelType,
-            //   selectedValue: selectedType,
-            //   getLabel: (item) => item.name,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       selectedType = value;
-            //       type_id = value?.id ?? '';
-            //     });
-            //   },
-            // ),
             _textController(
                 'Position', _positionController, false, Icons.numbers),
-            _buildDropdown<ModelType>(
+            _buildDropdown<roleContact>(
               label: 'Role',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
+              items: roleList,
+              selectedValue: selectedRole,
+              getLabel: (item) => item.cont_project_role_name,
               onChanged: (value) {
                 setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
+                  selectedRole = value;
+                  role_id = value?.cont_project_role_id ?? '';
                 });
               },
             ),
-            _buildDropdown<ModelType>(
+            _buildDropdown<emotionContact>(
               label: 'Emotion',
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
+              image: (item) => item.emo_icon_path,
+              items: emotionList,
+              selectedValue: selectedEmotion,
+              getLabel: (item) => item.emo_icon_title,
               onChanged: (value) {
                 setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
+                  selectedEmotion = value;
+                  emo_icon_id = value?.emo_icon_id ?? '';
                 });
               },
             ),
-            // _buildDropdown<ModelType>(
-            //   label: 'Marital',
-            //   items: _modelType,
-            //   selectedValue: selectedType,
-            //   getLabel: (item) => item.name,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       selectedType = value;
-            //       type_id = value?.id ?? '';
-            //     });
-            //   },
-            // ),
             SizedBox(height: 16),
           ],
         ),
@@ -239,6 +213,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
 
   Widget _buildDropdown<T>({
     required String label,
+    String Function(T)? image,
     required List<T> items,
     required T? selectedValue,
     required String Function(T) getLabel,
@@ -280,9 +255,25 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                   ),
                 ),
                 value: selectedValue,
-                items: items
-                    .map((item) => DropdownMenuItem<T>(
-                          value: item,
+                items: items.map((item) {
+                  final imageUrl = image?.call(item);
+                  return DropdownMenuItem<T>(
+                    value: item,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        (imageUrl != null && imageUrl.isNotEmpty)?
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Image.network(
+                              imageUrl,
+                              width: 24,
+                              height: 24,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.image_not_supported, size: 24),
+                            ),
+                          ):Container(),
+                        Expanded(
                           child: Text(
                             getLabel(item),
                             style: TextStyle(
@@ -291,8 +282,11 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                               color: Color(0xFF555555),
                             ),
                           ),
-                        ))
-                    .toList(),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
                 onChanged: onChanged,
                 style: TextStyle(
                   fontFamily: 'Arial',
@@ -368,81 +362,126 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
     endDate = formatter.format(_selectedDateEnd);
   }
 
-  ActivityContact? selectedContact;
-  List<ActivityContact> contactList = [];
-  List<ActivityContact> addNewContactList = [];
-  Future<void> fetchActivityContact() async {
-    final uri = Uri.parse('$host/crm/ios_activity_contact.php');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
-          'index': '0',
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
-        setState(() {
-          contactList =
-              dataJson.map((json) => ActivityContact.fromJson(json)).toList();
-          if (contactList.isNotEmpty && selectedContact == null) {
-            selectedContact = contactList[0];
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
+  String gender_id = '';
+  String cont_group_id = '';
+  String emo_icon_id = '';
+  String role_id = '';
+
+  Future<void> _getAPI() async {
+    await _fetchGender();
+    await _fetchGroupname();
+    await _fetchEmotionContact();
+    await _fetchRole();
   }
 
-  Future<List<ActivityContact>> fetchAddContact() async {
-    final uri = Uri.parse("$host/crm/ios_activity_contact.php");
+  genderContact? selectedGender;
+  List<genderContact> genderList = [];
+  Future<void> _fetchGender() async {
+    final uri =
+    Uri.parse("$hostDev/api/origami/crm/contact/component/gender.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
-        'index': '0',
       },
     );
-
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> dataJson = jsonResponse['data'];
-      return dataJson.map((json) => ActivityContact.fromJson(json)).toList();
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        genderList =
+            dataJson.map((json) => genderContact.fromJson(json)).toList();
+        if (genderList.isNotEmpty && selectedGender == null) {
+          selectedGender = genderList[0];
+        }
+      });
     } else {
-      throw Exception('Failed to load contacts');
+      throw Exception('Failed to load instructors');
     }
   }
 
-  final List<String> _emotions = ["😊", "😢", "😡", "😂", "😎", "😍"];
-  String? _selectedEmotion;
+  groupnameContact? selectedGroupname;
+  List<groupnameContact> groupnameList = [];
+  Future<void> _fetchGroupname() async {
+    final uri =
+    Uri.parse("$hostDev/api/origami/crm/contact/component/group_name.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        groupnameList =
+            dataJson.map((json) => groupnameContact.fromJson(json)).toList();
+        if (groupnameList.isNotEmpty && selectedGroupname == null) {
+          selectedGroupname = groupnameList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
 
-  ModelType? selectedType;
-  String type_id = '';
-  final List<ModelType> _modelType = [
-    ModelType(id: '1', name: 'รายการ A'),
-    ModelType(id: '2', name: 'รายการ B'),
-    ModelType(id: '3', name: 'รายการ C'),
-    ModelType(id: '4', name: 'รายการ D'),
-  ];
+  emotionContact? selectedEmotion;
+  List<emotionContact> emotionList = [];
+  Future<void> _fetchEmotionContact() async {
+    final uri =
+    Uri.parse("$hostDev/api/origami/crm/contact/component/emotion.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        emotionList =
+            dataJson.map((json) => emotionContact.fromJson(json)).toList();
+        if (emotionList.isNotEmpty && selectedEmotion == null) {
+          selectedEmotion = emotionList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
 
-  TitleDown? selectedItemJoin;
-  List<TitleDown> titleDownJoin = [
-    TitleDown(status_id: '001', status_name: 'DEV'),
-    TitleDown(status_id: '002', status_name: 'SEAL'),
-    TitleDown(status_id: '003', status_name: 'CAL'),
-    TitleDown(status_id: '004', status_name: 'DES'),
-  ];
+  roleContact? selectedRole;
+  List<roleContact> roleList = [];
+  Future<void> _fetchRole() async {
+    final uri =
+    Uri.parse("$hostDev/api/origami/crm/contact/component/role.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        roleList =
+            dataJson.map((json) => roleContact.fromJson(json)).toList();
+        if (roleList.isNotEmpty && selectedRole == null) {
+          selectedRole = roleList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
 }
 
 class ModelType {
@@ -455,4 +494,75 @@ class TitleDown {
   String status_id;
   String status_name;
   TitleDown({required this.status_id, required this.status_name});
+}
+
+class genderContact {
+  final String gender_id;
+  final String gender_name;
+
+  genderContact({
+    required this.gender_id,
+    required this.gender_name,
+  });
+
+  factory genderContact.fromJson(Map<String, dynamic> json) {
+    return genderContact(
+      gender_id: json['gender_id'] ?? '',
+      gender_name: json['gender_name'] ?? '',
+    );
+  }
+}
+
+class groupnameContact {
+  final String cont_group_id;
+  final String cont_group_name;
+
+  groupnameContact({
+    required this.cont_group_id,
+    required this.cont_group_name,
+  });
+
+  factory groupnameContact.fromJson(Map<String, dynamic> json) {
+    return groupnameContact(
+      cont_group_id: json['cont_group_id'] ?? '',
+      cont_group_name: json['cont_group_name'] ?? '',
+    );
+  }
+}
+
+class emotionContact {
+  final String emo_icon_id;
+  final String emo_icon_title;
+  final String emo_icon_path;
+
+  emotionContact({
+    required this.emo_icon_id,
+    required this.emo_icon_title,
+    required this.emo_icon_path,
+  });
+
+  factory emotionContact.fromJson(Map<String, dynamic> json) {
+    return emotionContact(
+      emo_icon_id: json['emo_icon_id'] ?? '',
+      emo_icon_title: json['emo_icon_title'] ?? '',
+      emo_icon_path: json['emo_icon_path'] ?? '',
+    );
+  }
+}
+
+class roleContact {
+  final String cont_project_role_id;
+  final String cont_project_role_name;
+
+  roleContact({
+    required this.cont_project_role_id,
+    required this.cont_project_role_name,
+  });
+
+  factory roleContact.fromJson(Map<String, dynamic> json) {
+    return roleContact(
+      cont_project_role_id: json['cont_project_role_id'] ?? '',
+      cont_project_role_name: json['cont_project_role_name'] ?? '',
+    );
+  }
 }

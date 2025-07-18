@@ -45,6 +45,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   @override
   void initState() {
     super.initState();
+    _getAPI();
     showDate();
     _getUpdateText();
     _downloadImage();
@@ -735,6 +736,13 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   String cus_email = '';
   String source_id = '';
   String cus_create_user = ''; // emp_id
+
+  Future<void> _getAPI() async {
+    await _fetchGroup();
+    await _fetchStatusType();
+    await _fetchRegistration();
+    await _fetchSource();
+  }
 
   GroupAccount? selectedGroup;
   List<GroupAccount> groupList = [];

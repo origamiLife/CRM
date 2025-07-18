@@ -4,6 +4,8 @@ import '../../../import.dart';
 import '../../contact/contact_screen.dart';
 import 'package:http/http.dart' as http;
 
+import '../contact_add/contact_add_detail.dart';
+
 class ContactEditDetail extends StatefulWidget {
   const ContactEditDetail({
     super.key,
@@ -29,6 +31,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   @override
   void initState() {
     super.initState();
+    _getAPI();
     _getUpdateText();
     _downloadImage();
   }
@@ -188,18 +191,18 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             SizedBox(height: 8),
             _showImagePhoto(contact),
             SizedBox(height: 16),
-            _buildDropdown<ModelType>(
+            _buildDropdown<groupnameContact>(
               label: 'Title',
-              hint: contact.role_name,
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
+              items: groupnameList,
+              selectedValue: selectedGroupname,
+              getLabel: (item) => item.cont_group_name,
               onChanged: (value) {
                 setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
+                  selectedGroupname = value;
+                  cont_group_id = value?.cont_group_id ?? '';
                 });
               },
+              hint: contact.role_name,
             ),
             _textController(
                 'Firstname', _firstnameController, false, Icons.numbers),
@@ -207,89 +210,51 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 'Lastname', _lastnameController, false, Icons.numbers),
             _textController(
                 'Nickname', _nicknameController, false, Icons.numbers),
-            _buildDropdown<ModelType>(
+            _buildDropdown<genderContact>(
               label: 'Gender',
-              hint: contact.gender_name,
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
+              items: genderList,
+              selectedValue: selectedGender,
+              getLabel: (item) => item.gender_name,
               onChanged: (value) {
                 setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
+                  selectedGender = value;
+                  gender_id = value?.gender_id ?? '';
                 });
               },
+              hint: contact.gender_name,
             ),
-            // _buildDropdown<ModelType>(
-            //   label: 'Account',
-            //   hint: contact.cont_name,
-            //   items: _modelType,
-            //   selectedValue: selectedType,
-            //   getLabel: (item) => item.name,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       selectedType = value;
-            //       type_id = value?.id ?? '';
-            //     });
-            //   },
-            // ),
             _textController('Email', _emailController, false, Icons.numbers),
             _textController(
                 'Tel', _mobileController, false, Icons.phone_android_rounded),
-            // _buildDropdown<ModelType>(
-            //   label: 'Occupation',
-            //   hint: contact.role_name,
-            //   items: _modelType,
-            //   selectedValue: selectedType,
-            //   getLabel: (item) => item.name,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       selectedType = value;
-            //       type_id = value?.id ?? '';
-            //     });
-            //   },
-            // ),
             _textController(
                 'Position', _positionController, false, Icons.numbers),
-            _buildDropdown<ModelType>(
+            _buildDropdown<roleContact>(
               label: 'Role',
+              items: roleList,
+              selectedValue: selectedRole,
+              getLabel: (item) => item.cont_project_role_name,
+              onChanged: (value) {
+                setState(() {
+                  selectedRole = value;
+                  role_id = value?.cont_project_role_id ?? '';
+                });
+              },
               hint: contact.role_name,
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
-                });
-              },
             ),
-            _buildDropdown<ModelType>(
+            _buildDropdown<emotionContact>(
               label: 'Emotion',
-              hint: contact.cus_cont_emo,
-              items: _modelType,
-              selectedValue: selectedType,
-              getLabel: (item) => item.name,
+              image: (item) => item.emo_icon_path,
+              items: emotionList,
+              selectedValue: selectedEmotion,
+              getLabel: (item) => item.emo_icon_title,
               onChanged: (value) {
                 setState(() {
-                  selectedType = value;
-                  type_id = value?.id ?? '';
+                  selectedEmotion = value;
+                  emo_icon_id = value?.emo_icon_id ?? '';
                 });
               },
+              hint: contact.cus_cont_emo,
             ),
-            // _buildDropdown<ModelType>(
-            //   label: 'Marital',
-            //   hint: contact.role_name,
-            //   items: _modelType,
-            //   selectedValue: selectedType,
-            //   getLabel: (item) => item.name,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       selectedType = value;
-            //       type_id = value?.id ?? '';
-            //     });
-            //   },
-            // ),
             SizedBox(height: 16),
           ],
         ),
@@ -368,6 +333,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
 
   Widget _buildDropdown<T>({
     required String label,
+    String Function(T)? image,
     required String hint,
     required List<T> items,
     required T? selectedValue,
@@ -410,9 +376,26 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                   ),
                 ),
                 value: selectedValue,
-                items: items
-                    .map((item) => DropdownMenuItem<T>(
-                          value: item,
+                items: items.map((item) {
+                  final imageUrl = image?.call(item);
+                  return DropdownMenuItem<T>(
+                    value: item,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        (imageUrl != null && imageUrl.isNotEmpty)
+                            ? Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Image.network(
+                                  imageUrl,
+                                  width: 24,
+                                  height: 24,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.image_not_supported, size: 24),
+                                ),
+                              )
+                            : Container(),
+                        Expanded(
                           child: Text(
                             getLabel(item),
                             style: TextStyle(
@@ -421,8 +404,11 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                               color: Color(0xFF555555),
                             ),
                           ),
-                        ))
-                    .toList(),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
                 onChanged: onChanged,
                 style: TextStyle(
                   fontFamily: 'Arial',
@@ -706,236 +692,126 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     );
   }
 
-  Widget _AccountCalendar(String title, int checkTitle, bool ifTime) {
-    final now = DateTime.now();
-    String currentTime =
-        "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
-    return InkWell(
-      onTap: () {
-        _requestDateEnd(checkTitle);
-      },
-      child: Container(
-        height: 40,
-        child: TextFormField(
-          enabled: false,
-          keyboardType: TextInputType.number,
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Color(0xFF555555),
-            fontSize: 14,
-          ),
-          decoration: InputDecoration(
-            isDense: false,
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            hintText: (ifTime == true) ? '${title} $currentTime' : title,
-            hintStyle: TextStyle(
-                fontFamily: 'Arial', fontSize: 14, color: Colors.grey),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey.shade300,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            suffixIcon: Container(
-              alignment: Alignment.centerRight,
-              width: 10,
-              child: Center(
-                child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.calendar_month),
-                    // color: Color(0xFFFF9900),
-                    iconSize: 22),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+  String gender_id = '';
+  String cont_group_id = '';
+  String emo_icon_id = '';
+  String role_id = '';
+
+  Future<void> _getAPI() async {
+    await _fetchGender();
+    await _fetchGroupname();
+    await _fetchEmotionContact();
+    await _fetchRole();
   }
 
-  Widget _DropdownEmotion(String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Emotion',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 14,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        SizedBox(height: 16),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.grey.shade300,
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton2<String>(
-            isExpanded: true,
-            hint: Text(
-              value,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-            ),
-            style: TextStyle(
-              fontFamily: 'Arial',
-              color: Colors.grey,
-              fontSize: 14,
-            ),
-            items: _emotions
-                .map((String emotions) => DropdownMenuItem<String>(
-                      value: emotions,
-                      child: Text(
-                        emotions,
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 24,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            value: _selectedEmotion,
-            onChanged: (value) {
-              setState(() {
-                _selectedEmotion = value;
-              });
-            },
-            underline: SizedBox.shrink(),
-            iconStyleData: IconStyleData(
-              icon: Icon(Icons.arrow_drop_down,
-                  color: Color(0xFF555555), size: 30),
-              iconSize: 30,
-            ),
-            buttonStyleData: ButtonStyleData(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight:
-                  200, // Height for displaying up to 5 lines (adjust as needed)
-            ),
-            menuItemStyleData: MenuItemStyleData(
-              height: 33,
-            ),
-          ),
-        ),
-        SizedBox(height: 16),
-      ],
-    );
-  }
-
-  DateTime _selectedDateEnd = DateTime.now();
-  String startDate = '';
-  String endDate = '';
-  void _showDate() {
-    DateFormat formatter = DateFormat('yyyy/MM/dd');
-    startDate = formatter.format(_selectedDateEnd);
-    endDate = formatter.format(_selectedDateEnd);
-  }
-
-  Future<void> _requestDateEnd(int check) async {
-    await showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Theme(
-          data: ThemeData(
-            primaryColor: Colors.teal,
-            colorScheme: ColorScheme.light(
-              primary: Color(0xFFFF9900),
-              onPrimary: Colors.white,
-              onSurface: Colors.teal,
-            ),
-            dialogBackgroundColor: Colors.teal[50],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CalendarDatePicker(
-                  initialDate: _selectedDateEnd,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                  onDateChanged: (DateTime newDate) {
-                    setState(() {
-                      _selectedDateEnd = newDate;
-                      DateFormat formatter = DateFormat('yyyy/MM/dd');
-                      if (check == 0) {
-                        startDate = formatter.format(_selectedDateEnd);
-                      } else {
-                        endDate = formatter.format(_selectedDateEnd);
-                      }
-
-                      // start_date = startDate;
-                      // end_date = startDate;
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
+  genderContact? selectedGender;
+  List<genderContact> genderList = [];
+  Future<void> _fetchGender() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/contact/component/gender.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': '2', //widget.employee.comp_id,
+        'emp_id': '2', //widget.employee.emp_id,
       },
     );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        genderList =
+            dataJson.map((json) => genderContact.fromJson(json)).toList();
+        if (widget.contact.gender_name == '' && selectedGender == null) {
+          selectedGender = genderList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
   }
 
-  final List<String> _emotions = ["😊", "😢", "😡", "😂", "😎", "😍"];
-  String? _selectedEmotion;
+  groupnameContact? selectedGroupname;
+  List<groupnameContact> groupnameList = [];
+  Future<void> _fetchGroupname() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/contact/component/group_name.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': '2', //widget.employee.comp_id,
+        'emp_id': '2', //widget.employee.emp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        groupnameList =
+            dataJson.map((json) => groupnameContact.fromJson(json)).toList();
+        if (widget.contact.gender_name == '' && selectedGroupname == null) {
+          selectedGroupname = groupnameList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
 
-  ModelType? selectedType;
-  String type_id = '';
-  final List<ModelType> _modelType = [
-    ModelType(id: '1', name: 'รายการ A'),
-    ModelType(id: '2', name: 'รายการ B'),
-    ModelType(id: '3', name: 'รายการ C'),
-    ModelType(id: '4', name: 'รายการ D'),
-  ];
-}
+  emotionContact? selectedEmotion;
+  List<emotionContact> emotionList = [];
+  Future<void> _fetchEmotionContact() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/contact/component/emotion.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': '2', //widget.employee.comp_id,
+        'emp_id': '2', //widget.employee.emp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        emotionList =
+            dataJson.map((json) => emotionContact.fromJson(json)).toList();
+        // if (widget.contact.cus_cont_emo == '' || selectedEmotion == null) {
+        //   selectedEmotion = emotionList[0];
+        // }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
 
-class ModelType {
-  String id;
-  String name;
-  ModelType({required this.id, required this.name});
-}
-
-class TitleDown {
-  String status_id;
-  String status_name;
-  TitleDown({required this.status_id, required this.status_name});
+  roleContact? selectedRole;
+  List<roleContact> roleList = [];
+  Future<void> _fetchRole() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/contact/component/role.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': '2', //widget.employee.comp_id,
+        'emp_id': '2', //widget.employee.emp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        roleList = dataJson.map((json) => roleContact.fromJson(json)).toList();
+        if (widget.contact.role_name == '' && selectedRole == null) {
+          selectedRole = roleList[0];
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
 }
