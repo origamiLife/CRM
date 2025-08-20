@@ -109,21 +109,21 @@ class _AccountEditViewState extends State<AccountEditView> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AccountEditDetail(
-                    employee: widget.employee,
-                    account: widget.account,
-                  ),
-                ),
-              );
-            },
-            child: Row(
-              children: [
-                Text(
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AccountEditDetail(
+                        employee: widget.employee,
+                        account: widget.account,
+                      ),
+                    ),
+                  );
+                },
+                child: Text(
                   'Edit',
                   style: TextStyle(
                     fontFamily: 'Arial',
@@ -132,27 +132,47 @@ class _AccountEditViewState extends State<AccountEditView> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(width: 16)
-              ],
-            ),
+              ),
+              VerticalDivider(
+                color: Colors.white,
+                thickness: 1,
+                indent: 16, // ขอบด้านบน
+                endIndent: 16, // ขอบด้านล่าง
+              ),
+              InkWell(
+                onTap: () {
+                  _showCustomDialog();
+                },
+                child: Text(
+                  'Delete',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              SizedBox(width: 16)
+            ],
           ),
         ],
       ),
-      body: _getContentWidget(widget.account),
-      bottomNavigationBar: BottomBarDefault(
-        items: items,
-        iconSize: 18,
-        animated: true,
-        titleStyle: TextStyle(
-          fontFamily: 'Arial',
-        ),
-        backgroundColor: Colors.white,
-        color: Colors.grey.shade400,
-        colorSelected: Color(0xFFFF9900),
-        indexSelected: _selectedIndex,
-        // paddingVertical: 25,
-        onTap: _onItemTapped,
-      ),
+      body: _viewDetail(widget.account),
+      // bottomNavigationBar: BottomBarDefault(
+      //   items: items,
+      //   iconSize: 18,
+      //   animated: true,
+      //   titleStyle: TextStyle(
+      //     fontFamily: 'Arial',
+      //   ),
+      //   backgroundColor: Colors.white,
+      //   color: Colors.grey.shade400,
+      //   colorSelected: Color(0xFFFF9900),
+      //   indexSelected: _selectedIndex,
+      //   // paddingVertical: 25,
+      //   onTap: _onItemTapped,
+      // ),
     );
   }
 
@@ -217,6 +237,7 @@ class _AccountEditViewState extends State<AccountEditView> {
         Row(
           children: [
             Expanded(
+              flex: 5,
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: 16, right: 8, bottom: 16, top: 8),
@@ -232,9 +253,11 @@ class _AccountEditViewState extends State<AccountEditView> {
                         color: Colors.grey.shade100,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.network(
-                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            fit: BoxFit.fill,
+                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                            // width: MediaQuery.of(context).size.width * 0.2,
+                            height: 160,
+                            fit: BoxFit.contain,
+                            color: Colors.grey.shade100,
                           );
                         },
                       ),
@@ -247,9 +270,9 @@ class _AccountEditViewState extends State<AccountEditView> {
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.network(
-                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            fit: BoxFit.fill,
+                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                            height: 150,
+                            fit: BoxFit.contain,
                           );
                         },
                       ),
@@ -259,72 +282,69 @@ class _AccountEditViewState extends State<AccountEditView> {
               ),
             ),
             Expanded(
+              flex: 6,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          account.owner_name,
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 20,
-                            color: Colors.grey.shade800,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          maxLines: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          account.cus_code,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w900),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          account.account_name,
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'Start Date : ${account.create_date}',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'End Date : ${account.last_activity_date}',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                    Text(
+                      account.owner_name,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 20,
+                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 10,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      account.cus_code,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                          fontWeight: FontWeight.w900),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      account.account_name,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'Start Date : ${account.create_date}',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 10,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      'End Date : ${account.last_activity_date}',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 10,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -511,7 +531,7 @@ class _AccountEditViewState extends State<AccountEditView> {
   }
 
   Future<void> _fetchDeleteAccount() async {
-    final uri = Uri.parse('$hostDev/api/origami/crm/account/dele.php');
+    final uri = Uri.parse('$hostDev/api/origami/crm/account/delete_account.php');
     try {
       final response = await http.post(
         uri,
@@ -526,18 +546,83 @@ class _AccountEditViewState extends State<AccountEditView> {
         // final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final jsonResponse = jsonDecode(response.body);
         final message = jsonResponse['message'];
-        if (jsonResponse['status'] == true) {
-          Navigator.pop(context);
-        }
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                OrigamiPage(employee: widget.employee, popPage: 13),
+          ),
+        );
         showSnackBar(message);
       } else {
-        throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+        throw Exception(
+            'Failed to load personal data: ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
     }
   }
-  void showSnackBar(String message){
+
+  void _showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Delete',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            (widget.account.registration_name == '')
+                ? 'Do you want to delete account ${widget.account.account_name_en}?'
+                : 'Do you want to delete account ${widget.account.registration_name ?? ''} : ${widget.account.account_name_en}?',
+            style: const TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                _fetchDeleteAccount();
+              },
+              child: Text(
+                'Ok',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
+  }
+
+  void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -550,5 +635,4 @@ class _AccountEditViewState extends State<AccountEditView> {
       ),
     );
   }
-
 }

@@ -100,7 +100,7 @@ class _TimeSampleState extends State<TimeSample> {
         }
       });
     } else {
-      print("Permission denied");
+      // print("Permission denied");
     }
   }
 
@@ -226,10 +226,6 @@ class _TimeSampleState extends State<TimeSample> {
   }
 
   Widget _getContentWidget(GetTimeStampSim branch) {
-    final LatLng branchCenter = LatLng(
-      double.parse(branch.branch_lat),
-      double.parse(branch.branch_lng),
-    );
     return SafeArea(
       child: Column(
         children: [
@@ -249,7 +245,7 @@ class _TimeSampleState extends State<TimeSample> {
               ),
             ),
           ),
-          Expanded(flex: 3, child: _buildGoogleMap(branch, branchCenter)),
+          Expanded(flex: 3, child: _buildGoogleMap(branch)),
           Expanded(
             flex: 2,
             child: _buildStampButtons(branch),
@@ -280,7 +276,11 @@ class _TimeSampleState extends State<TimeSample> {
   //   });
   // }
 
-  Widget _buildGoogleMap(GetTimeStampSim branch, LatLng center) {
+  Widget _buildGoogleMap(GetTimeStampSim branch) {
+    // final LatLng branchCenter = LatLng(
+    //   double.parse(branch.branch_lat),
+    //   double.parse(branch.branch_lng),
+    // );
     return GoogleMap(
       onMapCreated: (controller) => _mapController = controller,
       markers: _tappedLocation == null
@@ -310,11 +310,17 @@ class _TimeSampleState extends State<TimeSample> {
       //   // แสดงพิกัดใน console
       //   print('Tapped location: ${latLng.latitude}, ${latLng.longitude}');
       // },
-      initialCameraPosition: CameraPosition(target: center, zoom: 18),
+      initialCameraPosition: CameraPosition(target: LatLng(
+        double.parse(branch.branch_lat),
+        double.parse(branch.branch_lng),
+      ), zoom: 18),
       circles: {
         Circle(
           circleId: const CircleId('radius_circle'),
-          center: center,
+          center: LatLng(
+            double.parse(branch.branch_lat),
+            double.parse(branch.branch_lng),
+          ),
           radius: double.tryParse(branch.branch_radius) ?? 100,
           fillColor: fillColor,
           strokeColor: strokeColor,
@@ -345,7 +351,7 @@ class _TimeSampleState extends State<TimeSample> {
   Widget _buildLocationInfo(GetTimeStampSim b) {
     return Row(
       children: [
-        const Icon(Icons.location_on, color: Colors.red),
+        const Icon(Icons.location_on, color: Colors.white),
         const SizedBox(width: 4),
         Text(
           "$compDescription (${b.branch_name})",
@@ -539,7 +545,7 @@ class _TimeSampleState extends State<TimeSample> {
   double? branchLng;
   String compDescription = '';
   Future<GetTimeStampSim> fetchGetTimeStampSim() async {
-    final uri = Uri.parse("$host/api/origami/time/branch.php");
+    final uri = Uri.parse("$hostDev/api/origami/time/branch.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $authorization'},
@@ -575,17 +581,18 @@ class _TimeSampleState extends State<TimeSample> {
 
   String checkStampIn = '';
   String checkStampOut = '';
+
   Future<void> _fetchStamp() async {
     try {
       final response = await http.post(
-        Uri.parse('$host/api/origami/time/stamp.php'),
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        Uri.parse('$hostDev/api/origami/time/stamp.php'),
+        headers: {'Authorization': 'Bearer $authorization'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
           'stamp_type': stamp_type, //in,out
           //________________________activity_id_______________________//
-          'activity_id': '',
+          'activity_id': '0',
           //________________________branch_id_______________________//
           'branch_id': widget.timestamp?.branch_id ?? '2',
           'latitude': latitude,
@@ -596,10 +603,13 @@ class _TimeSampleState extends State<TimeSample> {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        String ms = jsonResponse['message'];
+        print('jsonResponse message message message message message message message = $ms');
         setState(() {
           checkStampIn = jsonResponse['stamp_in'];
           checkStampOut = jsonResponse['stamp_out'];
         });
+
         showStampSnackBar(jsonResponse['message']);
       } else {
         throw Exception('Failed to load status data');

@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'import/import.dart';
 import 'package:geolocator/geolocator.dart';
+
 String hostDev = 'https://dev.origami.life';
 String host = 'https://www.origami.life';
 String authorization = 'ori20#17gami';
@@ -74,7 +75,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Origami CRM',
+      title: 'Origami Platform',
       theme: ThemeData(
         useMaterial3: false,
         colorScheme: ColorScheme.fromSeed(
@@ -216,14 +217,15 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                     image: backgroudComponent.isNotEmpty
                         ? DecorationImage(
-                      image: NetworkImage(backgroudComponent),
-                      fit: BoxFit.cover,
-                    )
+                            image: NetworkImage(backgroudComponent),
+                            fit: BoxFit.cover,
+                          )
                         : DecorationImage(
-                      image: AssetImage('assets/images/logoOrigami/default_bg.png'),
-                      fit: BoxFit.cover,
-                    ) // หรือใช้ภาพจาก assets แทน
-                ),
+                            image: AssetImage(
+                                'assets/images/logoOrigami/default_bg.png'),
+                            fit: BoxFit.cover,
+                          ) // หรือใช้ภาพจาก assets แทน
+                    ),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -268,7 +270,8 @@ class _LoginPageState extends State<LoginPage> {
                 SnackBar(
                   content: Text(
                     exitApp2TS,
-                    style: const TextStyle(fontFamily: 'Arial', color: Colors.white),
+                    style: const TextStyle(
+                        fontFamily: 'Arial', color: Colors.white),
                   ),
                   duration: maxDuration,
                 ),
@@ -286,17 +289,18 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    image: backgroudComponent.isNotEmpty
-                        ? DecorationImage(
-                      image: NetworkImage(backgroudComponent),
-                      fit: BoxFit.cover,
-                    )
-                        : DecorationImage(
-                      image: AssetImage('assets/images/logoOrigami/default_bg.png'),
-                      fit: BoxFit.cover,
-                    ) // หรือใช้ภาพจาก assets แทน
-                  ),
+                      color: Colors.white,
+                      image: backgroudComponent.isNotEmpty
+                          ? DecorationImage(
+                              image: NetworkImage(backgroudComponent),
+                              fit: BoxFit.cover,
+                            )
+                          : DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/logoOrigami/default_bg.png'),
+                              fit: BoxFit.cover,
+                            ) // หรือใช้ภาพจาก assets แทน
+                      ),
                 ),
                 LayoutBuilder(builder: (context, constraints) {
                   return SingleChildScrollView(
@@ -304,9 +308,7 @@ class _LoginPageState extends State<LoginPage> {
                         constraints: BoxConstraints(
                           minHeight: constraints.maxHeight,
                         ),
-                        child: _forgot
-                            ? _forgotWidget(constraints)
-                            : _loginWidget(constraints)),
+                        child: _loginWidget(constraints)),
                   );
                 }),
               ],
@@ -406,12 +408,12 @@ class _LoginPageState extends State<LoginPage> {
               //   },
               // ),
               Text(
-                'Origami CRM',
+                'Origami Platform',
                 style: const TextStyle(
                   fontFamily: 'Arial',
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
-                  fontSize: 55,
+                  fontSize: 50,
                 ),
               ),
               // Text(
@@ -437,15 +439,15 @@ class _LoginPageState extends State<LoginPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: _onForgotPasswordPressed,
-                        child: Row(
+                        onPressed: () => _forgotWidget(constraints),
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.lock_open,
+                            Icon(Icons.lock_outline,
                                 color: Colors.white, size: 20),
                             SizedBox(width: 8),
                             Text(
-                              '$forgotPwdTS',
+                              'Forgot Pwd?',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 color: Colors.white,
@@ -576,7 +578,7 @@ class _LoginPageState extends State<LoginPage> {
                           foregroundColor: Colors.red,
                           backgroundColor: Colors.red,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(100),
                           ),
                         ),
                         onPressed: () => _fetchForgetMail(),
@@ -685,7 +687,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(12),
           backgroundColor: Colors.red,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         ),
         onPressed: _login,
         child: Text(
@@ -701,8 +703,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showFullScreenImage(List<Employee> employeeList)
-  {
+  void _showFullScreenImage(List<Employee> employeeList) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -744,7 +745,6 @@ class _LoginPageState extends State<LoginPage> {
                           MaterialPageRoute(
                             builder: (context) => OrigamiPage(
                               employee: employee,
-                              Authorization: authorization,
                               popPage: widget.popPage,
                               company_id: index,
                             ),
@@ -761,7 +761,7 @@ class _LoginPageState extends State<LoginPage> {
                             employee.comp_logo,
                             fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.broken_image),
+                                const Icon(Icons.broken_image),
                           ),
                         ),
                       ),
@@ -825,7 +825,8 @@ class _LoginPageState extends State<LoginPage> {
         final jsonResponse = jsonDecode(response.body);
 
         if (jsonResponse['status'] == 200) {
-          final List<dynamic> employeeJson = jsonResponse['employee_data'] ?? [];
+          final List<dynamic> employeeJson =
+              jsonResponse['employee_data'] ?? [];
 
           if (employeeJson.isEmpty) {
             throw Exception('No employee data found.');
@@ -848,7 +849,6 @@ class _LoginPageState extends State<LoginPage> {
               MaterialPageRoute(
                 builder: (context) => OrigamiPage(
                   employee: employeeList[widget.company_id ?? 0],
-                  Authorization: authorization,
                   company_id: widget.company_id ?? 0,
                   popPage: widget.popPage,
                 ),
@@ -886,7 +886,8 @@ class _LoginPageState extends State<LoginPage> {
         if (jsonResponse['status'] == false) {
           _showErrorSnackbar(jsonResponse['message'] ?? 'An error occurred');
         } else {
-          _showSuccessSnackbar(jsonResponse['message'] ?? 'Please check your email.');
+          _showSuccessSnackbar(
+              jsonResponse['message'] ?? 'Please check your email.');
         }
       } else {
         throw Exception('Server returned status ${response.statusCode}');
@@ -928,7 +929,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 }
 
 class Employee {

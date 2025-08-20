@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController _nicknameController = TextEditingController();
 
   Future<ProfileResponse> fetchProfile() async {
-    final uri = Uri.parse("$host/api/origami/profile/profile.php");
+    final uri = Uri.parse("$hostDev/api/origami/profile/profile.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${widget.Authorization}'},
@@ -170,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
             width: 450,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: Colors.transparent,
                 width: 1.0,
@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.grey.withOpacity(0.5),
                   spreadRadius: 0,
                   blurRadius: 0,
-                  offset: Offset(0, 3), // x, y
+                  offset: Offset(0, 1), // x, y
                 ),
               ],
             ),
@@ -215,6 +215,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       child: Image.network(
                                         profileData.emp_avatar ?? '',
                                         fit: BoxFit.fill,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Icon(Icons.person_pin_outlined,size: 60,);
+                                        },
                                       ),
                                     ),
                                   ),
@@ -242,6 +245,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       child: Image.network(
                                         profileData.dna_logo,
                                         fit: BoxFit.fill,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Icon(Icons.person_pin_outlined,size: 60,);
+                                        },
                                       ),
                                     ),
                                   ),
@@ -327,7 +333,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Colors.grey.shade50,
                           padding: EdgeInsets.only(top: 8, bottom: 8),
                           child: Text(
-                            'DNA / Birth Day',
+                            'DNA / Birthday',
                             style: TextStyle(
                               fontFamily: 'Arial',
                               fontSize: 16,
@@ -492,7 +498,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(4),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -507,6 +513,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: 150,
                             width: double.infinity,
                             fit: BoxFit.fill,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(Icons.note_alt_outlined,);
+                            },
                           ),
                         ),
                       ],
@@ -522,7 +531,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _fetchProfileSave() async {
-    final uri = Uri.parse("$host/api/origami/profile/saveProfile.php");
+    final uri = Uri.parse("$hostDev/api/origami/profile/saveProfile.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${widget.Authorization}'},
@@ -555,7 +564,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _fetchPasswordReset() async {
-    final uri = Uri.parse("$host/api/origami/profile/passwordReset.php");
+    final uri = Uri.parse("$hostDev/api/origami/profile/passwordReset.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${widget.Authorization}'},

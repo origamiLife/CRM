@@ -666,7 +666,6 @@ class _NeedsViewState extends State<NeedsView> {
                                           builder: (context) => OrigamiPage(
                                             employee: widget.employee,
                                             popPage: 0,
-                                            Authorization: widget.Authorization,
                                           ),
                                         ),
                                       );

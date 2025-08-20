@@ -357,21 +357,23 @@ class _WorkPageState extends State<WorkPage> {
         return AlertDialog(
           title: Container(
             width: MediaQuery.of(context).size.width,
+            child: Text(
+              '[${approve?.leave_name_th ?? ''}] ${approve?.reason ?? ''}',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF555555),
+              ),
+            ),
+          ),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '[${approve?.leave_name_th ?? ''}] ${approve?.reason ?? ''}',
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF555555),
-                  ),
-                ),
-                const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -528,7 +530,7 @@ class _WorkPageState extends State<WorkPage> {
                             ),
                             TextSpan(
                               text:
-                                  '${(approve?.approve_comment != null) ? approve?.approve_comment ?? '' : '[Waiting Approve]'}',
+                              '${(approve?.approve_comment != null) ? approve?.approve_comment ?? '' : '[Waiting Approve]'}',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 14,
@@ -567,7 +569,7 @@ class _WorkPageState extends State<WorkPage> {
   }
 
   Future<List<ModelWorkList>> fetchModelWorkList() async {
-    final uri = Uri.parse("$host/api/get_list_work.php");
+    final uri = Uri.parse("$hostDev/api/get_list_work.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
@@ -589,7 +591,7 @@ class _WorkPageState extends State<WorkPage> {
   }
 
   Future<List<ModelWork>> fetchModelWork() async {
-    final uri = Uri.parse("$host/api/get_work.php");
+    final uri = Uri.parse("$hostDev/api/get_work.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},

@@ -8,11 +8,11 @@ class ProjectAdd extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.saleData,
+    required this.project_sale_id,
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String saleData;
+  final String project_sale_id;
   @override
   _ProjectAddState createState() => _ProjectAddState();
 }
@@ -21,7 +21,6 @@ class _ProjectAddState extends State<ProjectAdd> {
   TextEditingController _codeController = TextEditingController();
   TextEditingController _projectController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _contactController = TextEditingController();
   TextEditingController _searchController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
   String _search = '';
@@ -31,22 +30,10 @@ class _ProjectAddState extends State<ProjectAdd> {
     _fatchApi();
     showDate();
     _fetchCategory();
-    (selectedProjectModel == null)?saleDataList[0]:saleDataList[1];
-    _codeController.addListener(() {
-      print("Current text: ${_codeController.text}");
-    });
-    _projectController.addListener(() {
-      print("Current text: ${_projectController.text}");
-    });
-    _descriptionController.addListener(() {
-      print("Current text: ${_descriptionController.text}");
-    });
-    _contactController.addListener(() {
-      print("Current text: ${_contactController.text}");
-    });
     _searchController.addListener(() {
       _search = _searchController.text;
     });
+    print(project_start);
   }
 
   @override
@@ -55,7 +42,6 @@ class _ProjectAddState extends State<ProjectAdd> {
     _codeController.dispose();
     _projectController.dispose();
     _descriptionController.dispose();
-    _contactController.dispose();
     _searchController.dispose();
   }
 
@@ -77,13 +63,15 @@ class _ProjectAddState extends State<ProjectAdd> {
 
   DateTime _selectedDateEnd = DateTime.now();
   String showlastDay = '';
-  String project_create = '';
-  String last_activity = '';
+  String project_start = '';
+  String project_end = '';
   void showDate() {
     DateFormat formatter = DateFormat('dd/MM/yyyy');
-    showlastDay = formatter.format(_selectedDateEnd);
-    project_create = showlastDay.toString();
-    last_activity = showlastDay.toString();
+    String formattedDate = formatter.format(_selectedDateEnd);
+
+    showlastDay = formattedDate;
+    project_start = formattedDate;
+    project_end = formattedDate;
   }
 
   Future<void> _requestDateEnd(BuildContext context, int start_end) async {
@@ -114,9 +102,11 @@ class _ProjectAddState extends State<ProjectAdd> {
                       DateFormat formatter = DateFormat('dd/MM/yyyy');
                       showlastDay = formatter.format(_selectedDateEnd);
                       if (start_end == 0) {
-                        project_create = showlastDay.toString();
+                        project_start = showlastDay.toString();
+                        print(project_start);
                       } else {
-                        last_activity = showlastDay.toString();
+                        project_end = showlastDay.toString();
+                        print(project_end);
                       }
                     });
                     Navigator.pop(context);
@@ -135,15 +125,14 @@ class _ProjectAddState extends State<ProjectAdd> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
-        title: Align(
-          alignment: Alignment.centerLeft,
+        backgroundColor: Colors.white,
+        title: Center(
           child: Text(
-            'Detail',
+            (widget.project_sale_id == '0') ? 'Sale' : 'Non Sale',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 24,
-              color: Colors.white,
+              color: Colors.orange,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -151,13 +140,13 @@ class _ProjectAddState extends State<ProjectAdd> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color: Colors.orange,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           InkWell(
-            onTap: _addDetail,
+            onTap: _fetchAddProject,
             child: Row(
               children: [
                 Text(
@@ -165,7 +154,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
-                    color: Colors.white,
+                    color: Colors.orange,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -224,13 +213,18 @@ class _ProjectAddState extends State<ProjectAdd> {
                 label: 'Type',
                 items: typeList,
                 selectedValue: selectedType,
-                getLabel: (item) => item.type_name,
+                getLabel: (item) => item.project_type_name,
                 onChanged: (value) {
                   setState(() {
                     selectedType = value;
-                    type_id = value?.type_id ?? '';
+                    project_type_id = value?.project_type_id ?? '';
+                    group_year = value?.project_type_year ?? '';
+                    group_shcode = value?.project_type_code ?? '';
+                    group_gen = value?.project_type_gen ?? '';
+                    _codeController.text = formaProjectcode(group_gen);
                   });
                 },
+                hint: '',
               ),
             ),
             SizedBox(width: 8),
@@ -255,14 +249,15 @@ class _ProjectAddState extends State<ProjectAdd> {
             onChanged: (value) {
               setState(() {
                 selectedProcess = value;
-                process_id = value?.process_id ?? '';
+                project_status_id = value?.process_id ?? '';
               });
             },
+            hint: '',
           ),
         ),
         Container(
           child: _buildDropdown<PriorityData>(
-            label: 'Project Priority',
+            label: 'Priority',
             items: priorityList,
             selectedValue: selectedPriority,
             getLabel: (item) => item.priority_name,
@@ -272,6 +267,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 priority_id = value?.priority_id ?? '';
               });
             },
+            hint: '',
           ),
         ),
       ],
@@ -288,45 +284,53 @@ class _ProjectAddState extends State<ProjectAdd> {
             label: 'Contact',
             items: contactList,
             selectedValue: selectedContact,
-            getLabel: (item) => item.contact_name,
+            getLabel: (item) => "${item.contact_name} ${item.contact_surname}",
             onChanged: (value) {
               setState(() {
                 selectedContact = value;
                 contact_id = value?.contact_id ?? '';
+                account_id = value?.cus_id ?? '';
+                String nameTH = value?.cus_name_th ?? '';
+                String nameEN = value?.cus_name_th ?? '';
+                if (account_id != '') {
+                  account_name = '$nameTH [$nameEN]';
+                } else {
+                  account_name = '';
+                }
               });
+              _fetchAccount();
+              selectedAccount = null;
+              print("account_name : $account_name");
             },
+            hint: contact_name,
           ),
         ),
-        Container(
-          child: _buildDropdown<AccountData>(
-            label: 'Account',
-            items: accountList,
-            selectedValue: selectedAccount,
-            getLabel: (item) => item.account_name,
-            onChanged: (value) {
-              setState(() {
-                selectedAccount = value;
-                account_id = value?.account_id ?? '';
-              });
-            },
-          ),
+        _buildDropdown<AccountData>(
+          label: 'Account',
+          items: accountList,
+          selectedValue: null,
+          getLabel: (item) => item.cus_name_en ?? '',
+          onChanged: (value) {},
+          hint: account_name,
+          filled: true,
         ),
         // _DropdownSale(
         //     'Sale/Non Sale'), //0,1 => Sale Project , Non Sale Project
         // _DropdownModel('Project Model'), //0,1 => internal , external
 
         Container(
-          child: _buildDropdown<ProjectModelData>(
+          child: _buildDropdown<ProjectSupportData>(
             label: 'Project Model',
-            items: projectModelList,
-            selectedValue: selectedProjectModel,
-            getLabel: (item) => item.project_model_name,
+            items: projectSupportList,
+            selectedValue: selectedSupportModel,
+            getLabel: (item) => item.project_support_name,
             onChanged: (value) {
               setState(() {
-                selectedProjectModel = value;
-                project_model_id = value?.project_model_id ?? '';
+                selectedSupportModel = value;
+                project_support_id = value?.project_support_id ?? '';
               });
             },
+            hint: '',
           ),
         ),
         Container(
@@ -338,9 +342,10 @@ class _ProjectAddState extends State<ProjectAdd> {
             onChanged: (value) {
               setState(() {
                 selectedSource = value;
-                type_id = value?.source_id ?? '';
+                source_id = value?.source_id ?? '';
               });
             },
+            hint: '',
           ),
         ),
         _textController(
@@ -371,14 +376,14 @@ class _ProjectAddState extends State<ProjectAdd> {
             child: TextFormField(
               controller: controller,
               readOnly: key,
-              minLines: controller == _descriptionController?3:1,
+              minLines: controller == _descriptionController ? 3 : 1,
               maxLines: null,
               autofocus: false,
               obscureText: false,
               decoration: InputDecoration(
                 isDense: true,
                 fillColor:
-                key == false ? Colors.grey.shade50 : Colors.grey.shade300,
+                    key == false ? Colors.grey.shade50 : Colors.grey.shade300,
                 labelStyle: TextStyle(
                   fontFamily: 'Arial',
                   color: Color(0xFF555555),
@@ -421,6 +426,9 @@ class _ProjectAddState extends State<ProjectAdd> {
 
   Widget _buildDropdown<T>({
     required String label,
+    IconData? icon,
+    bool? filled,
+    required String hint,
     required List<T> items,
     required T? selectedValue,
     required String Function(T) getLabel,
@@ -444,6 +452,9 @@ class _ProjectAddState extends State<ProjectAdd> {
           InputDecorator(
             decoration: InputDecoration(
               isDense: true,
+              filled:
+                  filled != true ? false : true, // ✅ เติมพื้นหลังเมื่อ disabled
+              fillColor: filled != true ? Colors.white : Colors.grey.shade300,
               contentPadding: EdgeInsets.only(top: 12, bottom: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -454,7 +465,7 @@ class _ProjectAddState extends State<ProjectAdd> {
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  '',
+                  hint,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -462,20 +473,28 @@ class _ProjectAddState extends State<ProjectAdd> {
                   ),
                 ),
                 value: selectedValue,
-                items: items
-                    .map((item) => DropdownMenuItem<T>(
-                  value: item,
-                  child: Text(
-                    getLabel(item),
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
+                items: items.map((item) {
+                  return DropdownMenuItem<T>(
+                    value: item,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        (icon != null) ? Icon(icon, size: 24) : Container(),
+                        Expanded(
+                          child: Text(
+                            getLabel(item),
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFF555555),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ))
-                    .toList(),
-                onChanged: onChanged,
+                  );
+                }).toList(),
+                onChanged: filled != true ? onChanged : null,
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
@@ -499,6 +518,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 menuItemStyleData: MenuItemStyleData(
                   height: 40,
                 ),
+
                 /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
                 dropdownSearchData: DropdownSearchData(
                   searchController: dropdownSearchController,
@@ -513,7 +533,8 @@ class _ProjectAddState extends State<ProjectAdd> {
                       controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -540,22 +561,6 @@ class _ProjectAddState extends State<ProjectAdd> {
       ),
     );
   }
-
-  ProjectModelData? selectedProjectModel;
-  String project_model_id = '';
-  String project_model_name = '';
-  List<ProjectModelData> projectModelList = [
-    ProjectModelData(project_model_id: '0', project_model_name: 'Internal'),
-    ProjectModelData(project_model_id: '1', project_model_name: 'External'),
-  ];
-
-  SaleData? selectedSaleData;
-  String sale_id = '';
-  String sale_name = '';
-  List<SaleData> saleDataList = [
-    SaleData(sale_id: '0', sale_name: 'Sale Project'),
-    SaleData(sale_id: '1', sale_name: 'Non Sale Project'),
-  ];
 
   Widget _DateBody(String _nemedate, int start_end) {
     return Padding(
@@ -592,7 +597,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 child: Row(
                   children: [
                     Text(
-                      (start_end == 0) ? project_create : last_activity,
+                      (start_end == 0) ? project_start : project_end,
                       style: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14,
@@ -613,6 +618,18 @@ class _ProjectAddState extends State<ProjectAdd> {
     );
   }
 
+  ProjectSupportData? selectedSupportModel;
+  String project_support_id = '';
+  String project_support_name = '';
+  List<ProjectSupportData> projectSupportList = [
+    ProjectSupportData(
+        project_support_id: '0', project_support_name: 'Internal'),
+    ProjectSupportData(
+        project_support_id: '1', project_support_name: 'Support internal'),
+    ProjectSupportData(
+        project_support_id: '2', project_support_name: 'External'),
+  ];
+
   void _fatchApi() {
     _fetchContact();
     _fetchAccount();
@@ -624,42 +641,34 @@ class _ProjectAddState extends State<ProjectAdd> {
     _fetchSubStatus();
   }
 
-  void _addDetail() {
-    Navigator.pop(context);
-  }
-
   ContactData? selectedContact;
   List<ContactData> contactList = [];
   String contact_id = '';
   String contact_name = '';
+  String cus_name = '';
+  String cont_id = '';
   Future<void> _fetchContact() async {
     final uri =
-        Uri.parse('$host/api/origami/need/contact.php?page=&search=$_search');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['contact_data'] ?? [];
-        setState(() {
-          contactList =
-              dataJson.map((json) => ContactData.fromJson(json)).toList();
-          if (contactList.isNotEmpty && selectedContact == null) {
-            selectedContact = contactList[0];
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+        Uri.parse("$hostDev/api/origami/crm/project/component/contact.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'cus_cont_id': cont_id,
+        'cus_id': account_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        contactList =
+            dataJson.map((json) => ContactData.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load instructors');
     }
   }
 
@@ -669,67 +678,57 @@ class _ProjectAddState extends State<ProjectAdd> {
   String account_name = '';
   Future<void> _fetchAccount() async {
     final uri =
-        Uri.parse('$host/api/origami/need/account.php?page=&search=$_search');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['account_data'] ?? [];
-        setState(() {
-          accountList =
-              dataJson.map((json) => AccountData.fromJson(json)).toList();
-          if (accountList.isNotEmpty && selectedAccount == null) {
-            selectedAccount = accountList[0];
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+        Uri.parse("$hostDev/api/origami/crm/project/component/account.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'cus_id': account_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        accountList =
+            dataJson.map((json) => AccountData.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load instructors');
     }
   }
 
   TypeData? selectedType;
   List<TypeData> typeList = [];
-  String type_id = '';
-  String type_name = '';
+  String project_type_id = '';
+  String project_type_name = '';
   Future<void> _fetchType() async {
-    final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/type.php?search=$_search');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'index': '',
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['type_data'] ?? [];
-        setState(() {
-          typeList = dataJson.map((json) => TypeData.fromJson(json)).toList();
-          if (typeList.isNotEmpty && selectedType == null) {
-            selectedType = typeList[0];
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/project/component/type.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        typeList = dataJson.map((json) => TypeData.fromJson(json)).toList();
+        if (typeList.isNotEmpty && selectedType == null) {
+          selectedType = typeList[0];
+          project_type_id = selectedType?.project_type_id ?? '';
+          group_shcode = selectedType?.project_type_code ?? '';
+          group_year = selectedType?.project_type_year ?? '';
+          group_gen = selectedType?.project_type_gen ?? '';
+          _codeController.text = formaProjectcode(group_gen);
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
     }
   }
 
@@ -739,7 +738,7 @@ class _ProjectAddState extends State<ProjectAdd> {
   String source_name = '';
   Future<void> _fetchSource() async {
     final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/source.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/source.php?search=$_search');
     try {
       final response = await http.post(
         uri,
@@ -759,6 +758,7 @@ class _ProjectAddState extends State<ProjectAdd> {
               dataJson.map((json) => SourceData.fromJson(json)).toList();
           if (sourceList.isNotEmpty && selectedSource == null) {
             selectedSource = sourceList[0];
+            source_id = selectedSource?.source_id ?? '';
           }
         });
       } else {
@@ -775,7 +775,7 @@ class _ProjectAddState extends State<ProjectAdd> {
   String category_name = '';
   Future<void> _fetchCategory() async {
     final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/category.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/category.php?search=$_search');
     try {
       final response = await http.post(
         uri,
@@ -795,6 +795,7 @@ class _ProjectAddState extends State<ProjectAdd> {
               dataJson.map((json) => CategoryData.fromJson(json)).toList();
           if (categoryList.isNotEmpty && selectedCategory == null) {
             selectedCategory = categoryList[0];
+            category_id = selectedCategory?.categories_id ?? '';
           }
         });
       } else {
@@ -807,11 +808,11 @@ class _ProjectAddState extends State<ProjectAdd> {
 
   ProcessData? selectedProcess;
   List<ProcessData> processList = [];
-  String process_id = '';
+  String project_status_id = '';
   String precess_name = '';
   Future<void> _fetchProcess() async {
     final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/process.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/process.php?search=$_search');
     try {
       final response = await http.post(
         uri,
@@ -831,6 +832,8 @@ class _ProjectAddState extends State<ProjectAdd> {
               dataJson.map((json) => ProcessData.fromJson(json)).toList();
           if (processList.isNotEmpty && selectedProcess == null) {
             selectedProcess = processList[0];
+            project_status_id = selectedProcess?.process_id ?? '';
+            print("process_id : ${project_status_id}");
           }
         });
       } else {
@@ -846,31 +849,29 @@ class _ProjectAddState extends State<ProjectAdd> {
   String priority_id = '';
   String priority_name = '';
   Future<void> _fetchPriority() async {
-    final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/priority.php?search=$_search');
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/project/component/priority');
     try {
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'index': ''
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['priority_data'] ?? [];
+        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
         setState(() {
           priorityList =
               dataJson.map((json) => PriorityData.fromJson(json)).toList();
           if (priorityList.isNotEmpty && selectedPriority == null) {
             selectedPriority = priorityList[0];
+            priority_id = selectedPriority?.priority_id ?? '';
           }
         });
       } else {
-        throw Exception('Failed to load status data');
+        throw Exception('Failed to load instructors');
       }
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
@@ -883,7 +884,7 @@ class _ProjectAddState extends State<ProjectAdd> {
   String sub_status_name = '';
   Future<void> _fetchSubStatus() async {
     final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/substatus.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/substatus.php?search=$_search');
     try {
       final response = await http.post(
         uri,
@@ -903,6 +904,7 @@ class _ProjectAddState extends State<ProjectAdd> {
               dataJson.map((json) => SubStatusData.fromJson(json)).toList();
           if (subStatusList.isNotEmpty && selectedSubStatus == null) {
             selectedSubStatus = subStatusList[0];
+            sub_status_id = selectedSubStatus?.sub_status_id ?? '';
           }
         });
       } else {
@@ -912,38 +914,156 @@ class _ProjectAddState extends State<ProjectAdd> {
       throw Exception('Failed to load personal data: $e');
     }
   }
+
+  Future<void> _fetchAddProject() async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/project/add_project.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'cus_create_user': widget.employee.emp_id,
+        'cont_id': contact_id,
+        'cus_id': account_id,
+        'project_sale': widget.project_sale_id,
+        'project_type_id': project_type_id,
+        'project_comefrom_id': source_id,
+        'project_process': project_status_id,
+        'project_sale_status_id': priority_id,
+        'project_support': project_support_id,
+        'project_code': project_code,
+        'project_name': _projectController.text.trim(),
+        'project_description': _descriptionController.text.trim(),
+        'project_start': project_start,
+        'project_end': project_end,
+        'owner_group': widget.employee.emp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final jsonResponse = jsonDecode(response.body);
+      final message = jsonResponse['message'];
+      final project_id = jsonResponse['project_id']??'';
+
+      if(project_id != ''){
+        fetchAddActivity(project_id.toString(),message);
+      }
+      // if(jsonResponse['status'] != 'error'){
+      
+      // }
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
+  List<String> contact_list = [];
+  Future<void> fetchAddActivity(String project_id,String message_p) async {
+    print('object pro => $project_id');
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/project/add_activity_project.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $authorization'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'activity_type_id': source_id,
+        'project_id': project_id,
+        'account_id': account_id,
+        'contact_id': contact_id,
+        'activity_project_name': _projectController.text.trim(),
+        'activity_description': _projectController.text.trim(),
+        'activity_start_date': project_start,
+        'activity_end_date': project_end,
+        'activity_create_user': widget.employee.emp_id,
+        'contact_list': contact_list.join(","),
+      },
+    );
+    if (response.statusCode == 200) {
+      print('true: ${response.statusCode}');
+      final jsonResponse = jsonDecode(response.body);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              OrigamiPage(employee: widget.employee, popPage: 10),
+        ),
+      );
+      showSnackBar(message_p, context);
+    } else {
+      throw Exception('Failed to load status data');
+    }
+  }
+
+  void showSnackBar(String message, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String group_shcode = '';
+  String group_year = '';
+  String group_gen = '';
+  String project_code = '';
+  String formaProjectcode(String input) {
+    return project_code = "$group_shcode$group_year-${input.padLeft(4, '0')}";
+  }
 }
 
 class ContactData {
   final String contact_id;
   final String contact_name;
+  final String contact_surname;
+  final String cus_id;
+  final String cus_name_th;
+  final String cus_name_en;
 
   ContactData({
     required this.contact_id,
     required this.contact_name,
+    required this.contact_surname,
+    required this.cus_id,
+    required this.cus_name_th,
+    required this.cus_name_en,
   });
 
   factory ContactData.fromJson(Map<String, dynamic> json) {
     return ContactData(
-      contact_id: json['contact_id'] ?? '',
-      contact_name: json['contact_name'] ?? '',
+      contact_id: json['cus_cont_id'] ?? '',
+      contact_name: json['cus_cont_name'] ?? '',
+      contact_surname: json['cus_cont_surname'] ?? '',
+      cus_id: json['cus_id'] ?? '',
+      cus_name_th: json['cus_name_th'] ?? '',
+      cus_name_en: json['cus_name_en'] ?? '',
     );
   }
 }
 
 class AccountData {
-  String account_id;
-  String account_name;
+  String cus_id;
+  String cus_name_th;
+  String cus_name_en;
 
   AccountData({
-    required this.account_id,
-    required this.account_name,
+    required this.cus_id,
+    required this.cus_name_th,
+    required this.cus_name_en,
   });
 
   factory AccountData.fromJson(Map<String, dynamic> json) {
     return AccountData(
-      account_id: json['account_id'] ?? '',
-      account_name: json['account_name'] ?? '',
+      cus_id: json['cus_id'] ?? '',
+      cus_name_th: json['cus_name_th'] ?? '',
+      cus_name_en: json['cus_name_en'] ?? '',
     );
   }
 }
@@ -966,18 +1086,27 @@ class SourceData {
 }
 
 class TypeData {
-  final String type_id;
-  final String type_name;
+  final String project_type_id;
+  final String project_type_name;
+  final String project_type_code;
+  final String project_type_year;
+  final String project_type_gen;
 
   TypeData({
-    required this.type_id,
-    required this.type_name,
+    required this.project_type_id,
+    required this.project_type_name,
+    required this.project_type_code,
+    required this.project_type_year,
+    required this.project_type_gen,
   });
 
   factory TypeData.fromJson(Map<String, dynamic> json) {
     return TypeData(
-      type_id: json['type_id'] ?? '',
-      type_name: json['type_name'] ?? '',
+      project_type_id: json['project_type_id'] ?? '',
+      project_type_name: json['project_type_name'] ?? '',
+      project_type_code: json['project_type_code'] ?? '',
+      project_type_year: json['project_type_year'] ?? '',
+      project_type_gen: json['project_type_gen'] ?? '',
     );
   }
 }
@@ -1027,8 +1156,8 @@ class PriorityData {
 
   factory PriorityData.fromJson(Map<String, dynamic> json) {
     return PriorityData(
-      priority_id: json['priority_id'] ?? '',
-      priority_name: json['priority_name'] ?? '',
+      priority_id: json['project_sale_status_id'] ?? '',
+      priority_name: json['project_sale_status_name'] ?? '',
     );
   }
 }
@@ -1050,23 +1179,23 @@ class SubStatusData {
   }
 }
 
-class SaleData {
-  final String sale_id;
-  final String sale_name;
+class ProjectSaleData {
+  final String project_sale_id;
+  final String project_sale_name;
 
-  SaleData({
-    required this.sale_id,
-    required this.sale_name,
+  ProjectSaleData({
+    required this.project_sale_id,
+    required this.project_sale_name,
   });
 }
 
-class ProjectModelData {
-  final String project_model_id;
-  final String project_model_name;
+class ProjectSupportData {
+  final String project_support_id;
+  final String project_support_name;
 
-  ProjectModelData({
-    required this.project_model_id,
-    required this.project_model_name,
+  ProjectSupportData({
+    required this.project_support_id,
+    required this.project_support_name,
   });
 }
 

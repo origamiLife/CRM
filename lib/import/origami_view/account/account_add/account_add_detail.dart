@@ -47,17 +47,15 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
-        title: const Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            '',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
+        // elevation: 0,
+        backgroundColor: Colors.orange,
+        title: Text(
+          '',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 24,
+            color: Colors.orange,
+            fontWeight: FontWeight.w500,
           ),
         ),
         leading: IconButton(
@@ -74,11 +72,14 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                   cus_type_id != '' &&
                   cus_type != '' &&
                   cus_status_id != '' &&
+                  source_id != '' &&
                   _nameTHController.text.trim() != '' &&
                   _nameENController.text.trim() != '' &&
                   _telephoneController.text.trim() != '' &&
                   _emailController.text.trim() != '') {
                 await _fetchAddAccount();
+              } else {
+                showSnackBar('Please fill in all required information.');
               }
             },
             child: const Row(
@@ -127,6 +128,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
           ),
         ),
         SizedBox(height: 8),
+        // _lineWidget(),
         Row(
           children: [
             Expanded(
@@ -141,14 +143,14 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                     cus_group_id = value?.cus_group_id ?? '';
                     group_shcode = value?.cus_group_shcode ?? '';
                     group_gen = value?.cus_group_gen ?? '';
+                    _groupController.text = formaCuscode(group_gen);
                   });
-                },
+                }, hint: '',
               ),
             ),
             SizedBox(width: 8),
             Expanded(
-              child: _textController(formaCuscode(group_gen), _groupController,
-                  false, Icons.numbers),
+              child: _textController('', _groupController, true, Icons.numbers),
             ),
           ],
         ),
@@ -166,7 +168,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                     selectedType = value;
                     cus_type = value?.cus_type ?? '';
                   });
-                },
+                }, hint: '',
               ),
             ),
             SizedBox(width: 8),
@@ -181,12 +183,12 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                     selectedStatus = value;
                     cus_status_id = value?.cus_status_id ?? '';
                   });
-                },
+                }, hint: '',
               ),
             ),
           ],
         ),
-        _lineWidget(),
+        // _lineWidget(),
         _textController(
             'Customer Name (TH)', _nameTHController, false, Icons.paste),
         _textController(
@@ -198,12 +200,13 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
           getLabel: (item) => item.cus_type_name,
           onChanged: (value) {
             setState(() {
+              print('Registration ${value?.cus_type_id ?? ''}.');
               selectedRegistration = value;
               cus_type_id = value?.cus_type_id ?? '';
             });
-          },
+          }, hint: '',
         ),
-        _lineWidget(),
+        // _lineWidget(),
         _buildDropdown<SourceAccount>(
           label: 'Source',
           items: sourceList,
@@ -214,8 +217,10 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
               selectedSource = value;
               source_id = value?.project_comefrom_id ?? '';
             });
-          },
+          }, hint: '',
         ),
+        _textController(
+            'Description', _descriptionController, false, Icons.subject),
         _textController('Email', _emailController, false, Icons.mail),
         _textController(
             'Tel', _telephoneController, false, Icons.phone_android_rounded),
@@ -274,7 +279,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
               decoration: InputDecoration(
                 isDense: true,
                 fillColor:
-                    key == false ? Colors.grey.shade100 : Colors.grey.shade300,
+                key == false ? Colors.grey.shade50 : Colors.grey.shade300,
                 labelStyle: TextStyle(
                   fontFamily: 'Arial',
                   color: Color(0xFF555555),
@@ -288,7 +293,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.grey.shade100,
+                    color: Colors.grey.shade400,
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -305,7 +310,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
               ),
               style: TextStyle(
                 fontFamily: 'Arial',
-                // color: Color(0xFF555555),
+                color: key ? Colors.black87 : Color(0xFF555555),
                 fontSize: 14,
               ),
             ),
@@ -317,6 +322,9 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
 
   Widget _buildDropdown<T>({
     required String label,
+    IconData? icon,
+    bool? filled,
+    required String hint,
     required List<T> items,
     required T? selectedValue,
     required String Function(T) getLabel,
@@ -340,17 +348,19 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
           InputDecorator(
             decoration: InputDecoration(
               isDense: true,
-              contentPadding: EdgeInsets.only(top: 12, bottom: 12, right: 12),
+              filled: filled != true ? false:true, // ✅ เติมพื้นหลังเมื่อ disabled
+              fillColor: filled != true? Colors.white:Colors.grey.shade300,
+              contentPadding: EdgeInsets.only(top: 12, bottom: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey.shade300),
+                borderSide: BorderSide(color: Colors.grey.shade400),
               ),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  '',
+                  hint,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -358,9 +368,14 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                   ),
                 ),
                 value: selectedValue,
-                items: items
-                    .map((item) => DropdownMenuItem<T>(
-                          value: item,
+                items: items.map((item) {
+                  return DropdownMenuItem<T>(
+                    value: item,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        (icon != null) ? Icon(icon, size: 24) : Container(),
+                        Expanded(
                           child: Text(
                             getLabel(item),
                             style: TextStyle(
@@ -369,9 +384,12 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                               color: Color(0xFF555555),
                             ),
                           ),
-                        ))
-                    .toList(),
-                onChanged: onChanged,
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: filled != true ? onChanged : null,
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
@@ -384,6 +402,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                 ),
                 buttonStyleData: ButtonStyleData(
                   height: 24,
+                  padding: EdgeInsets.only(right: 12),
                 ),
                 dropdownStyleData: DropdownStyleData(
                   maxHeight: 200,
@@ -410,7 +429,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -477,6 +496,10 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             dataJson.map((json) => GroupAccount.fromJson(json)).toList();
         if (groupList.isNotEmpty && selectedGroup == null) {
           selectedGroup = groupList[0];
+          cus_group_id = selectedGroup?.cus_group_id ?? '';
+          group_shcode = selectedGroup?.cus_group_shcode ?? '';
+          group_gen = selectedGroup?.cus_group_gen ?? '';
+          _groupController.text = formaCuscode(group_gen);
         }
       });
     } else {
@@ -504,6 +527,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             dataJson.map((json) => StatusAccount.fromJson(json)).toList();
         if (statusList.isNotEmpty && selectedStatus == null) {
           selectedStatus = statusList[0];
+          cus_status_id = selectedStatus?.cus_status_id??'';
         }
       });
     } else {
@@ -531,6 +555,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             dataJson.map((json) => RegistrationAccount.fromJson(json)).toList();
         if (registrationList.isNotEmpty && selectedRegistration == null) {
           selectedRegistration = registrationList[0];
+          cus_type_id = selectedRegistration?.cus_type_id??'';
         }
       });
     } else {
@@ -545,7 +570,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         Uri.parse("$hostDev/api/origami/crm/account/component/source.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $authorization'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -558,6 +583,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             dataJson.map((json) => SourceAccount.fromJson(json)).toList();
         if (sourceList.isNotEmpty && selectedSource == null) {
           selectedSource = sourceList[0];
+          source_id = selectedSource?.project_comefrom_id??'';
         }
       });
     } else {
@@ -569,34 +595,47 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
     final uri = Uri.parse("$hostDev/api/origami/crm/account/add_account.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $authorization'},
       body: {
         'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
         'cus_create_user': widget.employee.emp_id,
+        'owner_group': widget.employee.emp_id,
         'cus_code': cus_code,
+        'cus_group_id': cus_group_id,
         'cus_type_id': cus_type_id,
         'cus_type': cus_type,
         'cus_status_id': cus_status_id,
+        'project_comefrom_id': source_id,
         'cus_name_th': _nameTHController.text.trim(),
         'cus_name_en': _nameENController.text.trim(),
         'cus_tel_no': _telephoneController.text.trim(),
         'cus_email': _emailController.text.trim(),
+        'cus_description': _descriptionController.text.trim(),
       },
     );
     if (response.statusCode == 200) {
       // final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final jsonResponse = jsonDecode(response.body);
       final message = jsonResponse['message'];
-      if (jsonResponse['status'] == true) {
-        Navigator.pop(context);
-      }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              OrigamiPage(employee: widget.employee, popPage: 13),
+        ),
+      );
+
       showSnackBar(message);
+
+      // showSnackBar(message);
     } else {
       throw Exception('Failed to load personal data: ${response.reasonPhrase}');
     }
   }
 
-  void showSnackBar(String message){
+  void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

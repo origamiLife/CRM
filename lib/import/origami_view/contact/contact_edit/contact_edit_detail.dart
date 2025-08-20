@@ -3,6 +3,8 @@ import 'package:origamilift/import/origami_view/contact/contact_edit/contact_edi
 import '../../../import.dart';
 import '../../contact/contact_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as p;
 
 import '../contact_add/contact_add_detail.dart';
 
@@ -137,22 +139,43 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _fetchUpdateContact();
+                },
+                child: Text(
+                  'Done',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              SizedBox(width: 16)
+            ],
+          ),
+        ],
       ),
-      body: SafeArea(child: _getContentWidget(widget.contact)),
-      bottomNavigationBar: BottomBarDefault(
-        items: items,
-        iconSize: 18,
-        animated: true,
-        titleStyle: TextStyle(
-          fontFamily: 'Arial',
-        ),
-        backgroundColor: Colors.white,
-        color: Colors.grey.shade400,
-        colorSelected: Color(0xFFFF9900),
-        indexSelected: _selectedIndex,
-        // paddingVertical: 25,
-        onTap: _onItemTapped,
-      ),
+      body: SafeArea(child:_getDetailWidget(widget.contact)),
+      // bottomNavigationBar: BottomBarDefault(
+      //   items: items,
+      //   iconSize: 18,
+      //   animated: true,
+      //   titleStyle: TextStyle(
+      //     fontFamily: 'Arial',
+      //   ),
+      //   backgroundColor: Colors.white,
+      //   color: Colors.grey.shade400,
+      //   colorSelected: Color(0xFFFF9900),
+      //   indexSelected: _selectedIndex,
+      //   // paddingVertical: 25,
+      //   onTap: _onItemTapped,
+      // ),
     );
   }
 
@@ -189,8 +212,11 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               ),
             ),
             SizedBox(height: 8),
+            _lineWidget(),
             _showImagePhoto(contact),
-            SizedBox(height: 16),
+            SizedBox(height: 8),
+
+            SizedBox(height: 8),
             _buildDropdown<groupnameContact>(
               label: 'Title',
               items: groupnameList,
@@ -202,7 +228,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                   cont_group_id = value?.cont_group_id ?? '';
                 });
               },
-              hint: contact.role_name,
+              hint: selectedGroupname?.cont_group_name??'นาย',
             ),
             _textController(
                 'Firstname', _firstnameController, false, Icons.numbers),
@@ -223,9 +249,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               },
               hint: contact.gender_name,
             ),
-            _textController('Email', _emailController, false, Icons.numbers),
-            _textController(
-                'Tel', _mobileController, false, Icons.phone_android_rounded),
+            _lineWidget(),
             _textController(
                 'Position', _positionController, false, Icons.numbers),
             _buildDropdown<roleContact>(
@@ -251,13 +275,40 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                 setState(() {
                   selectedEmotion = value;
                   emo_icon_id = value?.emo_icon_id ?? '';
+
+                  final fileName = emo_icon_id.split('/').last;
+                  cont_emo = '../images/$fileName';
                 });
               },
               hint: contact.cus_cont_emo,
             ),
+            _textController('Email', _emailController, false, Icons.numbers),
+            _textController(
+                'Tel', _mobileController, false, Icons.phone_android_rounded),
             SizedBox(height: 16),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _lineWidget() {
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade50,
+            height: 3,
+            width: double.infinity,
+          ),
+          SizedBox(height: 1),
+          Container(
+            color: Colors.orange.shade100,
+            height: 3,
+            width: double.infinity,
+          ),
+        ],
       ),
     );
   }
@@ -481,22 +532,27 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   File? _image;
   String _base64Image = '';
   bool _isStamping = false;
-
+  String cus_cont_photo = '';
   Future<void> _pickImage(ImageSource source) async {
     if (_isStamping) return;
     _isStamping = true;
     try {
       final XFile? image = await _picker.pickImage(source: source);
       if (image == null) return;
+      final file = File(image.path);
 
       // final directory = await getApplicationDocumentsDirectory();
       // final filePath = path.join(
       //   directory.path,
-      //   'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      //   '${DateTime.now().millisecondsSinceEpoch}',
       // );
-      final file = File(image.path);
-      final imageBytes = await file.readAsBytes();
-      _base64Image = base64Encode(imageBytes);
+      // print('file=> $file');
+      // print('filePath=> $filePath');
+      // print('image=> $image');
+      // print('image.path=> ${image.path}');
+
+      cus_cont_photo = p.basename(image.path);
+      print(cus_cont_photo); // best-new-cars-2026.webp
       setState(() {
         _image = file;
       });
@@ -713,8 +769,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
-        'comp_id': '2', //widget.employee.comp_id,
-        'emp_id': '2', //widget.employee.emp_id,
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
       },
     );
     if (response.statusCode == 200) {
@@ -741,8 +797,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
-        'comp_id': '2', //widget.employee.comp_id,
-        'emp_id': '2', //widget.employee.emp_id,
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
       },
     );
     if (response.statusCode == 200) {
@@ -769,8 +825,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
-        'comp_id': '2', //widget.employee.comp_id,
-        'emp_id': '2', //widget.employee.emp_id,
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
       },
     );
     if (response.statusCode == 200) {
@@ -779,9 +835,9 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       setState(() {
         emotionList =
             dataJson.map((json) => emotionContact.fromJson(json)).toList();
-        // if (widget.contact.cus_cont_emo == '' || selectedEmotion == null) {
-        //   selectedEmotion = emotionList[0];
-        // }
+        if (widget.contact.cus_cont_emo == '' || selectedEmotion == null) {
+          selectedEmotion = emotionList[0];
+        }
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -813,5 +869,62 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     } else {
       throw Exception('Failed to load instructors');
     }
+  }
+
+  String cus_id = '';
+  String cont_emo = '';
+  Future<void> _fetchUpdateContact() async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/contact/update_contact.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'cus_create_user': widget.employee.emp_id,
+        'cus_cont_id': widget.contact.cus_cont_id,
+        // 'cus_id': cus_id, //account
+        'cont_group_id': cont_group_id,
+        'cus_cont_name': _firstnameController.text.trim(),
+        'cus_cont_surname': _lastnameController.text.trim(),
+        'cus_cont_nick': _nicknameController.text.trim(),
+        'gender_id': gender_id,
+        'cus_cont_email': _emailController.text.trim(),
+        'cus_cont_mob':  _mobileController.text.trim(),
+        'cus_posi_id': _positionController.text.trim(),
+        'cont_project_role_id': role_id,
+        'cus_cont_emo': cont_emo,
+        'cus_cont_photo': cus_cont_photo,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final jsonResponse = jsonDecode(response.body);
+      final message = jsonResponse['message'];
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              OrigamiPage(employee: widget.employee, popPage: 12),
+        ),
+      );
+      showSnackBar(message);
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
+  void showSnackBar(String message){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 }

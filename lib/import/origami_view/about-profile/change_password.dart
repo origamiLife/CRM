@@ -77,7 +77,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                       Text(
                         "   Choose a strong password and don't reuse it for other accounts.",
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 16,
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w500,
@@ -108,18 +108,18 @@ class _ChangePasswordState extends State<ChangePassword> {
                               Text(
                                 'Change Password',
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 16,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               SizedBox(height: 16),
-                              _TextFormField(
-                                  'Old password',_showOld, _oldPasswordController),
+                              _TextFormField('Old password', _showOld,
+                                  _oldPasswordController),
                               SizedBox(height: 16),
-                              _TextFormField(
-                                  'New password',_showNew, _newPasswordController),
+                              _TextFormField('New password', _showNew,
+                                  _newPasswordController),
                               _Condition(_hasMin, 'At least 8 characters long'),
                               _Condition(_hasUpper,
                                   'At least one uppercase English letter'),
@@ -128,8 +128,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                               _Condition(
                                   _hasSpecial, 'At least 1 special character'),
                               SizedBox(height: 8),
-                              _TextFormField(
-                                  'Confirm password',_showConfirm, _confirmPasswordController),
+                              _TextFormField('Confirm password', _showConfirm,
+                                  _confirmPasswordController),
                               SizedBox(height: 16),
                             ],
                           ),
@@ -151,13 +151,15 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ),
                 ),
                 onPressed: () {
-                  if(isValid && _oldPassword == _newPassword || _oldPassword == _confirmPassword){
+                  if (isValid && _oldPassword == _newPassword ||
+                      _oldPassword == _confirmPassword) {
                     showDialog(
                       context: context, // Assuming context is available
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text("Invalid Password"),
-                          content: Text("The new password must be different from your old password. Please enter the new password again."),
+                          content: Text(
+                              "The new password must be different from your old password. Please enter the new password again."),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
@@ -172,7 +174,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         content: Text(
                           'The new password must be different from your old password. Please enter the new password again.',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             color: Colors.white,
                           ),
                         ),
@@ -187,8 +189,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   child: Center(
                     child: Text(
                       '$Save',
-                      style: TextStyle(
-                fontFamily: 'Arial',fontSize: 16.0),
+                      style: TextStyle(fontFamily: 'Arial', fontSize: 16.0),
                     ),
                   ),
                 ),
@@ -200,13 +201,13 @@ class _ChangePasswordState extends State<ChangePassword> {
     );
   }
 
-  Widget _TextFormField(String title,bool showPass, controller) {
+  Widget _TextFormField(String title, bool showPass, controller) {
     return SizedBox(
       width: 350,
       child: TextFormField(
         controller: controller,
         style: TextStyle(
-                fontFamily: 'Arial',
+          fontFamily: 'Arial',
           color: Color(0xFF555555),
         ),
         obscureText: showPass,
@@ -219,11 +220,11 @@ class _ChangePasswordState extends State<ChangePassword> {
           ),
           labelText: title,
           labelStyle: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
           hintStyle: TextStyle(
-                fontFamily: 'Arial',
+            fontFamily: 'Arial',
             color: Color(0xFF555555),
           ),
           prefixIcon: Icon(
@@ -335,7 +336,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       text.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
 
   Future<void> _fetchChangePassword() async {
-    final uri = Uri.parse("$host/api/origami/change_password.php");
+    final uri = Uri.parse("$hostDev/api/origami/change_password.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${widget.Authorization}'},

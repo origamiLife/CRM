@@ -2,6 +2,7 @@ import '../../../import.dart';
 import '../../contact/contact_screen.dart';
 import '../../contact/contact_edit/contact_edit_detail.dart';
 import '../../contact/contact_edit/contact_edit_owner.dart';
+import 'package:http/http.dart' as http;
 
 class ContactView extends StatefulWidget {
   const ContactView({
@@ -56,6 +57,7 @@ class _ContactViewState extends State<ContactView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
         title: Align(
@@ -78,18 +80,18 @@ class _ContactViewState extends State<ContactView> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ContactEditDetail(
-                        employee: widget.employee, contact: widget.contact)),
-              );
-            },
-            child: Row(
-              children: [
-                Text(
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ContactEditDetail(
+                            employee: widget.employee, contact: widget.contact)),
+                  );
+                },
+                child: Text(
                   'Edit',
                   style: TextStyle(
                     fontFamily: 'Arial',
@@ -98,9 +100,27 @@ class _ContactViewState extends State<ContactView> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(width: 16)
-              ],
-            ),
+              ),
+              VerticalDivider(
+                color: Colors.white,
+                thickness: 1,
+                indent: 16,       // ขอบด้านบน
+                endIndent: 16,    // ขอบด้านล่าง
+              ),
+              InkWell(
+                onTap: (){_showCustomDialog();},
+                child: Text(
+                  'Delete',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              SizedBox(width: 16)
+            ],
           ),
         ],
       ),
@@ -158,6 +178,7 @@ class _ContactViewState extends State<ContactView> {
         Row(
           children: [
             Expanded(
+              flex: 5,
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: 16, right: 8, bottom: 16, top: 8),
@@ -179,97 +200,83 @@ class _ContactViewState extends State<ContactView> {
               ),
             ),
             Expanded(
+              flex: 6,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          " ${contact.cus_name}",
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey.shade800,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          contact.cont_type,
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          "name : ${contact.cont_name}",
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'nickname : ${contact.cus_cont_nick}',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 2),
-                        // Text(
-                        //   'Gender : ${(contact.gender_name == '') ? 'ไม่ระบุ' : contact.gender_name}',
-                        //   style: TextStyle(
-                        //     fontFamily: 'Arial',
-                        //     fontSize: 14,
-                        //     color: Colors.grey,
-                        //     fontWeight: FontWeight.w500,
-                        //   ),
-                        //   maxLines: 10,
-                        //   overflow: TextOverflow.ellipsis,
-                        // ),
+                    Text(
+                      "${contact.cus_name}",
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      contact.cont_type,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "name : ${contact.cont_name}",
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 2),
+                    // Text(
+                    //   'Gender : ${(contact.gender_name == '') ? 'ไม่ระบุ' : contact.gender_name}',
+                    //   style: TextStyle(
+                    //     fontFamily: 'Arial',
+                    //     fontSize: 14,
+                    //     color: Colors.grey,
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    //   maxLines: 10,
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
 
-                        SizedBox(height: 2),
-                        Text(
-                          'Tel : ${_telView(contact)}',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'Email : ${contact.cont_email}',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                    SizedBox(height: 2),
+                    Text(
+                      'Tel : ${_telView(contact)}',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 10,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      'Email : ${contact.cont_email}',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 10,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -357,7 +364,7 @@ class _ContactViewState extends State<ContactView> {
                   SizedBox(height: 4),
                   _subDetail(
                       'Name',
-                      "${contact.firstname_th} ${contact.lastname_th}\n${contact.firstname} ${contact.lastname}",
+                      "${contact.firstname} ${contact.lastname}",
                       Icons.person,
                       Colors.grey.shade400),
                   _subDetail(
@@ -460,4 +467,114 @@ class _ContactViewState extends State<ContactView> {
       ],
     );
   }
+
+  Future<void> _fetchDeleteContact() async {
+    final uri = Uri.parse('$hostDev/api/origami/crm/contact/delete_contact.php');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer ${authorization}'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'cus_cont_id': widget.contact.cus_cont_id,
+        },
+      );
+      if (response.statusCode == 200) {
+        // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                OrigamiPage(employee: widget.employee, popPage: 12),
+          ),
+        );
+        showSnackBar(message);
+      } else {
+        throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
+    }
+  }
+
+  void _showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Delete',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Do you want to delete contact ${widget.contact.firstname_th} ${widget.contact.lastname_th}?',
+                style: const TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555)),
+              ),
+              SizedBox(height: 16),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                _fetchDeleteContact();
+              },
+              child: Text(
+                'Ok',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
+  }
+
+  void showSnackBar(String message){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
 }

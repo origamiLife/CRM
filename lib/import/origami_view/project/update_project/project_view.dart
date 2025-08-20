@@ -98,7 +98,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -170,31 +170,14 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         );
       default:
         return ProjectOther(
-            employee: widget.employee,
-            pageInput: widget.pageInput);
+            employee: widget.employee, pageInput: widget.pageInput);
     }
   }
-
 
   Widget _ProjectDetail(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-          child: Row(
-            children: [
-              // Expanded(
-              //   child: _buildText(project.project_name, 16, Color(0xFF555555),
-              //       FontWeight.w700),
-              // ),
-
-              // _buildText(
-              //     project.project_code, 10, Colors.grey, FontWeight.w500),
-              // Flexible(child: Container()),
-            ],
-          ),
-        ),
-        // Divider(thickness: 1),
+        SizedBox(height: 16),
         Row(
           children: [
             Padding(
@@ -355,7 +338,11 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                   _subData('Account', project.account_name),
                   _subData('Type', project.project_type_name),
                   _subData('Description', project.project_description),
-                  _subData('Sub Status', (project.sub_status_name == '')?'-':project.sub_status_name),
+                  _subData(
+                      'Sub Status',
+                      (project.sub_status_name == '')
+                          ? '-'
+                          : project.sub_status_name),
                   _subData('Source', project.project_source_name),
                   _subData('Process', project.project_process_name),
                   _subData('Sales', project.project_sale_nonsale_name),
@@ -433,7 +420,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                               ),
                             ),
                             onPressed: () {
-                              fetchDeleteProject();
+                              _showCustomDialog();
                             },
                             child: Center(
                               child: Text(
@@ -482,7 +469,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 4,bottom: 4),
+          padding: const EdgeInsets.only(top: 4, bottom: 4),
           child: Row(
             children: [
               _buildText('$label : ', 14, Color(0xFF555555), FontWeight.w700),
@@ -519,25 +506,94 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
   }
 
   Future<void> fetchDeleteProject() async {
-    final uri = Uri.parse("$host/crm/delete_project.php");
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/project/delete_project.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $authorization'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'idemp': widget.employee.emp_id,
-        'Authorization': authorization,
-        'projectId': project.project_id,
+        'emp_id': widget.employee.emp_id,
+        'project_id': project.project_id,
       },
     );
 
     if (response.statusCode == 200) {
       setState(() {
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                OrigamiPage(employee: widget.employee, popPage: 10),
+          ),
+        );
       });
     } else {
       throw Exception('Failed to load projects');
     }
+  }
+
+  void _showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Delete',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Do you want to delete project ${widget.project.project_name}?',
+                style: const TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555)),
+              ),
+              SizedBox(height: 16),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await fetchDeleteProject();
+              },
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
   }
 }
 

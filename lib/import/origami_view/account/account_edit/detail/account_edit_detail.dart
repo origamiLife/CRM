@@ -47,18 +47,20 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     super.initState();
     _getAPI();
     showDate();
-    _getUpdateText();
+    _getaccount_text();;
     _downloadImage();
   }
 
-  void _getUpdateText() {
+  void _getaccount_text() {
     _nameTHController.text = widget.account.account_name_th;
     _nameENController.text = widget.account.account_name_en;
     _descriptionController.text = widget.account.cus_description;
     _emailController.text = widget.account.cus_email;
-    _groupController.text = widget.account.owner_group;
+    _groupController.text = widget.account.cus_code;
     _telephoneController.text = _telePhone(widget.account);
   }
+
+
 
   Future<void> _downloadImage() async {
     try {
@@ -116,33 +118,62 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       appBar: AppBar(
         // elevation: 0,
         backgroundColor: Colors.orange,
-        title: Text(
-          '',
-          style: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 24,
-            color: Colors.orange,
-            fontWeight: FontWeight.w500,
+        title: Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Detail',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _fetchUpdateAccount();
+                },
+                child: Center(
+                  child: Text(
+                    'SAVE',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 16)
+            ],
+          ),
+        ],
       ),
       body: _getContentWidget(widget.account),
-      bottomNavigationBar: BottomBarDefault(
-        items: items,
-        iconSize: 18,
-        animated: true,
-        titleStyle: TextStyle(fontFamily: 'Arial'),
-        backgroundColor: Colors.white,
-        color: Colors.grey.shade400,
-        colorSelected: Color(0xFFFF9900),
-        indexSelected: _selectedIndex,
-        // paddingVertical: 25,
-        onTap: _onItemTapped,
-      ),
+      // bottomNavigationBar: BottomBarDefault(
+      //   items: items,
+      //   iconSize: 18,
+      //   animated: true,
+      //   titleStyle: TextStyle(fontFamily: 'Arial'),
+      //   backgroundColor: Colors.white,
+      //   color: Colors.grey.shade400,
+      //   colorSelected: Color(0xFFFF9900),
+      //   indexSelected: _selectedIndex,
+      //   // paddingVertical: 25,
+      //   onTap: _onItemTapped,
+      // ),
     );
   }
 
@@ -176,8 +207,9 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
               ),
             ),
             SizedBox(height: 8),
-            _showImagePhoto(account),
-            SizedBox(height: 16),
+            // _lineWidget(),
+            // _showImagePhoto(account),
+            // SizedBox(height: 16),
             _informationTop(account),
           ],
         ),
@@ -399,15 +431,15 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                     cus_group_id = value?.cus_group_id ?? '';
                     group_shcode = value?.cus_group_shcode ?? '';
                     group_gen = value?.cus_group_gen ?? '';
+                    _groupController.text = formaCuscode(group_gen);
                   });
-                },
-                hint: account.cus_group_name,
+                }, hint: account.cus_group_name,
               ),
             ),
             SizedBox(width: 8),
             Expanded(
-              child: _textController('$group_shcode-${formatNumber(group_gen)}',
-                  _groupController, false, Icons.numbers),
+              child: _textController('', _groupController,
+                  true, Icons.numbers),
             ),
           ],
         ),
@@ -447,7 +479,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             ),
           ],
         ),
-        _lineWidget(),
+        // _lineWidget(),
         _textController(
             'Customer Name (TH)', _nameTHController, false, Icons.paste),
         _textController(
@@ -465,7 +497,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
           },
           hint: account.registration_name,
         ),
-        _lineWidget(),
+        // _lineWidget(),
         _buildDropdown<SourceAccount>(
           label: 'Source',
           items: sourceList,
@@ -511,14 +543,13 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             child: TextFormField(
               controller: controller,
               readOnly: key,
-              minLines: controller == _descriptionController ? 3 : 1,
               maxLines: null,
               autofocus: false,
               obscureText: false,
               decoration: InputDecoration(
                 isDense: true,
                 fillColor:
-                    key == false ? Colors.grey.shade100 : Colors.grey.shade300,
+                key == false ? Colors.grey.shade50 : Colors.grey.shade300,
                 labelStyle: TextStyle(
                   fontFamily: 'Arial',
                   color: Color(0xFF555555),
@@ -531,7 +562,9 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                   fontSize: 14,
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey.shade100),
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade400,
+                  ),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -547,7 +580,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
               ),
               style: TextStyle(
                 fontFamily: 'Arial',
-                // color: Color(0xFF555555),
+                color: key ? Colors.black87 : Color(0xFF555555),
                 fontSize: 14,
               ),
             ),
@@ -762,9 +795,6 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       setState(() {
         groupList =
             dataJson.map((json) => GroupAccount.fromJson(json)).toList();
-        if (groupList.isNotEmpty && selectedGroup == null) {
-          selectedGroup = groupList[0];
-        }
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -789,9 +819,6 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       setState(() {
         statusList =
             dataJson.map((json) => StatusAccount.fromJson(json)).toList();
-        if (statusList.isNotEmpty && selectedStatus == null) {
-          selectedStatus = statusList[0];
-        }
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -816,9 +843,6 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       setState(() {
         registrationList =
             dataJson.map((json) => RegistrationAccount.fromJson(json)).toList();
-        if (registrationList.isNotEmpty && selectedRegistration == null) {
-          selectedRegistration = registrationList[0];
-        }
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -843,19 +867,71 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       setState(() {
         sourceList =
             dataJson.map((json) => SourceAccount.fromJson(json)).toList();
-        if (sourceList.isNotEmpty && selectedSource == null) {
-          selectedSource = sourceList[0];
-        }
       });
     } else {
       throw Exception('Failed to load instructors');
     }
   }
 
+  Future<void> _fetchUpdateAccount() async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/account/update_account.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $authorization'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'cus_id': widget.account.cus_id,
+        'cus_last_user': widget.employee.emp_id,
+        'owner_group': widget.employee.emp_id,
+        'cus_code': cus_code,
+        'cus_group_id': cus_group_id,
+        'cus_type_id': cus_type_id,
+        'cus_type': cus_type,
+        'cus_status_id': cus_status_id,
+        'project_comefrom_id':source_id,
+        'cus_name_th': _nameTHController.text.trim(),
+        'cus_name_en': _nameENController.text.trim(),
+        'cus_tel_no': _telephoneController.text.trim(),
+        'cus_email': _emailController.text.trim(),
+        'cus_description': _descriptionController.text.trim(),
+      },
+    );
+    if (response.statusCode == 200) {
+      // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final jsonResponse = jsonDecode(response.body);
+      final message = jsonResponse['message'];
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              OrigamiPage(employee: widget.employee, popPage: 13),
+        ),
+      );
+      showSnackBar(message);
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
+  void showSnackBar(String message){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
   String group_shcode = '';
   String group_gen = '';
-  String formatNumber(String input) {
-    return input.padLeft(6, '0');
+  String formaCuscode(String input) {
+    return cus_code = "$group_shcode-${input.padLeft(6, '0')}";
   }
 
   CustomerType? selectedType;

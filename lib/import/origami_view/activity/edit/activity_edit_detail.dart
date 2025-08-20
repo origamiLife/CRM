@@ -1,22 +1,21 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-
-import '../../need/need_view/need_detail.dart';
+import '../activity.dart';
 import '../add/activity_add.dart';
 import '../skoop/skoop.dart';
+import 'dart:convert';
 
 class ActivityEditNow extends StatefulWidget {
   const ActivityEditNow({
     Key? key,
     required this.employee,
-    required this.skoopDetail,
-    required this.activity_id,
+    required this.activity,
+
   }) : super(key: key);
   final Employee employee;
-  final GetSkoopDetail? skoopDetail;
+  final GetActivity activity;
 
-  final String activity_id;
   @override
   _ActivityEditNowState createState() => _ActivityEditNowState();
 }
@@ -25,65 +24,46 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   TextEditingController _subjectController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _costController = TextEditingController();
-  TextEditingController _searchController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
   TextEditingController _locationController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
-  GetSkoopDetail? _skoopDetail;
   LatLng? _selectedLocation; // สำหรับเก็บตำแหน่งที่เลือก
   String _search = '';
 
   @override
   void initState() {
     super.initState();
-    _skoopDetail = widget.skoopDetail;
-    fetchGetProject();
-    fetchActivityAccount();
+    _fetchProject();
+    _fetchContact();
+    _fetchAccount();
     fetchActivityType();
     fetchActivityStatus();
     fetchActivityPriority();
-    fetchActivityContact();
-    _getdataUpdate();
-    _subjectController.addListener(() {
-      activity_name = _subjectController.text;
-      print("Current text: ${_subjectController.text}");
-    });
-    _descriptionController.addListener(() {
-      description = _descriptionController.text;
-      print("Current text: ${_descriptionController.text}");
-    });
-    _costController.addListener(() {
-      cost = _costController.text;
-      print("Current text: ${_costController.text}");
-    });
-    _searchController.addListener(() {
-      _search = _searchController.text;
-    });
-    _searchfilterController.addListener(() {
-      print("Current text: ${_searchfilterController.text}");
-    });
+    _getdataUpdate(widget.activity);
+    contact_name = "${widget.activity.contact_name ?? ''}";
+    account_name = "${widget.activity.account_name_th} [${widget.activity.account_name_en}]";
   }
 
-  Future<void> _getdataUpdate() async {
-    type_id = _skoopDetail?.type_id ?? '';
-    project_id = _skoopDetail?.project_id ?? '';
-    account_id = _skoopDetail?.account_id ?? '';
-    contact_id = _skoopDetail?.contact_id ?? '';
-    status_id = _skoopDetail?.status_id ?? '';
-    priority_id = _skoopDetail?.priority_id ?? '';
-    place_id = _skoopDetail?.place ?? '';
-    location = _locationController.text = _skoopDetail?.location ?? '';
-    location_lat = _skoopDetail?.location_lat ?? '';
-    location_long = _skoopDetail?.location_lng ?? '';
-    activity_name = _subjectController.text = _skoopDetail?.activity_name ?? '';
+  Future<void> _getdataUpdate(GetActivity activity) async {
+    type_id = activity.activity_type_id ?? '';
+    project_id = activity.project_id ?? '';
+    account_id = activity.cus_id ?? '';
+    contact_id = activity.cont_id ?? '';
+    status_id = activity.activity_status_id ?? '';
+    priority_id = activity.activity_priority_id ?? '';
+    place_id = activity.activity_place_type ?? '';
+    location = _locationController.text = activity.activity_location ?? '';
+    location_lat = activity.activity_lat ?? '';
+    location_long = activity.activity_lng ?? '';
+    activity_name = _subjectController.text = activity.activity_project_name ?? '';
     description =
-        _descriptionController.text = _skoopDetail?.activity_description ?? '';
-    start_date = showlastDay = _skoopDetail?.start_date ?? '';
-    start_time = _skoopDetail?.time_start ?? '';
-    end_date = _skoopDetail?.end_date ?? '';
-    end_time = _skoopDetail?.time_end ?? '';
-    cost = _costController.text = _skoopDetail?.cost ?? '';
-    contact_list = _skoopDetail?.contact_last ?? '';
+        _descriptionController.text = activity.activity_description ?? '';
+    real_date = start_date = showlastDay = activity.activity_start_date ?? '';
+    real_start_time = start_time = activity.activity_start_time_ ?? '';
+    end_date = start_date;
+    real_end_time = end_time = activity.activity_end_time_ ?? '';
+    cost = _costController.text = activity.activity_cost ?? '';
+    // contact_list = _skoopDetail?.contact_last ?? '';
     start_time_close =
         '${selectedTimeInClose.hour.toString().padLeft(2, '0')}:${selectedTimeOutClose.minute.toString().padLeft(2, '0')}';
     end_time_close =
@@ -98,42 +78,55 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   String start_time_close = '';
   String end_time_close = '';
 
+  String _formatTime(TimeOfDay time) =>
+      '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+
   Future<void> _selectTime(BuildContext context, String close) async {
+    final timeMap = {
+      'bodyOn': selectedTimeIn,
+      'bodyOff': selectedTimeOut,
+      'closeOn': selectedTimeInClose,
+      'closeOff': selectedTimeOutClose,
+    };
+
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
-      initialTime: close == 'bodyOn'
-          ? selectedTimeIn
-          : close == 'bodyOff'
-              ? selectedTimeOut
-              : close == 'closeOn'
-                  ? selectedTimeIn
-                  : selectedTimeOut,
+      initialTime: timeMap[close] ?? TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
     );
 
     if (newTime != null) {
-      if (close == 'bodyOn') {
-        setState(() {
-          selectedTimeIn = newTime;
-          start_time = selectedTimeIn.format(context);
-        });
-      } else if (close == 'bodyOff') {
-        setState(() {
-          selectedTimeOut = newTime;
-          end_time = selectedTimeOut.format(context);
-        });
-      } else if (close == 'closeOn') {
-        setState(() {
-          selectedTimeInClose = newTime;
-          start_time_close = selectedTimeInClose.format(context);
-        });
-      } else if (close == 'closeOff') {
-        setState(() {
-          selectedTimeOutClose = newTime;
-          end_time_close = selectedTimeOutClose.format(context);
-        });
-      }
+      final String formattedTime = _formatTime(newTime);
+
+      setState(() {
+        switch (close) {
+          case 'bodyOn':
+            selectedTimeIn = newTime;
+            start_time = formattedTime;
+            break;
+          case 'bodyOff':
+            selectedTimeOut = newTime;
+            end_time = formattedTime;
+            break;
+          case 'closeOn':
+            selectedTimeInClose = newTime;
+            start_time_close = formattedTime;
+            break;
+          case 'closeOff':
+            selectedTimeOutClose = newTime;
+            end_time_close = formattedTime;
+            break;
+        }
+      });
     }
   }
+
+
 
   DateTime _selectedDateEnd = DateTime.now();
   String showlastDay = '';
@@ -188,6 +181,10 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     );
   }
 
+  String project_name = '';
+  String account_name = '';
+  String contact_name = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,7 +228,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                             children: [
                               _buildDropdown<ActivityType>(
                                 label: 'Type',
-                                hint: widget.skoopDetail?.type_name ?? '',
+                                hint: widget.activity.activity_type_name,
                                 items: _modelType,
                                 selectedValue: selectedType,
                                 getLabel: (item) => item.type_name ?? '',
@@ -244,51 +241,95 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               ),
                               _buildDropdown<ActivityProject>(
                                 label: 'Project',
-                                hint: widget.skoopDetail?.project_name ?? '',
-                                items: _modelProject,
+                                hint: widget.activity.project_name ?? '',
+                                items: projectList,
                                 selectedValue: selectedProject,
                                 getLabel: (item) => item.project_name,
                                 onChanged: (value) {
                                   setState(() {
                                     selectedProject = value;
                                     project_id = value?.project_id ?? '';
+                                    contact_id = value?.cont_id ?? '';
+                                    account_id = value?.cus_id ?? '';
+                                    project_name = value?.project_name ?? '';
+                                    String name = value?.cus_cont_name ?? '';
+                                    String last = value?.cus_cont_surname ?? '';
+                                    if(contact_id != ''){
+                                      contact_name = "$name $last";
+                                    }else{
+                                      contact_name = '';
+                                    }
+                                    String nameTH = value?.cus_name_th??'';
+                                    String nameEN = value?.cus_name_en??'';
+                                    if(account_id != ''){
+                                      account_name = '$nameTH [$nameEN]';
+                                    } else{
+                                      account_name = '';
+                                    }
                                   });
+                                  _fetchContact();
+                                  _fetchAccount();
+                                  selectedContact = null;
+                                  selectedContact = null;
                                 },
                               ),
-                              _buildDropdown<ActivityContact>(
-                                label: 'Contact',
-                                hint:
-                                    "${widget.skoopDetail?.contact_first ?? ''} ${widget.skoopDetail?.contact_last ?? ''}",
-                                items: _modelContact,
-                                selectedValue: selectedContact,
-                                getLabel: (item) => item.contact_first,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedContact = value;
-                                    contact_id = value?.contact_id ?? '';
-                                  });
-                                },
+                              Container(
+                                child: _buildDropdown<ActivityContact>(
+                                  label: 'Contact',
+                                  hint: contact_name,
+                                  items: _modelContact,
+                                  selectedValue: selectedContact,
+                                  getLabel: (item) => item.contact_first,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedContact = value;
+                                      contact_id = value?.contact_id ?? '';
+                                      account_id = value?.cus_id ?? '';
+                                      final name = value?.contact_first ?? '';
+                                      final last = value?.contact_last ?? '';
+                                      if(contact_id != ''){
+
+                                        contact_name = "$name $last";
+                                      }else{
+                                        contact_name = '';
+                                      }
+                                      String nameTH = value?.cus_name_th??'';
+                                      String nameEN = value?.cus_name_en??'';
+                                      if(account_id != ''){
+                                        account_name = '$nameTH [$nameEN]';
+                                      } else{
+                                        account_name = '';
+                                      }
+                                    });
+                                    _fetchAccount();
+                                    selectedAccount = null;
+                                  },
+                                  filled: (contact_id == '')?true:false,
+                                ),
                               ),
-                              _buildDropdown<AccountData>(
-                                label: 'Account',
-                                hint: widget.skoopDetail?.account_en ?? '',
-                                items: _modelAccount,
-                                selectedValue: selectedAccount,
-                                getLabel: (item) => item.account_name ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedAccount = value;
-                                    account_id = value?.account_id ?? '';
-                                  });
-                                },
+                              Container(
+                                child: _buildDropdown<ActivityAccount>(
+                                  label: 'Account',
+                                  hint: account_name,
+                                  items: accountList,
+                                  selectedValue: selectedAccount,
+                                  getLabel: (item) => item.account_name ?? '',
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedAccount = value;
+                                      account_id = value?.account_id ?? '';
+                                    });
+                                  },
+                                  filled: true,
+                                ),
                               ),
-                              _lineWidget(),
+                              // _lineWidget(),
                               _buildDropdown<ActivityStatus>(
                                 label: 'Status',
-                                hint: widget.skoopDetail?.status ?? '',
+                                hint: widget.activity.activity_status_name,
                                 items: _modelStatus,
                                 selectedValue: selectedStatus,
-                                getLabel: (item) => item.status_name ?? '',
+                                getLabel: (item) => item.status_name,
                                 onChanged: (value) {
                                   setState(() {
                                     selectedStatus = value;
@@ -298,7 +339,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               ),
                               _buildDropdown<ActivityPriority>(
                                 label: 'Priority',
-                                hint: widget.skoopDetail?.priority_name ?? '',
+                                hint: widget.activity.activity_priority_name,
                                 items: _modelPriority,
                                 selectedValue: selectedPriority,
                                 getLabel: (item) => item.priority_name ?? '',
@@ -343,7 +384,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               SizedBox(height: 8),
                               _buildDropdown<ActivityPlace>(
                                 label: 'Place',
-                                hint: widget.skoopDetail?.place ?? '',
+                                hint: widget.activity.activity_place_type ?? '',
                                 items: _modelPlace,
                                 selectedValue: selectedPlace,
                                 getLabel: (item) => item.place_name ?? '',
@@ -358,131 +399,130 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                   true, Icons.location_history),
                               _textController('Cost', _costController, false,
                                   Icons.numbers),
-                              _lineWidget(),
-                              Text(
-                                'Other Contact',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Column(
-                                  children: List.generate(
-                                      addNewContactList.length, (index) {
-                                    final contact = addNewContactList[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.only(bottom: 5),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 4, right: 8),
-                                                child: CircleAvatar(
-                                                  radius: 20,
-                                                  backgroundColor: Colors.grey,
-                                                  child: CircleAvatar(
-                                                    radius: 19,
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                      child: Image.network(
-                                                        (contact.contact_image ==
-                                                                null)
-                                                            ? 'https://dev.origami.life/images/default.png'
-                                                            : '$host//crm/${contact.contact_image}',
-                                                        height: 100,
-                                                        width: 100,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '${contact.contact_first} ${contact.contact_last}',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 16,
-                                                        color:
-                                                            Color(0xFFFF9900),
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      '${contact.customer_en} (${contact.customer_th})',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 14,
-                                                        color:
-                                                            Color(0xFF555555),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    Divider(
-                                                        color: Colors
-                                                            .grey.shade300),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: _addOtherContact,
-                                child: Text(
-                                  'Add Other Contact',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 14,
-                                    color: Color(0xFFFF9900),
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
+                              // _lineWidget(),
+                              // Text(
+                              //   'Other Contact',
+                              //   maxLines: 1,
+                              //   overflow: TextOverflow.ellipsis,
+                              //   style: TextStyle(
+                              //     fontFamily: 'Arial',
+                              //     fontSize: 14,
+                              //     color: Color(0xFF555555),
+                              //     fontWeight: FontWeight.w700,
+                              //   ),
+                              // ),
+                              // SizedBox(height: 8),
+                              // Padding(
+                              //   padding:
+                              //       const EdgeInsets.symmetric(horizontal: 15),
+                              //   child: Column(
+                              //     children: List.generate(
+                              //         addNewContactList.length, (index) {
+                              //       final contact = addNewContactList[index];
+                              //       return Padding(
+                              //         padding: const EdgeInsets.only(bottom: 5),
+                              //         child: Column(
+                              //           mainAxisAlignment:
+                              //               MainAxisAlignment.center,
+                              //           crossAxisAlignment:
+                              //               CrossAxisAlignment.start,
+                              //           children: [
+                              //             Row(
+                              //               mainAxisAlignment:
+                              //                   MainAxisAlignment.start,
+                              //               crossAxisAlignment:
+                              //                   CrossAxisAlignment.center,
+                              //               children: [
+                              //                 Padding(
+                              //                   padding: const EdgeInsets.only(
+                              //                       bottom: 4, right: 8),
+                              //                   child: CircleAvatar(
+                              //                     radius: 20,
+                              //                     backgroundColor: Colors.grey,
+                              //                     child: CircleAvatar(
+                              //                       radius: 19,
+                              //                       backgroundColor:
+                              //                           Colors.white,
+                              //                       child: ClipRRect(
+                              //                         borderRadius:
+                              //                             BorderRadius.circular(
+                              //                                 100),
+                              //                         child: Image.network(
+                              //                           (contact.cus_cont_photo == '')
+                              //                               ? 'https://dev.origami.life/images/default.png'
+                              //                               : '$host//crm/${contact.cus_cont_photo}',
+                              //                           height: 100,
+                              //                           width: 100,
+                              //                           fit: BoxFit.cover,
+                              //                         ),
+                              //                       ),
+                              //                     ),
+                              //                   ),
+                              //                 ),
+                              //                 const SizedBox(width: 10),
+                              //                 Expanded(
+                              //                   child: Column(
+                              //                     mainAxisAlignment:
+                              //                         MainAxisAlignment.start,
+                              //                     crossAxisAlignment:
+                              //                         CrossAxisAlignment.start,
+                              //                     children: [
+                              //                       Text(
+                              //                         '${contact.contact_first} ${contact.contact_last}',
+                              //                         maxLines: 1,
+                              //                         overflow:
+                              //                             TextOverflow.ellipsis,
+                              //                         style: TextStyle(
+                              //                           fontFamily: 'Arial',
+                              //                           fontSize: 16,
+                              //                           color:
+                              //                               Color(0xFFFF9900),
+                              //                           fontWeight:
+                              //                               FontWeight.w700,
+                              //                         ),
+                              //                       ),
+                              //                       Text(
+                              //                         '${contact.cus_name_en} (${contact.cus_name_th})',
+                              //                         maxLines: 1,
+                              //                         overflow:
+                              //                             TextOverflow.ellipsis,
+                              //                         style: TextStyle(
+                              //                           fontFamily: 'Arial',
+                              //                           fontSize: 14,
+                              //                           color:
+                              //                               Color(0xFF555555),
+                              //                           fontWeight:
+                              //                               FontWeight.w500,
+                              //                         ),
+                              //                       ),
+                              //                       Divider(
+                              //                           color: Colors
+                              //                               .grey.shade300),
+                              //                     ],
+                              //                   ),
+                              //                 ),
+                              //               ],
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       );
+                              //     }),
+                              //   ),
+                              // ),
+                              // TextButton(
+                              //   onPressed: _addOtherContact,
+                              //   child: Text(
+                              //     'Add Other Contact',
+                              //     maxLines: 1,
+                              //     overflow: TextOverflow.ellipsis,
+                              //     style: TextStyle(
+                              //       fontFamily: 'Arial',
+                              //       fontSize: 14,
+                              //       color: Color(0xFFFF9900),
+                              //       fontWeight: FontWeight.w700,
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -499,7 +539,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                           ),
-                          onPressed: _fetchUpDateActivity,
+                          onPressed: fetchUpdateActivity,
                           child: SizedBox(
                             width: double.infinity,
                             child: Center(
@@ -535,7 +575,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                             builder: (context) => SkoopScreen(
                               employee: widget.employee,
                               Authorization: authorization,
-                              activity_id: widget.activity_id,
+                              activity: widget.activity,
                             ),
                           ),
                         );
@@ -545,20 +585,18 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     ),
                   ),
                   // if (_skoopDetail?.skooped == '1')
-                  //   Expanded(
-                  //     flex: 1,
-                  //     child: GestureDetector(
-                  //         onTap: _showDialogClose,
-                  //         child: _gestureDetector(
-                  //             'Close', Icons.close, Color(0xFF53C507))),
-                  //   ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          onTap: showCustomDialog,
+                          child: _gestureDetector(
+                              'Close', Icons.check, Color(0xFF53C507))),
+                    ),
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
                       onTap: () {
-                        _fetchDeleteActivity();
-                        Navigator.pop(context);
-                        Navigator.pop(context);
+                        _showCustomDeleteDialog(context);
                       },
                       child: _gestureDetector(
                           'Delete', Icons.delete_outline_outlined, Colors.red),
@@ -775,12 +813,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                               child: Image.network(
-                                                (contact.contact_image ==
-                                                            null ||
-                                                        contact.contact_image ==
-                                                            '')
+                                                (contact.cus_cont_photo == '')
                                                     ? 'https://dev.origami.life/images/default.png'
-                                                    : '$host//crm/${contact.contact_image}',
+                                                    : '$host//crm/${contact.cus_cont_photo}',
                                                 height: 100,
                                                 width: 100,
                                                 fit: BoxFit.cover,
@@ -809,7 +844,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                               ),
                                             ),
                                             Text(
-                                              '${contact.customer_en} (${contact.customer_th})',
+                                              '${contact.cus_name_en} (${contact.cus_name_th})',
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
@@ -915,6 +950,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
 
   Widget _buildDropdown<T>({
     required String label,
+    IconData? icon,
+    bool? filled,
     required String hint,
     required List<T> items,
     required T? selectedValue,
@@ -939,6 +976,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           InputDecorator(
             decoration: InputDecoration(
               isDense: true,
+              filled: filled != true ? false:true, // ✅ เติมพื้นหลังเมื่อ disabled
+              fillColor: filled != true? Colors.white:Colors.grey.shade300,
               contentPadding: EdgeInsets.only(top: 12, bottom: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -949,7 +988,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  hint ?? '',
+                  hint,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -957,9 +996,14 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   ),
                 ),
                 value: selectedValue,
-                items: items
-                    .map((item) => DropdownMenuItem<T>(
-                          value: item,
+                items: items.map((item) {
+                  return DropdownMenuItem<T>(
+                    value: item,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        (icon != null) ? Icon(icon, size: 24) : Container(),
+                        Expanded(
                           child: Text(
                             getLabel(item),
                             style: TextStyle(
@@ -968,9 +1012,12 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               color: Color(0xFF555555),
                             ),
                           ),
-                        ))
-                    .toList(),
-                onChanged: onChanged,
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: filled != true ? onChanged : null,
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
@@ -1010,7 +1057,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -1083,6 +1130,54 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               onTap: () {
                 if (ontap == true) {
                   _requestDateEnd(context, close);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      showlastDay,
+                      style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.calendar_month,
+                      color: Color(0xFF555555),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _realDate(String _namedate, bool ontap, String close) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: (ontap == true) ? Colors.white : Colors.grey.shade300,
+              border: Border.all(
+                color:
+                (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
+                width: 1.0,
+              ),
+            ),
+            child: InkWell(
+              onTap: () {
+                if (ontap == true) {
+                  _requestDate(context);
                 }
               },
               child: Padding(
@@ -1185,69 +1280,52 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     );
   }
 
-  void _showDialogClose() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          title: Column(
-            children: [
-              Text(
-                'Actual Activity',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 18,
-                  color: Color(0xFF555555),
-                  fontWeight: FontWeight.w700,
-                ),
+  Widget _realTime(String _nameTime, String close) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              border: Border.all(
+                color: Color(0xFFFF9900),
+                width: 1.0,
               ),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: _DateBody('Start Date', true, 'closeOn'),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: _TimeBody('Start Time', 'start', 'closeOn'),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: _DateBody('End Date', false, 'closeOff'),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: _TimeBody('End Time', 'end', 'closeOff'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                '$Cancel',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                  color: Color(0xFF555555),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
             ),
-          ],
-        );
-      },
+            child: InkWell(
+              onTap: () async => await _selectTime(context, close),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      close == 'bodyOn'
+                          ? start_time
+                          : (close == 'bodyOff')
+                          ? end_time
+                          : (close == 'closeOn')
+                          ? start_time_close
+                          : end_time_close,
+                      style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555)),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.access_time_outlined,
+                      color: Color(0xFF555555),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1271,60 +1349,90 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   String contact_list = '';
 
   ActivityProject? selectedProject;
-  List<ActivityProject> _modelProject = [];
-  Future<void> fetchGetProject() async {
-    String comp_id = widget.employee.comp_id;
-    String emp_id = widget.employee.emp_id;
-    String cus_id = '';
-    String page = '1';
-    String action = 'getDropdownProject';
-    final uri = Uri.parse(
-      "$host/api/origami/crm/activity/create_dropdown_project.php?"
-      "comp_id=$comp_id&emp_id=$emp_id&cus_id=$cus_id&page=$page&term=${_search}&action=$action",
-    );
-
-    final response = await http.get(
+  List<ActivityProject> projectList = [];
+  Future<void> _fetchProject() async {
+    final uri =
+    Uri.parse("$hostDev/api/origami/crm/activity/component/project.php");
+    final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'cont_id': contact_id,
+      },
     );
-
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       setState(() {
-        _modelProject =
+        projectList =
             dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-        // if (_modelProject.isNotEmpty && selectedProject == null) {
-        //   selectedProject = _modelProject[0];
+        // if (projectList.isNotEmpty && selectedProject == null) {
+        //   selectedProject = projectList[0];
+        //   project_id = selectedProject?.project_id??'';
         // }
       });
     } else {
-      throw Exception('Failed to load challenges');
+      throw Exception('Failed to load instructors');
     }
   }
 
-  AccountData? selectedAccount;
-  List<AccountData> _modelAccount = [];
-  Future<void> fetchActivityAccount() async {
-    final uri = Uri.parse('$host/api/origami/need/account.php?page&search');
+  ActivityAccount? selectedAccount;
+  List<ActivityAccount> accountList = [];
+  Future<void> _fetchAccount() async {
+    final uri =
+    Uri.parse("$hostDev/api/origami/crm/activity/component/account.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'cus_id': account_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        accountList =
+            dataJson.map((json) => ActivityAccount.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
+  ActivityContact? selectedContact;
+  List<ActivityContact> _modelContact = [];
+  List<ActivityContact> addNewContactList = [];
+  String cus_cont_id = '';
+  Future<void> _fetchContact() async {
+    final uri = Uri.parse('$hostDev/api/origami/crm/activity/component/contact.php');
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $authorization'},
+        headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'cus_cont_id' : contact_id,
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['account_data'];
+        final List<dynamic> dataJson = jsonResponse['data'];
         setState(() {
-          _modelAccount =
-              dataJson.map((json) => AccountData.fromJson(json)).toList();
-          // if (_modelAccount.isNotEmpty && selectedAccount == null) {
-          //   selectedAccount = _modelAccount[0];
+          _modelContact = dataJson.map((json) {
+            return ActivityContact.fromJson(json);
+          }).toList();
+
+          // first = dataJson
+          //     .map((item) =>
+          //         item.contact_first = widget.skoopDetail?.contact_first ?? '')
+          //     .join(', ');
+
+          // if (_modelContact.isNotEmpty && selectedContact == null) {
+          //   selectedContact = _modelContact[0];
           // }
         });
       } else {
@@ -1338,7 +1446,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   ActivityType? selectedType;
   List<ActivityType> _modelType = [];
   Future<void> fetchActivityType() async {
-    final uri = Uri.parse('$host/crm/ios_activity_type.php');
+    final uri = Uri.parse('$hostDev/crm/ios_activity_type.php');
     try {
       final response = await http.post(
         uri,
@@ -1370,7 +1478,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   ActivityStatus? selectedStatus;
   List<ActivityStatus> _modelStatus = [];
   Future<void> fetchActivityStatus() async {
-    final uri = Uri.parse('$host/crm/ios_activity_status.php');
+    final uri = Uri.parse('$hostDev/crm/ios_activity_status.php');
     try {
       final response = await http.post(
         uri,
@@ -1402,7 +1510,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   ActivityPriority? selectedPriority;
   List<ActivityPriority> _modelPriority = [];
   Future<void> fetchActivityPriority() async {
-    final uri = Uri.parse('$host/crm/ios_activity_priority.php');
+    final uri = Uri.parse('$hostDev/crm/ios_activity_priority.php');
     try {
       final response = await http.post(
         uri,
@@ -1431,50 +1539,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     }
   }
 
-  ActivityContact? selectedContact;
-  List<ActivityContact> _modelContact = [];
-  List<ActivityContact> addNewContactList = [];
-  String first = '';
-  Future<void> fetchActivityContact() async {
-    final uri = Uri.parse('$host/crm/ios_activity_contact.php');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'index': '0',
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
-        setState(() {
-          _modelContact = dataJson.map((json) {
-            return ActivityContact.fromJson(json);
-          }).toList();
-
-          // first = dataJson
-          //     .map((item) =>
-          //         item.contact_first = widget.skoopDetail?.contact_first ?? '')
-          //     .join(', ');
-
-          // if (_modelContact.isNotEmpty && selectedContact == null) {
-          //   selectedContact = _modelContact[0];
-          // }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
-  }
-
   Future<List<ActivityContact>> fetchAddContact() async {
-    final uri = Uri.parse("$host/crm/ios_activity_contact.php");
+    final uri = Uri.parse("$hostDev/crm/ios_activity_contact.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
@@ -1495,10 +1561,89 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     }
   }
 
-  String skoop_detail = '';
-  Future<void> _fetchUpDateActivity() async {
-    final uri = Uri.parse('$host/crm/ios_update_activity.php');
-    // final uri = Uri.parse('$host/test');
+  // String skoop_detail = '';
+  // Future<void> _fetchUpDateActivity() async {
+  //   final uri = Uri.parse('$hostDev/crm/ios_update_activity.php');
+  //   try {
+  //     final response = await http.post(
+  //       uri,
+  //       headers: {'Authorization': 'Bearer $authorization'},
+  //       body: {
+  //         'comp_id': widget.employee.comp_id,
+  //         'emp_id': widget.employee.emp_id,
+  //         'Authorization': authorization,
+  //         'activity_id': widget.activity.activity_id,
+  //         'type_id': type_id,
+  //         'project_id': project_id,
+  //         'account_id': account_id,
+  //         'contact_id': contact_id,
+  //         'status_id': status_id,
+  //         'priority_id': priority_id,
+  //         'place_id': place_id,
+  //         'location': location,
+  //         'location_lat': location_lat,
+  //         'location_long': location_long,
+  //         'activity_name': _subjectController.text.trim(),
+  //         'description': _descriptionController.text.trim(),
+  //         'start_date': start_date,
+  //         'start_time': start_time,
+  //         'end_date': end_date,
+  //         'end_time': end_time,
+  //         'cost': _costController.text.trim(),
+  //         'contact_list': contact_list,
+  //         'skoop_detail': _skoopDetail?.activity_id,
+  //       },
+  //     );
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
+  //       final List<dynamic> dataJson = jsonResponse['data'];
+  //       final message = jsonResponse['message'];
+  //       pushActivity(9);
+  //       showSnackBar(message);
+  //       throw Exception('UpDate Activity');
+  //     } else {
+  //       throw Exception('Failed to load status data');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to load personal data: $e');
+  //   }
+  // }
+
+  void pushActivity(int page){
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            OrigamiPage(employee: widget.employee, popPage: page),
+      ),
+    );
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String real_date = '';
+  String real_start_time = '';
+  String real_end_time = '';
+  String? activity_status;
+  String? activity_alert48_status;
+  Future<void> fetchUpdateActivity() async {
+    end_date = start_date;
+    // List<String> contactIds = ['12', '15', '18'];
+    List<String> contactIds = [];
+    String contactList1 = contactIds.join(','); // => "12,15,18"
+    final uri = Uri.parse("$hostDev/api/origami/crm/activity/update_activity.php");
     try {
       final response = await http.post(
         uri,
@@ -1506,34 +1651,38 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'activity_id': _skoopDetail?.activity_id,
-          'type_id': type_id,
+          'activity_id': widget.activity.activity_id,
+          'activity_type_id': type_id,
           'project_id': project_id,
           'account_id': account_id,
           'contact_id': contact_id,
-          'status_id': status_id,
-          'priority_id': priority_id,
+          'activity_status_id': status_id,
+          'activity_priority_id': priority_id,
           'place_id': place_id,
-          'location': location,
-          'location_lat': location_lat,
-          'location_long': location_long,
-          'activity_name': activity_name,
-          'description': description,
-          'start_date': start_date,
-          'start_time': start_time,
-          'end_date': end_date,
-          'end_time': end_time,
-          'cost': cost,
-          'contact_list': contact_list,
-          'skoop_detail': _skoopDetail?.activity_id,
+          'activity_location': _locationController.text,
+          'activity_lat': '',
+          'activity_lng': '',
+          'activity_project_name': _subjectController.text.trim(),
+          'activity_description': _descriptionController.text.trim(),
+          'activity_start_date': start_date,
+          'activity_start_time': start_time,
+          'activity_end_date': end_date,
+          'activity_end_time': end_time,
+          'activity_cost': cost,
+          'activity_real_start_date': real_date,
+          'activity_real_start_time': real_start_time,
+          'activity_real_end_date': real_date,
+          'activity_real_end_time': real_end_time,
+          'activity_status': activity_status,
+          'contact_list': contactList1,
         },
       );
       if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
-        Navigator.pop(context);
-        throw Exception('UpDate Activity');
+        print('true: ${response.statusCode}');
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+        pushActivity(9);
+        showSnackBar(message);
       } else {
         throw Exception('Failed to load status data');
       }
@@ -1543,24 +1692,30 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   }
 
   Future<void> _fetchCloseActivity() async {
-    final uri = Uri.parse('$host/crm/ios_close_activity.php');
+    final uri = Uri.parse('$hostDev/api/origami/crm/activity/update_activity.php');
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $authorization'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'start_date': _skoopDetail?.start_date,
-          'start_time': _skoopDetail?.time_start,
-          'end_date': _skoopDetail?.end_date,
-          'end_time': _skoopDetail?.time_end,
+          'activity_id': widget.activity.activity_id,
+          'activity_real_start_date': real_date,
+          'activity_real_start_time': real_start_time,
+          'activity_real_end_date': real_date,
+          'activity_real_end_time': real_end_time,
+          'activity_status': activity_status,
+          'activity_alert48_status': activity_alert48_status,
         },
       );
       if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
+        print('true: ${response.statusCode}');
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+        pushActivity(9);
+        showSnackBar(message);
+        print('close activity success --> $message');
         throw Exception('Close Activity');
       } else {
         throw Exception('Failed to load status data');
@@ -1570,21 +1725,157 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     }
   }
 
+  Future<void> _requestDate(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Theme(
+          data: ThemeData(
+            primaryColor: Colors.teal,
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFFFF9900),
+              onPrimary: Colors.white,
+              onSurface: Colors.teal,
+            ),
+            dialogBackgroundColor: Colors.teal[50],
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CalendarDatePicker(
+                  initialDate: _selectedDateEnd,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2101),
+                  onDateChanged: (DateTime newDate) {
+                    setState(() {
+                      _selectedDateEnd = newDate;
+                      DateFormat formatter = DateFormat('yyyy/MM/dd');
+                      showlastDay = formatter.format(_selectedDateEnd);
+                      real_date = showlastDay;
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Actual Activity',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 22,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  'Close Date/Time',
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555)),
+                ),
+              ),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child:
+                    _realDate('Start Date', true, 'bodyOn'),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: _realTime(
+                        'Start Time', 'bodyOn'),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child:
+                    _realDate('End Date', false, 'bodyOff'),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child:
+                    _realTime('End Time', 'bodyOff'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                activity_alert48_status = 'Y';
+                activity_status = 'close';
+                _fetchCloseActivity();
+              },
+              child: Text(
+                'Ok',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _fetchDeleteActivity() async {
-    final uri = Uri.parse('$host/crm/ios_delete_activity.php');
+    final uri = Uri.parse('$hostDev/api/origami/crm/activity/delete_activity.php');
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $authorization'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'activity_id': _skoopDetail?.activity_id ?? '',
+          'activity_id': widget.activity.activity_id,
         },
       );
       if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+        pushActivity(9);
+        showSnackBar(message);
         throw Exception('Delete Activity Now.');
       } else {
         throw Exception('Failed to load status data');
@@ -1592,6 +1883,63 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
     }
+  }
+
+  void _showCustomDeleteDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Delete Activity',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Do you want to delete this activity?',
+            style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 16,
+                color: Color(0xFF555555)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(dialogContext); // ปิด dialog ก่อน
+                _fetchDeleteActivity(); // แล้วค่อยไปลบ
+              },
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
   }
 
   ActivityPlace? selectedPlace;

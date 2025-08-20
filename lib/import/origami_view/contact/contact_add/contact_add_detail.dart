@@ -37,7 +37,6 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
     super.initState();
     _getAPI();
     _firstnameController.addListener(() {
-      // _search = _FirstnameController.text;
       print("Current text: ${_firstnameController.text}");
     });
   }
@@ -51,6 +50,60 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Color(0xFFFF9900),
+        title: const Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            '',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          InkWell(
+            onTap: () async {
+              if (cont_group_id != '' &&
+                  _firstnameController.text.trim() != '' &&
+                  _lastnameController.text.trim() != '' &&
+                  gender_id != '' &&
+                  _emailController.text.trim() != '' &&
+                  _mobileController.text.trim() != '' &&
+                  role_id != '' &&
+                  cont_emo != '') {
+                await _fetchAddContact();
+              } else {
+                showSnackBar('Please fill in all required information.');
+              }
+            },
+            child: const Row(
+              children: [
+                Text(
+                  'DONE',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 16)
+              ],
+            ),
+          ),
+        ],
+      ),
       body: _logoInformation(context),
     );
   }
@@ -68,13 +121,13 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 22,
-                 color: Colors.grey.shade700,
+                  color: Colors.grey.shade700,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
             SizedBox(height: 8),
-
+            _lineWidget(),
             _buildDropdown<groupnameContact>(
               label: 'Title',
               items: groupnameList,
@@ -105,9 +158,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                 });
               },
             ),
-            _textController('Email', _emailController, false, Icons.numbers),
-            _textController(
-                'Tel', _mobileController, false, Icons.phone_android_rounded),
+            _lineWidget(),
             _textController(
                 'Position', _positionController, false, Icons.numbers),
             _buildDropdown<roleContact>(
@@ -132,12 +183,39 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                 setState(() {
                   selectedEmotion = value;
                   emo_icon_id = value?.emo_icon_id ?? '';
+
+                  final fileName = emo_icon_id.split('/').last;
+                  cont_emo = '../images/$fileName';
                 });
               },
             ),
+            _textController('Email', _emailController, false, Icons.numbers),
+            _textController(
+                'Tel', _mobileController, false, Icons.phone_android_rounded),
             SizedBox(height: 16),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _lineWidget() {
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade50,
+            height: 3,
+            width: double.infinity,
+          ),
+          SizedBox(height: 1),
+          Container(
+            color: Colors.orange.shade100,
+            height: 3,
+            width: double.infinity,
+          ),
+        ],
       ),
     );
   }
@@ -262,17 +340,18 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        (imageUrl != null && imageUrl.isNotEmpty)?
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Image.network(
-                              imageUrl,
-                              width: 24,
-                              height: 24,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(Icons.image_not_supported, size: 24),
-                            ),
-                          ):Container(),
+                        (imageUrl != null && imageUrl.isNotEmpty)
+                            ? Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Image.network(
+                                  imageUrl,
+                                  width: 24,
+                                  height: 24,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.image_not_supported, size: 24),
+                                ),
+                              )
+                            : Container(),
                         Expanded(
                           child: Text(
                             getLabel(item),
@@ -311,6 +390,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                 menuItemStyleData: MenuItemStyleData(
                   height: 40,
                 ),
+
                 /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
                 dropdownSearchData: DropdownSearchData(
                   searchController: dropdownSearchController,
@@ -325,7 +405,8 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                       controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -378,7 +459,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
   List<genderContact> genderList = [];
   Future<void> _fetchGender() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/contact/component/gender.php");
+        Uri.parse("$hostDev/api/origami/crm/contact/component/gender.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
@@ -394,6 +475,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
             dataJson.map((json) => genderContact.fromJson(json)).toList();
         if (genderList.isNotEmpty && selectedGender == null) {
           selectedGender = genderList[0];
+          gender_id = selectedGender?.gender_id??'';
         }
       });
     } else {
@@ -405,7 +487,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
   List<groupnameContact> groupnameList = [];
   Future<void> _fetchGroupname() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/contact/component/group_name.php");
+        Uri.parse("$hostDev/api/origami/crm/contact/component/group_name.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
@@ -421,6 +503,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
             dataJson.map((json) => groupnameContact.fromJson(json)).toList();
         if (groupnameList.isNotEmpty && selectedGroupname == null) {
           selectedGroupname = groupnameList[0];
+          cont_group_id = selectedGroupname?.cont_group_id??'';
         }
       });
     } else {
@@ -432,7 +515,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
   List<emotionContact> emotionList = [];
   Future<void> _fetchEmotionContact() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/contact/component/emotion.php");
+        Uri.parse("$hostDev/api/origami/crm/contact/component/emotion.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
@@ -448,6 +531,10 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
             dataJson.map((json) => emotionContact.fromJson(json)).toList();
         if (emotionList.isNotEmpty && selectedEmotion == null) {
           selectedEmotion = emotionList[0];
+          emo_icon_id = selectedEmotion?.emo_icon_id ?? '';
+
+          final fileName = emo_icon_id.split('/').last;
+          cont_emo = '../images/$fileName';
         }
       });
     } else {
@@ -459,7 +546,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
   List<roleContact> roleList = [];
   Future<void> _fetchRole() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/contact/component/role.php");
+        Uri.parse("$hostDev/api/origami/crm/contact/component/role.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
@@ -471,16 +558,72 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       setState(() {
-        roleList =
-            dataJson.map((json) => roleContact.fromJson(json)).toList();
+        roleList = dataJson.map((json) => roleContact.fromJson(json)).toList();
         if (roleList.isNotEmpty && selectedRole == null) {
           selectedRole = roleList[0];
+          role_id = selectedRole?.cont_project_role_id??'';
         }
       });
     } else {
       throw Exception('Failed to load instructors');
     }
   }
+
+  String cus_id = '';
+  String cont_emo = '';
+  Future<void> _fetchAddContact() async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/contact/add_contact.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'cus_create_user': widget.employee.emp_id,
+        // 'cus_id': cus_id, //account
+        'cont_group_id': cont_group_id,
+        'cus_cont_name': _firstnameController.text.trim(),
+        'cus_cont_surname': _lastnameController.text.trim(),
+        'cus_cont_nick': _nicknameController.text.trim(),
+        'gender_id': gender_id,
+        'cus_cont_email': _emailController.text.trim(),
+        'cus_cont_mob': _mobileController.text.trim(),
+        'cus_posi_id': _positionController.text.trim(),
+        'cont_project_role_id': role_id,
+        'cus_cont_emo': cont_emo,
+      },
+    );
+    if (response.statusCode == 200) {
+      // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final jsonResponse = jsonDecode(response.body);
+      final message = jsonResponse['message'];
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              OrigamiPage(employee: widget.employee, popPage: 12),
+        ),
+      );
+      showSnackBar(message);
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
 
 }
 

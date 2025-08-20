@@ -2,16 +2,18 @@ import 'package:image/image.dart' as img;
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
+import '../activity.dart';
+
 class SkoopScreen extends StatefulWidget {
   const SkoopScreen({
     super.key,
     required this.employee,
     required this.Authorization,
-    required this.activity_id,
+    required this.activity,
   });
   final Employee employee;
   final String Authorization;
-  final String activity_id;
+  final GetActivity activity;
   @override
   _SkoopScreenState createState() => _SkoopScreenState();
 }
@@ -29,6 +31,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
 
   void initState() {
     super.initState();
+    description = _descriptionController.text = widget.activity.activity_note;
+    print(description);
     _descriptionController.addListener(() {
       description = _descriptionController.text;
       print("Current text: ${_descriptionController.text}");
@@ -119,7 +123,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
                   ),
                 );
               } else {
-                fetchSkoopActivity();
+                _fetchUpdateActivity();
+                _fetchSkoopDetail();
               }
             },
             child: Row(
@@ -153,36 +158,24 @@ class _SkoopScreenState extends State<SkoopScreen> {
           //   fetchSkoopActivity();
           // }
         },
-        child: FutureBuilder<List<GetSkoopDetail>>(
-            future: _fetchSkoopDetail(),
-            builder: (context, snapshot) {
-              return Column(
-                  children: List.generate(snapshot.data?.length ?? 0, (index) {
-                if (isSkoop == false) {
-                  _descriptionController.text =
-                      snapshot.data?[index].skoop_detail ?? '';
-                  isSkoop = true;
-                }
-                return SafeArea(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _textController(
-                              'Description', _descriptionController, false, Icons.paste),
-                          _textController(
-                              'Activity Lication', _locationController, true, Icons.location_history),
+        child:SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _textController(
+                      'Description', _descriptionController, false, Icons.paste),
+                  _textController(
+                      'Activity Lication', _locationController, true, Icons.location_history),
 
-                          _showImagePhoto(),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }));
-            }),
+                  _showImagePhoto(),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -382,7 +375,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
   }
 
   Future<List<GetSkoopDetail>> _fetchSkoopDetail() async {
-    final uri = Uri.parse('$host/crm/ios_activity_info.php');
+    final uri = Uri.parse('$hostDev/crm/ios_activity_info.php');
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${widget.Authorization}'},
@@ -390,7 +383,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
         'Authorization': widget.Authorization,
-        'activity_id': widget.activity_id,
+        'activity_id': widget.activity.activity_id,
       },
     );
 
@@ -407,7 +400,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
   }
 
   Future<void> fetchSkoopActivity() async {
-    final uri = Uri.parse("$host/crm/ios_skoop_activity.php");
+    final uri = Uri.parse("$hostDev/crm/ios_skoop_activity.php");
     try {
       final response = await http.post(
         uri,
@@ -416,11 +409,11 @@ class _SkoopScreenState extends State<SkoopScreen> {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
           'Authorization': widget.Authorization,
-          'activity_id': widget.activity_id,
-          'skoop_location': '',
+          'activity_id': widget.activity.activity_id,
+          'skoop_location': _locationController.text.trim(),
           'skoop_lat': '',
           'skoop_lng': '',
-          'skoop_detail': description,
+          'skoop_detail': _descriptionController.text.trim(),
         },
       );
       if (response.statusCode == 200) {
@@ -428,6 +421,35 @@ class _SkoopScreenState extends State<SkoopScreen> {
           Navigator.pop(context);
         });
         print('true: ${response.statusCode}');
+      } else {
+        throw Exception('Failed to load status data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
+    }
+  }
+
+  Future<void> _fetchUpdateActivity() async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/activity/update_activity.php");
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer ${authorization}'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'activity_id': widget.activity.activity_id,
+          'activity_note': _descriptionController.text.trim(),
+          'activity_location': _locationController.text.trim(),
+          'activity_lat': '',
+          'activity_lng': '',
+        },
+      );
+      if (response.statusCode == 200) {
+        print('true: ${response.statusCode}');
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+        Navigator.pop(context);
       } else {
         throw Exception('Failed to load status data');
       }

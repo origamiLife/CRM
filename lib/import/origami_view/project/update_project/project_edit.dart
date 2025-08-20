@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../../../import.dart';
+import '../../account/account_add/account_add_detail.dart';
 import '../create_project/project_add.dart';
 import '../project.dart';
 
@@ -36,23 +37,11 @@ class _ProjectEditState extends State<ProjectEdit> {
     showDate();
     _fatchApi();
     _fetchGetData(widget.project);
-    _fetchGetId(widget.project);
     (widget.project.project_sale_nonsale_id == '0')?saleDataList[0]:saleDataList[1];
-    _codeController.addListener(() {
-      print("Current text: ${_codeController.text}");
-    });
-    _projectController.addListener(() {
-      print("Current text: ${_projectController.text}");
-    });
-    _descriptionController.addListener(() {
-      print("Current text: ${_descriptionController.text}");
-    });
-    _contactController.addListener(() {
-      print("Current text: ${_contactController.text}");
-    });
-    _searchController.addListener(() {
-      _search = _searchController.text;
-    });
+    account_name = widget.project.account_name;
+    contact_name = widget.project.contact_name;
+    contact_id = widget.project.contact_id;
+    account_id = widget.project.account_id;
   }
 
   @override
@@ -75,17 +64,6 @@ class _ProjectEditState extends State<ProjectEdit> {
     _locationController.text = project.project_location;
   }
 
-  _fetchGetId(ModelProject project) {
-    // type_id = project.project_type_id;
-    // process_id = project.process_id;
-    // priority_id = project.project_priority_id;
-    // contact_id = project.contact_id;
-    // account_id = project.account_id;
-    // sale_id = project.project_sale_nonsale_id;
-    // project_model_id = project.project_model_id;
-    // source_id = project.project_source_id;
-  }
-
   String currentTime = '';
   TimeOfDay selectedTime = TimeOfDay(hour: 7, minute: 15);
 
@@ -104,13 +82,13 @@ class _ProjectEditState extends State<ProjectEdit> {
 
   DateTime _selectedDateEnd = DateTime.now();
   String showlastDay = '';
-  String project_create = '';
-  String last_activity = '';
+  String project_start = '';
+  String project_end = '';
   void showDate() {
     DateFormat formatter = DateFormat('yyyy/MM/dd');
     showlastDay = formatter.format(_selectedDateEnd);
-    project_create = widget.project.project_create;
-    last_activity = widget.project.last_activity;
+    project_start = widget.project.project_create;
+    project_end = widget.project.project_end;
   }
 
   Future<void> _requestDateEnd(BuildContext context, int start_end) async {
@@ -141,9 +119,9 @@ class _ProjectEditState extends State<ProjectEdit> {
                       DateFormat formatter = DateFormat('yyyy/MM/dd');
                       showlastDay = formatter.format(_selectedDateEnd);
                       if (start_end == 0) {
-                        project_create = showlastDay.toString();
+                        project_start = showlastDay.toString();
                       } else {
-                        last_activity = showlastDay.toString();
+                        project_end = showlastDay.toString();
                       }
                     });
                     Navigator.pop(context);
@@ -162,6 +140,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 1,
         backgroundColor: Colors.white,
         title: Center(
           child: Text(
@@ -184,7 +163,7 @@ class _ProjectEditState extends State<ProjectEdit> {
         actions: [
           InkWell(
             onTap: () {
-              Navigator.pop(context);
+              _fetchUpdateProject();
             },
             child: Row(
               children: [
@@ -209,9 +188,9 @@ class _ProjectEditState extends State<ProjectEdit> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                topProject(),
+                topProject(widget.project),
                 _lineWidget(),
-                bottomProject(),
+                bottomProject(widget.project),
               ],
             ),
           ),
@@ -241,7 +220,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     );
   }
 
-  Widget topProject() {
+  Widget topProject(ModelProject project) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -249,16 +228,20 @@ class _ProjectEditState extends State<ProjectEdit> {
           children: [
             Expanded(
               child: _buildDropdown<TypeData>(
-                label: 'Priority',
+                label: 'Type',
                 items: typeList,
                 selectedValue: selectedType,
-                getLabel: (item) => item.type_name,
+                getLabel: (item) => item.project_type_name,
                 onChanged: (value) {
                   setState(() {
                     selectedType = value;
-                    type_id = value?.type_id ?? '';
+                    project_type_id = value?.project_type_id ?? '';
+                    group_shcode = value?.project_type_code ?? '';
+                    group_year = value?.project_type_year??'';
+                    group_gen = value?.project_type_gen ?? '';
+                    _codeController.text = formaProjectcode(group_gen);
                   });
-                },
+                }, hint: project.project_type_name,
               ),
             ),
             SizedBox(width: 8),
@@ -269,9 +252,9 @@ class _ProjectEditState extends State<ProjectEdit> {
         ),
         Row(
           children: [
-            Expanded(child: _DateBody('Start Date', project_create, 0)),
+            Expanded(child: _DateBody('Start Date', project_start, 0)),
             SizedBox(width: 8),
-            Expanded(child: _DateBody('End Date', last_activity, 1)),
+            Expanded(child: _DateBody('End Date', project_end, 1)),
           ],
         ),
         Container(
@@ -285,12 +268,12 @@ class _ProjectEditState extends State<ProjectEdit> {
                 selectedProcess = value;
                 process_id = value?.process_id ?? '';
               });
-            },
+            }, hint: project.project_process_name,
           ),
         ),
         Container(
           child: _buildDropdown<PriorityData>(
-            label: 'Project Priority',
+            label: 'Priority',
             items: priorityList,
             selectedValue: selectedPriority,
             getLabel: (item) => item.priority_name,
@@ -299,14 +282,14 @@ class _ProjectEditState extends State<ProjectEdit> {
                 selectedPriority = value;
                 priority_id = value?.priority_id ?? '';
               });
-            },
+            },hint: project.project_priority_name,
           ),
         ),
       ],
     );
   }
 
-  Widget bottomProject() {
+  Widget bottomProject(ModelProject project) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -316,27 +299,52 @@ class _ProjectEditState extends State<ProjectEdit> {
             label: 'Contact',
             items: contactList,
             selectedValue: selectedContact,
-            getLabel: (item) => item.contact_name,
+            getLabel: (item) => "${item.contact_name} ${item.contact_surname}",
             onChanged: (value) {
               setState(() {
                 selectedContact = value;
                 contact_id = value?.contact_id ?? '';
+                account_id = value?.cus_id??'';
+                String nameTH = value?.cus_name_th??'';
+                String nameEN = value?.cus_name_th??'';
+                if(account_id != ''){
+                  account_name = '$nameTH [$nameEN]';
+                } else{
+                  account_name = '';
+                }
               });
-            },
+              _fetchAccount();
+              selectedAccount = null;
+              print("account_name : $account_name");
+            },hint: contact_name,
           ),
+        ),
+        _buildDropdown<AccountData>(
+          label: 'Account',
+          items: accountList,
+          selectedValue: null,
+          getLabel: (item) => item.cus_name_en ?? '',
+          onChanged: (value) {},
+          hint: account_name,
+          filled: true,
         ),
         Container(
           child: _buildDropdown<AccountData>(
             label: 'Account',
             items: accountList,
             selectedValue: selectedAccount,
-            getLabel: (item) => item.account_name,
+            getLabel: (item) => account_name,
             onChanged: (value) {
-              setState(() {
-                selectedAccount = value;
-                account_id = value?.account_id ?? '';
-              });
-            },
+              // setState(() {
+              //   selectedAccount = value;
+              //   account_id = value?.cus_id ?? '';
+              //   if(account_id != ''){
+              //     cont_id = '';
+              //   }
+              // });
+              // _fetchContact();
+              // selectedContact = null;
+            },hint: account_name,
           ),
         ),
         // _DropdownSale(
@@ -344,31 +352,31 @@ class _ProjectEditState extends State<ProjectEdit> {
         // _DropdownModel('Project Model'), //0,1 => internal , external
 
         Container(
-          child: _buildDropdown<SaleData>(
+          child: _buildDropdown<ProjectSaleData>(
             label: 'Sale/Non Sale',
             items: saleDataList,
             selectedValue: selectedSaleData,
-            getLabel: (item) => item.sale_name,
+            getLabel: (item) => item.project_sale_name,
             onChanged: (value) {
               setState(() {
                 selectedSaleData = value;
-                sale_id = value?.sale_id ?? '';
+                project_sale_id = value?.project_sale_id ?? '';
               });
-            },
+            },hint: project.project_sale_nonsale_name,
           ),
         ),
         Container(
-          child: _buildDropdown<ProjectModelData>(
+          child: _buildDropdown<ProjectSupportData>(
             label: 'Project Model',
-            items: projectModelList,
-            selectedValue: selectedProjectModel,
-            getLabel: (item) => item.project_model_name,
+            items: projectSupportList,
+            selectedValue: selectedSupportModel,
+            getLabel: (item) => item.project_support_name,
             onChanged: (value) {
               setState(() {
-                selectedProjectModel = value;
-                project_model_id = value?.project_model_id ?? '';
+                selectedSupportModel = value;
+                project_support_id = value?.project_support_id ?? '';
               });
-            },
+            },hint: project.project_model_name,
           ),
         ),
         Container(
@@ -380,9 +388,9 @@ class _ProjectEditState extends State<ProjectEdit> {
             onChanged: (value) {
               setState(() {
                 selectedSource = value;
-                type_id = value?.source_id ?? '';
+                source_id = value?.source_id ?? '';
               });
-            },
+            },hint: project.project_source_name,
           ),
         ),
         _textController(
@@ -463,6 +471,9 @@ class _ProjectEditState extends State<ProjectEdit> {
 
   Widget _buildDropdown<T>({
     required String label,
+    IconData? icon,
+    bool? filled,
+    required String hint,
     required List<T> items,
     required T? selectedValue,
     required String Function(T) getLabel,
@@ -486,6 +497,8 @@ class _ProjectEditState extends State<ProjectEdit> {
           InputDecorator(
             decoration: InputDecoration(
               isDense: true,
+              filled: filled != true ? false:true, // ✅ เติมพื้นหลังเมื่อ disabled
+              fillColor: filled != true? Colors.white:Colors.grey.shade300,
               contentPadding: EdgeInsets.only(top: 12, bottom: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -496,7 +509,7 @@ class _ProjectEditState extends State<ProjectEdit> {
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  '',
+                  hint,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -504,9 +517,14 @@ class _ProjectEditState extends State<ProjectEdit> {
                   ),
                 ),
                 value: selectedValue,
-                items: items
-                    .map((item) => DropdownMenuItem<T>(
-                          value: item,
+                items: items.map((item) {
+                  return DropdownMenuItem<T>(
+                    value: item,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        (icon != null) ? Icon(icon, size: 24) : Container(),
+                        Expanded(
                           child: Text(
                             getLabel(item),
                             style: TextStyle(
@@ -515,9 +533,12 @@ class _ProjectEditState extends State<ProjectEdit> {
                               color: Color(0xFF555555),
                             ),
                           ),
-                        ))
-                    .toList(),
-                onChanged: onChanged,
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: filled != true ? onChanged : null,
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
@@ -541,6 +562,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                 menuItemStyleData: MenuItemStyleData(
                   height: 40,
                 ),
+
                 /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
                 dropdownSearchData: DropdownSearchData(
                   searchController: dropdownSearchController,
@@ -555,7 +577,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                       controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -641,46 +664,44 @@ class _ProjectEditState extends State<ProjectEdit> {
     );
   }
 
-  void _fatchApi() {
-    _fetchContact();
-    _fetchAccount();
-    _fetchType();
-    _fetchSource();
-    _fetchCategory();
-    _fetchProcess();
-    _fetchPriority();
-    _fetchSubStatus();
+  Future<void> _fatchApi() async{
+   await _fetchContact();
+   await _fetchAccount();
+   await _fetchType();
+   await _fetchSource();
+   await _fetchCategory();
+   await _fetchProcess();
+   await _fetchPriority();
+   await _fetchSubStatus();
   }
 
   ContactData? selectedContact;
   List<ContactData> contactList = [];
   String contact_id = '';
   String contact_name = '';
+  String cus_name = '';
+  String cont_id = '';
   Future<void> _fetchContact() async {
     final uri =
-        Uri.parse('$host/api/origami/need/contact.php?page=&search=$_search');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['contact_data'];
-        setState(() {
-          contactList =
-              dataJson.map((json) => ContactData.fromJson(json)).toList();
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+    Uri.parse("$hostDev/api/origami/crm/project/component/contact.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'cus_cont_id': cont_id,
+        'cus_id': account_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        contactList =
+            dataJson.map((json) => ContactData.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load instructors');
     }
   }
 
@@ -690,71 +711,58 @@ class _ProjectEditState extends State<ProjectEdit> {
   String account_name = '';
   Future<void> _fetchAccount() async {
     final uri =
-        Uri.parse('$host/api/origami/need/account.php?page=&search=$_search');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['account_data'];
-        setState(() {
-          accountList =
-              dataJson.map((json) => AccountData.fromJson(json)).toList();
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+    Uri.parse("$hostDev/api/origami/crm/project/component/account.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'cus_id': account_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        accountList =
+            dataJson.map((json) => AccountData.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load instructors');
     }
   }
 
   TypeData? selectedType;
   List<TypeData> typeList = [];
-  String type_id = '';
-  String type_name = '';
+  String project_type_id = '';
   Future<void> _fetchType() async {
-    final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/type.php?search=$_search');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'index': '',
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['type_data'];
-        setState(() {
-          typeList = dataJson.map((json) => TypeData.fromJson(json)).toList();
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+    final uri =
+    Uri.parse("$hostDev/api/origami/crm/project/component/type.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        typeList =
+            dataJson.map((json) => TypeData.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load instructors');
     }
   }
 
   SourceData? selectedSource;
   List<SourceData> sourceList = [];
   String source_id = '';
-  String source_name = '';
   Future<void> _fetchSource() async {
     final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/source.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/source.php?search=$_search');
     try {
       final response = await http.post(
         uri,
@@ -784,10 +792,9 @@ class _ProjectEditState extends State<ProjectEdit> {
   CategoryData? selectedCategory;
   List<CategoryData> categoryList = [];
   String category_id = '';
-  String category_name = '';
   Future<void> _fetchCategory() async {
     final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/category.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/category.php?search=$_search');
     try {
       final response = await http.post(
         uri,
@@ -817,10 +824,9 @@ class _ProjectEditState extends State<ProjectEdit> {
   ProcessData? selectedProcess;
   List<ProcessData> processList = [];
   String process_id = '';
-  String precess_name = '';
   Future<void> _fetchProcess() async {
     final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/process.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/process.php?search=$_search');
     try {
       final response = await http.post(
         uri,
@@ -850,30 +856,26 @@ class _ProjectEditState extends State<ProjectEdit> {
   PriorityData? selectedPriority;
   List<PriorityData> priorityList = [];
   String priority_id = '';
-  String priority_name = '';
   Future<void> _fetchPriority() async {
     final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/priority.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/priority');
     try {
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'index': ''
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['priority_data'];
+        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
         setState(() {
           priorityList =
               dataJson.map((json) => PriorityData.fromJson(json)).toList();
         });
       } else {
-        throw Exception('Failed to load status data');
+        throw Exception('Failed to load instructors');
       }
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
@@ -883,7 +885,6 @@ class _ProjectEditState extends State<ProjectEdit> {
   SubStatusData? selectedSubStatus;
   List<SubStatusData> subStatusList = [];
   String sub_status_id = '';
-  String sub_status_name = '';
   Future<void> _fetchSubStatus() async {
     final uri = Uri.parse(
         '$host/api/origami/crm/project/component/substatus.php?search=$_search');
@@ -913,20 +914,83 @@ class _ProjectEditState extends State<ProjectEdit> {
     }
   }
 
-  ProjectModelData? selectedProjectModel;
-  String project_model_id = '';
-  String project_model_name = '';
-  List<ProjectModelData> projectModelList = [
-    ProjectModelData(project_model_id: '0', project_model_name: 'Internal'),
-    ProjectModelData(project_model_id: '1', project_model_name: 'External'),
+  String project_status = '';
+  Future<void> _fetchUpdateProject() async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/project/update_project.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'cus_create_user': widget.employee.emp_id,
+        'project_id': widget.project.project_id,
+        'cont_id': contact_id,
+        'cus_id': account_id,
+        'project_sale': project_sale_id,
+        'project_type_id': project_type_id,
+        'project_comefrom_id': source_id,
+        'project_process': process_id,
+        'project_sale_status_id': priority_id,
+        'project_support': project_support_id,
+        'project_code': project_code,
+        'project_name': _projectController.text.trim(),
+        'project_description': _descriptionController.text.trim(),
+        'project_start': project_start,
+        'project_end': project_end,
+        'owner_group': widget.employee.emp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final jsonResponse = jsonDecode(response.body);
+      final message = jsonResponse['message'];
+      if(jsonResponse['status'] != 'error'){
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                OrigamiPage(employee: widget.employee, popPage: 10),
+          ),
+        );
+      }
+      showSnackBar(message);
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+
+
+  ProjectSupportData? selectedSupportModel;
+  String project_support_id = '';
+  String project_support_name = '';
+  List<ProjectSupportData> projectSupportList = [
+    ProjectSupportData(project_support_id: '0', project_support_name: 'Internal'),
+    ProjectSupportData(project_support_id: '1', project_support_name: 'Support internal'),
+    ProjectSupportData(project_support_id: '2', project_support_name: 'External'),
   ];
 
-  SaleData? selectedSaleData;
-  String sale_id = '';
-  String sale_name = '';
-  List<SaleData> saleDataList = [
-    SaleData(sale_id: '0', sale_name: 'Sale Project'),
-    SaleData(sale_id: '1', sale_name: 'Non Sale Project'),
+  ProjectSaleData? selectedSaleData;
+  String project_sale_id = '';
+  String project_sale_name = '';
+  List<ProjectSaleData> saleDataList = [
+    ProjectSaleData(project_sale_id: '0', project_sale_name: 'Sale Project'),
+    ProjectSaleData(project_sale_id: '1', project_sale_name: 'Non Sale Project'),
   ];
 
   ApproveQuotation? selectedApprove;
@@ -934,4 +998,14 @@ class _ProjectEditState extends State<ProjectEdit> {
     ApproveQuotation(approve_quotation: 'No'),
     ApproveQuotation(approve_quotation: 'Yes'),
   ];
+
+  String group_shcode = '';
+  String group_year = '';
+  String group_gen = '';
+  String project_code = '';
+  String formaProjectcode(String input) {
+    return project_code = "$group_shcode$group_year-${input.padLeft(4, '0')}";
+  }
+
+
 }

@@ -72,7 +72,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
         builder: (context) => ProjectAdd(
           employee: widget.employee,
           pageInput: widget.pageInput,
-          saleData: non_sale,
+          project_sale_id: non_sale,
         ),
       ),
     ).then((value) {
@@ -230,34 +230,91 @@ class _ProjectScreenState extends State<ProjectScreen> {
   Widget bodyBuild() {
     return Column(
       children: [
-        _Header(),
-        if (filter)
-          Column(
-            children: [
-              _buildDropdownFilter(
-                  'All Project',
-                  _modelProject,
-                  selectedProject,
-                  (value) => setState(() => selectedProject = value)),
-              _buildDropdownFilter(
-                  'All Raised By',
-                  _modelRaisedBy,
-                  selectedRaisedBy,
-                  (value) => setState(() => selectedRaisedBy = value)),
-              _buildDropdownFilter(
-                  'All In-Charge',
-                  _modelInCharge,
-                  selectedInCharge,
-                  (value) => setState(() => selectedInCharge = value)),
-              _buildDropdownFilter(
-                  'All Priority',
-                  _modelPriority,
-                  selectedPriority,
-                  (value) => setState(() => selectedPriority = value)),
-              _buildDropdownFilter('All Status', _modelStatus, selectedStatus,
-                  (value) => setState(() => selectedStatus = value)),
-            ],
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(100),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2), // สีเงา
+                  blurRadius: 1, // ความฟุ้งของเงา
+                  offset: Offset(0, 4), // การเยื้องของเงา (แนวแกน X, Y)
+                ),
+              ],
+            ),
+            child: TextFormField(
+              controller: _searchController,
+              keyboardType: TextInputType.text,
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Color(0xFF555555),
+                fontSize: 14,
+              ),
+              decoration: InputDecoration(
+                isDense: true,
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                hintText: 'Search...',
+                hintStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Color(0xFFFF9900),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+            ),
           ),
+        ),
+        // if (filter)
+        //   Column(
+        //     children: [
+        //       _buildDropdownFilter(
+        //           'All Project',
+        //           _modelProject,
+        //           selectedProject,
+        //           (value) => setState(() => selectedProject = value)),
+        //       _buildDropdownFilter(
+        //           'All Raised By',
+        //           _modelRaisedBy,
+        //           selectedRaisedBy,
+        //           (value) => setState(() => selectedRaisedBy = value)),
+        //       _buildDropdownFilter(
+        //           'All In-Charge',
+        //           _modelInCharge,
+        //           selectedInCharge,
+        //           (value) => setState(() => selectedInCharge = value)),
+        //       _buildDropdownFilter(
+        //           'All Priority',
+        //           _modelPriority,
+        //           selectedPriority,
+        //           (value) => setState(() => selectedPriority = value)),
+        //       _buildDropdownFilter('All Status', _modelStatus, selectedStatus,
+        //           (value) => setState(() => selectedStatus = value)),
+        //     ],
+        //   ),
         // Divider(),
         Expanded(
           child: Padding(
@@ -472,7 +529,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                   ),
                                   (project.can_delete == 'Y')
                                       ? InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            _showCustomDialog(project.project_id,project.project_name);
+                                          },
                                           child: Icon(
                                             Icons.delete,
                                             color: Colors.red,
@@ -687,7 +746,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
     try {
       await fetchModelProjectGetSum();
       final uri =
-      Uri.parse("$host/api/origami/crm/project/get.php?search=${_search}");
+      Uri.parse("$hostDev/api/origami/crm/project/get.php?search=${_search}");
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer ${authorization}'},
@@ -749,7 +808,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   }
 
   Future<void> fetchModelProjectGetSum() async {
-    final uri = Uri.parse("$host/crm/project.php");
+    final uri = Uri.parse("$hostDev/crm/project.php");
     try {
       final response = await http.post(
         uri,
@@ -772,6 +831,96 @@ class _ProjectScreenState extends State<ProjectScreen> {
     } catch (e) {
       print('Error fetching data: $e');
     }
+  }
+
+  Future<void> fetchDeleteProject(String project_id) async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/project/delete_project.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $authorization'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'project_id': project_id,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                OrigamiPage(employee: widget.employee, popPage: 10),
+          ),
+        );
+      });
+    } else {
+      throw Exception('Failed to load projects');
+    }
+  }
+
+  void _showCustomDialog(String project_id , String project_name) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Delete',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Do you want to delete project $project_name}?',
+                style: const TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555)),
+              ),
+              SizedBox(height: 16),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                fetchDeleteProject(project_id);
+              },
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
   }
 
   // ModelType? selectedItem;

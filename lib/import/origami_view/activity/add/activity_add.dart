@@ -41,11 +41,12 @@ class _activityAddState extends State<activityAdd> {
     selectedType = widget.dataType;
     _modelType = widget.listType;
     showDate();
-    fetchGetProject();
-    fetchActivityAccount();
+    _fetchProject();
+    _fetchAccount();
+    _fetchContact();
     fetchActivityStatus();
-    fetchActivityPriority();
-    fetchActivityContact();
+    _fetchPriority();
+
     _typeController.addListener(() {
       print("Current text: ${_typeController.text}");
     });
@@ -87,25 +88,36 @@ class _activityAddState extends State<activityAdd> {
   String currentTime = '';
   TimeOfDay selectedTimeIn = TimeOfDay(hour: 09, minute: 00);
   TimeOfDay selectedTimeOut = TimeOfDay(hour: 18, minute: 00);
+  TimeOfDay selectedTimeInClose = TimeOfDay(hour: 09, minute: 00);
+  TimeOfDay selectedTimeOutClose = TimeOfDay(hour: 18, minute: 00);
 
   Future<void> _selectTime(BuildContext context, String inOut) async {
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
       initialTime: inOut == 'start' ? selectedTimeIn : selectedTimeOut,
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
     );
 
     if (newTime != null) {
       setState(() {
         if (inOut == 'start') {
           selectedTimeIn = newTime;
-          start_time = selectedTimeIn.format(context);
+          start_time =
+          '${selectedTimeIn.hour.toString().padLeft(2, '0')}:${selectedTimeIn.minute.toString().padLeft(2, '0')}';
         } else if (inOut == 'end') {
           selectedTimeOut = newTime;
-          end_time = selectedTimeOut.format(context);
+          end_time =
+          '${selectedTimeOut.hour.toString().padLeft(2, '0')}:${selectedTimeOut.minute.toString().padLeft(2, '0')}';
         }
       });
     }
   }
+
 
   DateTime _selectedDateEnd = DateTime.now();
   String showlastDay = '';
@@ -114,6 +126,7 @@ class _activityAddState extends State<activityAdd> {
     showlastDay = formatter.format(_selectedDateEnd);
     start_date = showlastDay;
     end_date = showlastDay;
+    print('$start_date');
   }
 
   Future<void> _requestDateEnd(BuildContext context) async {
@@ -160,18 +173,17 @@ class _activityAddState extends State<activityAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Add Activity',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
+        backgroundColor: Colors.orange,
+        elevation: 1,
+        title: Text(
+          '',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 24,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
           ),
         ),
         leading: IconButton(
@@ -182,299 +194,343 @@ class _activityAddState extends State<activityAdd> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SafeArea(
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildDropdown<ActivityType>(
-                                label: 'Type',
-                                hint: selectedType?.type_name ?? '',
-                                items: _modelType,
-                                selectedValue: selectedType,
-                                getLabel: (item) => item?.type_name ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedType = value;
-                                    type_id = value?.type_id ?? '';
-                                  });
-                                },
-                              ),
-                              _buildDropdown<ActivityProject>(
-                                label: 'Project',
-                                items: _modelProject,
-                                selectedValue: selectedProject,
-                                getLabel: (item) => item?.project_name ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedProject = value;
-                                    project_id = value?.project_id ?? '';
-                                  });
-                                },
-                              ),
-                              _buildDropdown<ActivityContact>(
-                                label: 'Contact',
-                                items: _modelContact,
-                                selectedValue: selectedContact,
-                                getLabel: (item) => item?.contact_first ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedContact = value;
-                                    contact_id = value?.contact_id ?? '';
-                                  });
-                                },
-                              ),
-                              _buildDropdown<AccountData>(
-                                label: 'Account',
-                                items: _modelAccount,
-                                selectedValue: selectedAccount,
-                                getLabel: (item) => item?.account_name ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedAccount = value;
-                                    account_id = value?.account_id ?? '';
-                                  });
-                                },
-                              ),
-                              _lineWidget(),
-                              _buildDropdown<ActivityStatus>(
-                                label: 'Status',
-                                items: _modelStatus,
-                                selectedValue: selectedStatus,
-                                getLabel: (item) => item?.status_name ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedStatus = value;
-                                    status_id = value?.status_id ?? '';
-                                  });
-                                },
-                              ),
-                              _buildDropdown<ActivityPriority>(
-                                label: 'Priority',
-                                items: _modelPriority,
-                                selectedValue: selectedPriority,
-                                getLabel: (item) => item?.priority_name ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedPriority = value;
-                                    project_id = value?.priority_id ?? '';
-                                  });
-                                },
-                              ),
-                              _textController(
-                                  'Subject', _subjectController, false, Icons.numbers),
-                              _textController('Owner Activity Description',
-                                  _descriptionController, false, Icons.numbers),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: _DateBody('Start Date', true),
-                                  ),
-                                  SizedBox(width: 16),
-                                  Expanded(
-                                    child: _TimeBody('Start Time', 'start'),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: _DateBody('End Date', false),
-                                  ),
-                                  SizedBox(width: 16),
-                                  Expanded(
-                                    child: _TimeBody('End Time', 'end'),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              _buildDropdown<ActivityPlace>(
-                                label: 'Place',
-                                items: _modelPlace,
-                                selectedValue: selectedPlace,
-                                getLabel: (item) => item?.place_name ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedPlace = value;
-                                    project_id = value?.place_id ?? '';
-                                  });
-                                },
-                              ),
-                              _textController('Location', _locationController, true,
-                                  Icons.location_history),
-                              _textController('Cost', _costController, false, Icons.numbers),
-                              _lineWidget(),
-                              Text(
-                                'Other Contact',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.bold,
+      body: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildDropdown<ActivityType>(
+                              label: 'Type',
+                              items: _modelType,
+                              selectedValue: selectedType,
+                              getLabel: (item) => item.type_name,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedType = value;
+                                  type_id = value?.type_id ?? '';
+                                });
+                              },
+                              hint: selectedType?.type_name ?? '',
+                            ),
+                            _buildDropdown<ActivityProject>(
+                              label: 'Project',
+                              items: projectList,
+                              selectedValue: selectedProject,
+                              getLabel: (item) => item.project_name,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedProject = value;
+                                  project_id = value?.project_id ?? '';
+                                  contact_id = value?.cont_id ?? '';
+                                  account_id = value?.cus_id ?? '';
+                                  project_name = value?.project_name ?? '';
+                                  String name = value?.cus_cont_name ?? '';
+                                  String last = value?.cus_cont_surname ?? '';
+                                  if (contact_id != '') {
+                                    contact_name = "$name $last";
+                                  } else {
+                                    contact_name = '';
+                                  }
+                                  String nameTH = value?.cus_name_th ?? '';
+                                  String nameEN = value?.cus_name_en ?? '';
+                                  if (account_id != '') {
+                                    account_name = '$nameTH [$nameEN]';
+                                  } else {
+                                    account_name = '';
+                                  }
+                                });
+                                _fetchContact();
+                                _fetchAccount();
+                                selectedContact = null;
+                                selectedContact = null;
+                              },
+                              hint: project_name,
+                            ),
+                            _buildDropdown<ActivityContact>(
+                              label: 'Contact',
+                              items: contactList,
+                              selectedValue: selectedContact,
+                              getLabel: (item) =>
+                                  "${item.contact_first} ${item.contact_last}",
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedContact = value;
+                                  contact_id = value?.contact_id ?? '';
+                                  account_id = value?.cus_id ?? '';
+                                  String name = value?.contact_first ?? '';
+                                  String last = value?.contact_last ?? '';
+                                  if (contact_id != '') {
+                                    contact_name = "$name $last";
+                                  } else {
+                                    contact_name = '';
+                                  }
+                                  String nameTH = value?.cus_name_th ?? '';
+                                  String nameEN = value?.cus_name_en ?? '';
+                                  if (account_id != '') {
+                                    account_name = '$nameTH [$nameEN]';
+                                  } else {
+                                    account_name = '';
+                                  }
+                                });
+                                _fetchAccount();
+                                selectedAccount = null;
+                              },
+                              hint: contact_name,
+                              filled: (contact_id == '') ? true : false,
+                            ),
+                            _buildDropdown<ActivityAccount>(
+                              label: 'Account',
+                              items: accountList,
+                              selectedValue: null,
+                              getLabel: (item) => item.account_name ?? '',
+                              onChanged: (value) {},
+                              hint: account_name,
+                              filled: true,
+                            ),
+                            // _lineWidget(),
+                            _buildDropdown<ActivityStatus>(
+                              label: 'Status',
+                              items: _modelStatus,
+                              selectedValue: selectedStatus,
+                              getLabel: (item) => item.status_name,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedStatus = value;
+                                  status_id = value?.status_id ?? '';
+                                });
+                              },
+                              hint: '',
+                            ),
+                            _buildDropdown<ActivityPriority>(
+                              label: 'Priority',
+                              hint: '',
+                              items: _modelPriority,
+                              selectedValue: selectedPriority,
+                              getLabel: (item) => item.priority_name ?? '',
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPriority = value;
+                                  project_id = value?.priority_id ?? '';
+                                });
+                              },
+                            ),
+                            _textController('Subject', _subjectController,
+                                false, Icons.numbers),
+                            _textController('Owner Activity Description',
+                                _descriptionController, false, Icons.numbers),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _DateBody('Start Date', true),
                                 ),
-                              ),
-                              SizedBox(height: 8),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 15),
-                                child: Column(
-                                  children: List.generate(
-                                      addNewContactList.length, (index) {
-                                    final contact = addNewContactList[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.only(bottom: 5),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 4, right: 8),
-                                                child: CircleAvatar(
-                                                  radius: 20,
-                                                  backgroundColor: Colors.grey,
-                                                  child: CircleAvatar(
-                                                    radius: 19,
-                                                    backgroundColor:
-                                                    Colors.white,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                      child: Image.network(
-                                                        (contact.contact_image ==
-                                                            null)
-                                                            ? 'https://dev.origami.life/images/default.png'
-                                                            : '$host//crm/${contact.contact_image}',
-                                                        height: 100,
-                                                        width: 100,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '${contact.contact_first} ${contact.contact_last}',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 16,
-                                                        color:
-                                                        Color(0xFFFF9900),
-                                                        fontWeight:
-                                                        FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      '${contact.customer_en} (${contact.customer_th})',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 14,
-                                                        color:
-                                                        Color(0xFF555555),
-                                                        fontWeight:
-                                                        FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    Divider(
-                                                        color: Colors
-                                                            .grey.shade300),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }),
+                                SizedBox(width: 16),
+                                Expanded(
+                                  child: _TimeBody('Start Time', 'start'),
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: _addOtherContact,
-                                child: Text(
-                                  'Add Other Contact',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 14,
-                                    color: Color(0xFFFF9900),
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _DateBody('End Date', false),
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: 16),
+                                Expanded(
+                                  child: _TimeBody('End Time', 'end'),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            _buildDropdown<ActivityPlace>(
+                              label: 'Place',
+                              items: _modelPlace,
+                              icon: Icons.input,
+                              selectedValue: selectedPlace,
+                              getLabel: (item) => item.place_name,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPlace = value;
+                                  place_id = value?.place_id ?? '';
+                                });
+                              },
+                              hint: '',
+                            ),
+                            _textController('Location', _locationController,
+                                true, Icons.location_history),
+                            _textController('Cost', _costController, false,
+                                Icons.numbers),
+                            // _lineWidget(),
+                            // Text(
+                            //   'Other Contact',
+                            //   maxLines: 1,
+                            //   overflow: TextOverflow.ellipsis,
+                            //   style: TextStyle(
+                            //     fontFamily: 'Arial',
+                            //     fontSize: 14,
+                            //     color: Color(0xFF555555),
+                            //     fontWeight: FontWeight.bold,
+                            //   ),
+                            // ),
+                            // SizedBox(height: 8),
+                            // Padding(
+                            //   padding:
+                            //       const EdgeInsets.symmetric(horizontal: 15),
+                            //   child: Column(
+                            //     children: List.generate(
+                            //         addNewContactList.length, (index) {
+                            //       final contact = addNewContactList[index];
+                            //       return Padding(
+                            //         padding: const EdgeInsets.only(bottom: 5),
+                            //         child: Column(
+                            //           mainAxisAlignment:
+                            //               MainAxisAlignment.center,
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.start,
+                            //           children: [
+                            //             Row(
+                            //               mainAxisAlignment:
+                            //                   MainAxisAlignment.start,
+                            //               crossAxisAlignment:
+                            //                   CrossAxisAlignment.center,
+                            //               children: [
+                            //                 Padding(
+                            //                   padding: const EdgeInsets.only(
+                            //                       bottom: 4, right: 8),
+                            //                   child: CircleAvatar(
+                            //                     radius: 20,
+                            //                     backgroundColor: Colors.grey,
+                            //                     child: CircleAvatar(
+                            //                       radius: 19,
+                            //                       backgroundColor:
+                            //                           Colors.white,
+                            //                       child: ClipRRect(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                                 100),
+                            //                         child: Image.network(
+                            //                           (contact.cus_cont_photo ==
+                            //                                   '')
+                            //                               ? 'https://dev.origami.life/images/default.png'
+                            //                               : '$host//crm/${contact.cus_cont_photo}',
+                            //                           height: 100,
+                            //                           width: 100,
+                            //                           fit: BoxFit.cover,
+                            //                         ),
+                            //                       ),
+                            //                     ),
+                            //                   ),
+                            //                 ),
+                            //                 const SizedBox(width: 10),
+                            //                 Expanded(
+                            //                   child: Column(
+                            //                     mainAxisAlignment:
+                            //                         MainAxisAlignment.start,
+                            //                     crossAxisAlignment:
+                            //                         CrossAxisAlignment.start,
+                            //                     children: [
+                            //                       Text(
+                            //                         '${contact.contact_first} ${contact.contact_last}',
+                            //                         maxLines: 1,
+                            //                         overflow:
+                            //                             TextOverflow.ellipsis,
+                            //                         style: TextStyle(
+                            //                           fontFamily: 'Arial',
+                            //                           fontSize: 16,
+                            //                           color:
+                            //                               Color(0xFFFF9900),
+                            //                           fontWeight:
+                            //                               FontWeight.w700,
+                            //                         ),
+                            //                       ),
+                            //                       Text(
+                            //                         '${contact.cus_name_en} (${contact.cus_name_th})',
+                            //                         maxLines: 1,
+                            //                         overflow:
+                            //                             TextOverflow.ellipsis,
+                            //                         style: TextStyle(
+                            //                           fontFamily: 'Arial',
+                            //                           fontSize: 14,
+                            //                           color:
+                            //                               Color(0xFF555555),
+                            //                           fontWeight:
+                            //                               FontWeight.w500,
+                            //                         ),
+                            //                       ),
+                            //                       Divider(
+                            //                           color: Colors
+                            //                               .grey.shade300),
+                            //                     ],
+                            //                   ),
+                            //                 ),
+                            //               ],
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       );
+                            //     }),
+                            //   ),
+                            // ),
+                            // TextButton(
+                            //   onPressed: _addOtherContact,
+                            //   child: Text(
+                            //     'Add Other Contact',
+                            //     maxLines: 1,
+                            //     overflow: TextOverflow.ellipsis,
+                            //     style: TextStyle(
+                            //       fontFamily: 'Arial',
+                            //       fontSize: 14,
+                            //       color: Color(0xFFFF9900),
+                            //       fontWeight: FontWeight.w700,
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Color(0xFFFF9900),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        onPressed: _saveAddActivity,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Center(
+                            child: Text(
+                              Save,
+                              style: TextStyle(
+                                  fontFamily: 'Arial', fontSize: 16.0),
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Color(0xFFFF9900),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                          onPressed: _saveAddActivity,
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                Save,
-                                style: TextStyle(fontFamily: 'Arial', fontSize: 16.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 8),
-              Container(),
-            ],
-          ),
+            ),
+            SizedBox(height: 8),
+            Container(),
+          ],
         ),
       ),
     );
@@ -659,12 +715,11 @@ class _activityAddState extends State<activityAdd> {
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                               child: Image.network(
-                                                (contact.contact_image ==
-                                                            null ||
-                                                        contact.contact_image ==
+                                                (contact.cus_cont_photo == '' ||
+                                                        contact.cus_cont_photo ==
                                                             '')
                                                     ? 'https://dev.origami.life/images/default.png'
-                                                    : '$host//crm/${contact.contact_image}',
+                                                    : '$host//crm/${contact.cus_cont_photo}',
                                                 height: 100,
                                                 width: 100,
                                                 fit: BoxFit.cover,
@@ -693,7 +748,7 @@ class _activityAddState extends State<activityAdd> {
                                               ),
                                             ),
                                             Text(
-                                              '${contact.customer_en} (${contact.customer_th})',
+                                              '${contact.cus_name_en} (${contact.cus_name_th})',
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
@@ -799,7 +854,9 @@ class _activityAddState extends State<activityAdd> {
 
   Widget _buildDropdown<T>({
     required String label,
-    String? hint,
+    IconData? icon,
+    bool? filled,
+    required String hint,
     required List<T> items,
     required T? selectedValue,
     required String Function(T) getLabel,
@@ -823,6 +880,9 @@ class _activityAddState extends State<activityAdd> {
           InputDecorator(
             decoration: InputDecoration(
               isDense: true,
+              filled:
+                  filled != true ? false : true, // ✅ เติมพื้นหลังเมื่อ disabled
+              fillColor: filled != true ? Colors.white : Colors.grey.shade300,
               contentPadding: EdgeInsets.only(top: 12, bottom: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -833,7 +893,7 @@ class _activityAddState extends State<activityAdd> {
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  hint ?? '',
+                  hint,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -841,9 +901,14 @@ class _activityAddState extends State<activityAdd> {
                   ),
                 ),
                 value: selectedValue,
-                items: items
-                    .map((item) => DropdownMenuItem<T>(
-                          value: item,
+                items: items.map((item) {
+                  return DropdownMenuItem<T>(
+                    value: item,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        (icon != null) ? Icon(icon, size: 24) : Container(),
+                        Expanded(
                           child: Text(
                             getLabel(item),
                             style: TextStyle(
@@ -852,9 +917,12 @@ class _activityAddState extends State<activityAdd> {
                               color: Color(0xFF555555),
                             ),
                           ),
-                        ))
-                    .toList(),
-                onChanged: onChanged,
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: filled != true ? onChanged : null,
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
@@ -1133,87 +1201,14 @@ class _activityAddState extends State<activityAdd> {
     }
   }
 
-  Future<void> fetchAddActivity() async {
-    final uri = Uri.parse("$host/crm/ios_add_activity.php");
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'type_id': type_id,
-          'project_id': project_id,
-          'account_id': account_id,
-          'contact_id': contact_id,
-          'status_id': status_id,
-          'priority_id': priority_id,
-          'place_id': place_id,
-          'location': _locationController.text,
-          'location_lat': '',
-          'location_long': '',
-          'activity_name': activity_name,
-          'description': description,
-          'start_date': start_date,
-          'start_time': start_time,
-          'end_date': end_date,
-          'end_time': end_time,
-          'cost': cost,
-          'contact_list': contact_list.join(","),
-        },
-      );
-      if (response.statusCode == 200) {
-        print('true: ${response.statusCode}');
-        Navigator.pop(context);
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
-  }
-
   String formatText(String text) {
     return text.replaceAll(RegExp(r'(\r\n|\r)'), '\n');
-  }
-
-  AccountData? selectedAccount;
-  List<AccountData> _modelAccount = [];
-  Future<void> fetchActivityAccount() async {
-    final uri = Uri.parse('$host/api/origami/need/account.php?page&search');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['account_data'];
-        setState(() {
-          _modelAccount =
-              dataJson.map((json) => AccountData.fromJson(json)).toList();
-          if (_modelAccount.isNotEmpty && selectedAccount == null) {
-            selectedAccount = _modelAccount[0];
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
   }
 
   ActivityStatus? selectedStatus;
   List<ActivityStatus> _modelStatus = [];
   Future<void> fetchActivityStatus() async {
-    final uri = Uri.parse('$host/crm/ios_activity_status.php');
+    final uri = Uri.parse('$hostDev/crm/ios_activity_status.php');
     try {
       final response = await http.post(
         uri,
@@ -1242,63 +1237,86 @@ class _activityAddState extends State<activityAdd> {
     }
   }
 
-  ActivityPriority? selectedPriority;
-  List<ActivityPriority> _modelPriority = [];
-  Future<void> fetchActivityPriority() async {
-    final uri = Uri.parse('$host/crm/ios_activity_priority.php');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
-        setState(() {
-          _modelPriority =
-              dataJson.map((json) => ActivityPriority.fromJson(json)).toList();
-          if (_modelPriority.isNotEmpty && selectedPriority == null) {
-            selectedPriority = _modelPriority[0];
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+  ActivityProject? selectedProject;
+  List<ActivityProject> projectList = [];
+  String project_name = '';
+  Future<void> _fetchProject() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/activity/component/project.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'cont_id': contact_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        projectList =
+            dataJson.map((json) => ActivityProject.fromJson(json)).toList();
+        if (projectList.isNotEmpty && selectedProject == null) {
+          selectedProject = projectList[0];
+          project_id = selectedProject?.project_id ?? '';
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
+  ActivityAccount? selectedAccount;
+  List<ActivityAccount> accountList = [];
+  String account_name = '';
+  Future<void> _fetchAccount() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/activity/component/account.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer ${authorization}'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'cus_id': account_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        accountList =
+            dataJson.map((json) => ActivityAccount.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load instructors');
     }
   }
 
   ActivityContact? selectedContact;
-  List<ActivityContact> _modelContact = [];
+  List<ActivityContact> contactList = [];
   List<ActivityContact> addNewContactList = [];
-  Future<void> fetchActivityContact() async {
-    final uri = Uri.parse('$host/crm/ios_activity_contact.php');
+  String cus_cont_id = '';
+  String contact_name = '';
+  Future<void> _fetchContact() async {
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/activity/component/contact.php');
     try {
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer ${authorization}'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'index': '0',
+          'cus_cont_id': contact_id,
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> dataJson = jsonResponse['data'];
         setState(() {
-          _modelContact =
+          contactList =
               dataJson.map((json) => ActivityContact.fromJson(json)).toList();
-          if (_modelContact.isNotEmpty && selectedContact == null) {
-            selectedContact = _modelContact[0];
-          }
         });
       } else {
         throw Exception('Failed to load status data');
@@ -1309,10 +1327,10 @@ class _activityAddState extends State<activityAdd> {
   }
 
   Future<List<ActivityContact>> fetchAddContact() async {
-    final uri = Uri.parse("$host/crm/ios_activity_contact.php");
+    final uri = Uri.parse("$hostDev/crm/ios_activity_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $authorization'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -1330,38 +1348,106 @@ class _activityAddState extends State<activityAdd> {
     }
   }
 
-  ActivityProject? selectedProject;
-  List<ActivityProject> _modelProject = [];
-  Future<void> fetchGetProject() async {
-    String comp_id = widget.employee.comp_id;
-    String emp_id = widget.employee.emp_id;
-    String cus_id = '';
-    String page = '1';
-    String action = 'getDropdownProject';
-
-    final uri = Uri.parse(
-      "$host/api/origami/crm/activity/create_dropdown_project.php?"
-      "comp_id=$comp_id&emp_id=$emp_id&cus_id=$cus_id&page=$page&term=${_search}&action=$action",
-    );
-
-    final response = await http.get(
-      uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-      setState(() {
-        _modelProject =
-            dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-        if (_modelProject.isNotEmpty && selectedProject == null) {
-          selectedProject = _modelProject[0];
-        }
-      });
-    } else {
-      throw Exception('Failed to load challenges');
+  ActivityPriority? selectedPriority;
+  List<ActivityPriority> _modelPriority = [];
+  Future<void> _fetchPriority() async {
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/activity/component/priority');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer ${authorization}'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+        },
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+        setState(() {
+          _modelPriority =
+              dataJson.map((json) => ActivityPriority.fromJson(json)).toList();
+          if (_modelPriority.isNotEmpty && selectedPriority == null) {
+            selectedPriority = _modelPriority[0];
+            priority_id = selectedPriority?.priority_id ?? '';
+          }
+        });
+      } else {
+        throw Exception('Failed to load instructors');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
     }
+  }
+
+  String skoop_activity = '';
+  Future<void> fetchAddActivity() async {
+    // List<String> contactIds = ['12', '15', '18'];
+    // String contactList = contactIds.join(','); // => "12,15,18"
+    final uri = Uri.parse("$hostDev/api/origami/crm/activity/add_activity.php");
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer ${authorization}'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'activity_type_id': type_id,
+          'project_id': project_id,
+          'account_id': account_id,
+          'contact_id': contact_id,
+          'activity_status_id': status_id,
+          'activity_priority_id': priority_id,
+          'place_id': place_id,
+          'activity_location': _locationController.text,
+          // 'activity_lat': '',
+          // 'activity_lng': '',
+          'activity_project_name': activity_name,
+          'activity_description': description,
+          'activity_start_date': start_date,
+          'activity_start_time': start_time,
+          'activity_end_date': end_date,
+          'activity_end_time': end_time,
+          'activity_cost': cost,
+          'contact_list': contact_list.join(","),
+        },
+      );
+      if (response.statusCode == 200) {
+        print('true: ${response.statusCode}');
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+        pushActivity(9);
+        showSnackBar(message);
+      } else {
+        throw Exception('Failed to load status data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
+    }
+  }
+
+  void pushActivity(int page) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            OrigamiPage(employee: widget.employee, popPage: page),
+      ),
+    );
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 
   ActivityPlace? selectedPlace;
@@ -1384,32 +1470,35 @@ class ActivityPlace {
 class ActivityProject {
   final String project_id;
   final String project_name;
-  final String total_project;
-  final String project_code;
-  final String location_lat;
-  final String location_lng;
-  final String location_name;
+  final String cont_id;
+  final String cus_id;
+  final String cus_name_th;
+  final String cus_name_en;
+  final String cus_cont_name;
+  final String cus_cont_surname;
 
   ActivityProject({
     required this.project_id,
     required this.project_name,
-    required this.total_project,
-    required this.project_code,
-    required this.location_lat,
-    required this.location_lng,
-    required this.location_name,
+    required this.cont_id,
+    required this.cus_id,
+    required this.cus_name_th,
+    required this.cus_name_en,
+    required this.cus_cont_name,
+    required this.cus_cont_surname,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityProject.fromJson(Map<String, dynamic> json) {
     return ActivityProject(
       project_id: json['project_id']?.toString() ?? '',
-      project_name: json['project_name'] ?? '',
-      total_project: json['total_project']?.toString() ?? '',
-      project_code: json['project_code'] ?? '',
-      location_lat: json['location_lat'] ?? '',
-      location_lng: json['location_lng'] ?? '',
-      location_name: json['location_name'] ?? '',
+      project_name: json['project_name']?.toString() ?? '',
+      cont_id: json['cont_id']?.toString() ?? '',
+      cus_id: json['cus_id']?.toString() ?? '',
+      cus_name_th: json['cus_name_th']?.toString() ?? '',
+      cus_name_en: json['cus_name_en']?.toString() ?? '',
+      cus_cont_name: json['cus_cont_name']?.toString() ?? '',
+      cus_cont_surname: json['cus_cont_surname']?.toString() ?? '',
     );
   }
 }
@@ -1454,22 +1543,18 @@ class ActivityStatus {
 }
 
 class ActivityPriority {
-  final String priority_id;
-  final String priority_name;
-  final String priority_value;
+  final String? priority_id;
+  final String? priority_name;
 
   ActivityPriority({
-    required this.priority_id,
-    required this.priority_name,
-    required this.priority_value,
+    this.priority_id,
+    this.priority_name,
   });
 
-  // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityPriority.fromJson(Map<String, dynamic> json) {
     return ActivityPriority(
-      priority_id: json['priority_id'] ?? '',
-      priority_name: json['priority_name'] ?? '',
-      priority_value: json['priority_value'] ?? '',
+      priority_id: json['activity_priority_id'],
+      priority_name: json['activity_priority_name'],
     );
   }
 }
@@ -1478,31 +1563,49 @@ class ActivityContact {
   final String contact_id;
   final String contact_first;
   final String contact_last;
-  final String contact_image;
-  final String customer_id;
-  final String customer_en;
-  final String customer_th;
+  final String cus_cont_photo;
+  final String cus_id;
+  final String cus_name_th;
+  final String cus_name_en;
 
   ActivityContact({
     required this.contact_id,
     required this.contact_first,
     required this.contact_last,
-    required this.contact_image,
-    required this.customer_id,
-    required this.customer_en,
-    required this.customer_th,
+    required this.cus_cont_photo,
+    required this.cus_id,
+    required this.cus_name_th,
+    required this.cus_name_en,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityContact.fromJson(Map<String, dynamic> json) {
     return ActivityContact(
-      contact_id: json['contact_id'] ?? '',
-      contact_first: json['contact_first'] ?? '',
-      contact_last: json['contact_last'] ?? '',
-      contact_image: json['contact_image'] ?? '',
-      customer_id: json['customer_id'] ?? '',
-      customer_en: json['customer_en'] ?? '',
-      customer_th: json['customer_th'] ?? '',
+      contact_id: json['cus_cont_id'] ?? '',
+      contact_first: json['cus_cont_name'] ?? '',
+      contact_last: json['cus_cont_surname'] ?? '',
+      cus_cont_photo: json['cus_cont_photo'] ?? '',
+      cus_id: json['cus_id'] ?? '',
+      cus_name_th: json['cus_name_th'] ?? '',
+      cus_name_en: json['cus_name_en'] ?? '',
+    );
+  }
+}
+
+class ActivityAccount {
+  final String account_id;
+  final String account_name;
+
+  ActivityAccount({
+    required this.account_id,
+    required this.account_name,
+  });
+
+  // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
+  factory ActivityAccount.fromJson(Map<String, dynamic> json) {
+    return ActivityAccount(
+      account_id: json['cus_id'],
+      account_name: json['cus_name_th'],
     );
   }
 }

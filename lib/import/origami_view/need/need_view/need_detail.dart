@@ -2611,7 +2611,6 @@ class _NeedDetailState extends State<NeedDetail> {
             MaterialPageRoute(
                 builder: (context) => OrigamiPage(
                       employee: widget.employee,
-                      Authorization: widget.Authorization,
                       popPage: 0,
                     )),
             (Route<dynamic> route) => false, // ลบหน้าทั้งหมดใน stack

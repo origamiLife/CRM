@@ -11,6 +11,7 @@ import '../EmailSender/email_sender.dart';
 import '../OCRScreen/OCRScreen.dart';
 import '../OCRScreen/OcrTessdata.dart';
 import '../OCRScreen/OCRScreen2.dart';
+import '../call/ticket_page.dart';
 import '../job/job.dart';
 import 'IDOC/idoc_view.dart';
 import 'about-profile/profile.dart';
@@ -18,6 +19,7 @@ import 'academy/academy.dart';
 import 'account/account_screen.dart';
 import 'activity/activity.dart';
 import 'calendar/calendar.dart';
+import 'calendar/calendar_api.dart';
 import 'chat/chat.dart';
 import 'contact/contact_screen.dart';
 import 'helpdesk/chat_ui/chat_ui.dart';
@@ -34,13 +36,11 @@ class OrigamiPage extends StatefulWidget {
     super.key,
     required this.employee,
     required this.popPage,
-    required this.Authorization,
     this.page,
     this.company_id,
   });
   final Employee employee;
   final int popPage;
-  final String Authorization;
   final String? page;
   final int? company_id;
   @override
@@ -113,7 +113,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 1,
+          elevation: 2,
           backgroundColor: Colors.white,
           foregroundColor: const Color(0xFFFF9900),
           title: Text(
@@ -125,11 +125,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
               color: Color(0xFFFF9900),
             ),
           ),
-          actions: (_index == 5)
-              ? _buildAppBarTimeStamp()
-              : (widget.employee.emp_id == '19777')
-                  ? _buildOCRScreen()
-                  : null,
+          actions: (_index == 5) ? _buildAppBarTimeStamp() : null,
         ),
         drawer: Container(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -206,9 +202,9 @@ class _OrigamiPageState extends State<OrigamiPage> {
           ),
         ),
         const SizedBox(height: 8),
-        _infoRow('$Name: ', widget.employee.emp_name),
+        _infoRow('Name: ', widget.employee.emp_name),
         const SizedBox(height: 6),
-        _infoRow('$Position1: ', widget.employee.dept_name),
+        _infoRow('Department: ', widget.employee.dept_name),
       ],
     );
   }
@@ -317,15 +313,15 @@ class _OrigamiPageState extends State<OrigamiPage> {
     final pages = {
       0: NeedsView(
         employee: widget.employee,
-        Authorization: widget.Authorization,
+        Authorization: authorization,
       ),
       1: NeedRequest(
         employee: widget.employee,
-        Authorization: widget.Authorization,
+        Authorization: authorization,
       ),
       2: AcademyPage(
         employee: widget.employee,
-        Authorization: widget.Authorization,
+        Authorization: authorization,
         page: widget.page ?? '',
       ),
       3: const TranslatePage(),
@@ -339,16 +335,16 @@ class _OrigamiPageState extends State<OrigamiPage> {
       ),
       6: ProfilePage(
         employee: widget.employee,
-        Authorization: widget.Authorization,
+        Authorization: authorization,
       ),
       7: HelpDeskScreen(
         employee: widget.employee,
         pageInput: 'origami',
-        Authorization: widget.Authorization,
+        Authorization: authorization,
       ),
       8: PettyCash(
         employee: widget.employee,
-        Authorization: widget.Authorization,
+        Authorization: authorization,
       ),
       9: ActivityScreen(
         employee: widget.employee,
@@ -369,14 +365,14 @@ class _OrigamiPageState extends State<OrigamiPage> {
         employee: widget.employee,
         pageInput: 'origami',
       ),
-      14: CalendarScreen(
+      14: CalendarScreenAPI(
         employee: widget.employee,
         pageInput: 'origami',
       ),
       15: HelpDesk2(
         employee: widget.employee,
         pageInput: 'origami',
-        Authorization: widget.Authorization,
+        Authorization: authorization,
       ),
       16: IdocScreen(
         employee: widget.employee,
@@ -385,12 +381,12 @@ class _OrigamiPageState extends State<OrigamiPage> {
       17: IssueLogScreen(
         employee: widget.employee,
         pageInput: 'origami',
-        Authorization: widget.Authorization,
+        Authorization: authorization,
       ),
       18: Container(), //CallScreen(),
       19: JobPage(
         employee: widget.employee,
-        Authorization: widget.Authorization,
+        Authorization: authorization,
         compid: '',
         empid: '',
       ),
@@ -569,10 +565,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
   int indexBranch = 0;
   bool isBranch_id = false;
   Future<List<GetTimeStampSim>> fetchBranch() async {
-    final uri = Uri.parse("$host/api/origami/time/default.php");
+    final uri = Uri.parse("$hostDev/api/origami/time/default.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -592,7 +588,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
           }
         });
       });
-      print('branch_id : $branch_id');
+      // print('branch_id : $branch_id');
       return dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load contacts');
@@ -603,45 +599,51 @@ class _OrigamiPageState extends State<OrigamiPage> {
   String empid = ''; // 2, 5
   List<Widget> _buildOCRScreen() {
     return [
-      IconButton(
-        icon: const Icon(Icons.filter_2, color: Colors.orange),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => JobPage(
-                employee: widget.employee,
-                Authorization: authorization,
-                compid: '2',
-                empid: '19807',
-              ),
-            ),
-          );
-        },
-      ),
-      IconButton(
-        icon: const Icon(Icons.filter_5, color: Colors.orange),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => JobPage(
-                employee: widget.employee,
-                Authorization: authorization,
-                compid: '5',
-                empid: '19777',
-              ),
-            ),
-          );
-        },
-      ),
       // IconButton(
-      //   icon: const Icon(Icons.mark_email_read_rounded, color: Colors.orange),
+      //   icon: const Icon(Icons.credit_card_outlined, color: Colors.orange),
       //   onPressed: () {
       //     Navigator.push(
       //       context,
       //       MaterialPageRoute(
-      //         builder: (context) => EmailSenderPage(),
+      //         builder: (context) => OCRScreen(),
+      //       ),
+      //     );
+      //   },
+      // ),
+      // IconButton(
+      //   icon: const Icon(Icons.add_card_outlined, color: Colors.orange),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => TesseractOCRThaiPage(),
+      //       ),
+      //     );
+      //   },
+      // ),
+      // IconButton(
+      //   icon: const Icon(Icons.filter_5, color: Colors.orange),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => JobPage(
+      //           employee: widget.employee,
+      //           Authorization: authorization,
+      //           compid: '5',
+      //           empid: '19777',
+      //         ),
+      //       ),
+      //     );
+      //   },
+      // ),
+      // IconButton(
+      //   icon: const Icon(Icons.airplane_ticket, color: Colors.orange),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => TicketWithCutAndDashedLine(),
       //       ),
       //     );
       //   },
@@ -673,7 +675,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
             child: TimeAttendanceHistory(
               employee: widget.employee,
               pageInput: '5',
-              Authorization: widget.Authorization,
+              Authorization: authorization,
             ),
           ),
         ),
@@ -725,7 +727,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
               ),
             ],
           ),
-          onTap: () => fetchLogout(),
+          onTap: () => showCustomDialog(context),
         ),
       ),
     );
@@ -734,9 +736,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
   Future<void> fetchLogout() async {
     print('กำลังออกจากระบบ...');
     try {
-      showCustomDialog();
       final response = await http.post(
-        Uri.parse('$host/api/origami/signout.php'),
+        Uri.parse('$hostDev/api/origami/signout.php'),
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -758,82 +759,147 @@ class _OrigamiPageState extends State<OrigamiPage> {
     }
   }
 
-  void showCustomDialog() {
+  void showCustomDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dismissing by tapping outside
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Login', // Title of the dialog
+          title: Text(
+            'Login',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Do you want to log out?',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Colors.black87,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
                 style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 22,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 16),
-              Text(
-                'Do you want to log out?',
-                style: TextStyle(
-                  fontFamily: 'Arial',
                   fontSize: 16,
-                  color: Colors.black87,
+                  color: Colors.grey,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-            ],
-          ),
-          actions: [
-            Flexible(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Close the dialog
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
             ),
-            Flexible(
-              child: TextButton(
-                onPressed: () {
-                  if (mounted) {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            LoginPage(num: 1, popPage: 0, company_id: 0),
-                      ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                fetchLogout();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(num: 1, popPage: 0, company_id: 0),
+                  ),
                       (route) => false,
-                    );
-                  }
-                },
-                child: Text(
-                  'Ok',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w700,
-                  ),
+                );
+              },
+              child: Text(
+                'Ok',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            // Confirm Button
           ],
         );
       },
     );
   }
+
+  // void showCustomDialog() {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false, // Prevent dismissing by tapping outside
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(
+  //               'Login', // Title of the dialog
+  //               style: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 22,
+  //                 color: Colors.black87,
+  //                 fontWeight: FontWeight.w700,
+  //               ),
+  //             ),
+  //             SizedBox(height: 16),
+  //             Text(
+  //               'Do you want to log out?',
+  //               style: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 16,
+  //                 color: Colors.black87,
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         actions: [
+  //           Flexible(
+  //             child: TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context); // Close the dialog
+  //               },
+  //               child: Text(
+  //                 'Cancel',
+  //                 style: TextStyle(
+  //                   fontSize: 16,
+  //                   color: Colors.grey,
+  //                   fontWeight: FontWeight.w500,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           Flexible(
+  //             child: TextButton(
+  //               onPressed: () {
+  //                 if (mounted) {
+  //                   Navigator.pushAndRemoveUntil(
+  //                     context,
+  //                     MaterialPageRoute(
+  //                       builder: (context) =>
+  //                           LoginPage(num: 1, popPage: 0, company_id: 0),
+  //                     ),
+  //                     (route) => false,
+  //                   );
+  //                 }
+  //               },
+  //               child: Text(
+  //                 'Ok',
+  //                 style: TextStyle(
+  //                   fontSize: 16,
+  //                   color: Colors.grey,
+  //                   fontWeight: FontWeight.w700,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           // Confirm Button
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void _confirmLogout() {
     showDialog(

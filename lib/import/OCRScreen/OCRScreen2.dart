@@ -1,146 +1,147 @@
+// import 'dart:io';
 // import 'package:flutter/material.dart';
-// import '../import.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 //
-// class OcrScreen2 extends StatefulWidget {
-//   const OcrScreen2({super.key});
+// // โค้ดหลักของแอป
+//
+// class MyApp22 extends StatelessWidget {
+//   const MyApp22({Key? key}) : super(key: key);
 //
 //   @override
-//   State<OcrScreen2> createState() => _OcrScreen2State();
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'OCR ภาษาไทย + อังกฤษ',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//         fontFamily: 'Noto Sans Thai', // ใช้ฟอนต์ที่รองรับภาษาไทยและอังกฤษ
+//       ),
+//       home: const OCRScreen22(),
+//     );
+//   }
 // }
 //
-// class _OcrScreen2State extends State<OcrScreen2> {
-//   String _scannedText = "ผลลัพธ์การสแกนจะแสดงที่นี่...";
-//   bool _isScanning = false;
-//   final ImagePicker _picker = ImagePicker();
+// class OCRScreen22 extends StatefulWidget {
+//   const OCRScreen22({Key? key}) : super(key: key);
+//
+//   @override
+//   _OCRScreen22State createState() => _OCRScreen22State();
+// }
+//
+// class _OCRScreen22State extends State<OCRScreen22> {
+//   File? _imageFile;
+//   String _recognizedText = 'ยังไม่มีข้อความ';
+//   bool _isLoading = false;
+//
+//   // ฟังก์ชันหลักสำหรับถ่ายรูปและประมวลผลข้อความ
+//   Future<void> _getImageAndRecognizeText() async {
+//     // แสดงสถานะกำลังโหลด
+//     setState(() {
+//       _isLoading = true;
+//       _recognizedText = 'กำลังประมวลผล... กรุณารอสักครู่';
+//     });
+//
+//     try {
+//       final picker = ImagePicker();
+//       final pickedImage = await picker.pickImage(source: ImageSource.camera);
+//
+//       if (pickedImage == null) {
+//         setState(() {
+//           _isLoading = false;
+//           _recognizedText = 'ไม่มีรูปภาพที่ถูกเลือก';
+//         });
+//         return;
+//       }
+//
+//       final imagePath = pickedImage.path;
+//       setState(() => _imageFile = File(imagePath));
+//
+//       final inputImage = InputImage.fromFilePath(imagePath);
+//
+//       // สร้าง TextRecognizer โดยไม่ระบุภาษา เพื่อให้ไลบรารีตรวจจับภาษาได้เอง
+//       final textRecognizer = TextRecognizer();
+//
+//       // ประมวลผลภาพ
+//       final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+//
+//       setState(() {
+//         _recognizedText = recognizedText.text.isNotEmpty ? recognizedText.text : 'ไม่พบข้อความ';
+//       });
+//
+//       // ปิด TextRecognizer เมื่อใช้งานเสร็จ
+//       await textRecognizer.close();
+//
+//     } catch (e) {
+//       // จัดการข้อผิดพลาด
+//       setState(() {
+//         _recognizedText = 'เกิดข้อผิดพลาด: $e';
+//       });
+//       print('Error during text recognition: $e');
+//     } finally {
+//       // ซ่อนสถานะกำลังโหลด
+//       setState(() {
+//         _isLoading = false;
+//       });
+//     }
+//   }
 //
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       appBar: AppBar(
+//         title: const Text('OCR ภาษาไทย + อังกฤษ'),
 //         centerTitle: true,
-//         title: const Text('📷 Flutter OCR (ไทย/Eng)'),
 //       ),
-//       body: Column(
-//         children: [
-//           // ส่วนแสดงผล
-//           Expanded(
-//             child: Container(
-//               width: double.infinity,
-//               margin: const EdgeInsets.all(16.0),
-//               padding: const EdgeInsets.all(16.0),
-//               decoration: BoxDecoration(
-//                 color: Colors.grey[200],
-//                 borderRadius: BorderRadius.circular(12.0),
-//                 border: Border.all(color: Colors.teal.shade100),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           children: [
+//             ElevatedButton.icon(
+//               onPressed: _isLoading ? null : _getImageAndRecognizeText,
+//               icon: const Icon(Icons.camera_alt),
+//               label: Text(_isLoading ? 'กำลังประมวลผล...' : 'ถ่ายรูปและสแกนข้อความ'),
+//               style: ElevatedButton.styleFrom(
+//                 minimumSize: const Size.fromHeight(50),
 //               ),
-//               child: _isScanning
-//                   ? const Center(
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     CircularProgressIndicator(),
-//                     SizedBox(height: 16),
-//                     Text("กำลังประมวลผล..."),
-//                   ],
-//                 ),
+//             ),
+//             const SizedBox(height: 16),
+//             // แสดงรูปภาพที่เลือก
+//             if (_imageFile != null)
+//               Expanded(
+//                 flex: 1,
+//                 child: Image.file(_imageFile!),
 //               )
-//                   : SingleChildScrollView(
-//                 child: SelectableText(
-//                   _scannedText,
-//                   style: const TextStyle(fontSize: 16.0, height: 1.5),
+//             else
+//               const Expanded(
+//                 flex: 1,
+//                 child: Center(
+//                   child: Text(
+//                     'กรุณาเลือกรูปภาพเพื่อเริ่มการสแกน',
+//                     style: TextStyle(color: Colors.grey),
+//                   ),
+//                 ),
+//               ),
+//             const SizedBox(height: 16),
+//             // แสดงข้อความที่สแกนได้
+//             Expanded(
+//               flex: 1,
+//               child: Container(
+//                 padding: const EdgeInsets.all(8),
+//                 decoration: BoxDecoration(
+//                   color: Colors.grey[200],
+//                   borderRadius: BorderRadius.circular(8),
+//                 ),
+//                 child: SingleChildScrollView(
+//                   child: SelectableText(
+//                     _recognizedText,
+//                     style: const TextStyle(fontSize: 16),
+//                   ),
 //                 ),
 //               ),
 //             ),
-//           ),
-//           // ส่วนของปุ่ม
-//           Container(
-//             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-//             decoration: const BoxDecoration(
-//               color: Colors.white,
-//               boxShadow: [
-//                 BoxShadow(
-//                   color: Colors.black12,
-//                   blurRadius: 10,
-//                   offset: Offset(0, -2),
-//                 ),
-//               ],
-//             ),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceAround,
-//               children: [
-//                 _buildButton(
-//                   icon: Icons.image_search,
-//                   label: 'แกลเลอรี',
-//                   onPressed: () => _pickImage(ImageSource.gallery),
-//                 ),
-//                 _buildButton(
-//                   icon: Icons.camera_alt,
-//                   label: 'ถ่ายภาพ',
-//                   onPressed: () => _pickImage(ImageSource.camera),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   // Widget สำหรับสร้างปุ่ม
-//   Widget _buildButton({required IconData icon, required String label, required VoidCallback onPressed}) {
-//     return ElevatedButton.icon(
-//       icon: Icon(icon),
-//       label: Text(label),
-//       onPressed: onPressed,
-//       style: ElevatedButton.styleFrom(
-//         foregroundColor: Colors.white,
-//         backgroundColor: Colors.teal,
-//         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-//         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(30.0),
+//           ],
 //         ),
 //       ),
 //     );
-//   }
-//
-//   // ฟังก์ชันหลักสำหรับเลือกและสแกนรูป
-//   Future<void> _pickImage(ImageSource source) async {
-//     // ป้องกันการกดซ้ำซ้อน
-//     if (_isScanning) return;
-//
-//     try {
-//       final pickedFile = await _picker.pickImage(source: source);
-//       if (pickedFile == null) return;
-//
-//       setState(() {
-//         _isScanning = true;
-//         _scannedText = ""; // ล้างข้อความเก่า
-//       });
-//
-//       // เรียกใช้ Service เพื่อสแกน
-//       final text = await OcrService.scanText(pickedFile.path);
-//
-//       setState(() {
-//         _scannedText = text;
-//         _isScanning = false;
-//       });
-//     } catch (e) {
-//       setState(() {
-//         _scannedText = "เกิดข้อผิดพลาด: ${e.toString()}";
-//         _isScanning = false;
-//       });
-//     }
-//   }
-// }
-//
-// class OcrService {
-//   static Future<String> scanText(String imagePath) async {
-//     final inputImage = InputImage.fromFilePath(imagePath);
-//     final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin); // ถ้าต้องการรองรับไทย เปลี่ยนเป็น .thai
-//     final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
-//     await textRecognizer.close();
-//
-//     return recognizedText.text;
 //   }
 // }

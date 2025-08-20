@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 import 'package:origamilift/import/import.dart';
-
 import '../../project/update_project/join_user/project_join_user.dart';
 import '../activity.dart';
 import '../signature_page/signature_page.dart';
@@ -16,7 +16,7 @@ class ActivityEditView extends StatefulWidget {
     required this.index,
   }) : super(key: key);
   final Employee employee;
-  final ModelActivity activity;
+  final GetActivity activity;
   final int index;
 
   @override
@@ -27,21 +27,25 @@ class _ActivityEditViewState extends State<ActivityEditView> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _telController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
-  ModelActivity? activity;
   int _index = 0;
+  String parent_id = '';
+  String ownerStr = '';
+
   @override
   void initState() {
     super.initState();
-    fetchModelEmployee();
-    activity = widget.activity;
+    if (widget.activity.parent_activity_id == '' ||
+        widget.activity.parent_activity_id == '0') {
+      parent_id = widget.activity.activity_id;
+    } else {
+      parent_id = widget.activity.parent_activity_id;
+    }
+    if (widget.activity.activity_place_type == 'out') {
+      _fetchGetTimeActivity();
+    }
+    _CheckPlatform();
+    _fetchJoinActivity();
     showDate();
-    _fetchSkoopDetail();
-    _nameController.addListener(() {
-      // _search = _nameController.text;
-    });
-    _telController.addListener(() {
-      // _search = _telController.text;
-    });
     updateTime();
     Timer.periodic(Duration(seconds: 1), (Timer t) => updateTime());
   }
@@ -69,12 +73,12 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     });
   }
 
-  Widget _BodySwitch() {
+  Widget _BodySwitch(GetActivity activity) {
     switch (_selectedIndex) {
       case 0:
-        return _activity();
+        return _activity(activity);
       case 1:
-        return _activityImage();
+        return _showJoinUser(activity); //_activityImage();
       case 2:
         return _activityTime();
       case 3:
@@ -104,7 +108,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     ),
     TabItem(
       icon: FontAwesomeIcons.images,
-      title: 'Photo',
+      title: 'Join User',
     ),
     TabItem(
       icon: FontAwesomeIcons.clock,
@@ -150,7 +154,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          (skoopDetail?.status == 'Close')
+          (widget.activity.activity_status != '')
               ? Container()
               : InkWell(
                   onTap: () {
@@ -159,16 +163,10 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                       MaterialPageRoute(
                         builder: (context) => ActivityEditNow(
                           employee: widget.employee,
-                          skoopDetail: getSkoopDetail[0],
-                          activity_id: widget.activity.activity_id,
+                          activity: widget.activity,
                         ),
                       ),
-                    ).then((value) {
-                      // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-                      setState(() {
-                        _fetchSkoopDetail(); // เรียกฟังก์ชันโหลด API ใหม่
-                      });
-                    });
+                    );
                   },
                   child: Row(
                     children: [
@@ -202,69 +200,53 @@ class _ActivityEditViewState extends State<ActivityEditView> {
         onTap: _onItemTapped,
       ),
       body: SingleChildScrollView(
-        child: Container(
-          child: (skoopDetail != null)
-              ? Column(
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Image.asset(
-                    'assets/images/busienss1.jpg',
-                    fit: BoxFit.cover,
-                    height: 150,
-                    width: double.infinity,
-                  ),
-                  Positioned(
-                    bottom: -55,
-                    left: 0,
-                    right: 0,
+        child: Column(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Image.asset(
+                  'assets/images/busienss1.jpg',
+                  fit: BoxFit.cover,
+                  height: 150,
+                  width: double.infinity,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.network(
+                      'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                      height: 160,
+                      fit: BoxFit.contain,
+                      color: Colors.grey.shade100,
+                    );
+                  },
+                ),
+                Positioned(
+                  bottom: -55,
+                  left: 0,
+                  right: 0,
+                  child: CircleAvatar(
+                    radius: 57,
+                    backgroundColor: Colors.grey.shade400,
                     child: CircleAvatar(
-                      radius: 57,
-                      backgroundColor: Colors.grey.shade400,
-                      child: CircleAvatar(
-                        radius: 55,
-                        backgroundColor: Colors.white,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            widget.employee.emp_avatar,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(Icons.person, size: 50);
-                            },
-                          ),
+                      radius: 55,
+                      backgroundColor: Colors.white,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(
+                          widget.employee.emp_avatar,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(Icons.person, size: 50);
+                          },
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 60), // ให้เว้นที่ไว้ใต้ Avatar
-              _BodySwitch(),
-            ],
-          )
-              : Center(
-                  child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(
-                      color: Color(0xFFFF9900),
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Text(
-                      '$Loading...',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF555555),
-                      ),
-                    ),
-                  ],
-                )),
+                ),
+              ],
+            ),
+            SizedBox(height: 60), // ให้เว้นที่ไว้ใต้ Avatar
+            _BodySwitch(widget.activity),
+          ],
         ),
       ),
     );
@@ -358,13 +340,13 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     );
   }
 
-  Widget _activity() {
+  Widget _activity(GetActivity activity) {
     return Column(
       children: [
         Column(
           children: [
             Text(
-              '${skoopDetail?.first_en ?? ''} ${skoopDetail?.last_en ?? ''}',
+              activity.project_name ?? '',
               maxLines: 1,
               style: TextStyle(
                 fontFamily: 'Arial',
@@ -375,7 +357,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
             ),
             SizedBox(height: 8),
             Text(
-              '${skoopDetail?.start_date ?? ''} ${skoopDetail?.time_start ?? ''} - ${skoopDetail?.end_date ?? ''} ${skoopDetail?.time_end ?? ''}',
+              '${activity.activity_start_date} ${activity.activity_start_time_} - ${activity.activity_end_date} ${activity.activity_end_time_}',
               maxLines: 1,
               style: TextStyle(
                 fontFamily: 'Arial',
@@ -399,14 +381,16 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                   ),
                 ),
                 Text(
-                  skoopDetail?.status ?? '',
+                  (activity.activity_status == '')
+                      ? 'plan'
+                      : activity.activity_status ?? '',
                   maxLines: 1,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
-                    color: (skoopDetail?.status == 'Close')
-                        ? Color(0xFFFF9900)
-                        : Colors.blue.shade300,
+                    color: (activity.activity_status == '')
+                        ? Colors.blue.shade300
+                        : Colors.orange,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -422,25 +406,22 @@ class _ActivityEditViewState extends State<ActivityEditView> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _subDetail('SUBJECT', skoopDetail?.activity_name ?? '',
+                  _subDetail('SUBJECT', activity.activity_project_name,
                       Icons.subject, Colors.transparent),
-                  _subDetail(
-                      'DESCRIPTION',
-                      skoopDetail?.activity_description ?? '',
-                      Icons.details,
-                      Colors.transparent),
-                  _subDetail('TYPE', skoopDetail?.type_name ?? '',
+                  _subDetail('DESCRIPTION', activity.activity_description,
+                      Icons.details, Colors.transparent),
+                  _subDetail('TYPE', activity.activity_type_name,
                       Icons.pie_chart, Color(0xFF555555)),
-                  _subDetail('PROJECT', skoopDetail?.project_name ?? '',
+                  _subDetail('PROJECT', activity.project_name,
                       Icons.insert_drive_file, Color(0xFF555555)),
                   _subDetail(
                       'CONTACT',
-                      '${skoopDetail?.contact_first ?? ''} ${skoopDetail?.contact_last ?? ''}',
+                      '${activity.contact_name} ${activity.contact_surname}',
                       Icons.account_circle,
                       Color(0xFF555555)),
                   _subDetail(
                       'ACCOUNT',
-                      '${skoopDetail?.account_en ?? ''} (${skoopDetail?.account_th ?? ''})',
+                      '${activity.account_name_en} (${activity.account_name_th})',
                       FontAwesomeIcons.building,
                       Color(0xFF555555)),
                 ],
@@ -451,16 +432,18 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                 children: [
                   _subDetailBack(
                       'PLACE',
-                      (skoopDetail?.place == 'in') ? 'Indoor' : 'Outdoor',
+                      (activity.activity_place_type == 'in')
+                          ? 'Indoor'
+                          : 'Outdoor',
                       Icons.place,
                       Colors.transparent),
+                  _subDetailBack('ACTIVITY STATUS', activity.activity_status,
+                      Icons.local_activity_outlined, Colors.transparent),
                   _subDetailBack(
-                      'ACTIVITY STATUS',
-                      skoopDetail?.status_name ?? '',
-                      Icons.local_activity_outlined,
+                      'PRIORITY',
+                      widget.activity.activity_priority_name ?? '',
+                      Icons.priority_high,
                       Colors.transparent),
-                  _subDetailBack('PRIORITY', skoopDetail?.priority_name ?? '',
-                      Icons.priority_high, Colors.transparent),
                 ],
               ),
             ],
@@ -470,44 +453,44 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     );
   }
 
-  Widget _activityImage() {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Column(
-            children: [
-              Text(
-                '${skoopDetail?.first_en ?? ''} ${skoopDetail?.last_en ?? ''}',
-                maxLines: 1,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  color: Color(0xFF555555),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                '${skoopDetail?.start_date ?? ''} ${skoopDetail?.time_start ?? ''} - ${skoopDetail?.end_date ?? ''} ${skoopDetail?.time_end ?? ''}',
-                maxLines: 1,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                  color: Color(0xFFFF9900),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: _showImagePhoto(),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _activityImage() {
+  //   return Container(
+  //     color: Colors.white,
+  //     child: Column(
+  //       children: [
+  //         Column(
+  //           children: [
+  //             Text(
+  //               '${skoopDetail?.first_en ?? ''} ${skoopDetail?.last_en ?? ''}',
+  //               maxLines: 1,
+  //               style: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 16,
+  //                 color: Color(0xFF555555),
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //             ),
+  //             SizedBox(height: 8),
+  //             Text(
+  //               '${skoopDetail?.start_date ?? ''} ${skoopDetail?.time_start ?? ''} - ${skoopDetail?.end_date ?? ''} ${skoopDetail?.time_end ?? ''}',
+  //               maxLines: 1,
+  //               style: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 14,
+  //                 color: Color(0xFFFF9900),
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.all(16),
+  //           child: _showImagePhoto(),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _activityTime() {
     return Container(
@@ -527,11 +510,11 @@ class _ActivityEditViewState extends State<ActivityEditView> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                _subDetail('SUBJECT', skoopDetail?.activity_name ?? '',
+                _subDetail('SUBJECT', widget.activity.account_name_th ?? '',
                     Icons.description, Colors.grey),
                 _subDetail(
                     'ACCOUNT',
-                    '${skoopDetail?.account_en ?? ''} (${skoopDetail?.account_th ?? ''})',
+                    '${widget.activity.account_name_th ?? ''} (${widget.activity.account_name_en ?? ''})',
                     FontAwesomeIcons.building,
                     Colors.grey),
                 Row(
@@ -555,7 +538,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      (_addInTime == '') ? '-' : _addInTime,
+                      fristTimeList?.date_time ?? '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -589,7 +572,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      (_addOutTime == '') ? '-' : _addOutTime,
+                      lastTimeList?.date_time ?? '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -604,23 +587,17 @@ class _ActivityEditViewState extends State<ActivityEditView> {
               ],
             ),
           ),
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
           if (widget.activity.activity_place_type == 'out')
             GestureDetector(
               onTap: () {
-                setState(() {
-                  if (_addInTime == '') {
-                    _addInTime =
-                        "${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}";
-                  } else {
-                    _addOutTime =
-                        "${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}";
-                  }
-                });
+                if(lastTimeList?.status == 'in'){
+                _pickImage(ImageSource.camera, widget.activity);
+                }
               },
               child: CircleAvatar(
                 radius: 50,
-                backgroundColor: Colors.red,
+                backgroundColor: stamp_type == 'in' ? Colors.red : (stamp_type == 'out')?Colors.grey:Colors.green,
                 child: CircleAvatar(
                   radius: 47,
                   backgroundColor: Color(0xFF555555),
@@ -647,151 +624,344 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     );
   }
 
-  String _addInTime = '';
-  String _addOutTime = '';
-
-  final ImagePicker _picker = ImagePicker();
-  File? _image;
-  List<String> _addImage = [];
-
-  Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _image = File(image.path);
-        _addImage.add(_image!.path);
-      });
+  String _checkPlatform = '';
+  void _CheckPlatform() {
+    if (Platform.isAndroid) {
+      _checkPlatform = 'Android';
+      print("Running on Android");
+    } else if (Platform.isIOS) {
+      _checkPlatform = 'IOS';
+      print("Running on iOS");
     }
   }
 
-  Widget _showImagePhoto() {
-    return _addImage.isNotEmpty
-        ? InkWell(
-            onTap: () => _pickImage(),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GridView.builder(
-                        itemCount: _addImage.length,
-                        shrinkWrap: true, // ทำให้ GridView มีขนาดพอดีกับเนื้อหา
-                        physics:
-                            NeverScrollableScrollPhysics(), // ปิดการเลื่อนของ GridView
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // ตั้งค่าให้มี 2 รูปต่อ 1 แถว
-                          crossAxisSpacing: 2, // ระยะห่างระหว่างรูปแนวนอน
-                          mainAxisSpacing: 2, // ระยะห่างระหว่างรูปแนวตั้ง
-                        ),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Stack(
-                              children: [
-                                Image.file(
-                                  File(_addImage[index]),
-                                  height: 200,
-                                  width: 200,
-                                  fit: BoxFit.cover,
-                                ),
-                                Positioned(
-                                  top: 4,
-                                  right: 4,
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _addImage.removeAt(
-                                            index); // ลบรูปออกจากรายการ
-                                      });
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        Icon(
-                                          Icons.cancel_outlined,
-                                          color: Colors.white,
-                                        ),
-                                        Icon(
-                                          Icons.cancel,
-                                          color: Colors.red,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    'Tap here to select an image.',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFFFF9900),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        : InkWell(
-            onTap: () => _pickImage(),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Column(
-                children: [
-                  Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    'Tap here to select an image.',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFFFF9900),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+  bool _isStamping = false;
+  final ImagePicker _picker = ImagePicker();
+  String _base64Image = '';
+  Future<void> _pickImage(ImageSource source, GetActivity activity) async {
+    if (_isStamping) return;
+    _isStamping = true;
+
+    try {
+      // if (stamp_type == 'in') {
+      final XFile? image = await _picker.pickImage(source: source);
+      if (image == null) return;
+      final file = File(image.path);
+      final imageBytes = await file.readAsBytes();
+      final base64String = base64Encode(imageBytes);
+
+      setState(() {
+        _base64Image = base64String;
+        latitude = '${userPosition?.latitude}';
+        longitude = '${userPosition?.longitude}';
+      });
+      // พิมพ์ข้อมูลเพิ่มเติมใน console
+      print('Stamp Type: $stamp_type');
+      print('Latitude: $latitude');
+      print('Longitude: $longitude');
+      print('Platform: $_checkPlatform');
+      print('Base64 Image: $_base64Image');
+      _timestamp();
+      // }else {
+      //   _showOutOfAreaMessage();
+      // }
+    } catch (e) {
+      print('Error picking image: $e');
+    } finally {
+      _isStamping = false;
+    }
   }
 
-  Widget _showJoinUser() {
+  void _timestamp() {
+    setState(() {
+      if (stamp_type_in == '') {
+        stamp_type_in =
+            "${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}";
+        stamp_type = 'in';
+        latitude = '${userPosition?.latitude}';
+        longitude = '${userPosition?.longitude}';
+      } else {
+        stamp_type_out =
+            "${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}";
+        stamp_type = 'out';
+        latitude = '${userPosition?.latitude}';
+        longitude = '${userPosition?.longitude}';
+      }
+      _fetchStampActivity();
+    });
+  }
+
+  void _showOutOfAreaMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        duration: Duration(seconds: 2),
+        content: Text(
+          'You are outside the specified radius area and cannot stamp.',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String stamp_type_in = '';
+  String stamp_type_out = '';
+  String stamp_type = '';
+  String latitude = '';
+  String longitude = '';
+  Future<void> _fetchStampActivity() async {
+    try {
+      final response = await http.post(
+        Uri.parse('$hostDev/api/origami/time/stamp.php'),
+        headers: {'Authorization': 'Bearer $authorization'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'stamp_type': stamp_type, //in,out
+          //________________________activity_id_______________________//
+          'activity_id': widget.activity.activity_id,
+          //________________________branch_id_______________________//
+          // 'branch_id': '',
+          'latitude': latitude,
+          'longitude': longitude,
+          'device': _checkPlatform,
+          'photo': _base64Image,
+        },
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        setState(() {
+          latitude = '';
+          longitude = '';
+          stamp_type_in = jsonResponse['stamp_in'];
+          stamp_type_out = jsonResponse['stamp_out'];
+          _fetchGetTimeActivity();
+        });
+        showStampSnackBar(jsonResponse['message']);
+      } else {
+        throw Exception('Failed to load status data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
+    }
+  }
+
+  List<TimeActivity> timeList = [];
+  TimeActivity? fristTimeList;
+  TimeActivity? lastTimeList;
+  Future<void> _fetchGetTimeActivity() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/activity/get_time_activity.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $authorization'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'activity_id': widget.activity.activity_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        timeList = dataJson.map((json) => TimeActivity.fromJson(json)).toList();
+        fristTimeList = timeList.first;
+        lastTimeList = timeList.last;
+        if (fristTimeList?.status == 'in' && lastTimeList?.status == 'out') {
+          stamp_type = 'out';
+        }else if (fristTimeList?.status == 'in') {
+          stamp_type_in = fristTimeList?.date_time ?? '';
+          stamp_type = 'in';
+        } else {
+          stamp_type_out = lastTimeList?.date_time ?? '';
+          stamp_type = 'out';
+        }
+      });
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
+  void showStampSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 3),
+        content: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Icon(Icons.check_circle, color: Colors.green, size: 20),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(left: 14),
+                child: Text(
+                  message,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // final ImagePicker _picker = ImagePicker();
+  // File? _image;
+  // List<String> _addImage = [];
+  //
+  // Future<void> _pickImage() async {
+  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  //   if (image != null) {
+  //     setState(() {
+  //       _image = File(image.path);
+  //       _addImage.add(_image!.path);
+  //     });
+  //   }
+  // }
+
+  // Widget _showImagePhoto() {
+  //   return _addImage.isNotEmpty
+  //       ? InkWell(
+  //           onTap: () => _pickImage(),
+  //           child: Padding(
+  //             padding: const EdgeInsets.only(top: 8),
+  //             child: Column(
+  //               children: [
+  //                 Container(
+  //                   decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(10),
+  //                     color: Colors.white,
+  //                     border: Border.all(
+  //                       color: Colors.grey,
+  //                       width: 1.0,
+  //                     ),
+  //                   ),
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: GridView.builder(
+  //                       itemCount: _addImage.length,
+  //                       shrinkWrap: true, // ทำให้ GridView มีขนาดพอดีกับเนื้อหา
+  //                       physics:
+  //                           NeverScrollableScrollPhysics(), // ปิดการเลื่อนของ GridView
+  //                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //                         crossAxisCount: 2, // ตั้งค่าให้มี 2 รูปต่อ 1 แถว
+  //                         crossAxisSpacing: 2, // ระยะห่างระหว่างรูปแนวนอน
+  //                         mainAxisSpacing: 2, // ระยะห่างระหว่างรูปแนวตั้ง
+  //                       ),
+  //                       itemBuilder: (context, index) {
+  //                         return Padding(
+  //                           padding: const EdgeInsets.all(8.0),
+  //                           child: Stack(
+  //                             children: [
+  //                               Image.file(
+  //                                 File(_addImage[index]),
+  //                                 height: 200,
+  //                                 width: 200,
+  //                                 fit: BoxFit.cover,
+  //                               ),
+  //                               Positioned(
+  //                                 top: 4,
+  //                                 right: 4,
+  //                                 child: InkWell(
+  //                                   onTap: () {
+  //                                     setState(() {
+  //                                       _addImage.removeAt(
+  //                                           index); // ลบรูปออกจากรายการ
+  //                                     });
+  //                                   },
+  //                                   child: Stack(
+  //                                     children: [
+  //                                       Icon(
+  //                                         Icons.cancel_outlined,
+  //                                         color: Colors.white,
+  //                                       ),
+  //                                       Icon(
+  //                                         Icons.cancel,
+  //                                         color: Colors.red,
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         );
+  //                       },
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 SizedBox(
+  //                   height: 8,
+  //                 ),
+  //                 Text(
+  //                   'Tap here to select an image.',
+  //                   style: TextStyle(
+  //                     fontFamily: 'Arial',
+  //                     fontSize: 14,
+  //                     color: Color(0xFFFF9900),
+  //                     fontWeight: FontWeight.w500,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         )
+  //       : InkWell(
+  //           onTap: () => _pickImage(),
+  //           child: Padding(
+  //             padding: const EdgeInsets.only(top: 8),
+  //             child: Column(
+  //               children: [
+  //                 Container(
+  //                   height: 200,
+  //                   decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(10),
+  //                     color: Colors.white,
+  //                     border: Border.all(
+  //                       color: Colors.grey,
+  //                       width: 1.0,
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 SizedBox(
+  //                   height: 8,
+  //                 ),
+  //                 Text(
+  //                   'Tap here to select an image.',
+  //                   style: TextStyle(
+  //                     fontFamily: 'Arial',
+  //                     fontSize: 14,
+  //                     color: Color(0xFFFF9900),
+  //                     fontWeight: FontWeight.w500,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  // }
+
+  Widget _showJoinUser(GetActivity modelActivity) {
     return Column(
       children: [
         Column(
-            children: List.generate(modelEmployee.length, (index) {
-          final join_user = modelEmployee[index];
+            children: List.generate(joinList.length, (index) {
+          final join = joinList[index];
           return Padding(
             padding: const EdgeInsets.all(4),
             child: Column(
@@ -819,6 +989,37 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                       children: [
                         Row(
                           children: [
+                            Expanded(
+                              child: Text(
+                                join.emp_code,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16,
+                                  color: Color(0xFF555555),
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Text(
+                              join.emp_id == widget.employee.emp_id
+                                  ? ownerStr
+                                  : '',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
+                                fontWeight: FontWeight.w700,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                        Divider(),
+                        Row(
+                          children: [
                             CircleAvatar(
                               radius: 30,
                               backgroundColor: Colors.grey.shade400,
@@ -828,23 +1029,14 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: Image.network(
-                                    join_user.emp_pic,
+                                    join.emp_pic,
                                     fit: BoxFit.fill,
                                   ),
                                 ),
                               ),
                             ),
                             SizedBox(width: 8),
-                            _switch(join_user),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                                child: _checkBox('Owner', join_user.is_owner)),
-                            Expanded(
-                                child: _checkBox(
-                                    'Approve Activity', join_user.is_owner)),
+                            _switch(join),
                           ],
                         ),
                       ],
@@ -878,13 +1070,13 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     );
   }
 
-  Widget _switch(ModelEmployee join_user) {
+  Widget _switch(JoinActivity join) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            join_user.emp_name,
+            '${join.title} ${join.firstname} ${join.lastname} (${join.nickname})',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 16,
@@ -894,8 +1086,8 @@ class _ActivityEditViewState extends State<ActivityEditView> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          _description(Icons.apartment, '${join_user.posi_description}'),
-          _description(Icons.work, '${join_user.dept_description}'),
+          _description(Icons.apartment, '${join.posi_description}'),
+          _description(Icons.work, '${join.dept_description}'),
           SizedBox(height: 8),
         ],
       ),
@@ -962,7 +1154,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
           Column(
             children: [
               Text(
-                '${skoopDetail?.first_en ?? ''} ${skoopDetail?.last_en ?? ''}',
+                '${widget.employee.emp_name}',
                 maxLines: 1,
                 style: TextStyle(
                   fontFamily: 'Arial',
@@ -973,7 +1165,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
               ),
               SizedBox(height: 8),
               Text(
-                '${skoopDetail?.start_date ?? ''} ${skoopDetail?.time_start ?? ''} - ${skoopDetail?.end_date ?? ''} ${skoopDetail?.time_end ?? ''}',
+                '${widget.activity.activity_start_date} ${widget.activity.activity_start_time_} - ${widget.activity.activity_start_date} ${widget.activity.activity_end_time_}',
                 maxLines: 1,
                 style: TextStyle(
                   fontFamily: 'Arial',
@@ -990,121 +1182,90 @@ class _ActivityEditViewState extends State<ActivityEditView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Name',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                TextFormField(
-                  controller: _nameController,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 12),
-                    hintText: '',
-                    hintStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Color(0xFF555555)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    filled: true, // เปิดการใช้สีพื้นหลัง
-                    fillColor: Colors.white,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey, // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey, // ขอบสีส้มตอนที่โฟกัส
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Tel',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(flex: 1, child: _DropdownSignature()),
-                    SizedBox(width: 16),
-                    Expanded(
-                      flex: 2,
-                      child: TextFormField(
-                        controller: _telController,
-                        keyboardType: TextInputType.number,
-                        style: TextStyle(
-                            fontFamily: 'Arial',
-                            color: Color(0xFF555555),
-                            fontSize: 14),
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 12),
-                          hintText: '',
-                          hintStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14,
-                              color: Color(0xFF555555)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          filled: true, // เปิดการใช้สีพื้นหลัง
-                          fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                _textController('Name', _nameController, false, Icons.numbers),
+                _textController('Tel', _telController, false, Icons.numbers),
                 SizedBox(height: 16),
                 Text(
                   'Signature',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16,
-                    color: Colors.grey,
+                    color: Color(0xFF555555),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 _showSignatureImage(),
                 SizedBox(height: 8),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _textController(String text, controller, bool key, IconData numbers) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            child: TextFormField(
+              controller: controller,
+              readOnly: key,
+              maxLines: null,
+              autofocus: false,
+              obscureText: false,
+              decoration: InputDecoration(
+                isDense: true,
+                fillColor:
+                    key == false ? Colors.grey.shade50 : Colors.grey.shade300,
+                labelStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                hintText: '',
+                hintStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade400,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: key == false
+                        ? Colors.orange.shade300
+                        : Colors.grey.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                // prefixIcon: Icon(numbers, color: Colors.black54),
+              ),
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: key ? Colors.black87 : Color(0xFF555555),
+                fontSize: 14,
+              ),
             ),
           ),
         ],
@@ -1138,7 +1299,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
+                      color: Colors.grey.shade100,
                       border: Border.all(
                         color: Colors.grey,
                         width: 1.0,
@@ -1230,74 +1391,6 @@ class _ActivityEditViewState extends State<ActivityEditView> {
             ),
           );
   }
-
-  Widget _DropdownSignature() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.grey,
-          width: 1.0,
-        ),
-      ),
-      child: DropdownButton2<TitleDown>(
-        isExpanded: true,
-        hint: Text(
-          '+66',
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Color(0xFF555555),
-          ),
-        ),
-        style: TextStyle(
-          fontFamily: 'Arial',
-          color: Color(0xFF555555),
-        ),
-        items: signatures
-            .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-                  value: item,
-                  child: Text(
-                    item.status_name,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                    ),
-                  ),
-                ))
-            .toList(),
-        value: selectedSignature,
-        onChanged: (value) {
-          setState(() {
-            selectedSignature = value;
-          });
-        },
-        underline: SizedBox.shrink(),
-        iconStyleData: IconStyleData(
-          icon: Icon(Icons.arrow_drop_down, color: Colors.black, size: 30),
-          iconSize: 30,
-        ),
-        buttonStyleData: ButtonStyleData(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-        ),
-        dropdownStyleData: DropdownStyleData(
-          maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          height: 40, // Height for each menu item
-        ),
-      ),
-    );
-  }
-
-  TitleDown? selectedSignature;
-  List<TitleDown> signatures = [
-    TitleDown(status_id: '001', status_name: 'TH +66'),
-    TitleDown(status_id: '002', status_name: 'AF +93'),
-    TitleDown(status_id: '003', status_name: 'AX +358'),
-    TitleDown(status_id: '004', status_name: 'AI +1'),
-  ];
 
   Widget _getJoinUser() {
     return FutureBuilder<List<Object>>(
@@ -1410,66 +1503,25 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     );
   }
 
-  GetSkoopDetail? skoopDetail;
-  List<GetSkoopDetail> getSkoopDetail = [];
-  Future<void> _fetchSkoopDetail() async {
-    final uri = Uri.parse('$host/crm/ios_activity_info.php');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'activity_id': widget.activity.activity_id,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'] ??
-            []; //is_join => null || '' Activity ปกติ, 0 Approvrd, 1 Waiting
-        _index = widget.index;
-        setState(() {
-          getSkoopDetail =
-              dataJson.map((json) => GetSkoopDetail.fromJson(json)).toList();
-          skoopDetail = getSkoopDetail.first;
-          print(getSkoopDetail);
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
-  }
-
-  List<ModelEmployee> modelEmployee = [];
-  Future<void> fetchModelEmployee() async {
-    final uri = Uri.parse(
-        "$host/api/origami/crm/project/component/employee.php?search");
+  List<JoinActivity> joinList = [];
+  Future<void> _fetchJoinActivity() async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/activity/join_user.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer ${authorization}'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'project_id': skoopDetail?.project_id ?? 0,
-        'index': '',
+        'activity_id': parent_id,
+        'parent_activity_id': parent_id,
       },
     );
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      if (jsonResponse['status'] == true) {
-        final List<dynamic> dataJson = jsonResponse['employee_data'] ?? [];
-        int limit = jsonResponse['limit'];
-        setState(() {
-          modelEmployee =
-              dataJson.map((json) => ModelEmployee.fromJson(json)).toList();
-        });
-      } else {
-        throw Exception(
-            'Failed to load personal data: ${jsonResponse['message']}');
-      }
+
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        joinList = dataJson.map((json) => JoinActivity.fromJson(json)).toList();
+      });
     } else {
       throw Exception('Failed to load personal data: ${response.reasonPhrase}');
     }
@@ -1483,4 +1535,100 @@ class TitleDown {
     required this.status_id,
     required this.status_name,
   });
+}
+
+class JoinActivity {
+  final String activity_id;
+  final String emp_id;
+  final String emp_code;
+  final String title;
+  final String gender;
+  final String religion;
+  final String firstname;
+  final String lastname;
+  final String firstname_th;
+  final String lastname_th;
+  final String date_birth;
+  final String age;
+  final String emp_pic;
+  final String nickname;
+  final String dept_description;
+  final String posi_description;
+
+  JoinActivity({
+    required this.activity_id,
+    required this.emp_id,
+    required this.emp_code,
+    required this.title,
+    required this.gender,
+    required this.religion,
+    required this.firstname,
+    required this.lastname,
+    required this.firstname_th,
+    required this.lastname_th,
+    required this.date_birth,
+    required this.age,
+    required this.emp_pic,
+    required this.nickname,
+    required this.dept_description,
+    required this.posi_description,
+  });
+
+  // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
+  factory JoinActivity.fromJson(Map<String, dynamic> json) {
+    return JoinActivity(
+      activity_id: json['parent_activity_id'] ?? '',
+      emp_id: json['emp_id'] ?? '',
+      emp_code: json['emp_code'] ?? '',
+      title: json['title'] ?? '',
+      gender: json['gender'] ?? '',
+      religion: json['religion'] ?? '',
+      firstname: json['firstname'] ?? '',
+      lastname: json['lastname'] ?? '',
+      firstname_th: json['firstname_th'] ?? '',
+      lastname_th: json['lastname_th'] ?? '',
+      date_birth: json['date_birth'] ?? '',
+      age: json['age'] ?? '',
+      emp_pic: json['emp_pic'] ?? '',
+      nickname: json['nickname'] ?? '',
+      dept_description: json['dept_description'] ?? '',
+      posi_description: json['posi_description'] ?? '',
+    );
+  }
+}
+
+class TimeActivity {
+  final String activity_id;
+  final String activity_place_type;
+  final String id_time;
+  final String time_lat;
+  final String time_lng;
+  final String date_create;
+  final String date_time;
+  final String status;
+
+  TimeActivity({
+    required this.activity_id,
+    required this.activity_place_type,
+    required this.id_time,
+    required this.time_lat,
+    required this.time_lng,
+    required this.date_create,
+    required this.date_time,
+    required this.status,
+  });
+
+  // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
+  factory TimeActivity.fromJson(Map<String, dynamic> json) {
+    return TimeActivity(
+      activity_id: json['activity_id'] ?? '',
+      activity_place_type: json['activity_place_type'] ?? '',
+      id_time: json['id_time'] ?? '',
+      time_lat: json['time_lat'] ?? '',
+      time_lng: json['time_lng'] ?? '',
+      date_create: json['date_create'] ?? '',
+      date_time: json['date_time'] ?? '',
+      status: json['status'] ?? '',
+    );
+  }
 }

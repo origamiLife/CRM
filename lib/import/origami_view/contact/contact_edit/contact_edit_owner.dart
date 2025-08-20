@@ -180,9 +180,9 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                           child: Image.network(
-                                            (contact.contact_image == '')
+                                            (contact.cus_cont_photo == '')
                                                 ? 'https://dev.origami.life/images/default.png'
-                                                : '$host//crm/${contact.contact_image}',
+                                                : '$host//crm/${contact.cus_cont_photo}',
                                             height: 100,
                                             width: 100,
                                             fit: BoxFit.cover,
@@ -211,7 +211,7 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
                                           ),
                                         ),
                                         Text(
-                                          '${contact.customer_en} (${contact.customer_th})',
+                                          '${contact.cus_name_en} (${contact.cus_name_th})',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
@@ -397,9 +397,9 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
                                               borderRadius:
                                                   BorderRadius.circular(100),
                                               child: Image.network(
-                                                (contact.contact_image == '')
+                                                (contact.cus_cont_photo == '')
                                                     ? 'https://dev.origami.life/images/default.png'
-                                                    : '$host//crm/${contact.contact_image}',
+                                                    : '$host//crm/${contact.cus_cont_photo}',
                                                 height: 100,
                                                 width: 100,
                                                 fit: BoxFit.cover,
@@ -428,7 +428,7 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
                                               ),
                                             ),
                                             Text(
-                                              '${contact.customer_en} (${contact.customer_th})',
+                                              '${contact.cus_name_en} (${contact.cus_name_th})',
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(

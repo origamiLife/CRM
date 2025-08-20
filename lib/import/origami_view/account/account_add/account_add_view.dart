@@ -132,21 +132,21 @@ class _AccountAddViewState extends State<AccountAddView> {
       //     ),
       //   ],
       // ),
-      body: SafeArea(child: _getContentWidget()),
-      bottomNavigationBar: BottomBarDefault(
-        items: items,
-        iconSize: 18,
-        animated: true,
-        titleStyle: TextStyle(
-          fontFamily: 'Arial',
-        ),
-        backgroundColor: Colors.white,
-        color: Colors.grey.shade400,
-        colorSelected: Color(0xFFFF9900),
-        indexSelected: _selectedIndex,
-        // paddingVertical: 25,
-        onTap: _onItemTapped,
-      ),
+      body: SafeArea(child: AccountAddDetail(employee: widget.employee)),
+      // bottomNavigationBar: BottomBarDefault(
+      //   items: items,
+      //   iconSize: 18,
+      //   animated: true,
+      //   titleStyle: TextStyle(
+      //     fontFamily: 'Arial',
+      //   ),
+      //   backgroundColor: Colors.white,
+      //   color: Colors.grey.shade400,
+      //   colorSelected: Color(0xFFFF9900),
+      //   indexSelected: _selectedIndex,
+      //   // paddingVertical: 25,
+      //   onTap: _onItemTapped,
+      // ),
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import '../../import.dart';
+import 'account_add/account_add_detail.dart';
 import 'account_add/account_add_view.dart';
 import 'account_edit/account_edit_view.dart';
 
@@ -21,34 +22,37 @@ class _AccountScreenState extends State<AccountScreen> {
   TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController = ScrollController();
   String _search = "";
-  bool isLoading = false;
+
   bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
+  bool isLoading = true; // ให้เป็น false เมื่อ API โหลดเสร็จ
 
   @override
   void initState() {
     super.initState();
-    fetchModelAccountVoid();
+    _loadAccounts();
     _scrollController.addListener(_scrollListener);
-    // _searchController.addListener(_filterAccountScreen);
     _searchController.addListener(() {
       _search = _searchController.text;
       indexItems = 0;
       print('$indexItems');
-      accountScreen = [];
-      fetchModelAccountVoid();
+      accountList = [];
+      fetchModelAccount();
     });
   }
 
-  // void _filterAccountScreen() {
-  //   setState(() {
-  //     String query = _searchController.text.toLowerCase();
-  //     filteredAccountScreen = AccountScreen.where((Account) {
-  //       return Account.account_name?.toLowerCase().contains(query) ??
-  //           false;
-  //     }).toList();
-  //   });
-  //   fetchModelAccountVoid();
-  // }
+  void _loadAccounts() async {
+    setState(() => isLoading = true);
+
+    final newAccount = await fetchModelAccount();
+
+    setState(() {
+      if (_isFirstTime) _isFirstTime = false;
+
+      accountList.addAll(newAccount);
+      accountList.sort((a, b) => b.create_date.compareTo(a.create_date));
+      isLoading = false;
+    });
+  }
 
   @override
   void dispose() {
@@ -71,7 +75,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AccountAddView(
+                    builder: (context) => AccountAddDetail(
                       employee: widget.employee,
                     ),
                   ),
@@ -182,15 +186,57 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _getContentWidget() {
+    if (isLoading) {
+      // แสดง shimmer loading แทน
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: ListView.builder(
+          itemCount: 20, // จำนวน shimmer item ที่แสดงระหว่างโหลด
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(height: 12, width: double.infinity, color: Colors.white),
+                          SizedBox(height: 5),
+                          Container(height: 12, width: 100, color: Colors.white),
+                          SizedBox(height: 5),
+                          Container(height: 12, width: 150, color: Colors.white),
+                          SizedBox(height: 5),
+                          Container(height: 12, width: 120, color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.symmetric(horizontal: 15),
       child: ListView.builder(
           controller: _scrollController,
-          itemCount: accountScreen.length,
+          itemCount: accountList.length,
           itemBuilder: (context, index) {
-            // AccountScreen.sort((a, b) => b.cus_id.compareTo(a.cus_id));
-            final account = accountScreen[index];
-            print('AccountScreen.length : ${accountScreen.length}');
+            final account = accountList[index];
+            print('AccountScreen.length : ${accountList.length}');
             return InkWell(
               onTap: () {
                 Navigator.push(
@@ -209,100 +255,65 @@ class _AccountScreenState extends State<AccountScreen> {
                   });
                 });
               },
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Row(
-                        children: [
-                          Flexible(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 8.0),
-                                    child: Text(
-                                      account.cus_code,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 12,
-                                        color: Color(0xFF555555),
-                                        fontWeight: FontWeight.w500,
-                                      ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    account.cus_code,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Color(0xFF555555),
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),
-                                // Padding(
-                                //   padding: EdgeInsets.only(left: 8.0),
-                                //   child: Text(
-                                //     project.project_priority_name,
-                                //     maxLines: 1,
-                                //     overflow: TextOverflow.ellipsis,
-                                //     style: TextStyle(
-                                //       fontFamily: 'Arial',
-                                //       fontSize: 12,
-                                //       color: Color(0xFF555555),
-                                //       fontWeight: FontWeight.w500,
-                                //     ),
-                                //   ),
-                                // ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          // Container(
-                          //   width: 1, // ความกว้างของเส้น
-                          //   height: 16, // ความสูงของเส้น
-                          //   color: Colors.grey, // สีของเส้น
-                          //   margin: EdgeInsets.symmetric(
-                          //       horizontal:
-                          //       8), // ระยะห่างจาก IconButton
-                          // ),
-                          // InkWell(
-                          //   onTap: () {},
-                          //   child: Icon(
-                          //     Icons.delete,
-                          //     color: Colors.grey,
-                          //     size: 18,
-                          //   ),
-                          // ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
                       children: [
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 4, bottom: 4, right: 8),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: Image.network(
-                                account.cus_logo,
+                        Container(
+                          width: 100,
+                          height: 100,
+                          child: Image.network(
+                            account.cus_logo,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.network(
+                                'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                                width: 100,
                                 height: 100,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.network(
-                                    'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         Expanded(
-                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,6 +344,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
+                              SizedBox(height: 5),
                               Text(
                                 'Grop : ${account.cus_group_name}',
                                 maxLines: 1,
@@ -343,6 +355,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
+                              SizedBox(height: 5),
                               Text(
                                 'Type : ${account.cus_type_name ?? ''}',
                                 maxLines: 1,
@@ -353,6 +366,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
+                              SizedBox(height: 5),
                               (account.cus_tel_no == '')
                                   ? Container()
                                   : Text(
@@ -382,9 +396,9 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                       ],
                     ),
-                    Divider(color: Colors.grey),
-                  ],
-                ),
+                  ),
+                  Divider(color: Colors.grey),
+                ],
               ),
             );
           }),
@@ -399,7 +413,7 @@ class _AccountScreenState extends State<AccountScreen> {
         setState(() {
           isAtEnd = true;
         });
-        fetchModelAccountVoid();
+        fetchModelAccount();
       }
     } else {
       setState(() {
@@ -410,14 +424,15 @@ class _AccountScreenState extends State<AccountScreen> {
 
   bool _isFirstTime = true;
   int indexItems = 0;
-  List<ModelAccount> accountScreen = [];
-  Future<void> fetchModelAccountVoid() async {
+  List<ModelAccount> accountList = [];
+  Future<List<ModelAccount>> fetchModelAccount() async {
     final uri = Uri.parse(
-        "$host/api/origami/crm/account/list-account.php?search=$_search");
+        "$hostDev/api/origami/crm/account/list-account.php?search=$_search");
+
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $authorization'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -429,38 +444,33 @@ class _AccountScreenState extends State<AccountScreen> {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> accountJson = jsonResponse['account_data'] ?? [];
         bool nextPage = jsonResponse['next_page'];
-        List<ModelAccount> newActivities =
-            accountJson.map((json) => ModelAccount.fromJson(json)).toList();
 
-        setState(() {
+        List<ModelAccount> newAccount = accountJson
+            .map((json) => ModelAccount.fromJson(json))
+            .where((contact) {
           // กรอง id ที่ซ้ำ
-          Set<String> seenIds = accountScreen.map((e) => e.cus_id).toSet();
-          newActivities =
-              newActivities.where((a) => seenIds.add(a.cus_id)).toList();
+          return !accountList.any(
+                  (existing) => existing.cus_id == contact.cus_id);
+        }).toList();
 
-          accountScreen.addAll(newActivities);
-          accountScreen.sort((a, b) => b.cus_id.compareTo(a.cus_id));
-          if (_isFirstTime) {
-            _isFirstTime = false; // ป้องกันการรันซ้ำ
-          }
-          if (nextPage == true) {
-            indexItems = indexItems + 1;
-          } else {
-            indexItems = indexItems;
-          }
-          isAtEnd = false; // โหลดเสร็จแล้ว
-        });
-        print('nextPage : $indexItems');
+        // จัดการ indexItems และ isAtEnd (อัปเดตภายนอกได้)
+        if (nextPage) {
+          indexItems += 1;
+        } else {
+          isAtEnd = true;
+        }
 
-        print("Total activities: ${accountScreen.length}");
+        return newAccount;
       } else {
         throw Exception(
             'Failed to load data, status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching data: $e');
+      return []; // ถ้า error ส่งกลับลิสต์ว่าง
     }
   }
+
 }
 
 class ModelAccount {
