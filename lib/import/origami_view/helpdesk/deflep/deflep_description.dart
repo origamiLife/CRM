@@ -8,11 +8,9 @@ class HelpDescription extends StatefulWidget {
   const HelpDescription({
     Key? key,
     required this.employee,
-    required this.Authorization,
     required this.pageInput,
   }) : super(key: key);
   final Employee employee;
-  final String Authorization;
   final String pageInput;
 
   @override
@@ -324,7 +322,6 @@ class _HelpDescriptionState extends State<HelpDescription> {
                                   MaterialPageRoute(
                                       builder: (context) => ChatBubbles(
                                             employee: widget.employee,
-                                            Authorization: widget.Authorization,
                                             pageInput: widget.pageInput,
                                           )),
                                 );

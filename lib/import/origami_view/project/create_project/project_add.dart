@@ -43,6 +43,7 @@ class _ProjectAddState extends State<ProjectAdd> {
     _projectController.dispose();
     _descriptionController.dispose();
     _searchController.dispose();
+    dropdownSearchController.dispose();
   }
 
   String currentTime = '';
@@ -267,7 +268,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 priority_id = value?.priority_id ?? '';
               });
             },
-            hint: '',
+            hint: priority_name,
           ),
         ),
       ],
@@ -291,7 +292,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 contact_id = value?.contact_id ?? '';
                 account_id = value?.cus_id ?? '';
                 String nameTH = value?.cus_name_th ?? '';
-                String nameEN = value?.cus_name_th ?? '';
+                String nameEN = value?.cus_name_en ?? '';
                 if (account_id != '') {
                   account_name = '$nameTH [$nameEN]';
                 } else {
@@ -330,7 +331,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 project_support_id = value?.project_support_id ?? '';
               });
             },
-            hint: '',
+            hint: project_support_name,
           ),
         ),
         Container(
@@ -345,7 +346,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                 source_id = value?.source_id ?? '';
               });
             },
-            hint: '',
+            hint: source_name,
           ),
         ),
         _textController(
@@ -625,9 +626,7 @@ class _ProjectAddState extends State<ProjectAdd> {
     ProjectSupportData(
         project_support_id: '0', project_support_name: 'Internal'),
     ProjectSupportData(
-        project_support_id: '1', project_support_name: 'Support internal'),
-    ProjectSupportData(
-        project_support_id: '2', project_support_name: 'External'),
+        project_support_id: '1', project_support_name: 'External'),
   ];
 
   void _fatchApi() {
@@ -639,6 +638,10 @@ class _ProjectAddState extends State<ProjectAdd> {
     _fetchProcess();
     _fetchPriority();
     _fetchSubStatus();
+    if(selectedSupportModel == null){
+      project_support_id = projectSupportList[0].project_support_id;
+      project_support_name = projectSupportList[0].project_support_name;
+    }
   }
 
   ContactData? selectedContact;
@@ -652,7 +655,7 @@ class _ProjectAddState extends State<ProjectAdd> {
         Uri.parse("$hostDev/api/origami/crm/project/component/contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -681,7 +684,7 @@ class _ProjectAddState extends State<ProjectAdd> {
         Uri.parse("$hostDev/api/origami/crm/project/component/account.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'cus_id': account_id,
@@ -708,7 +711,7 @@ class _ProjectAddState extends State<ProjectAdd> {
         Uri.parse("$hostDev/api/origami/crm/project/component/type.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -738,27 +741,25 @@ class _ProjectAddState extends State<ProjectAdd> {
   String source_name = '';
   Future<void> _fetchSource() async {
     final uri = Uri.parse(
-        '$hostDev/api/origami/crm/project/component/source.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/source.php');
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'index': ''
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['source_data'] ?? [];
+        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
         setState(() {
           sourceList =
               dataJson.map((json) => SourceData.fromJson(json)).toList();
           if (sourceList.isNotEmpty && selectedSource == null) {
             selectedSource = sourceList[0];
             source_id = selectedSource?.source_id ?? '';
+            source_name = selectedSource?.source_name ?? '';
           }
         });
       } else {
@@ -779,11 +780,10 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
           'index': ''
         },
       );
@@ -816,11 +816,10 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
           'index': ''
         },
       );
@@ -854,7 +853,7 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
         },
@@ -868,6 +867,7 @@ class _ProjectAddState extends State<ProjectAdd> {
           if (priorityList.isNotEmpty && selectedPriority == null) {
             selectedPriority = priorityList[0];
             priority_id = selectedPriority?.priority_id ?? '';
+            priority_name = selectedPriority?.priority_name ?? '';
           }
         });
       } else {
@@ -888,11 +888,11 @@ class _ProjectAddState extends State<ProjectAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'Authorization': token,
           'index': ''
         },
       );
@@ -919,7 +919,7 @@ class _ProjectAddState extends State<ProjectAdd> {
     final uri = Uri.parse("$hostDev/api/origami/crm/project/add_project.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -964,7 +964,7 @@ class _ProjectAddState extends State<ProjectAdd> {
         Uri.parse("$hostDev/api/origami/crm/project/add_activity_project.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $authorization'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -1079,8 +1079,8 @@ class SourceData {
 
   factory SourceData.fromJson(Map<String, dynamic> json) {
     return SourceData(
-      source_id: json['source_id'] ?? '',
-      source_name: json['source_name'] ?? '',
+      source_id: json['project_comefrom_id'] ?? '',
+      source_name: json['project_comefrom_name'] ?? '',
     );
   }
 }

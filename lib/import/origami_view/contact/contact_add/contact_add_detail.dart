@@ -4,15 +4,14 @@ import 'package:origamilift/import/import.dart';
 
 import '../../account/account_add/account_add_detail.dart';
 import '../../activity/add/activity_add.dart';
+import '../../need/need_view/need_detail.dart';
 
 class ContactAddDetail extends StatefulWidget {
   const ContactAddDetail({
     Key? key,
     required this.employee,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
-  final String Authorization;
 
   @override
   _ContactAddDetailState createState() => _ContactAddDetailState();
@@ -25,24 +24,25 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
   TextEditingController _mobileController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _positionController = TextEditingController();
-  TextEditingController _searchfilterController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
 
-  // GlobalKey<FormState> _formKey = GlobalKey();
   FocusNode focusNode = FocusNode();
-  String _tellphone = '';
 
   @override
   void initState() {
     super.initState();
     _getAPI();
-    _firstnameController.addListener(() {
-      print("Current text: ${_firstnameController.text}");
-    });
   }
 
   @override
   void dispose() {
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _nicknameController.dispose();
+    _mobileController.dispose();
+    _emailController.dispose();
+    _positionController.dispose();
+    dropdownSearchController.dispose();
     super.dispose();
   }
 
@@ -138,7 +138,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                   selectedGroupname = value;
                   cont_group_id = value?.cont_group_id ?? '';
                 });
-              },
+              }, hint: cont_group_name,
             ),
             _textController(
                 'Firstname', _firstnameController, false, Icons.numbers),
@@ -156,7 +156,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                   selectedGender = value;
                   gender_id = value?.gender_id ?? '';
                 });
-              },
+              }, hint: gender_name,
             ),
             _lineWidget(),
             _textController(
@@ -171,7 +171,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                   selectedRole = value;
                   role_id = value?.cont_project_role_id ?? '';
                 });
-              },
+              }, hint: role_name,
             ),
             _buildDropdown<emotionContact>(
               label: 'Emotion',
@@ -183,11 +183,21 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                 setState(() {
                   selectedEmotion = value;
                   emo_icon_id = value?.emo_icon_id ?? '';
-
-                  final fileName = emo_icon_id.split('/').last;
-                  cont_emo = '../images/$fileName';
+                  cont_emo = value?.emo_icon_path??'';
                 });
-              },
+              }, hint: '',
+            ),
+            _buildDropdown<AccountContact>(
+              label: 'Account',
+              items: accountList,
+              selectedValue: selectedAccount,
+              getLabel: (item) => item.cus_name_en??'',
+              onChanged: (value) {
+                setState(() {
+                  selectedAccount = value;
+                  account_id = value?.cus_id ?? '';
+                });
+              }, hint: account_name,
             ),
             _textController('Email', _emailController, false, Icons.numbers),
             _textController(
@@ -291,6 +301,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
 
   Widget _buildDropdown<T>({
     required String label,
+    required String hint,
     String Function(T)? image,
     required List<T> items,
     required T? selectedValue,
@@ -325,7 +336,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
               child: DropdownButton2<T>(
                 isExpanded: true,
                 hint: Text(
-                  '',
+                  hint,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -453,16 +464,52 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
     await _fetchGroupname();
     await _fetchEmotionContact();
     await _fetchRole();
+    await _fetchAccount();
+  }
+
+
+  AccountContact? selectedAccount;
+  List<AccountContact> accountList = [];
+  String account_id = '';
+  String account_name = '';
+  Future<void> _fetchAccount() async {
+    final uri =
+    Uri.parse("$hostDev/api/origami/crm/contact/component/account.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $token'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        accountList =
+            dataJson.map((json) => AccountContact.fromJson(json)).toList();
+        if (accountList.isNotEmpty && selectedAccount == null) {
+          selectedAccount = accountList[0];
+          account_id = selectedAccount?.cus_id??'';
+          account_name = selectedAccount?.cus_name_en??'';
+          print('print account_name $account_name');
+        }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
   }
 
   genderContact? selectedGender;
   List<genderContact> genderList = [];
+  String gender_name = '';
   Future<void> _fetchGender() async {
     final uri =
         Uri.parse("$hostDev/api/origami/crm/contact/component/gender.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -476,6 +523,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
         if (genderList.isNotEmpty && selectedGender == null) {
           selectedGender = genderList[0];
           gender_id = selectedGender?.gender_id??'';
+          gender_name = selectedGender?.gender_name??'';
         }
       });
     } else {
@@ -485,12 +533,13 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
 
   groupnameContact? selectedGroupname;
   List<groupnameContact> groupnameList = [];
+  String cont_group_name = '';
   Future<void> _fetchGroupname() async {
     final uri =
         Uri.parse("$hostDev/api/origami/crm/contact/component/group_name.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -504,6 +553,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
         if (groupnameList.isNotEmpty && selectedGroupname == null) {
           selectedGroupname = groupnameList[0];
           cont_group_id = selectedGroupname?.cont_group_id??'';
+          cont_group_name = selectedGroupname?.cont_group_name??'';
         }
       });
     } else {
@@ -518,7 +568,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/emotion.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -532,9 +582,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
         if (emotionList.isNotEmpty && selectedEmotion == null) {
           selectedEmotion = emotionList[0];
           emo_icon_id = selectedEmotion?.emo_icon_id ?? '';
-
-          final fileName = emo_icon_id.split('/').last;
-          cont_emo = '../images/$fileName';
+          cont_emo = selectedEmotion?.emo_icon_path ?? '';
         }
       });
     } else {
@@ -544,12 +592,13 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
 
   roleContact? selectedRole;
   List<roleContact> roleList = [];
+  String role_name = '';
   Future<void> _fetchRole() async {
     final uri =
         Uri.parse("$hostDev/api/origami/crm/contact/component/role.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -562,6 +611,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
         if (roleList.isNotEmpty && selectedRole == null) {
           selectedRole = roleList[0];
           role_id = selectedRole?.cont_project_role_id??'';
+          role_name = selectedRole?.cont_project_role_name??'';
         }
       });
     } else {
@@ -575,12 +625,12 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
     final uri = Uri.parse("$hostDev/api/origami/crm/contact/add_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
         'cus_create_user': widget.employee.emp_id,
-        // 'cus_id': cus_id, //account
+        'cus_id': account_id, //account
         'cont_group_id': cont_group_id,
         'cus_cont_name': _firstnameController.text.trim(),
         'cus_cont_surname': _lastnameController.text.trim(),
@@ -706,6 +756,26 @@ class roleContact {
     return roleContact(
       cont_project_role_id: json['cont_project_role_id'] ?? '',
       cont_project_role_name: json['cont_project_role_name'] ?? '',
+    );
+  }
+}
+
+class AccountContact {
+  final String cus_id;
+  final String cus_name_th;
+  final String cus_name_en;
+
+  AccountContact({
+    required this.cus_id,
+    required this.cus_name_th,
+    required this.cus_name_en,
+  });
+
+  factory AccountContact.fromJson(Map<String, dynamic> json) {
+    return AccountContact(
+      cus_id: json['cus_id'] ?? '',
+      cus_name_th: json['cus_name_th'] ?? '',
+      cus_name_en: json['cus_name_en'] ?? '',
     );
   }
 }

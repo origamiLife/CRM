@@ -141,8 +141,8 @@ class _IdocScreenState extends State<IdocScreen> {
                               MaterialPageRoute(
                                 builder: (context) => IdocEdit(
                                     employee: widget.employee,
-                                    pageInput: widget.pageInput,
-                                    Authorization: authorization),
+                                    pageInput: widget.pageInput
+                                    ),
                               ),
                             );
                           },

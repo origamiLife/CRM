@@ -236,8 +236,8 @@ class _TimeSampleState extends State<TimeSample> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildTimeWidget(branch),
-                  const SizedBox(height: 8),
+                  _buildTimeWidget(),
+                  const SizedBox(height: 10),
                   _buildLocationInfo(branch),
                   const SizedBox(height: 16),
                   _buildInOutTime(branch),
@@ -277,10 +277,6 @@ class _TimeSampleState extends State<TimeSample> {
   // }
 
   Widget _buildGoogleMap(GetTimeStampSim branch) {
-    // final LatLng branchCenter = LatLng(
-    //   double.parse(branch.branch_lat),
-    //   double.parse(branch.branch_lng),
-    // );
     return GoogleMap(
       onMapCreated: (controller) => _mapController = controller,
       markers: _tappedLocation == null
@@ -310,10 +306,12 @@ class _TimeSampleState extends State<TimeSample> {
       //   // แสดงพิกัดใน console
       //   print('Tapped location: ${latLng.latitude}, ${latLng.longitude}');
       // },
-      initialCameraPosition: CameraPosition(target: LatLng(
-        double.parse(branch.branch_lat),
-        double.parse(branch.branch_lng),
-      ), zoom: 18),
+      initialCameraPosition: CameraPosition(
+          target: LatLng(
+            double.parse(branch.branch_lat),
+            double.parse(branch.branch_lng),
+          ),
+          zoom: 18),
       circles: {
         Circle(
           circleId: const CircleId('radius_circle'),
@@ -336,7 +334,7 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
-  Widget _buildTimeWidget(GetTimeStampSim branch) {
+  Widget _buildTimeWidget() {
     return Text(
       "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}:${_currentTime.second.toString().padLeft(2, '0')}",
       style: const TextStyle(
@@ -432,11 +430,11 @@ class _TimeSampleState extends State<TimeSample> {
           Stack(
             alignment: Alignment.center,
             children: [
-              if (isStampedIn)
-                LoadingAnimationWidget.beat(
-                  size: 100,
-                  color: Colors.white12,
-                ),
+              // if (isStampedIn)
+              LoadingAnimationWidget.beat(
+                size: 100,
+                color: Colors.white24,
+              ),
               GestureDetector(
                 onTap: () => _pickImage(ImageSource.camera, b),
                 child: CircleAvatar(
@@ -454,12 +452,21 @@ class _TimeSampleState extends State<TimeSample> {
                 AssetImage('assets/images/stamp/stamp_button_disable.png'),
           ),
         if (!isStampedIn)
-          GestureDetector(
-            onTap: () => _pickImage(ImageSource.camera, b),
-            child: CircleAvatar(
-              radius: 50,
-              child: Image.asset('assets/images/stamp/stamp_button_in.png'),
-            ),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              LoadingAnimationWidget.beat(
+                size: 100,
+                color: Colors.white24,
+              ),
+              GestureDetector(
+                onTap: () => _pickImage(ImageSource.camera, b),
+                child: CircleAvatar(
+                  radius: 50,
+                  child: Image.asset('assets/images/stamp/stamp_button_in.png'),
+                ),
+              ),
+            ],
           ),
       ],
     );
@@ -548,7 +555,7 @@ class _TimeSampleState extends State<TimeSample> {
     final uri = Uri.parse("$hostDev/api/origami/time/branch.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $authorization'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -586,7 +593,7 @@ class _TimeSampleState extends State<TimeSample> {
     try {
       final response = await http.post(
         Uri.parse('$hostDev/api/origami/time/stamp.php'),
-        headers: {'Authorization': 'Bearer $authorization'},
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -603,8 +610,6 @@ class _TimeSampleState extends State<TimeSample> {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        String ms = jsonResponse['message'];
-        print('jsonResponse message message message message message message message = $ms');
         setState(() {
           checkStampIn = jsonResponse['stamp_in'];
           checkStampOut = jsonResponse['stamp_out'];

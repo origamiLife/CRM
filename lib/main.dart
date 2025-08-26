@@ -7,7 +7,8 @@ import 'package:geolocator/geolocator.dart';
 
 String hostDev = 'https://dev.origami.life';
 String host = 'https://www.origami.life';
-String authorization = 'ori20#17gami';
+String token = 'ori20#17gami'; // m_application
+String tokenMD5 = 'aeb674f8c49dd404dabc759f81f15918'; // m_application
 int selectedRadio = 2;
 // bool isAndroid = false;
 // bool isTablet = false;
@@ -809,37 +810,26 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _fetchLogin(String username, String password) async {
-    final uri = Uri.parse('$host/api/origami/signin.php');
-
+    final uri = Uri.parse('$hostDev/api/origami/signin.php');
     try {
       final response = await http.post(
         uri,
         body: {
-          'auth_password': 'ori20#17gami',
           'username': username.trim(),
           'password': password.trim(),
+          'auth_password': token,
         },
       );
-
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
-
+        final List<dynamic> employeeJson = jsonResponse['employee_data'] ?? [];
         if (jsonResponse['status'] == 200) {
-          final List<dynamic> employeeJson =
-              jsonResponse['employee_data'] ?? [];
-
-          if (employeeJson.isEmpty) {
-            throw Exception('No employee data found.');
-          }
-
-          final List<Employee> employeeList = employeeJson
+          final employeeList = employeeJson
               .map<Employee>((json) => Employee.fromJson(json))
               .toList();
-
           setState(() {
             _isLoading = true;
           });
-
           if (countPage == 1 && employeeList.length >= 2) {
             _showFullScreenImage(employeeList);
           } else {
@@ -871,7 +861,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String forgot_mail = '';
   Future<void> _fetchForgetMail() async {
-    final uri = Uri.parse("$host/api/origami/forgot_password.php");
+    final uri = Uri.parse("$hostDev/api/origami/forgot_password.php");
     try {
       final response = await http.post(
         uri,
@@ -960,11 +950,11 @@ class Employee {
 
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
-      emp_id: json['emp_id'] ?? '',
+      comp_id: json['comp_id'] = '2',
+      emp_id: json['emp_id'] = '17',
       emp_code: json['emp_code'] ?? '',
       emp_name: json['emp_name'] ?? '',
       emp_avatar: json['emp_avatar'] ?? '',
-      comp_id: json['comp_id'] ?? '',
       comp_name: json['comp_name'] ?? '',
       comp_logo: json['comp_logo'] ?? '',
       dept_name: json['dept_name'] ?? '',

@@ -214,7 +214,7 @@ class _TimeAttendanceHistoryState extends State<TimeAttendanceHistory> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: Image.network(
-                          '$host/${ownerList.emp_pic}',
+                          '$hostDev/${ownerList.emp_pic}',
                           fit: BoxFit.fill,
                         ),
                       ),

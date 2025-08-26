@@ -39,6 +39,8 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
     _descriptionController.dispose();
     _emailController.dispose();
     _groupController.dispose();
+    _telephoneController.dispose();
+    dropdownSearchController.dispose();
     super.dispose();
   }
 
@@ -483,7 +485,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         Uri.parse("$hostDev/api/origami/crm/account/component/group.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -514,7 +516,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         Uri.parse("$hostDev/api/origami/crm/account/component/status_type.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -542,7 +544,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         "$hostDev/api/origami/crm/account/component/registration.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -570,7 +572,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         Uri.parse("$hostDev/api/origami/crm/account/component/source.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $authorization'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -595,7 +597,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
     final uri = Uri.parse("$hostDev/api/origami/crm/account/add_account.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $authorization'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,

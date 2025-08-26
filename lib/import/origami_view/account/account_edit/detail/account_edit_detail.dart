@@ -6,6 +6,7 @@ import '../../../Contact/contact_edit/contact_edit_detail.dart';
 import '../../account_add/account_add_detail.dart';
 import '../../account_screen.dart';
 import '../location/account_edit_location.dart';
+import 'package:path/path.dart' as p;
 
 class AccountEditDetail extends StatefulWidget {
   const AccountEditDetail({
@@ -208,106 +209,13 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
             ),
             SizedBox(height: 8),
             // _lineWidget(),
-            // _showImagePhoto(account),
-            // SizedBox(height: 16),
+            _showImagePhoto(account),
+            SizedBox(height: 16),
             _informationTop(account),
           ],
         ),
       ),
     );
-  }
-
-  Widget _lineWidget() {
-    return Padding(
-      padding: EdgeInsets.only(top: 18, bottom: 18),
-      child: Column(
-        children: [
-          Container(
-            color: Colors.orange.shade50,
-            height: 3,
-            width: double.infinity,
-          ),
-          SizedBox(height: 1),
-          Container(
-            color: Colors.orange.shade100,
-            height: 3,
-            width: double.infinity,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _showImagePhoto(ModelAccount account) {
-    return _image != null
-        ? Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.file(
-                          _image!,
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.contain,
-                        ),
-                        Positioned(
-                          top: 4,
-                          right: 4,
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _image = null;
-                                cus_logo = '';
-                              });
-                            },
-                            child: Stack(
-                              children: [
-                                Icon(Icons.cancel_outlined,
-                                    color: Colors.white),
-                                Icon(Icons.cancel, color: Colors.red),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        : Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Container(
-              // height: 48,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(color: Colors.grey.shade300, width: 1.0),
-              ),
-              child: GestureDetector(
-                onTap: _imageDialog,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Container(
-                    width: double.infinity,
-                    child: Icon(Icons.camera_alt, color: Colors.grey),
-                  ),
-                ),
-              ),
-            ),
-          );
   }
 
   void _imageDialog() {
@@ -412,6 +320,129 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         );
       },
     );
+  }
+
+  final ImagePicker _picker = ImagePicker();
+  File? _image;
+  String _base64Image = '';
+  bool _isStamping = false;
+  String cus_photo = '';
+  Future<void> _pickImage(ImageSource source) async {
+    if (_isStamping) return;
+    _isStamping = true;
+    try {
+      final XFile? image = await _picker.pickImage(source: source);
+      if (image == null) return;
+      final file = File(image.path);
+      final imageBytes = await file.readAsBytes();
+      final base64String = base64Encode(imageBytes);
+
+      setState(() {
+        _base64Image = base64String;
+      });
+
+      cus_photo = p.basename(image.path);
+      print(cus_photo); // best-new-cars-2026.webp
+      setState(() {
+        _image = file;
+      });
+    } catch (e) {
+      print('Error picking image: $e');
+    } finally {
+      _isStamping = false;
+    }
+  }
+
+  Widget _lineWidget() {
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: 18),
+      child: Column(
+        children: [
+          Container(
+            color: Colors.orange.shade50,
+            height: 3,
+            width: double.infinity,
+          ),
+          SizedBox(height: 1),
+          Container(
+            color: Colors.orange.shade100,
+            height: 3,
+            width: double.infinity,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _showImagePhoto(ModelAccount account) {
+    return _image != null
+        ? Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.transparent,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.file(
+                          _image!,
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _image = null;
+                              });
+                            },
+                            child: Stack(
+                              children: [
+                                Icon(Icons.cancel_outlined,
+                                    color: Colors.white),
+                                Icon(Icons.cancel, color: Colors.red),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Container(
+              // height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade300, width: 1.0),
+              ),
+              child: GestureDetector(
+                onTap: _imageDialog,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Container(
+                    width: double.infinity,
+                    child: Icon(Icons.camera_alt, color: Colors.grey),
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 
   Widget _informationTop(ModelAccount account) {
@@ -727,37 +758,6 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     endDate = formatter.format(_selectedDateEnd);
   }
 
-  final ImagePicker _picker = ImagePicker();
-  File? _image;
-  String _base64Image = '';
-  bool _isStamping = false;
-
-  Future<void> _pickImage(ImageSource source) async {
-    if (_isStamping) return;
-    _isStamping = true;
-    try {
-      final XFile? image = await _picker.pickImage(source: source);
-      if (image == null) return;
-
-      // final directory = await getApplicationDocumentsDirectory();
-      // final filePath = path.join(
-      //   directory.path,
-      //   'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
-      // );
-
-      final file = File(image.path);
-      final imageBytes = await file.readAsBytes();
-      _base64Image = base64Encode(imageBytes);
-      setState(() {
-        _image = file;
-      });
-    } catch (e) {
-      print('Error picking image: $e');
-    } finally {
-      _isStamping = false;
-    }
-  }
-
   String cus_group_id = '';
   String cus_code = '';
   String cus_type_id = '';
@@ -784,7 +784,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/account/component/group.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -808,7 +808,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/account/component/status_type.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -832,7 +832,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         "$hostDev/api/origami/crm/account/component/registration.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -856,7 +856,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/account/component/source.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -877,7 +877,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     final uri = Uri.parse("$hostDev/api/origami/crm/account/update_account.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $authorization'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -898,7 +898,11 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       },
     );
     if (response.statusCode == 200) {
-      // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      if(_image == null){
+        await _fetchDeletePhotoAccount();
+      }else{
+        await updateAccountPhoto();
+      }
       final jsonResponse = jsonDecode(response.body);
       final message = jsonResponse['message'];
       Navigator.pushReplacement(
@@ -911,6 +915,53 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       showSnackBar(message);
     } else {
       throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
+  Future<void> updateAccountPhoto() async {
+    print("cus_photo_name $cus_photo");
+    print("base64 prefix: ${_base64Image.substring(0, 50)}...");
+    final response = await http.post(
+      Uri.parse("$hostDev/api/origami/crm/account/save_account_photo.php"),
+      headers: {'Authorization': 'Bearer $token'},
+      body: {
+        "cus_id": widget.account.cus_id,
+        "emp_id": widget.employee.emp_id,
+        "cus_photo_base64": _base64Image,
+        "cus_photo_name": cus_photo,
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final message = jsonResponse['message'];
+      print('updateAccountPhoto ${message}');
+
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
+  Future<void> _fetchDeletePhotoAccount() async {
+    final uri = Uri.parse('$hostDev/api/origami/crm/account/delete_account_photo.php');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'cus_id': widget.account.cus_id,
+        },
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+
+      } else {
+        throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
     }
   }
 

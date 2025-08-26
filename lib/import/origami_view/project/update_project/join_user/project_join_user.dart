@@ -471,7 +471,7 @@ class _ProjectJoinUserState extends State<ProjectJoinUser> {
         "$hostDev/api/origami/crm/project/component/employee.php?search");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'project_id': widget.project.project_id,

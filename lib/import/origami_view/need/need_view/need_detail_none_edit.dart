@@ -9,12 +9,12 @@ class NeedDetailNoneEdit extends StatefulWidget {
     super.key,
     required this.employee,
     required this.request_id,
-    required this.Authorization,
+
     // required this.approvelList,
   });
   final Employee employee;
   final String request_id;
-  final String Authorization;
+
   // final ApprovelData approvelList;
 
   @override
@@ -971,11 +971,11 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'action_type': "$action_type",
           'need_id': "$need_id",
           'type_id': "$type_id",

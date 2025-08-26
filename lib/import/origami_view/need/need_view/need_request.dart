@@ -9,10 +9,10 @@ import 'need_detail.dart';
 class NeedRequest extends StatefulWidget {
   const NeedRequest({
     super.key,
-    required this.employee, required this.Authorization,
+    required this.employee,
   });
   final Employee employee;
-  final String Authorization;
+
   @override
   _NeedRequestState createState() => _NeedRequestState();
 }
@@ -124,7 +124,7 @@ class _NeedRequestState extends State<NeedRequest> {
                               request_id: ApprovelList[indexA]
                                   .mny_request_id ??
                                   '',
-                                Authorization: widget.Authorization
+
                               // approvelList:ApprovelList[indexA],
                             ),
                           ),
@@ -703,11 +703,11 @@ class _NeedRequestState extends State<NeedRequest> {
         Uri.parse('$host/api/origami/need/approval.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri, headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -738,11 +738,11 @@ class _NeedRequestState extends State<NeedRequest> {
         '$host/api/origami/need/approval_manage.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        uri, headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'need_id': "$need_id",
           'approve_flag': "$approve_flag",
           'comment': "$comment",

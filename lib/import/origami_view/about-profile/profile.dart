@@ -8,10 +8,8 @@ class ProfilePage extends StatefulWidget {
   const ProfilePage({
     Key? key,
     required this.employee,
-    required this.Authorization,
   }) : super(key: key);
   final Employee employee;
-  final String Authorization;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -26,11 +24,11 @@ class _ProfilePageState extends State<ProfilePage> {
     final uri = Uri.parse("$hostDev/api/origami/profile/profile.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': token,
       },
     );
     if (response.statusCode == 200) {
@@ -94,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 _loading(),
                 ChangePassword(
                     employee: widget.employee,
-                    Authorization: widget.Authorization),
+                    ),
               ],
             )),
           ],
@@ -534,7 +532,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final uri = Uri.parse("$hostDev/api/origami/profile/saveProfile.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'emp_id': widget.employee.emp_id,
         'comp_id': widget.employee.comp_id,
@@ -567,7 +565,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final uri = Uri.parse("$hostDev/api/origami/profile/passwordReset.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'emp_id': widget.employee.emp_id,
         'comp_id': widget.employee.comp_id,

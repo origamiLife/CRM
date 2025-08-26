@@ -11,7 +11,6 @@ class YouTubePlayerWidget extends StatefulWidget {
   final String videoId;
   final Employee employee;
   final AcademyRespond academy;
-  final String Authorization;
   final Topic topic;
   final String learning_seq;
   final String courseId;
@@ -21,7 +20,6 @@ class YouTubePlayerWidget extends StatefulWidget {
     required this.videoId,
     required this.employee,
     required this.academy,
-    required this.Authorization,
     required this.topic,
     required this.learning_seq,
     required this.courseId,
@@ -231,8 +229,6 @@ class _YouTubePlayerWidgetState extends State<YouTubePlayerWidget> {
                                               EvaluateModule(
                                                 employee: widget.employee,
                                                 academy: widget.academy,
-                                                Authorization:
-                                                widget.Authorization,
                                                 selectedPage:1,
                                               ))),
                                   child: Icon(Icons.keyboard_arrow_down,
@@ -364,7 +360,7 @@ class _YouTubePlayerWidgetState extends State<YouTubePlayerWidget> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

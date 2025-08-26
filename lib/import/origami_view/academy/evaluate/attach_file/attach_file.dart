@@ -8,11 +8,11 @@ class AttachFile extends StatefulWidget {
     super.key,
     required this.employee,
     required this.academy,
-    required this.Authorization,
+
   });
   final Employee employee;
   final AcademyRespond academy;
-  final String Authorization;
+
   @override
   _AttachFileState createState() => _AttachFileState();
 }
@@ -22,11 +22,11 @@ class _AttachFileState extends State<AttachFile> {
     final uri = Uri.parse("$host/api/origami/academy/attachfile.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': token,
         'academy_id': widget.academy.academy_id,
         'academy_type': widget.academy.academy_type,
       },

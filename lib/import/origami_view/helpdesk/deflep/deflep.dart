@@ -8,11 +8,9 @@ class HelpDesk2 extends StatefulWidget {
   const HelpDesk2({
     Key? key,
     required this.employee,
-    required this.Authorization,
     required this.pageInput,
   }) : super(key: key);
   final Employee employee;
-  final String Authorization;
   final String pageInput;
 
   @override
@@ -135,7 +133,6 @@ class _HelpDesk2State extends State<HelpDesk2> {
                                   MaterialPageRoute(
                                     builder: (context) => HelpDescription(
                                       employee: widget.employee,
-                                      Authorization: widget.Authorization,
                                       pageInput: widget.pageInput,
                                     ),
                                   ),

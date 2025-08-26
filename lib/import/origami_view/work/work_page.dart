@@ -45,7 +45,6 @@ class _WorkPageState extends State<WorkPage> {
               MaterialPageRoute(
                 builder: (context) => WorkApplyAdd(
                   employee: widget.employee,
-                  Authorization: authorization,
                 ),
               ),
             );
@@ -572,15 +571,16 @@ class _WorkPageState extends State<WorkPage> {
     final uri = Uri.parse("$hostDev/api/get_list_work.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': authorization,
+        'Authorization': token,
       },
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      print(jsonResponse);
       // เข้าถึงข้อมูลในคีย์ 'instructors'
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
@@ -594,15 +594,16 @@ class _WorkPageState extends State<WorkPage> {
     final uri = Uri.parse("$hostDev/api/get_work.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': authorization,
+        'Authorization': token,
       },
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      print(jsonResponse);
       // เข้าถึงข้อมูลในคีย์ 'instructors'
       final List<dynamic> dataJson = jsonResponse['data'];
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>

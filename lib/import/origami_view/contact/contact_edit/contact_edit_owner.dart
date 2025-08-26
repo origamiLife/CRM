@@ -563,15 +563,15 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
   List<ActivityContact> contactList = [];
   List<ActivityContact> addNewContactList = [];
   Future<void> fetchActivityContact() async {
-    final uri = Uri.parse('$host/crm/ios_activity_contact.php');
+    final uri = Uri.parse('$hostDev/crm/ios_activity_contact.php');
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'Authorization': token,
           'index': '0',
         },
       );
@@ -594,14 +594,14 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
   }
 
   Future<List<ActivityContact>> fetchAddContact() async {
-    final uri = Uri.parse("$host/crm/ios_activity_contact.php");
+    final uri = Uri.parse("$hostDev/crm/ios_activity_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': authorization,
+        'Authorization': token,
         'index': '0',
       },
     );

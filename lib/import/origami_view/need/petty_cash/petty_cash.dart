@@ -11,10 +11,10 @@ class PettyCash extends StatefulWidget {
   PettyCash({
     super.key,
     required this.employee,
-    required this.Authorization,
+
   });
   final Employee employee;
-  final String Authorization;
+
 
   @override
   _PettyCashState createState() => _PettyCashState();
@@ -1859,11 +1859,11 @@ class _PettyCashState extends State<PettyCash> {
     final uri = Uri.parse("$host/api/origami/pettyCash/cash.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        
       },
     );
 
@@ -1887,11 +1887,11 @@ class _PettyCashState extends State<PettyCash> {
     final uri = Uri.parse("$host/api/origami/pettyCash/used.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        
         'cash_id': cash_id,
         'status_id': status_id,
       },
@@ -1912,11 +1912,11 @@ class _PettyCashState extends State<PettyCash> {
     final uri = Uri.parse("$host/api/origami/pettyCash/detail.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        
         'cash_id': cash_id,
         'used_id': used_id,
       },
@@ -1949,11 +1949,11 @@ class _PettyCashState extends State<PettyCash> {
     final uri = Uri.parse("$host/api/origami/pettyCash/status.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        
       },
     );
     if (response.statusCode == 200) {
@@ -2010,11 +2010,11 @@ class _PettyCashState extends State<PettyCash> {
     final uri = Uri.parse("$host/api/origami/pettyCash/save.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        
         'cash_id': cash_id,
         'used_id': used_id,
         'use_date': use_date,
@@ -2044,11 +2044,11 @@ class _PettyCashState extends State<PettyCash> {
     final uri = Uri.parse("$host/api/origami/pettyCash/delete.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        
         'cash_id': cash_id,
         'used_id': used_id,
       },
@@ -2074,11 +2074,11 @@ class _PettyCashState extends State<PettyCash> {
         "$host/api/origami/need/unit.php?page=$unitNumber&search=$unitName");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        
       },
     );
     if (response.statusCode == 200) {
@@ -2105,11 +2105,11 @@ class _PettyCashState extends State<PettyCash> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          
         },
       );
       if (response.statusCode == 200) {
@@ -2135,11 +2135,11 @@ class _PettyCashState extends State<PettyCash> {
     final uri = Uri.parse("$host/api/origami/pettyCash/expense.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        
         'cash_id': cash_id,
         'used_id': expense_used_id,
         'need_subject': need_subject,

@@ -2,8 +2,9 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 import 'package:origamilift/import/origami_view/project/project.dart';
-import 'package:origamilift/import/origami_view/sample/attendance_history.dart';
-import 'package:origamilift/import/origami_view/sample/time_stamp.dart';
+import 'package:origamilift/import/origami_view/sample/stamp_activity/activity_list.dart';
+import 'package:origamilift/import/origami_view/sample/stamp_time/attendance_history.dart';
+import 'package:origamilift/import/origami_view/sample/stamp_time/time_stamp.dart';
 import 'package:origamilift/import/origami_view/work/work_page.dart';
 
 import '../Call/call_phone.dart';
@@ -313,15 +314,12 @@ class _OrigamiPageState extends State<OrigamiPage> {
     final pages = {
       0: NeedsView(
         employee: widget.employee,
-        Authorization: authorization,
       ),
       1: NeedRequest(
         employee: widget.employee,
-        Authorization: authorization,
       ),
       2: AcademyPage(
         employee: widget.employee,
-        Authorization: authorization,
         page: widget.page ?? '',
       ),
       3: const TranslatePage(),
@@ -335,16 +333,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
       ),
       6: ProfilePage(
         employee: widget.employee,
-        Authorization: authorization,
       ),
       7: HelpDeskScreen(
         employee: widget.employee,
         pageInput: 'origami',
-        Authorization: authorization,
       ),
       8: PettyCash(
         employee: widget.employee,
-        Authorization: authorization,
       ),
       9: ActivityScreen(
         employee: widget.employee,
@@ -372,7 +367,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
       15: HelpDesk2(
         employee: widget.employee,
         pageInput: 'origami',
-        Authorization: authorization,
       ),
       16: IdocScreen(
         employee: widget.employee,
@@ -381,12 +375,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
       17: IssueLogScreen(
         employee: widget.employee,
         pageInput: 'origami',
-        Authorization: authorization,
       ),
       18: Container(), //CallScreen(),
       19: JobPage(
         employee: widget.employee,
-        Authorization: authorization,
         compid: '',
         empid: '',
       ),
@@ -568,7 +560,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     final uri = Uri.parse("$hostDev/api/origami/time/default.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -629,7 +621,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
       //       MaterialPageRoute(
       //         builder: (context) => JobPage(
       //           employee: widget.employee,
-      //           Authorization: authorization,
+      //
       //           compid: '5',
       //           empid: '19777',
       //         ),
@@ -664,29 +656,39 @@ class _OrigamiPageState extends State<OrigamiPage> {
 
   List<Widget> _buildAppBarTimeStamp() {
     return [
-      IconButton(
-        icon: const Icon(Icons.history, color: Colors.orange),
-        onPressed: () => showDialog(
-          context: context,
-          builder: (_) => Dialog(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            insetPadding: const EdgeInsets.all(8),
-            child: TimeAttendanceHistory(
-              employee: widget.employee,
-              pageInput: '5',
-              Authorization: authorization,
-            ),
-          ),
-        ),
-      ),
+      // IconButton(
+      //   icon: const Icon(Icons.history, color: Colors.orange),
+      //   onPressed: () => showDialog(
+      //     context: context,
+      //     builder: (_) => Dialog(
+      //       elevation: 0,
+      //       backgroundColor: Colors.white,
+      //       insetPadding: const EdgeInsets.all(8),
+      //       child: TimeAttendanceHistory(
+      //         employee: widget.employee,
+      //         pageInput: '5',
+      //
+      //       ),
+      //     ),
+      //   ),
+      // ),
       IconButton(
         icon: const Icon(Icons.home, color: Colors.orange),
         onPressed: () => _changeBranch(_branches),
       ),
       IconButton(
         icon: const Icon(Icons.call_missed_outgoing, color: Colors.orange),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ActivityList(
+                  employee: widget.employee,
+                  pageInput: 'origami'
+              ),
+            ),
+          );
+        },
       ),
     ];
   }
@@ -741,7 +743,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'auth_password': authorization,
+          'auth_password': token,
         },
       );
 
@@ -804,9 +806,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginPage(num: 1, popPage: 0, company_id: 0),
+                    builder: (context) =>
+                        LoginPage(num: 1, popPage: 0, company_id: 0),
                   ),
-                      (route) => false,
+                  (route) => false,
                 );
               },
               child: Text(

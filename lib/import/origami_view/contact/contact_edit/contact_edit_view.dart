@@ -178,7 +178,7 @@ class _ContactViewState extends State<ContactView> {
         Row(
           children: [
             Expanded(
-              flex: 5,
+              flex: 4,
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: 16, right: 8, bottom: 16, top: 8),
@@ -186,13 +186,13 @@ class _ContactViewState extends State<ContactView> {
                   borderRadius: BorderRadius.circular(2),
                   child: Image.network(
                     contact.cus_cont_photo,
-                    height: 150,
+                    height: 100,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.network(
                         'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
-                        height: 150,
-                        fit: BoxFit.fill,
+                        height: 100,
+                        fit: BoxFit.contain,
                       );
                     },
                   ),
@@ -211,8 +211,8 @@ class _ContactViewState extends State<ContactView> {
                       "${contact.cus_name}",
                       style: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey.shade800,
+                        fontSize: 18,
+                        color: Colors.orange,
                         fontWeight: FontWeight.w700,
                       ),
                       maxLines: 2,
@@ -364,7 +364,7 @@ class _ContactViewState extends State<ContactView> {
                   SizedBox(height: 4),
                   _subDetail(
                       'Name',
-                      "${contact.firstname} ${contact.lastname}",
+                      "${contact.cont_name}",
                       Icons.person,
                       Colors.grey.shade400),
                   _subDetail(
@@ -473,7 +473,7 @@ class _ContactViewState extends State<ContactView> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

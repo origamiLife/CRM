@@ -237,7 +237,7 @@ class _AccountEditViewState extends State<AccountEditView> {
         Row(
           children: [
             Expanded(
-              flex: 5,
+              flex: 4,
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: 16, right: 8, bottom: 16, top: 8),
@@ -248,14 +248,14 @@ class _AccountEditViewState extends State<AccountEditView> {
                       borderRadius: BorderRadius.circular(2),
                       child: Image.network(
                         account.cus_logo,
-                        height: 160,
+                        height: 105,
                         fit: BoxFit.contain,
                         color: Colors.grey.shade100,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.network(
                             'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
-                            // width: MediaQuery.of(context).size.width * 0.2,
-                            height: 160,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            height: 105,
                             fit: BoxFit.contain,
                             color: Colors.grey.shade100,
                           );
@@ -266,12 +266,13 @@ class _AccountEditViewState extends State<AccountEditView> {
                       borderRadius: BorderRadius.circular(2),
                       child: Image.network(
                         account.cus_logo,
-                        height: 150,
+                        height: 100,
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.network(
                             'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
-                            height: 150,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            height: 100,
                             fit: BoxFit.contain,
                           );
                         },
@@ -289,18 +290,6 @@ class _AccountEditViewState extends State<AccountEditView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      account.owner_name,
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 20,
-                        color: Colors.grey.shade800,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      maxLines: 10,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 2),
-                    Text(
                       account.cus_code,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -312,7 +301,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      account.account_name,
+                      account.account_name_en,
                       style: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14,
@@ -535,7 +524,7 @@ class _AccountEditViewState extends State<AccountEditView> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

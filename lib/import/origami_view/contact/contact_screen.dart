@@ -47,8 +47,11 @@ class _ContactScreenState extends State<ContactScreen> {
     if (_isFirstTime) _isFirstTime = false;
     newContacts = await fetchModelContact();
     // กรอง ID ที่ยังไม่มีใน contactList
-    final existingIds = contactList.map((c) => c.cus_cont_id).toSet(); // สมมุติว่า c.id คือ cus_cont_id
-    final uniqueNewContacts = newContacts.where((c) => !existingIds.contains(c.cus_cont_id)).toList();
+    final existingIds = contactList
+        .map((c) => c.cus_cont_id)
+        .toSet(); // สมมุติว่า c.id คือ cus_cont_id
+    final uniqueNewContacts =
+        newContacts.where((c) => !existingIds.contains(c.cus_cont_id)).toList();
 
     contactList.addAll(uniqueNewContacts);
     // contactList.sort((a, b) => b.cus_cont_id.compareTo(a.cus_cont_id)); // ถ้าใช้ DateTime
@@ -65,9 +68,18 @@ class _ContactScreenState extends State<ContactScreen> {
 
     setState(() {
       filteredContactList = contactList.where((contact) {
-        final name = contact.cus_name.toLowerCase(); // หรือ contact.cus_cont_name
-        final nick = contact.cus_cont_nick.toLowerCase(); // หรือ contact.cus_cont_name
-        return name.contains(query) || nick.contains(query);
+        final name =
+            contact.cont_name.toLowerCase(); // หรือ contact.cus_cont_name
+        final nick =
+            contact.cus_cont_nick.toLowerCase(); // หรือ contact.cus_cont_name
+        final tel =
+            contact.cont_mobile.toLowerCase(); // หรือ contact.cus_cont_name
+        final mail =
+            contact.cont_email.toLowerCase(); // หรือ contact.cus_cont_name
+        return name.contains(query) ||
+            nick.contains(query) ||
+            tel.contains(query) ||
+            mail.contains(query);
       }).toList();
     });
   }
@@ -110,7 +122,6 @@ class _ContactScreenState extends State<ContactScreen> {
                   MaterialPageRoute(
                     builder: (context) => ContactAddView(
                       employee: widget.employee,
-                      Authorization: authorization,
                     ),
                   ),
                 ).then((value) {
@@ -212,9 +223,7 @@ class _ContactScreenState extends State<ContactScreen> {
                 ),
                 borderRadius: BorderRadius.circular(50),
               ),
-
             ),
-
           ),
         ));
   }
@@ -244,13 +253,19 @@ class _ContactScreenState extends State<ContactScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(height: 12, width: double.infinity, color: Colors.white),
+                          Container(
+                              height: 12,
+                              width: double.infinity,
+                              color: Colors.white),
                           SizedBox(height: 5),
-                          Container(height: 12, width: 100, color: Colors.white),
+                          Container(
+                              height: 12, width: 100, color: Colors.white),
                           SizedBox(height: 5),
-                          Container(height: 12, width: 150, color: Colors.white),
+                          Container(
+                              height: 12, width: 150, color: Colors.white),
                           SizedBox(height: 5),
-                          Container(height: 12, width: 120, color: Colors.white),
+                          Container(
+                              height: 12, width: 120, color: Colors.white),
                         ],
                       ),
                     ),
@@ -273,47 +288,47 @@ class _ContactScreenState extends State<ContactScreen> {
           // filteredContactList.sort(
           //         (a, b) => b.cus_cont_id.compareTo(a.cus_cont_id));
           ModelContact contact = filteredContactList[index];
+          print('cus_cont_photo cus_cont_photo ${contact.cus_cont_photo}');
           return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ContactView(
-                      employee: widget.employee,
-                      contact: contact,
-                    ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ContactView(
+                    employee: widget.employee,
+                    contact: contact,
                   ),
-                );
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 8.0),
-                                  child: Text(
-                                    contact.cus_name,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 12,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
+                ),
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                contact.cus_name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  color: Color(0xFF555555),
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8.0),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Center(
                                 child: Text(
                                   contact.cont_type,
                                   maxLines: 1,
@@ -321,136 +336,137 @@ class _ContactScreenState extends State<ContactScreen> {
                                   style: TextStyle(
                                     fontFamily: 'Arial',
                                     fontSize: 12,
-                                    color: Color(0xFF555555),
+                                    color: Colors.grey,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 100,
-                          child: Image.network(
-                            contact.cus_cont_photo,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.network(
-                                'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        child: Image.network(
+                          contact.cus_cont_photo,
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.network(
+                              'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
-                        const SizedBox(
-                          width: 10,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (contact.cont_name != '' &&
+                                contact.cus_cont_nick == '')
+                              Text(
+                                contact.cont_name,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  color: Color(0xFFFF9900),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            else if (contact.cont_name == '' &&
+                                contact.cus_cont_nick != '')
+                              Text(
+                                contact.cus_cont_nick,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  color: Color(0xFFFF9900),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            else if (contact.cont_name != '' &&
+                                contact.cus_cont_nick != '')
+                              Text(
+                                '${contact.cont_name} (${contact.cus_cont_nick})',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  color: Color(0xFFFF9900),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Gender : ${(contact.gender_name == '') ? 'ไม่ระบุ' : contact.gender_name}',
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            // Text(
+                            //   'Birthday : ${(contact.cont_birthday == '') ? 'ไม่ระบุ' : contact.cont_birthday}',
+                            //   maxLines: 1,
+                            //   style: TextStyle(
+                            //     fontFamily: 'Arial',
+                            //     fontSize: 12,
+                            //     color: Colors.grey,
+                            //     fontWeight: FontWeight.w500,
+                            //   ),
+                            // ),
+                            // SizedBox(height: 5),
+                            Text(
+                              'Tel : ${_telView(contact)}',
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Email : ${contact.cont_email}',
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (contact.cont_name != '' &&
-                                  contact.cus_cont_nick == '')
-                                Text(
-                                  contact.cont_name,
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 14,
-                                    color: Color(0xFFFF9900),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              else if (contact.cont_name == '' &&
-                                  contact.cus_cont_nick != '')
-                                Text(
-                                  contact.cus_cont_nick,
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 14,
-                                    color: Color(0xFFFF9900),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              else if (contact.cont_name != '' &&
-                                    contact.cus_cont_nick != '')
-                                  Text(
-                                    '${contact.cont_name} (${contact.cus_cont_nick})',
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14,
-                                      color: Color(0xFFFF9900),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                              SizedBox(height: 5),
-                              Text(
-                                'Gender : ${(contact.gender_name == '') ? 'ไม่ระบุ' : contact.gender_name}',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                'Birthday : ${(contact.cont_birthday == '') ? 'ไม่ระบุ' : contact.cont_birthday}',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                'Tel : ${_telView(contact)}',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                'Email : ${contact.cont_email}',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Divider(color: Colors.grey),
-                ],
-              ), // <-- โค้ดเดิมของคุณที่แสดงข้อมูลจริง
+                ),
+                Divider(color: Colors.grey),
+              ],
+            ), // <-- โค้ดเดิมของคุณที่แสดงข้อมูลจริง
           );
         },
       ),
@@ -463,7 +479,8 @@ class _ContactScreenState extends State<ContactScreen> {
       child: ListView.builder(
           controller: _scrollController,
           itemCount: contactList.length,
-          itemBuilder: (context, index) {;
+          itemBuilder: (context, index) {
+            ;
             final contact = contactList[index];
 
             // print('ContactScreen.length : ${ContactCallScreen.length}');
@@ -659,12 +676,11 @@ class _ContactScreenState extends State<ContactScreen> {
   int indexItems = 0;
   List<ModelContact> newContacts = [];
   Future<List<ModelContact>> fetchModelContact() async {
-    final uri = Uri.parse(
-        "$hostDev/api/origami/crm/contact/list-contact.php");
+    final uri = Uri.parse("$hostDev/api/origami/crm/contact/list-contact.php");
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $authorization'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -681,8 +697,8 @@ class _ContactScreenState extends State<ContactScreen> {
             .map((json) => ModelContact.fromJson(json))
             .where((contact) {
           // กรอง id ที่ซ้ำ
-          return !contactList.any(
-                  (existing) => existing.cus_cont_id == contact.cus_cont_id);
+          return !contactList
+              .any((existing) => existing.cus_cont_id == contact.cus_cont_id);
         }).toList();
 
         setState(() {
@@ -698,17 +714,16 @@ class _ContactScreenState extends State<ContactScreen> {
           }
         });
 
-
         return newContacts;
       } else {
-        throw Exception('Failed to load data, status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load data, status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching data: $e');
       return []; // หรือ throw ก็ได้ ขึ้นอยู่กับว่าอยาก handle ยังไง
     }
   }
-
 
   // Future<void> fetchModelContactCall() async {
   //   final uri = Uri.parse(
@@ -758,7 +773,6 @@ class _ContactScreenState extends State<ContactScreen> {
   //     // handle error (e.g., show a message to the user)
   //   }
   // }
-
 }
 
 class ModelContact {
@@ -769,6 +783,8 @@ class ModelContact {
   final String contact_pin;
   final String create_date;
   final String cont_name;
+  final String cus_cont_name;
+  final String cus_cont_surname;
   final String cus_cont_nick;
   final String cont_birthday;
   final String cont_age;
@@ -803,6 +819,8 @@ class ModelContact {
     required this.contact_pin,
     required this.create_date,
     required this.cont_name,
+    required this.cus_cont_name,
+    required this.cus_cont_surname,
     required this.cus_cont_nick,
     required this.cont_birthday,
     required this.cont_age,
@@ -839,6 +857,8 @@ class ModelContact {
       contact_pin: json['contact_pin'] ?? '',
       create_date: json['create_date'] ?? '',
       cont_name: json['cont_name'] ?? '',
+      cus_cont_name: json['cus_cont_name'] ?? '',
+      cus_cont_surname: json['cus_cont_surname'] ?? '',
       cus_cont_nick: json['cus_cont_nick'] ?? '',
       cont_birthday: json['cont_birthday'] ?? '',
       cont_age: json['cont_age'] ?? '',

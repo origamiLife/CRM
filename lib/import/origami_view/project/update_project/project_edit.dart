@@ -26,7 +26,6 @@ class _ProjectEditState extends State<ProjectEdit> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _contactController = TextEditingController();
   TextEditingController _locationController = TextEditingController();
-  TextEditingController _searchController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
   LatLng? _selectedLocation; // สำหรับเก็บตำแหน่งที่เลือก
   String _search = '';
@@ -53,6 +52,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     _descriptionController.dispose();
     _contactController.dispose();
     _locationController.dispose();
+    dropdownSearchController.dispose();
   }
 
   _fetchGetData(ModelProject project) {
@@ -168,7 +168,7 @@ class _ProjectEditState extends State<ProjectEdit> {
             child: Row(
               children: [
                 Text(
-                  'DONE',
+                  'SAVE',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -686,7 +686,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     Uri.parse("$hostDev/api/origami/crm/project/component/contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'cus_cont_id': cont_id,
@@ -714,7 +714,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     Uri.parse("$hostDev/api/origami/crm/project/component/account.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'cus_id': account_id,
@@ -740,7 +740,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     Uri.parse("$hostDev/api/origami/crm/project/component/type.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -762,21 +762,18 @@ class _ProjectEditState extends State<ProjectEdit> {
   String source_id = '';
   Future<void> _fetchSource() async {
     final uri = Uri.parse(
-        '$hostDev/api/origami/crm/project/component/source.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/source.php');
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
-          'index': ''
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['source_data'];
+        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
         setState(() {
           sourceList =
               dataJson.map((json) => SourceData.fromJson(json)).toList();
@@ -798,11 +795,11 @@ class _ProjectEditState extends State<ProjectEdit> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'Authorization': token,
           'index': ''
         },
       );
@@ -830,11 +827,11 @@ class _ProjectEditState extends State<ProjectEdit> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'Authorization': token,
           'index': ''
         },
       );
@@ -862,7 +859,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
         },
@@ -887,15 +884,15 @@ class _ProjectEditState extends State<ProjectEdit> {
   String sub_status_id = '';
   Future<void> _fetchSubStatus() async {
     final uri = Uri.parse(
-        '$host/api/origami/crm/project/component/substatus.php?search=$_search');
+        '$hostDev/api/origami/crm/project/component/substatus.php?search=$_search');
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'Authorization': token,
           'index': ''
         },
       );
@@ -919,7 +916,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     final uri = Uri.parse("$hostDev/api/origami/crm/project/update_project.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -944,6 +941,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     if (response.statusCode == 200) {
       // final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final jsonResponse = jsonDecode(response.body);
+      print('jsonDecode(response.body) : $jsonResponse');
       final message = jsonResponse['message'];
       if(jsonResponse['status'] != 'error'){
         Navigator.pushReplacement(
@@ -981,8 +979,7 @@ class _ProjectEditState extends State<ProjectEdit> {
   String project_support_name = '';
   List<ProjectSupportData> projectSupportList = [
     ProjectSupportData(project_support_id: '0', project_support_name: 'Internal'),
-    ProjectSupportData(project_support_id: '1', project_support_name: 'Support internal'),
-    ProjectSupportData(project_support_id: '2', project_support_name: 'External'),
+    ProjectSupportData(project_support_id: '1', project_support_name: 'External'),
   ];
 
   ProjectSaleData? selectedSaleData;

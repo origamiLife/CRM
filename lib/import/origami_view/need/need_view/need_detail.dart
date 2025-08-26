@@ -20,13 +20,11 @@ class NeedDetail extends StatefulWidget {
     this.needTypeItem,
     required this.employee,
     required this.request_id,
-    required this.Authorization,
     // this.approvelList,
   });
   final NeedTypeItemRespond? needTypeItem;
   final Employee employee;
   final String request_id;
-  final String Authorization;
   // final ApprovelData? approvelList;
 
   @override
@@ -856,7 +854,6 @@ class _NeedDetailState extends State<NeedDetail> {
               builder: (context) => MiniProject(
                 callback: (String value) => editprojectText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
                 callbackId: (String value) => projectId = value,
               ),
             ),
@@ -881,7 +878,6 @@ class _NeedDetailState extends State<NeedDetail> {
               builder: (context) => MiniDepartment(
                 callback: (String value) => editDepartmentText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
                 callbackId: (String value) => departmentId = value,
               ),
             ),
@@ -906,7 +902,7 @@ class _NeedDetailState extends State<NeedDetail> {
               builder: (context) => MiniDivision(
                 callback: (String value) => editDivisionText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
+                
                 callbackId: (String value) => divisionId = value,
               ),
             ),
@@ -931,7 +927,7 @@ class _NeedDetailState extends State<NeedDetail> {
               builder: (context) => MiniEmployee(
                 callback: (String value) => editEmployeeText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
+                
                 callbackId: (String value) => employeeId = value,
               ),
             ),
@@ -956,7 +952,7 @@ class _NeedDetailState extends State<NeedDetail> {
               builder: (context) => MiniAccount(
                 callback: (String value) => editAccountText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
+                
                 callbackId: (String value) => accountId = value,
               ),
             ),
@@ -981,7 +977,7 @@ class _NeedDetailState extends State<NeedDetail> {
               builder: (context) => MiniAsset(
                 callback: (String value) => editAssetText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
+                
                 callbackId: (String value) => assetId = value,
               ),
             ),
@@ -1006,7 +1002,7 @@ class _NeedDetailState extends State<NeedDetail> {
               builder: (context) => MiniContact(
                 callback: (String value) => editContactText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
+                
                 callbackId: (String value) => contactId = value,
               ),
             ),
@@ -1032,7 +1028,7 @@ class _NeedDetailState extends State<NeedDetail> {
                 callbackID: (String value) => selectItemId = value,
                 callbackNAME: (String value) => edititemText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
+                
                 Item_type_id: widget.needTypeItem!.type_id ?? '',
               ),
             ),
@@ -1059,7 +1055,7 @@ class _NeedDetailState extends State<NeedDetail> {
                 callbackName: (String value) => unitText = editunitText = value,
                 callbackId: (String value) => editunit_id = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
+                
               ),
             ),
           );
@@ -2112,11 +2108,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2158,11 +2154,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2202,11 +2198,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2246,11 +2242,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2291,11 +2287,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2336,11 +2332,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2381,11 +2377,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2427,11 +2423,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2472,11 +2468,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2516,11 +2512,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -2582,11 +2578,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'request_id': widget.request_id,
           'need_type': widget.needTypeItem!.type_id,
           'need_subject': "$_searchSubject",
@@ -2645,11 +2641,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'action_type': "$action_type",
           'need_id': "$need_id",
           'type_id': "$type_id",
@@ -2694,11 +2690,11 @@ class _NeedDetailState extends State<NeedDetail> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer ${token}'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'request_id': widget.request_id,
           // 'item_id': item_id,
           'item_sort': item_sort,

@@ -8,12 +8,12 @@ class MiniAsset extends StatefulWidget {
       required this.callback,
       required this.employee,
       required this.callbackId,
-      required this.Authorization})
+      })
       : super(key: key);
   final String Function(String) callback;
   final String Function(String) callbackId;
   final Employee employee;
-  final String Authorization;
+
   @override
   _MiniAssetState createState() => _MiniAssetState();
 }
@@ -234,11 +234,11 @@ class _MiniAssetState extends State<MiniAsset> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {

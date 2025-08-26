@@ -13,10 +13,10 @@ class NeedsView extends StatefulWidget {
   const NeedsView({
     super.key,
     required this.employee,
-    required this.Authorization,
+
   });
   final Employee employee;
-  final String Authorization;
+
   @override
   _NeedsViewState createState() => _NeedsViewState();
 }
@@ -323,7 +323,6 @@ class _NeedsViewState extends State<NeedsView> {
                 MaterialPageRoute(
                   builder: (context) => NeedDetail(
                     needTypeItem: NeedTypeItemOption[indexItem],
-                    Authorization: widget.Authorization,
                     employee: widget.employee,
                     request_id: '',
                   ),
@@ -534,7 +533,6 @@ class _NeedsViewState extends State<NeedsView> {
                                                 "All")
                                         ? NeedDetailApprove(
                                             employee: widget.employee,
-                                            Authorization: widget.Authorization,
                                             request_id: needList[indexNl]
                                                 .mny_request_id,
                                             // approvelList:needList[indexNl],
@@ -542,7 +540,6 @@ class _NeedsViewState extends State<NeedsView> {
                                         : NeedDetail(
                                             needTypeItem:
                                                 NeedTypeItemOption[indexI],
-                                            Authorization: widget.Authorization,
                                             employee: widget.employee,
                                             request_id: needList[indexNl]
                                                 .mny_request_id),
@@ -729,7 +726,6 @@ class _NeedsViewState extends State<NeedsView> {
                 callback: (String value) => editEmployeeText = value,
                 employee: widget.employee,
                 callbackId: (String value) => ownerId = value,
-                Authorization: widget.Authorization,
               ),
             ),
           );
@@ -787,7 +783,7 @@ class _NeedsViewState extends State<NeedsView> {
               builder: (context) => MiniProject(
                 callback: (String value) => editprojectText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
+                
                 callbackId: (String value) => projectId = value,
               ),
             ),
@@ -846,7 +842,7 @@ class _NeedsViewState extends State<NeedsView> {
               builder: (context) => MiniDepartment(
                 callback: (String value) => editDepartmentText = value,
                 employee: widget.employee,
-                Authorization: widget.Authorization,
+                
                 callbackId: (String value) => departmentId = value,
               ),
             ),
@@ -887,11 +883,11 @@ class _NeedsViewState extends State<NeedsView> {
     final uri = Uri.parse("$host/api/origami/announce/announce.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': token,
       },
     );
 
@@ -916,11 +912,11 @@ class _NeedsViewState extends State<NeedsView> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -952,11 +948,11 @@ class _NeedsViewState extends State<NeedsView> {
 
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': token,
       },
     );
     if (response.statusCode == 200) {
@@ -989,11 +985,11 @@ class _NeedsViewState extends State<NeedsView> {
         "$host/api/origami/need/need.php?need_type=$need_type&need_status=$need_status&search=$search");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': token,
         'start_date': firstDay,
         'end_date': lastDay,
         'filter_priority': filter_Priority,
@@ -1029,11 +1025,11 @@ class _NeedsViewState extends State<NeedsView> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -1074,11 +1070,11 @@ class _NeedsViewState extends State<NeedsView> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -1120,11 +1116,11 @@ class _NeedsViewState extends State<NeedsView> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -1167,11 +1163,11 @@ class _NeedsViewState extends State<NeedsView> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -1206,11 +1202,11 @@ class _NeedsViewState extends State<NeedsView> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'request_id': "$request_id",
         },
       );

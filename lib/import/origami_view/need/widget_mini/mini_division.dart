@@ -7,13 +7,11 @@ class MiniDivision extends StatefulWidget {
       {Key? key,
       required this.callback,
       required this.employee,
-      required this.callbackId,
-      required this.Authorization})
+      required this.callbackId})
       : super(key: key);
   final String Function(String) callback;
   final String Function(String) callbackId;
   final Employee employee;
-  final String Authorization;
   @override
   _MiniDivisionState createState() => _MiniDivisionState();
 }
@@ -237,11 +235,10 @@ class _MiniDivisionState extends State<MiniDivision> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
         },
       );
       if (response.statusCode == 200) {

@@ -27,11 +27,9 @@ class _activityAddState extends State<activityAdd> {
   TextEditingController _costController = TextEditingController();
   TextEditingController _locationController = TextEditingController();
   TextEditingController _searchfilterController = TextEditingController();
-  TextEditingController _searchController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
   LatLng? _selectedLocation; // สำหรับเก็บตำแหน่งที่เลือก
   Timer? _debounce;
-  String _search = '';
   ActivityType? selectedType;
   List<ActivityType> _modelType = [];
 
@@ -46,31 +44,18 @@ class _activityAddState extends State<activityAdd> {
     _fetchContact();
     fetchActivityStatus();
     _fetchPriority();
-
-    _typeController.addListener(() {
-      print("Current text: ${_typeController.text}");
-    });
+    if(_costController.text == ''){
+      _costController.text = '0';
+    }
     _subjectController.addListener(() {
       activity_name = _subjectController.text;
-      print("Current text: ${_subjectController.text}");
     });
     _descriptionController.addListener(() {
       description = _descriptionController.text;
-      print("Current text: ${_descriptionController.text}");
     });
     _costController.addListener(() {
       cost = _costController.text;
-      print("Current text: ${_costController.text}");
     });
-    _searchController.addListener(() {
-      _search = _searchController.text;
-      // print("Current text: ${_searchController.text}");
-    });
-    _searchfilterController.addListener(() {
-      // _addfilter = _searchfilterController.text;
-      print("Current text: ${_searchfilterController.text}");
-    });
-    // addNewContactList.add();
   }
 
   @override
@@ -80,7 +65,6 @@ class _activityAddState extends State<activityAdd> {
     _subjectController.dispose();
     _descriptionController.dispose();
     _costController.dispose();
-    _searchController.dispose();
     _debounce?.cancel();
     _searchfilterController.dispose();
   }
@@ -1212,11 +1196,11 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -1245,7 +1229,7 @@ class _activityAddState extends State<activityAdd> {
         Uri.parse("$hostDev/api/origami/crm/activity/component/project.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -1258,10 +1242,10 @@ class _activityAddState extends State<activityAdd> {
       setState(() {
         projectList =
             dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-        if (projectList.isNotEmpty && selectedProject == null) {
-          selectedProject = projectList[0];
-          project_id = selectedProject?.project_id ?? '';
-        }
+        // if (projectList.isNotEmpty && selectedProject == null) {
+        //   selectedProject = projectList[0];
+        //   project_id = selectedProject?.project_id ?? '';
+        // }
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -1276,7 +1260,7 @@ class _activityAddState extends State<activityAdd> {
         Uri.parse("$hostDev/api/origami/crm/activity/component/account.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'cus_id': account_id,
@@ -1305,7 +1289,7 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'cus_cont_id': contact_id,
@@ -1330,11 +1314,11 @@ class _activityAddState extends State<activityAdd> {
     final uri = Uri.parse("$hostDev/crm/ios_activity_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $authorization'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': authorization,
+        'Authorization': token,
         'index': '0',
       },
     );
@@ -1356,7 +1340,7 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
         },
@@ -1388,7 +1372,7 @@ class _activityAddState extends State<activityAdd> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

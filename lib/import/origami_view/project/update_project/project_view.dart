@@ -177,153 +177,309 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
   Widget _ProjectDetail(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 16),
         Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 16, right: 8, bottom: 16),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      project.owner_avatar,
-                      height: 180,
-                      fit: BoxFit.fill,
-                      color: Colors.grey.shade100,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.network(
-                          'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          fit: BoxFit.fill,
-                        );
-                      },
-                    ),
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 16, right: 8, bottom: 16, top: 8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: Image.network(
+                    project.owner_avatar,
+                    height: 100,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                        height: 100,
+                        fit: BoxFit.contain,
+                      );
+                    },
                   ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      project.owner_avatar,
-                      height: 170,
-                      fit: BoxFit.fill,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.network(
-                          'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          fit: BoxFit.fill,
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-            Flexible(
+            Expanded(
+              flex: 6,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          project.owner_name,
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 22,
-                            color: Color(0xFF555555),
-                            fontWeight: FontWeight.w700,
-                          ),
-                          maxLines: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        _buildText(project.project_code, 12, Colors.grey,
-                            FontWeight.w500),
-                        SizedBox(height: 8),
-                        Text(
-                          project.account_name,
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'Start Date : ${project.project_create} \nEnd Date : ${project.last_activity}',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          maxLines: 10,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.orange.shade100,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Icon(Icons.mail,
-                                    color: Colors.orange.shade400),
-                              ),
-                            ),
-                            Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: Icon(Icons.call,
-                                      color: Colors.red.shade400),
-                                )),
-                            Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: Icon(Icons.camera_alt,
-                                      color: Colors.grey),
-                                )),
-                            Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: Icon(Icons.location_history,
-                                      color: Colors.green.shade400),
-                                )),
-                          ],
-                        ),
+                    // Text(
+                    //   project.owner_name,
+                    //   style: TextStyle(
+                    //     fontFamily: 'Arial',
+                    //     fontSize: 22,
+                    //     color: Color(0xFF555555),
+                    //     fontWeight: FontWeight.w700,
+                    //   ),
+                    //   maxLines: 10,
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
+
+                    Text(
+                      project.account_name,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 18,
+                        color: Colors.orange,
+                        fontWeight: FontWeight.w700,
                       ),
-                    )
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4),
+                    _buildText(project.project_code, 14, Colors.grey,
+                        FontWeight.w500),
+                    SizedBox(height: 4),
+                    Text(
+                      'Start Date : ${project.project_create}',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 10,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'End Date : ${project.last_activity}',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 10,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),
             ),
-            SizedBox(width: 16)
           ],
         ),
+        Padding(
+          padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade100,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(Icons.mail, color: Colors.orange.shade400),
+                  ),
+                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          // _makePhoneCall(_telView(account));
+                          // _makePhoneCall(account.cus_tel_no);
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Icon(Icons.call, color: Colors.red.shade400),
+                      ),
+                    )),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Icon(Icons.camera_alt, color: Colors.grey),
+                    )),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Icon(Icons.location_history,
+                          color: Colors.green.shade400),
+                    )),
+              ),
+            ],
+          ),
+        ),
+        // Row(
+        //   children: [
+        //     Padding(
+        //       padding: const EdgeInsets.only(left: 16, right: 8, bottom: 16),
+        //       child: Stack(
+        //         alignment: Alignment.center,
+        //         children: [
+        //           ClipRRect(
+        //             borderRadius: BorderRadius.circular(10),
+        //             child: Image.network(
+        //               project.owner_avatar,
+        //               height: 180,
+        //               fit: BoxFit.fill,
+        //               color: Colors.grey.shade100,
+        //               errorBuilder: (context, error, stackTrace) {
+        //                 return Image.network(
+        //                   'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+        //                   width: MediaQuery.of(context).size.width * 0.2,
+        //                   fit: BoxFit.fill,
+        //                 );
+        //               },
+        //             ),
+        //           ),
+        //           ClipRRect(
+        //             borderRadius: BorderRadius.circular(10),
+        //             child: Image.network(
+        //               project.owner_avatar,
+        //               height: 170,
+        //               fit: BoxFit.fill,
+        //               errorBuilder: (context, error, stackTrace) {
+        //                 return Image.network(
+        //                   'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+        //                   width: MediaQuery.of(context).size.width * 0.2,
+        //                   fit: BoxFit.fill,
+        //                 );
+        //               },
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //     Flexible(
+        //       child: Padding(
+        //         padding: const EdgeInsets.all(8.0),
+        //         child: Column(
+        //           children: [
+        //             Column(
+        //               crossAxisAlignment: CrossAxisAlignment.start,
+        //               children: [
+        //                 Text(
+        //                   project.owner_name,
+        //                   style: TextStyle(
+        //                     fontFamily: 'Arial',
+        //                     fontSize: 22,
+        //                     color: Color(0xFF555555),
+        //                     fontWeight: FontWeight.w700,
+        //                   ),
+        //                   maxLines: 10,
+        //                   overflow: TextOverflow.ellipsis,
+        //                 ),
+        //                 _buildText(project.project_code, 12, Colors.grey,
+        //                     FontWeight.w500),
+        //                 SizedBox(height: 8),
+        //                 Text(
+        //                   project.account_name,
+        //                   style: TextStyle(
+        //                     fontFamily: 'Arial',
+        //                     fontSize: 14,
+        //                     color: Colors.grey,
+        //                     fontWeight: FontWeight.w500,
+        //                   ),
+        //                   maxLines: 10,
+        //                   overflow: TextOverflow.ellipsis,
+        //                 ),
+        //                 Text(
+        //                   'Start Date : ${project.project_create} \nEnd Date : ${project.last_activity}',
+        //                   style: TextStyle(
+        //                     fontFamily: 'Arial',
+        //                     fontSize: 14,
+        //                     color: Colors.grey,
+        //                     fontWeight: FontWeight.w500,
+        //                   ),
+        //                   maxLines: 10,
+        //                   overflow: TextOverflow.ellipsis,
+        //                 ),
+        //               ],
+        //             ),
+        //             Padding(
+        //               padding: const EdgeInsets.only(top: 16),
+        //               child: Padding(
+        //                 padding: const EdgeInsets.all(8.0),
+        //                 child: Row(
+        //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //                   children: [
+        //                     Container(
+        //                       decoration: BoxDecoration(
+        //                         color: Colors.orange.shade100,
+        //                         borderRadius: BorderRadius.circular(10),
+        //                       ),
+        //                       child: Padding(
+        //                         padding: const EdgeInsets.all(4),
+        //                         child: Icon(Icons.mail,
+        //                             color: Colors.orange.shade400),
+        //                       ),
+        //                     ),
+        //                     Container(
+        //                         decoration: BoxDecoration(
+        //                           color: Colors.orange.shade100,
+        //                           borderRadius: BorderRadius.circular(10),
+        //                         ),
+        //                         child: Padding(
+        //                           padding: const EdgeInsets.all(4),
+        //                           child: Icon(Icons.call,
+        //                               color: Colors.red.shade400),
+        //                         )),
+        //                     Container(
+        //                         decoration: BoxDecoration(
+        //                           color: Colors.orange.shade100,
+        //                           borderRadius: BorderRadius.circular(10),
+        //                         ),
+        //                         child: Padding(
+        //                           padding: const EdgeInsets.all(4),
+        //                           child: Icon(Icons.camera_alt,
+        //                               color: Colors.grey),
+        //                         )),
+        //                     Container(
+        //                         decoration: BoxDecoration(
+        //                           color: Colors.orange.shade100,
+        //                           borderRadius: BorderRadius.circular(10),
+        //                         ),
+        //                         child: Padding(
+        //                           padding: const EdgeInsets.all(4),
+        //                           child: Icon(Icons.location_history,
+        //                               color: Colors.green.shade400),
+        //                         )),
+        //                   ],
+        //                 ),
+        //               ),
+        //             )
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //     SizedBox(width: 16)
+        //   ],
+        // ),
         Flexible(
           child: Container(
             color: Colors.white,
@@ -333,7 +489,6 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                 padding: EdgeInsets.zero,
                 children: [
                   SizedBox(height: 22),
-                  _subData('Main Owner', project.owner_name),
                   _subData('Contact', project.contact_name),
                   _subData('Account', project.account_name),
                   _subData('Type', project.project_type_name),
@@ -510,7 +665,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         Uri.parse("$hostDev/api/origami/crm/project/delete_project.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $authorization'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,

@@ -609,7 +609,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '${project.owner_name}',
+                                        '${project.project_sale_nonsale_name}',
                                         maxLines: 1,
                                         style: TextStyle(
                                           fontFamily: 'Arial',
@@ -749,7 +749,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
       Uri.parse("$hostDev/api/origami/crm/project/get.php?search=${_search}");
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -812,7 +812,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'idemp': widget.employee.emp_id,
@@ -837,7 +837,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
     final uri = Uri.parse("$hostDev/api/origami/crm/project/delete_project.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $authorization'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,

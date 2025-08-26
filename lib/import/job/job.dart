@@ -3,9 +3,12 @@ import '../import.dart';
 import 'information_job.dart';
 
 class JobPage extends StatefulWidget {
-  JobPage({super.key, required this.employee, required this.Authorization, required this.compid, required this.empid});
+  JobPage(
+      {super.key,
+      required this.employee,
+      required this.compid,
+      required this.empid});
   final Employee employee;
-  final String Authorization;
   final String compid;
   final String empid;
   @override
@@ -93,7 +96,7 @@ class _JobPageState extends State<JobPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
-        (widget.compid == '2')?'Trandar':'Allable',
+          (widget.compid == '2') ? 'Trandar' : 'Allable',
           style: GoogleFonts.openSans(
             fontSize: 22,
             color: Colors.orange,
@@ -308,7 +311,7 @@ class _JobPageState extends State<JobPage> {
     final uri = Uri.parse('$host/api/origami/jobs/personal');
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.compid,
         'emp_id': widget.empid,

@@ -88,7 +88,7 @@ class _ProjectOtherState extends State<ProjectOther> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(50),
                             child: Image.network(
-                              '$host/uploads/employee/5/employee/19777.jpg?v=1729754401',
+                              '$hostDev/uploads/employee/5/employee/19777.jpg?v=1729754401',
                               fit: BoxFit.fill,
                             ),
                           ),

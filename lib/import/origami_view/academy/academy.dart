@@ -7,10 +7,9 @@ import 'challeng/challenge_menu.dart';
 class AcademyPage extends StatefulWidget {
   AcademyPage({
     super.key,
-    required this.employee, required this.Authorization, required this.page,
+    required this.employee, required this.page,
   });
   final Employee employee;
-  final String Authorization;
   final String page;
   @override
   _AcademyPageState createState() => _AcademyPageState();
@@ -285,7 +284,7 @@ class _AcademyPageState extends State<AcademyPage> {
                     builder: (context) => EvaluateModule(
                       employee: widget.employee,
                       academy: academyItem,
-                      Authorization: widget.Authorization,
+                      
                       callback: () {
                         setState(() {
                           academyId = academyItem.academy_id;
@@ -403,7 +402,7 @@ class _AcademyPageState extends State<AcademyPage> {
                   builder: (context) => EvaluateModule(
                     employee: widget.employee,
                     academy: academyItem,
-                    Authorization: widget.Authorization,
+                    
                     callback: () {
                       setState(() {
                         academyId = academyItem.academy_id;
@@ -596,11 +595,11 @@ class _AcademyPageState extends State<AcademyPage> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'pages': page,
           'search': search,
         },
@@ -632,7 +631,7 @@ class _AcademyPageState extends State<AcademyPage> {
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'academy_id': academyId,
           'academy_type': academyType,
         },

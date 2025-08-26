@@ -6,11 +6,11 @@ class ChatBubbles extends StatefulWidget {
   const ChatBubbles({
     Key? key,
     required this.employee,
-    required this.Authorization,
+
     required this.pageInput,
   }) : super(key: key);
   final Employee employee;
-  final String Authorization;
+
   final String pageInput;
 
   @override

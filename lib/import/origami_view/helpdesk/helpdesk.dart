@@ -11,11 +11,11 @@ class HelpDeskScreen extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-    required this.Authorization,
+
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
-  final String Authorization;
+
   @override
   _HelpDeskScreenState createState() => _HelpDeskScreenState();
 }
@@ -354,7 +354,6 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                                   MaterialPageRoute(
                                     builder: (context) => ChatBubbles(
                                       employee: widget.employee,
-                                      Authorization: widget.Authorization,
                                       pageInput:
                                           '${ticket.ticket_account_category}',
                                       // approvelList:ApprovelList[indexA],

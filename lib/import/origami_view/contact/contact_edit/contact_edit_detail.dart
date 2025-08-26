@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path/path.dart' as p;
 
+import '../../need/need_view/need_detail.dart';
 import '../contact_add/contact_add_detail.dart';
 
 class ContactEditDetail extends StatefulWidget {
@@ -39,8 +40,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   }
 
   void _getUpdateText() {
-    _firstnameController.text = widget.contact.firstname;
-    _lastnameController.text = widget.contact.lastname;
+    _firstnameController.text = widget.contact.cus_cont_name;
+    _lastnameController.text = widget.contact.cus_cont_surname;
     _nicknameController.text = widget.contact.cus_cont_nick;
     _mobileController.text = _telView(widget.contact);
     _emailController.text = widget.contact.cont_email;
@@ -88,6 +89,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     _mobileController.dispose();
     _emailController.dispose();
     _positionController.dispose();
+    dropdownSearchController.dispose();
     PaintingBinding.instance.imageCache.clear();
     super.dispose();
   }
@@ -161,7 +163,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           ),
         ],
       ),
-      body: SafeArea(child:_getDetailWidget(widget.contact)),
+      body: SafeArea(child: _getDetailWidget(widget.contact)),
       // bottomNavigationBar: BottomBarDefault(
       //   items: items,
       //   iconSize: 18,
@@ -212,11 +214,8 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               ),
             ),
             SizedBox(height: 8),
-            _lineWidget(),
             _showImagePhoto(contact),
-            SizedBox(height: 8),
-
-            SizedBox(height: 8),
+            SizedBox(height: 16),
             _buildDropdown<groupnameContact>(
               label: 'Title',
               items: groupnameList,
@@ -228,7 +227,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                   cont_group_id = value?.cont_group_id ?? '';
                 });
               },
-              hint: selectedGroupname?.cont_group_name??'นาย',
+              hint: selectedGroupname?.cont_group_name ?? 'นาย',
             ),
             _textController(
                 'Firstname', _firstnameController, false, Icons.numbers),
@@ -274,13 +273,24 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
               onChanged: (value) {
                 setState(() {
                   selectedEmotion = value;
-                  emo_icon_id = value?.emo_icon_id ?? '';
-
-                  final fileName = emo_icon_id.split('/').last;
-                  cont_emo = '../images/$fileName';
+                  cont_emo = value?.emo_icon_path ?? '';
                 });
               },
-              hint: contact.cus_cont_emo,
+              img: cont_emo,
+              hint: emo_icon_title,
+            ),
+            _buildDropdown<AccountContact>(
+              label: 'Account',
+              items: accountList,
+              selectedValue: selectedAccount,
+              getLabel: (item) => item.cus_name_en ?? '',
+              onChanged: (value) {
+                setState(() {
+                  selectedAccount = value;
+                  account_id = value?.cus_id ?? '';
+                });
+              },
+              hint: contact.cus_name,
             ),
             _textController('Email', _emailController, false, Icons.numbers),
             _textController(
@@ -385,6 +395,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   Widget _buildDropdown<T>({
     required String label,
     String Function(T)? image,
+    String? img,
     required String hint,
     required List<T> items,
     required T? selectedValue,
@@ -418,14 +429,42 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             child: DropdownButtonHideUnderline(
               child: DropdownButton2<T>(
                 isExpanded: true,
-                hint: Text(
-                  hint,
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555),
-                  ),
-                ),
+                hint: (img == null)
+                    ? Text(
+                        hint,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555),
+                        ),
+                      )
+                    : Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Image.network(
+                              img ?? '',
+                              width: 24,
+                              height: 24,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                null,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              hint,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14,
+                                color: Color(0xFF555555),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                 value: selectedValue,
                 items: items.map((item) {
                   final imageUrl = image?.call(item);
@@ -540,16 +579,12 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       final XFile? image = await _picker.pickImage(source: source);
       if (image == null) return;
       final file = File(image.path);
+      final imageBytes = await file.readAsBytes();
+      final base64String = base64Encode(imageBytes);
 
-      // final directory = await getApplicationDocumentsDirectory();
-      // final filePath = path.join(
-      //   directory.path,
-      //   '${DateTime.now().millisecondsSinceEpoch}',
-      // );
-      // print('file=> $file');
-      // print('filePath=> $filePath');
-      // print('image=> $image');
-      // print('image.path=> ${image.path}');
+      setState(() {
+        _base64Image = base64String;
+      });
 
       cus_cont_photo = p.basename(image.path);
       print(cus_cont_photo); // best-new-cars-2026.webp
@@ -618,18 +653,17 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           )
         : Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: Container(
-              // height: 48,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                  width: 1.0,
+            child: GestureDetector(
+              onTap: _imageDialog,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey.shade300,
+                    width: 1.0,
+                  ),
                 ),
-              ),
-              child: GestureDetector(
-                onTap: _imageDialog,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Container(
@@ -750,7 +784,6 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
 
   String gender_id = '';
   String cont_group_id = '';
-  String emo_icon_id = '';
   String role_id = '';
 
   Future<void> _getAPI() async {
@@ -758,6 +791,40 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     await _fetchGroupname();
     await _fetchEmotionContact();
     await _fetchRole();
+    await _fetchAccount();
+  }
+
+  AccountContact? selectedAccount;
+  List<AccountContact> accountList = [];
+  String account_id = '';
+  String account_name = '';
+  Future<void> _fetchAccount() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/contact/component/account.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $token'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        accountList =
+            dataJson.map((json) => AccountContact.fromJson(json)).toList();
+        // if (accountList.isNotEmpty && selectedAccount == null) {
+        //   selectedAccount = accountList[0];
+        //   account_id = selectedAccount?.cus_id??'';
+        //   account_name = selectedAccount?.cus_name_en??'';
+        //   print('print account_name $account_name');
+        // }
+      });
+    } else {
+      throw Exception('Failed to load instructors');
+    }
   }
 
   genderContact? selectedGender;
@@ -767,7 +834,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/gender.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -779,9 +846,9 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       setState(() {
         genderList =
             dataJson.map((json) => genderContact.fromJson(json)).toList();
-        if (widget.contact.gender_name == '' && selectedGender == null) {
-          selectedGender = genderList[0];
-        }
+        // if (widget.contact.gender_name == '' && selectedGender == null) {
+        //   selectedGender = genderList[0];
+        // }
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -795,7 +862,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/group_name.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -807,9 +874,9 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       setState(() {
         groupnameList =
             dataJson.map((json) => groupnameContact.fromJson(json)).toList();
-        if (widget.contact.gender_name == '' && selectedGroupname == null) {
-          selectedGroupname = groupnameList[0];
-        }
+        // if (widget.contact.gender_name == '' && selectedGroupname == null) {
+        //   selectedGroupname = groupnameList[0];
+        // }
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -818,15 +885,15 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
 
   emotionContact? selectedEmotion;
   List<emotionContact> emotionList = [];
+  String emo_icon_title = '';
   Future<void> _fetchEmotionContact() async {
     final uri =
         Uri.parse("$hostDev/api/origami/crm/contact/component/emotion.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
       },
     );
     if (response.statusCode == 200) {
@@ -835,8 +902,19 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       setState(() {
         emotionList =
             dataJson.map((json) => emotionContact.fromJson(json)).toList();
-        if (widget.contact.cus_cont_emo == '' || selectedEmotion == null) {
-          selectedEmotion = emotionList[0];
+        if (emotionList.isNotEmpty && selectedEmotion == null) {
+          // selectedEmotion = emotionList[0];
+          for (int i = 0; i < emotionList.length; i++) {
+            print(
+                '${widget.contact.cus_cont_emo} ==== ${emotionList[i].emo_icon_path}');
+            if (widget.contact.cus_cont_emo == emotionList[i].emo_icon_path) {
+              cont_emo = emotionList[i].emo_icon_path;
+              emo_icon_title = emotionList[i].emo_icon_title;
+            } else {
+              selectedEmotion = emotionList[0];
+              cont_emo = selectedEmotion?.emo_icon_path ?? '';
+            }
+          }
         }
       });
     } else {
@@ -851,10 +929,10 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/role.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
-        'comp_id': '2', //widget.employee.comp_id,
-        'emp_id': '2', //widget.employee.emp_id,
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
       },
     );
     if (response.statusCode == 200) {
@@ -862,9 +940,9 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       setState(() {
         roleList = dataJson.map((json) => roleContact.fromJson(json)).toList();
-        if (widget.contact.role_name == '' && selectedRole == null) {
-          selectedRole = roleList[0];
-        }
+        // if (widget.contact.role_name == '' && selectedRole == null) {
+        //   selectedRole = roleList[0];
+        // }
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -874,31 +952,32 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   String cus_id = '';
   String cont_emo = '';
   Future<void> _fetchUpdateContact() async {
-    final uri = Uri.parse("$hostDev/api/origami/crm/contact/update_contact.php");
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/contact/update_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
         'cus_create_user': widget.employee.emp_id,
         'cus_cont_id': widget.contact.cus_cont_id,
-        // 'cus_id': cus_id, //account
+        'cus_id': account_id, //account
         'cont_group_id': cont_group_id,
         'cus_cont_name': _firstnameController.text.trim(),
         'cus_cont_surname': _lastnameController.text.trim(),
         'cus_cont_nick': _nicknameController.text.trim(),
         'gender_id': gender_id,
         'cus_cont_email': _emailController.text.trim(),
-        'cus_cont_mob':  _mobileController.text.trim(),
+        'cus_cont_mob': _mobileController.text.trim(),
         'cus_posi_id': _positionController.text.trim(),
         'cont_project_role_id': role_id,
         'cus_cont_emo': cont_emo,
-        'cus_cont_photo': cus_cont_photo,
       },
     );
 
     if (response.statusCode == 200) {
-      // final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      await updateContactPhoto();
       final jsonResponse = jsonDecode(response.body);
       final message = jsonResponse['message'];
       Navigator.pushReplacement(
@@ -914,7 +993,29 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     }
   }
 
-  void showSnackBar(String message){
+  Future<void> updateContactPhoto() async {
+    print("cus_cont_photo_name $cus_cont_photo");
+    print("base64 prefix: ${_base64Image.substring(0, 50)}...");
+    final response = await http.post(
+      Uri.parse("$hostDev/api/origami/crm/contact/save_contact_photo.php"),
+      headers: {'Authorization': 'Bearer $token'},
+      body: {
+        "cus_cont_id": widget.contact.cus_cont_id,
+        "emp_id": widget.employee.emp_id,
+        "cus_cont_photo_base64": _base64Image,
+        "cus_cont_photo_name": cus_cont_photo,
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final message = jsonResponse['message'];
+      print("cus_cont_photo_name message ///// $message");
+    } else {
+      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+    }
+  }
+
+  void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

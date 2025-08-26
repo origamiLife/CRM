@@ -8,11 +8,10 @@ class Certification extends StatefulWidget {
     super.key,
     required this.employee,
     required this.academy,
-    required this.Authorization,
   });
   final Employee employee;
   final AcademyRespond academy;
-  final String Authorization;
+
   @override
   _CertificationState createState() => _CertificationState();
 }
@@ -399,11 +398,11 @@ class _CertificationState extends State<Certification> {
     final uri = Uri.parse("$host/api/origami/academy/certification.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': token,
         'academy_id': widget.academy.academy_id,
         'academy_type': widget.academy.academy_type,
       },
@@ -429,7 +428,7 @@ class _CertificationState extends State<Certification> {
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'academy_id': widget.academy.academy_id,
           'academy_type': widget.academy.academy_type,
           'course_id': courseId,

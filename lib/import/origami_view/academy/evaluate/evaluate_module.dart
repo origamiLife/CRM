@@ -17,13 +17,11 @@ class EvaluateModule extends StatefulWidget {
     required this.academy,
     this.callback,
     this.selectedPage,
-    required this.Authorization,
   });
   final Employee employee;
   final AcademyRespond academy;
   final VoidCallback? callback;
   final int? selectedPage;
-  final String Authorization;
 
   @override
   _EvaluateModuleState createState() => _EvaluateModuleState();
@@ -47,11 +45,11 @@ class _EvaluateModuleState extends State<EvaluateModule>
       final uri = Uri.parse("$host/api/origami/academy/academy.php");
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'academy_id': widget.academy.academy_id,
           'academy_type': widget.academy.academy_type,
         },
@@ -444,13 +442,13 @@ class _EvaluateModuleState extends State<EvaluateModule>
         return Description(
           employee: widget.employee,
           academy: widget.academy,
-          Authorization: widget.Authorization,
+          
         );
       case 1:
         return Curriculum(
           employee: widget.employee,
           academy: widget.academy,
-          Authorization: widget.Authorization,
+          
           callback: () {
             _selectedIndex = 1;
           },
@@ -459,13 +457,13 @@ class _EvaluateModuleState extends State<EvaluateModule>
         return Instructors(
           employee: widget.employee,
           academy: widget.academy,
-          Authorization: widget.Authorization,
+          
         );
       case 3:
         return Discussion(
           employee: widget.employee,
           academy: widget.academy,
-          Authorization: widget.Authorization,
+          
         );
       // case 4:
       //   return Announcements();
@@ -473,13 +471,13 @@ class _EvaluateModuleState extends State<EvaluateModule>
         return AttachFile(
           employee: widget.employee,
           academy: widget.academy,
-          Authorization: widget.Authorization,
+          
         );
       case 5:
         return Certification(
           employee: widget.employee,
           academy: widget.academy,
-          Authorization: widget.Authorization,
+          
         );
       default:
         return Container(

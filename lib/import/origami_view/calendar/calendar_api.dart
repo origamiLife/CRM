@@ -229,7 +229,7 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
     final uri = Uri.parse("$hostDev/api/origami/crm/calendar/calendar.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $authorization'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,

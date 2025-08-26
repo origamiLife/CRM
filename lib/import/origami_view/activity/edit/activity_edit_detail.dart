@@ -228,7 +228,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                             children: [
                               _buildDropdown<ActivityType>(
                                 label: 'Type',
-                                hint: widget.activity.activity_type_name,
+                                hint: widget.activity.activity_type_name == ''?type_name:widget.activity.activity_type_name,
                                 items: _modelType,
                                 selectedValue: selectedType,
                                 getLabel: (item) => item.type_name ?? '',
@@ -276,10 +276,10 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               Container(
                                 child: _buildDropdown<ActivityContact>(
                                   label: 'Contact',
-                                  hint: contact_name,
+                                  hint: "${widget.activity.contact_name} ${widget.activity.contact_surname}",
                                   items: _modelContact,
                                   selectedValue: selectedContact,
-                                  getLabel: (item) => item.contact_first,
+                                  getLabel: (item) => "${item.contact_first} ${item.contact_last}",
                                   onChanged: (value) {
                                     setState(() {
                                       selectedContact = value;
@@ -313,7 +313,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                   hint: account_name,
                                   items: accountList,
                                   selectedValue: selectedAccount,
-                                  getLabel: (item) => item.account_name ?? '',
+                                  getLabel: (item) => item.account_name,
                                   onChanged: (value) {
                                     setState(() {
                                       selectedAccount = value;
@@ -384,7 +384,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                               SizedBox(height: 8),
                               _buildDropdown<ActivityPlace>(
                                 label: 'Place',
-                                hint: widget.activity.activity_place_type ?? '',
+                                hint: widget.activity.activity_place_type == 'out' ?'Outdoor':'Indoor',
                                 items: _modelPlace,
                                 selectedValue: selectedPlace,
                                 getLabel: (item) => item.place_name ?? '',
@@ -574,7 +574,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                           MaterialPageRoute(
                             builder: (context) => SkoopScreen(
                               employee: widget.employee,
-                              Authorization: authorization,
                               activity: widget.activity,
                             ),
                           ),
@@ -1355,7 +1354,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     Uri.parse("$hostDev/api/origami/crm/activity/component/project.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -1385,7 +1384,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     Uri.parse("$hostDev/api/origami/crm/activity/component/account.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'cus_id': account_id,
@@ -1412,7 +1411,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'cus_cont_id' : contact_id,
@@ -1445,16 +1444,17 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
 
   ActivityType? selectedType;
   List<ActivityType> _modelType = [];
+  String type_name = '';
   Future<void> fetchActivityType() async {
     final uri = Uri.parse('$hostDev/crm/ios_activity_type.php');
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $authorization'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -1463,9 +1463,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         setState(() {
           _modelType =
               dataJson.map((json) => ActivityType.fromJson(json)).toList();
-          // if (_modelType.isNotEmpty && selectedType == null) {
-          //   selectedType = _modelType[0];
-          // }
+          if (widget.activity.activity_type_name == '') {
+            selectedType = _modelType[0];
+            type_id = selectedType?.type_id??'';
+            type_name = selectedType?.type_name??'';
+          }
         });
       } else {
         throw Exception('Failed to load status data');
@@ -1482,11 +1484,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -1514,11 +1516,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': authorization,
+          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
@@ -1543,11 +1545,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     final uri = Uri.parse("$hostDev/crm/ios_activity_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': authorization,
+        'Authorization': token,
         'index': '0',
       },
     );
@@ -1647,7 +1649,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -1696,7 +1698,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $authorization'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -1864,7 +1866,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $authorization'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

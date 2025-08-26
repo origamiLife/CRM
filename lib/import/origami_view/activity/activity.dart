@@ -20,7 +20,6 @@ class ActivityScreen extends StatefulWidget {
 class _ActivityScreenState extends State<ActivityScreen> {
   TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  String _search = "";
   bool isLoading = true;
   bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
   List<GetActivity> filteredActivityList = [];
@@ -348,7 +347,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      'Type : ${activity.activity_type_name}',
+                                      "Place : ${activity.activity_place_type == 'in'?'Indoor':'Outdoor'}",
                                       maxLines: 1,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
@@ -456,13 +455,13 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 12,right: 12,top: 12),
+                        padding: const EdgeInsets.only(left: 12,right: 12,top: 16),
                         child: Text(
-                          'เลือกประเภท activity ที่ต้องการเข้าใช้งาน',
+                          'ประเภทกิจกรรม [Activity Type]',
                           style: const TextStyle(
                             fontFamily: 'Arial',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -574,19 +573,21 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.cases_rounded,
+                    Icons.accessibility_new_outlined,
                     size: 28,
                     color: Color(0xFF555555),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    type.type_name,
-                    style: TextStyle(
-                        fontFamily: 'Arial',
-                        color: Color(0xFF555555),
-                        fontWeight: FontWeight.w700),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  SizedBox(height: 16),
+                  Center(
+                    child: Text(
+                      type.type_name,
+                      style: TextStyle(
+                          fontFamily: 'Arial',
+                          color: Color(0xFF555555),
+                          fontWeight: FontWeight.w700),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   )
                 ],
               ),
@@ -602,69 +603,13 @@ class _ActivityScreenState extends State<ActivityScreen> {
   int sum = 0;
   List<GetActivity> activityList = [];
   List<GetActivity> newActivities = [];
-  // Future<List<ModelActivity>> fetchModelActivityVoid() async {
-  //   final uri = Uri.parse("$hostDev/crm/activity.php");
-  //   try {
-  //     final response = await http.post(
-  //       uri,
-  //       headers: {'Authorization': 'Bearer ${authorization}'},
-  //       body: {
-  //         'comp_id': widget.employee.comp_id,
-  //         'idemp': widget.employee.emp_id,
-  //         'index': (_search != '') ? '0' : indexItems.toString(),
-  //         'txt_search': _search,
-  //       },
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-  //       final List<dynamic> activityJson = jsonResponse['data'] ?? [];
-  //       int max = jsonResponse['max'];
-  //       sum = jsonResponse['sum'];
-  //       print('sum : $sum');
-  //
-  //       newActivities =
-  //           activityJson.map((json) => ModelActivity.fromJson(json)).toList();
-  //
-  //       setState(() {
-  //         // กรอง id ที่ซ้ำ
-  //         Set<String> seenIds = activityList.map((e) => e.activity_id).toSet();
-  //         newActivities =
-  //             newActivities.where((a) => seenIds.add(a.activity_id)).toList();
-  //
-  //         activityList.addAll(newActivities);
-  //         activityList.sort((a, b) => b.activity_id.compareTo(a.activity_id));
-  //         if (_isFirstTime) {
-  //           filteredActivityList = activityList;
-  //           _isFirstTime = false; // ป้องกันการรันซ้ำ
-  //         }
-  //         int check = indexItems + max;
-  //         if ((check - sum) >= max) {
-  //           indexItems = sum - 1;
-  //         } else {
-  //           indexItems += max;
-  //         }
-  //
-  //         isAtEnd = false; // โหลดเสร็จแล้ว
-  //       });
-  //       return newActivities;
-  //       print("Total activities: ${activityList.length}");
-  //     } else {
-  //       throw Exception(
-  //           'Failed to load data, status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching data: $e');
-  //     return [];
-  //   }
-  // }
 
   Future<List<GetActivity>> _fetchModelActivity() async {
     final uri = Uri.parse("$hostDev/api/origami/crm/activity/get_activity.php");
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $authorization'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -711,11 +656,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
     final uri = Uri.parse("$hostDev/crm/ios_activity_type.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': authorization,
+        'Authorization': token,
       },
     );
     if (response.statusCode == 200) {

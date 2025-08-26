@@ -8,11 +8,9 @@ class SkoopScreen extends StatefulWidget {
   const SkoopScreen({
     super.key,
     required this.employee,
-    required this.Authorization,
     required this.activity,
   });
   final Employee employee;
-  final String Authorization;
   final GetActivity activity;
   @override
   _SkoopScreenState createState() => _SkoopScreenState();
@@ -378,11 +376,11 @@ class _SkoopScreenState extends State<SkoopScreen> {
     final uri = Uri.parse('$hostDev/crm/ios_activity_info.php');
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': token,
         'activity_id': widget.activity.activity_id,
       },
     );
@@ -404,11 +402,11 @@ class _SkoopScreenState extends State<SkoopScreen> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'activity_id': widget.activity.activity_id,
           'skoop_location': _locationController.text.trim(),
           'skoop_lat': '',
@@ -434,7 +432,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer ${authorization}'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

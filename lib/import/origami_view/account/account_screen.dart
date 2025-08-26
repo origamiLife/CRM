@@ -293,18 +293,18 @@ class _AccountScreenState extends State<AccountScreen> {
                     child: Row(
                       children: [
                         Container(
-                          width: 100,
-                          height: 100,
+                          width: 80,
+                          height: 80,
                           child: Image.network(
                             account.cus_logo,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.contain,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.network(
                                 'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
-                                width: 100,
-                                height: 100,
+                                width: 80,
+                                height: 80,
                                 fit: BoxFit.cover,
                               );
                             },
@@ -432,7 +432,7 @@ class _AccountScreenState extends State<AccountScreen> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $authorization'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

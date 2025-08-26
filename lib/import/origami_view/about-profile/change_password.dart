@@ -4,10 +4,10 @@ import 'package:origamilift/import/import.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword(
-      {Key? key, required this.employee, required this.Authorization})
+      {Key? key, required this.employee})
       : super(key: key);
   final Employee employee;
-  final String Authorization;
+
   @override
   _ChangePasswordState createState() => _ChangePasswordState();
 }
@@ -339,7 +339,7 @@ class _ChangePasswordState extends State<ChangePassword> {
     final uri = Uri.parse("$hostDev/api/origami/change_password.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'emp_id': widget.employee.emp_id,
         'comp_id': widget.employee.comp_id,

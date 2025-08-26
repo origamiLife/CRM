@@ -8,10 +8,10 @@ import 'contact_add_owner.dart';
 class ContactAddView extends StatefulWidget {
   const ContactAddView({
     Key? key,
-    required this.employee, required this.Authorization,
+    required this.employee,
   }) : super(key: key);
   final Employee employee;
-  final String Authorization;
+
   @override
   _ContactAddViewState createState() => _ContactAddViewState();
 }
@@ -53,7 +53,7 @@ class _ContactAddViewState extends State<ContactAddView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ContactAddDetail(employee: widget.employee, Authorization: widget.Authorization),
+      body: ContactAddDetail(employee: widget.employee),
       // bottomNavigationBar: BottomBarDefault(
       //   items: items,
       //   iconSize: 18,
@@ -73,7 +73,7 @@ class _ContactAddViewState extends State<ContactAddView> {
   Widget _getContentWidget() {
     switch (_selectedIndex) {
       case 0:
-        return ContactAddDetail(employee: widget.employee, Authorization: widget.Authorization);
+        return ContactAddDetail(employee: widget.employee);
       case 1:
         return ContactAddOwner();
       default:

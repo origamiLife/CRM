@@ -11,12 +11,10 @@ class Curriculum extends StatefulWidget {
     super.key,
     required this.employee,
     required this.academy,
-    required this.Authorization,
     required this.callback,
   });
   final Employee employee;
   final AcademyRespond academy;
-  final String Authorization;
   final VoidCallback callback;
   @override
   _CurriculumState createState() => _CurriculumState();
@@ -493,7 +491,6 @@ class _CurriculumState extends State<Curriculum> {
         videoUrl: url,
         employee: widget.employee,
         academy: widget.academy,
-        Authorization: widget.Authorization,
         topic: topic,
         learning_seq: learningSeq,
         courseId: courseId,
@@ -503,7 +500,6 @@ class _CurriculumState extends State<Curriculum> {
         videoId: url,
         employee: widget.employee,
         academy: widget.academy,
-        Authorization: widget.Authorization,
         topic: topic,
         learning_seq: learningSeq,
         courseId: courseId,
@@ -532,7 +528,7 @@ class _CurriculumState extends State<Curriculum> {
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': widget.Authorization,
+          'Authorization': token,
           'academy_id': widget.academy.academy_id,
           'academy_type': widget.academy.academy_type,
           'course_id': courseId,
@@ -592,11 +588,11 @@ class _CurriculumState extends State<Curriculum> {
     final uri = Uri.parse("$host/api/origami/academy/curriculum.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer ${widget.Authorization}'},
+      headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': widget.Authorization,
+        'Authorization': token,
         'academy_id': widget.academy.academy_id,
         'academy_type': widget.academy.academy_type,
       },
