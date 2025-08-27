@@ -427,200 +427,67 @@ class _ProjectScreenState extends State<ProjectScreen> {
                 .sort((a, b) => b.project_id.compareTo(a.project_id));
             final project = filteredProjectList[index];
             print('activityList.length : ${filteredProjectList.length}');
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(color: Colors.white),
-                    child: InkWell(
-                      onTap: () {
-                        // context.pushNamed(
-                        //   'project',
-                        //   extra: {
-                        //     'employee': widget.employee,
-                        //     'Authorization': widget.Authorization,
-                        //     'project': project,
-                        //     'pageInput': widget.pageInput,
-                        //   },
-                        // ).then((value) {
-                        //   // เมื่อกลับจากหน้า ProjectListUpdate
-                        //   setState(() {
-                        //     indexItems = 0;
-                        //     isAtEnd = false;
-                        //     modelProjectList.clear();
-                        //     fetchModelProject();
-                        //   });
-                        // });
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProjectListUpdate(
-                              employee: widget.employee,
-                              project: project,
-                              pageInput: widget.pageInput,
-                            ),
-                          ),
-                        ).then((value) {
-                          // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-                          setState(() {
-                            indexItems = 0;
-                            isAtEnd = false; // ครั้งแรก
-                            modelProjectList.clear();
-                            fetchModelProject();
-                          });
-                        });
-                        _searchController.clear();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(left: 8.0),
-                                            child: Text(
-                                              project.project_code,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 12,
-                                                color: Color(0xFF555555),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
+            return Column(
+              children: [
+                Container(
+                    color: Colors.grey.shade100, height: 4, width: double.infinity),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProjectListUpdate(
+                          employee: widget.employee,
+                          project: project,
+                          pageInput: widget.pageInput,
+                        ),
+                      ),
+                    ).then((value) {
+                      // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
+                      setState(() {
+                        indexItems = 0;
+                        isAtEnd = false; // ครั้งแรก
+                        modelProjectList.clear();
+                        fetchModelProject();
+                      });
+                    });
+                    _searchController.clear();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4,top: 8),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: Text(
+                                          project.project_code,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 12,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 8.0),
-                                          child: Text(
-                                            project.project_priority_name,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 12,
-                                              color: Color(0xFF555555),
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 1, // ความกว้างของเส้น
-                                    height: 16, // ความสูงของเส้น
-                                    color: Colors.grey, // สีของเส้น
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal:
-                                            8), // ระยะห่างจาก IconButton
-                                  ),
-                                  (project.can_delete == 'Y')
-                                      ? InkWell(
-                                          onTap: () {
-                                            _showCustomDialog(project.project_id,project.project_name);
-                                          },
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Colors.red,
-                                            size: 20,
-                                          ),
-                                        )
-                                      : Icon(
-                                          Icons.delete,
-                                          color: Colors.grey,
-                                          size: 20,
-                                        ),
-                                ],
-                              ),
-                            ),
-                            // Divider(thickness: 1),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 4, bottom: 4, right: 8),
-                                  child: CircleAvatar(
-                                    radius: 25,
-                                    backgroundColor: Colors.grey,
-                                    child: CircleAvatar(
-                                      radius: 24,
-                                      backgroundColor: Colors.white,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Image.network(
-                                          project.owner_avatar,
-                                          fit: BoxFit.fill,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Image.network(
-                                              'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                                              width: double.infinity,
-                                              fit: BoxFit.contain,
-                                            );
-                                          },
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        project.project_name,
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 8.0),
+                                      child: Text(
+                                        project.project_priority_name,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14,
-                                          color: Colors.orange,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${project.account_name}',
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${project.project_sale_nonsale_name}',
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${project.project_process_name}',
-                                        maxLines: 1,
                                         style: TextStyle(
                                           fontFamily: 'Arial',
                                           fontSize: 12,
@@ -628,19 +495,150 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
+                              Container(
+                                width: 1, // ความกว้างของเส้น
+                                height: 16, // ความสูงของเส้น
+                                color: Colors.grey, // สีของเส้น
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        8), // ระยะห่างจาก IconButton
+                              ),
+                              (project.can_delete == 'Y')
+                                  ? InkWell(
+                                      onTap: () {
+                                        _showCustomDialog(project.project_id,project.project_name);
+                                      },
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                        size: 18,
+                                      ),
+                                    )
+                                  : Icon(
+                                      Icons.delete,
+                                      color: Colors.grey,
+                                      size: 18,
+                                    ),
+                            ],
+                          ),
+                        ),
+                        Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  project.owner_avatar,
+                                  height: 60,
+                                  width: 60,
+                                  fit: BoxFit.cover,
+                                  cacheWidth: 100,
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.orange.shade100,
+                                        value: loadingProgress.expectedTotalBytes != null
+                                            ? loadingProgress.cumulativeBytesLoaded /
+                                            (loadingProgress.expectedTotalBytes ?? 1)
+                                            : 0,
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(height: 60,
+                                        width: 60,child: Icon(Icons.error)); // แสดงไอคอนเมื่อโหลดภาพไม่สำเร็จ
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    project.project_name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Colors.orange,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${project.account_name}',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${project.project_sale_nonsale_name}',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${project.project_process_name}',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Color(0xFF555555),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'รายละเอียด',
+                              style: GoogleFonts.roboto(
+                                fontSize: 14,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  Divider(color: Colors.grey),
-                ],
-              ),
+                ),
+                Container(
+                    color: Colors.grey.shade100, height: 4, width: double.infinity),
+              ],
             );
           }),
     );

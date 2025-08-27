@@ -480,7 +480,6 @@ class _ContactScreenState extends State<ContactScreen> {
           controller: _scrollController,
           itemCount: contactList.length,
           itemBuilder: (context, index) {
-            ;
             final contact = contactList[index];
 
             // print('ContactScreen.length : ${ContactCallScreen.length}');

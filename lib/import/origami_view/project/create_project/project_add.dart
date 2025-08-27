@@ -24,6 +24,9 @@ class _ProjectAddState extends State<ProjectAdd> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
   String _search = '';
+
+  List<estimateYear> estimate_year = [];
+
   @override
   void initState() {
     super.initState();
@@ -33,7 +36,34 @@ class _ProjectAddState extends State<ProjectAdd> {
     _searchController.addListener(() {
       _search = _searchController.text;
     });
-    print(project_start);
+    quarter_id = _quarterList[0].quarter_id;
+    _EstimateYear();
+  }
+
+  estimateYear? selectedYear;
+  int year_id = 0;
+  List<estimateYear> _yearList = [];
+  int currentYear = 0;
+  void _EstimateYear() {
+    currentYear = DateTime.now().year;
+    // ย้อนหลัง 5 ปี และไปข้างหน้า 10 ปี
+    int startYear = currentYear - 5;
+    int endYear = currentYear + 10;
+    List<estimateYear> years = List.generate(
+      endYear - startYear + 1,
+      (index) {
+        int y = startYear + index;
+        return estimateYear(
+            year_id: y,
+            year_name: '$y ${y == currentYear ? '(This Year)' : ''}');
+      },
+    );
+    _yearList = years;
+    year_id = years[0].year_id;
+    // ตัวอย่างการใช้งาน
+    for (var item in years) {
+      print("${item.year_id} - ${item.year_name}");
+    }
   }
 
   @override
@@ -48,19 +78,6 @@ class _ProjectAddState extends State<ProjectAdd> {
 
   String currentTime = '';
   TimeOfDay selectedTime = TimeOfDay(hour: 7, minute: 15);
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? newTime = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
-
-    if (newTime != null) {
-      setState(() {
-        selectedTime = newTime;
-      });
-    }
-  }
 
   DateTime _selectedDateEnd = DateTime.now();
   String showlastDay = '';
@@ -239,6 +256,45 @@ class _ProjectAddState extends State<ProjectAdd> {
             Expanded(child: _DateBody('Start Date', 0)),
             SizedBox(width: 8),
             Expanded(child: _DateBody('End Date', 1)),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                child: _buildDropdown<estimateQuarter>(
+                  label: 'Quarter',
+                  items: _quarterList,
+                  selectedValue: selectedQuarter,
+                  getLabel: (item) => item.quarter_name,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedQuarter = value;
+                      quarter_id = value?.quarter_id ?? '';
+                    });
+                  },
+                  hint: 'Q1 (Jan-Mar)',
+                ),
+              ),
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: Container(
+                child: _buildDropdown<estimateYear>(
+                  label: 'Year',
+                  items: _yearList,
+                  selectedValue: selectedYear,
+                  getLabel: (item) => item.year_name,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedYear = value;
+                      year_id = value?.year_id ?? 0;
+                    });
+                  },
+                  hint: '$currentYear (This Year)',
+                ),
+              ),
+            ),
           ],
         ),
         Container(
@@ -638,7 +694,7 @@ class _ProjectAddState extends State<ProjectAdd> {
     _fetchProcess();
     _fetchPriority();
     _fetchSubStatus();
-    if(selectedSupportModel == null){
+    if (selectedSupportModel == null) {
       project_support_id = projectSupportList[0].project_support_id;
       project_support_name = projectSupportList[0].project_support_name;
     }
@@ -740,8 +796,8 @@ class _ProjectAddState extends State<ProjectAdd> {
   String source_id = '';
   String source_name = '';
   Future<void> _fetchSource() async {
-    final uri = Uri.parse(
-        '$hostDev/api/origami/crm/project/component/source.php');
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/project/component/source.php');
     try {
       final response = await http.post(
         uri,
@@ -937,6 +993,8 @@ class _ProjectAddState extends State<ProjectAdd> {
         'project_description': _descriptionController.text.trim(),
         'project_start': project_start,
         'project_end': project_end,
+        'estimate_quarter': quarter_id,
+        'estimate_year': year_id.toString(),
         'owner_group': widget.employee.emp_id,
       },
     );
@@ -944,13 +1002,13 @@ class _ProjectAddState extends State<ProjectAdd> {
       // final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final jsonResponse = jsonDecode(response.body);
       final message = jsonResponse['message'];
-      final project_id = jsonResponse['project_id']??'';
+      final project_id = jsonResponse['project_id'] ?? '';
 
-      if(project_id != ''){
-        fetchAddActivity(project_id.toString(),message);
+      if (project_id != '') {
+        fetchAddActivity(project_id.toString(), message);
       }
       // if(jsonResponse['status'] != 'error'){
-      
+
       // }
     } else {
       throw Exception('Failed to load personal data: ${response.reasonPhrase}');
@@ -958,7 +1016,7 @@ class _ProjectAddState extends State<ProjectAdd> {
   }
 
   List<String> contact_list = [];
-  Future<void> fetchAddActivity(String project_id,String message_p) async {
+  Future<void> fetchAddActivity(String project_id, String message_p) async {
     print('object pro => $project_id');
     final uri =
         Uri.parse("$hostDev/api/origami/crm/project/add_activity_project.php");
@@ -1017,6 +1075,15 @@ class _ProjectAddState extends State<ProjectAdd> {
   String formaProjectcode(String input) {
     return project_code = "$group_shcode$group_year-${input.padLeft(4, '0')}";
   }
+
+  estimateQuarter? selectedQuarter;
+  String quarter_id = '';
+  List<estimateQuarter> _quarterList = [
+    estimateQuarter(quarter_id: '1', quarter_name: 'Q1 (Jan-Mar)'),
+    estimateQuarter(quarter_id: '2', quarter_name: 'Q2 (Apr-Jun)'),
+    estimateQuarter(quarter_id: '3', quarter_name: 'Q3 (Jul-Sep)'),
+    estimateQuarter(quarter_id: '4', quarter_name: 'Q4 (Oct-Dec)'),
+  ];
 }
 
 class ContactData {
@@ -1199,10 +1266,22 @@ class ProjectSupportData {
   });
 }
 
-class ApproveQuotation {
-  final String approve_quotation;
+class estimateQuarter {
+  final String quarter_id;
+  final String quarter_name;
 
-  ApproveQuotation({
-    required this.approve_quotation,
+  estimateQuarter({
+    required this.quarter_id,
+    required this.quarter_name,
+  });
+}
+
+class estimateYear {
+  final int year_id;
+  final String year_name;
+
+  estimateYear({
+    required this.year_id,
+    required this.year_name,
   });
 }

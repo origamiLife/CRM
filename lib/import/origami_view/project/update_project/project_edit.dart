@@ -36,11 +36,40 @@ class _ProjectEditState extends State<ProjectEdit> {
     showDate();
     _fatchApi();
     _fetchGetData(widget.project);
-    (widget.project.project_sale_nonsale_id == '0')?saleDataList[0]:saleDataList[1];
+    (widget.project.project_sale_nonsale_id == '0')
+        ? saleDataList[0]
+        : saleDataList[1];
     account_name = widget.project.account_name;
     contact_name = widget.project.contact_name;
     contact_id = widget.project.contact_id;
     account_id = widget.project.account_id;
+    _EstimateYear();
+    print('projectprojectproject ${widget.project}');
+    print('projectprojectproject ${widget.project}');
+  }
+
+  estimateYear? selectedYear;
+  int year_id = 0;
+  List<estimateYear> _yearList = [];
+  int currentYear = 0;
+  void _EstimateYear() {
+    currentYear = DateTime.now().year;
+    int startYear = currentYear - 5;
+    int endYear = currentYear + 10;
+    List<estimateYear> years = List.generate(
+      endYear - startYear + 1,
+      (index) {
+        int y = startYear + index;
+        return estimateYear(
+            year_id: y,
+            year_name: '$y ${y == currentYear ? '(This Year)' : ''}');
+      },
+    );
+    _yearList = years;
+    // ตัวอย่างการใช้งาน
+    for (var item in years) {
+      print("${item.year_id} - ${item.year_name}");
+    }
   }
 
   @override
@@ -237,11 +266,12 @@ class _ProjectEditState extends State<ProjectEdit> {
                     selectedType = value;
                     project_type_id = value?.project_type_id ?? '';
                     group_shcode = value?.project_type_code ?? '';
-                    group_year = value?.project_type_year??'';
+                    group_year = value?.project_type_year ?? '';
                     group_gen = value?.project_type_gen ?? '';
                     _codeController.text = formaProjectcode(group_gen);
                   });
-                }, hint: project.project_type_name,
+                },
+                hint: project.project_type_name,
               ),
             ),
             SizedBox(width: 8),
@@ -257,6 +287,45 @@ class _ProjectEditState extends State<ProjectEdit> {
             Expanded(child: _DateBody('End Date', project_end, 1)),
           ],
         ),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                child: _buildDropdown<estimateQuarter>(
+                  label: 'Quarter',
+                  items: _quarterList,
+                  selectedValue: selectedQuarter,
+                  getLabel: (item) => item.quarter_name,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedQuarter = value;
+                      quarter_id = value?.quarter_id ?? '';
+                    });
+                  },
+                  hint: 'Q1 (Jan-Mar)',
+                ),
+              ),
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: Container(
+                child: _buildDropdown<estimateYear>(
+                  label: 'Year',
+                  items: _yearList,
+                  selectedValue: selectedYear,
+                  getLabel: (item) => item.year_name,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedYear = value;
+                      year_id = value?.year_id ?? 0;
+                    });
+                  },
+                  hint: '$currentYear (This Year)',
+                ),
+              ),
+            ),
+          ],
+        ),
         Container(
           child: _buildDropdown<ProcessData>(
             label: 'Process',
@@ -268,7 +337,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 selectedProcess = value;
                 process_id = value?.process_id ?? '';
               });
-            }, hint: project.project_process_name,
+            },
+            hint: project.project_process_name,
           ),
         ),
         Container(
@@ -282,7 +352,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 selectedPriority = value;
                 priority_id = value?.priority_id ?? '';
               });
-            },hint: project.project_priority_name,
+            },
+            hint: project.project_priority_name,
           ),
         ),
       ],
@@ -304,19 +375,20 @@ class _ProjectEditState extends State<ProjectEdit> {
               setState(() {
                 selectedContact = value;
                 contact_id = value?.contact_id ?? '';
-                account_id = value?.cus_id??'';
-                String nameTH = value?.cus_name_th??'';
-                String nameEN = value?.cus_name_th??'';
-                if(account_id != ''){
+                account_id = value?.cus_id ?? '';
+                String nameTH = value?.cus_name_th ?? '';
+                String nameEN = value?.cus_name_th ?? '';
+                if (account_id != '') {
                   account_name = '$nameTH [$nameEN]';
-                } else{
+                } else {
                   account_name = '';
                 }
               });
               _fetchAccount();
               selectedAccount = null;
               print("account_name : $account_name");
-            },hint: contact_name,
+            },
+            hint: contact_name,
           ),
         ),
         _buildDropdown<AccountData>(
@@ -344,7 +416,8 @@ class _ProjectEditState extends State<ProjectEdit> {
               // });
               // _fetchContact();
               // selectedContact = null;
-            },hint: account_name,
+            },
+            hint: account_name,
           ),
         ),
         // _DropdownSale(
@@ -362,7 +435,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 selectedSaleData = value;
                 project_sale_id = value?.project_sale_id ?? '';
               });
-            },hint: project.project_sale_nonsale_name,
+            },
+            hint: project.project_sale_nonsale_name,
           ),
         ),
         Container(
@@ -376,7 +450,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 selectedSupportModel = value;
                 project_support_id = value?.project_support_id ?? '';
               });
-            },hint: project.project_model_name,
+            },
+            hint: project.project_model_name,
           ),
         ),
         Container(
@@ -390,7 +465,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                 selectedSource = value;
                 source_id = value?.source_id ?? '';
               });
-            },hint: project.project_source_name,
+            },
+            hint: project.project_source_name,
           ),
         ),
         _textController(
@@ -421,7 +497,7 @@ class _ProjectEditState extends State<ProjectEdit> {
             child: TextFormField(
               controller: controller,
               readOnly: key,
-              minLines: controller == _descriptionController?3:1,
+              minLines: controller == _descriptionController ? 3 : 1,
               maxLines: null,
               autofocus: false,
               obscureText: false,
@@ -497,8 +573,9 @@ class _ProjectEditState extends State<ProjectEdit> {
           InputDecorator(
             decoration: InputDecoration(
               isDense: true,
-              filled: filled != true ? false:true, // ✅ เติมพื้นหลังเมื่อ disabled
-              fillColor: filled != true? Colors.white:Colors.grey.shade300,
+              filled:
+                  filled != true ? false : true, // ✅ เติมพื้นหลังเมื่อ disabled
+              fillColor: filled != true ? Colors.white : Colors.grey.shade300,
               contentPadding: EdgeInsets.only(top: 12, bottom: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -578,7 +655,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -664,15 +741,15 @@ class _ProjectEditState extends State<ProjectEdit> {
     );
   }
 
-  Future<void> _fatchApi() async{
-   await _fetchContact();
-   await _fetchAccount();
-   await _fetchType();
-   await _fetchSource();
-   await _fetchCategory();
-   await _fetchProcess();
-   await _fetchPriority();
-   await _fetchSubStatus();
+  Future<void> _fatchApi() async {
+    await _fetchContact();
+    await _fetchAccount();
+    await _fetchType();
+    await _fetchSource();
+    await _fetchCategory();
+    await _fetchProcess();
+    await _fetchPriority();
+    await _fetchSubStatus();
   }
 
   ContactData? selectedContact;
@@ -683,7 +760,7 @@ class _ProjectEditState extends State<ProjectEdit> {
   String cont_id = '';
   Future<void> _fetchContact() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/project/component/contact.php");
+        Uri.parse("$hostDev/api/origami/crm/project/component/contact.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -711,7 +788,7 @@ class _ProjectEditState extends State<ProjectEdit> {
   String account_name = '';
   Future<void> _fetchAccount() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/project/component/account.php");
+        Uri.parse("$hostDev/api/origami/crm/project/component/account.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -737,7 +814,7 @@ class _ProjectEditState extends State<ProjectEdit> {
   String project_type_id = '';
   Future<void> _fetchType() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/project/component/type.php");
+        Uri.parse("$hostDev/api/origami/crm/project/component/type.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -749,8 +826,7 @@ class _ProjectEditState extends State<ProjectEdit> {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       setState(() {
-        typeList =
-            dataJson.map((json) => TypeData.fromJson(json)).toList();
+        typeList = dataJson.map((json) => TypeData.fromJson(json)).toList();
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -761,8 +837,8 @@ class _ProjectEditState extends State<ProjectEdit> {
   List<SourceData> sourceList = [];
   String source_id = '';
   Future<void> _fetchSource() async {
-    final uri = Uri.parse(
-        '$hostDev/api/origami/crm/project/component/source.php');
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/project/component/source.php');
     try {
       final response = await http.post(
         uri,
@@ -854,8 +930,8 @@ class _ProjectEditState extends State<ProjectEdit> {
   List<PriorityData> priorityList = [];
   String priority_id = '';
   Future<void> _fetchPriority() async {
-    final uri = Uri.parse(
-        '$hostDev/api/origami/crm/project/component/priority');
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/project/component/priority');
     try {
       final response = await http.post(
         uri,
@@ -913,7 +989,8 @@ class _ProjectEditState extends State<ProjectEdit> {
 
   String project_status = '';
   Future<void> _fetchUpdateProject() async {
-    final uri = Uri.parse("$hostDev/api/origami/crm/project/update_project.php");
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/project/update_project.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -935,6 +1012,8 @@ class _ProjectEditState extends State<ProjectEdit> {
         'project_description': _descriptionController.text.trim(),
         'project_start': project_start,
         'project_end': project_end,
+        'estimate_quarter': quarter_id,
+        'estimate_year': year_id.toString(),
         'owner_group': widget.employee.emp_id,
       },
     );
@@ -943,7 +1022,7 @@ class _ProjectEditState extends State<ProjectEdit> {
       final jsonResponse = jsonDecode(response.body);
       print('jsonDecode(response.body) : $jsonResponse');
       final message = jsonResponse['message'];
-      if(jsonResponse['status'] != 'error'){
+      if (jsonResponse['status'] != 'error') {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -972,14 +1051,14 @@ class _ProjectEditState extends State<ProjectEdit> {
     );
   }
 
-
-
   ProjectSupportData? selectedSupportModel;
   String project_support_id = '';
   String project_support_name = '';
   List<ProjectSupportData> projectSupportList = [
-    ProjectSupportData(project_support_id: '0', project_support_name: 'Internal'),
-    ProjectSupportData(project_support_id: '1', project_support_name: 'External'),
+    ProjectSupportData(
+        project_support_id: '0', project_support_name: 'Internal'),
+    ProjectSupportData(
+        project_support_id: '1', project_support_name: 'External'),
   ];
 
   ProjectSaleData? selectedSaleData;
@@ -987,13 +1066,8 @@ class _ProjectEditState extends State<ProjectEdit> {
   String project_sale_name = '';
   List<ProjectSaleData> saleDataList = [
     ProjectSaleData(project_sale_id: '0', project_sale_name: 'Sale Project'),
-    ProjectSaleData(project_sale_id: '1', project_sale_name: 'Non Sale Project'),
-  ];
-
-  ApproveQuotation? selectedApprove;
-  List<ApproveQuotation> ApproveList = [
-    ApproveQuotation(approve_quotation: 'No'),
-    ApproveQuotation(approve_quotation: 'Yes'),
+    ProjectSaleData(
+        project_sale_id: '1', project_sale_name: 'Non Sale Project'),
   ];
 
   String group_shcode = '';
@@ -1004,5 +1078,12 @@ class _ProjectEditState extends State<ProjectEdit> {
     return project_code = "$group_shcode$group_year-${input.padLeft(4, '0')}";
   }
 
-
+  estimateQuarter? selectedQuarter;
+  String quarter_id = '';
+  List<estimateQuarter> _quarterList = [
+    estimateQuarter(quarter_id: '1', quarter_name: 'Q1 (Jan-Mar)'),
+    estimateQuarter(quarter_id: '2', quarter_name: 'Q2 (Apr-Jun)'),
+    estimateQuarter(quarter_id: '3', quarter_name: 'Q3 (Jul-Sep)'),
+    estimateQuarter(quarter_id: '4', quarter_name: 'Q4 (Oct-Dec)'),
+  ];
 }
