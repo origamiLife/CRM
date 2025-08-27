@@ -161,7 +161,7 @@ class _StampActivityState extends State<StampActivity> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        if (stamp_type_in != 'in')
+        if (stamp_type_in == 'in')
           Stack(
             alignment: Alignment.center,
             children: [
@@ -411,6 +411,8 @@ class _StampActivityState extends State<StampActivity> {
           stamp_type_in = 'in';
           stamp_type_out = 'out';
           get_time_out = lastTimeList.date_time;
+        } else {
+          stamp_type_in = 'in';
         }
       });
     } else {

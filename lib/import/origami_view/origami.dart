@@ -656,22 +656,20 @@ class _OrigamiPageState extends State<OrigamiPage> {
 
   List<Widget> _buildAppBarTimeStamp() {
     return [
-      // IconButton(
-      //   icon: const Icon(Icons.history, color: Colors.orange),
-      //   onPressed: () => showDialog(
-      //     context: context,
-      //     builder: (_) => Dialog(
-      //       elevation: 0,
-      //       backgroundColor: Colors.white,
-      //       insetPadding: const EdgeInsets.all(8),
-      //       child: TimeAttendanceHistory(
-      //         employee: widget.employee,
-      //         pageInput: '5',
-      //
-      //       ),
-      //     ),
-      //   ),
-      // ),
+      IconButton(
+        icon: const Icon(Icons.history, color: Colors.orange),
+        onPressed: () => showDialog(
+          context: context,
+          builder: (_) => Dialog(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            insetPadding: const EdgeInsets.all(8),
+            child: TimeAttendanceHistory(
+              employee: widget.employee,
+            ),
+          ),
+        ),
+      ),
       IconButton(
         icon: const Icon(Icons.home, color: Colors.orange),
         onPressed: () => _changeBranch(_branches),
@@ -682,10 +680,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ActivityList(
-                  employee: widget.employee,
-                  pageInput: 'origami'
-              ),
+              builder: (context) =>
+                  ActivityList(employee: widget.employee, pageInput: 'origami'),
             ),
           );
         },

@@ -6,7 +6,9 @@ import '../Contact/contact_add/contact_add_detail.dart';
 import '../Contact/contact_edit/contact_edit_detail.dart';
 
 class WorkApplyPage extends StatefulWidget {
-  const WorkApplyPage({Key? key, required this.employee, required this.Authorization}) : super(key: key);
+  const WorkApplyPage(
+      {Key? key, required this.employee, required this.Authorization})
+      : super(key: key);
   final Employee employee;
   final String Authorization;
   @override
@@ -94,7 +96,6 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +107,7 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
           child: Text(
             'Me',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -130,7 +131,7 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                 Text(
                   'DONE',
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -174,7 +175,7 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                         Text(
                           'Work Type',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFF555555),
                             fontWeight: FontWeight.w700,
@@ -215,7 +216,7 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                         Text(
                           'Select DateTime',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFF555555),
                             fontWeight: FontWeight.w700,
@@ -246,8 +247,9 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                                         Text(
                                           showlastDay,
                                           style: TextStyle(
-                fontFamily: 'Arial',
-                                              fontSize: 14, color: Color(0xFF555555)),
+                                              fontFamily: 'Arial',
+                                              fontSize: 14,
+                                              color: Color(0xFF555555)),
                                         ),
                                         Spacer(),
                                         Icon(
@@ -283,8 +285,9 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                                         Text(
                                           showlastDay,
                                           style: TextStyle(
-                fontFamily: 'Arial',
-                                              fontSize: 14, color: Color(0xFF555555)),
+                                              fontFamily: 'Arial',
+                                              fontSize: 14,
+                                              color: Color(0xFF555555)),
                                         ),
                                         Spacer(),
                                         Icon(
@@ -316,7 +319,7 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                             Text(
                               'Leave Without Pay',
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Color(0xFF555555),
                                 fontWeight: FontWeight.w700,
@@ -358,7 +361,7 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                         Text(
                           'Reason : ',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFF555555),
                             fontWeight: FontWeight.w700,
@@ -369,7 +372,7 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                         Text(
                           'Note : ',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontSize: 16,
                             color: Color(0xFF555555),
                             fontWeight: FontWeight.w700,
@@ -398,17 +401,16 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
           controller: textController,
           keyboardType: TextInputType.text,
           style: TextStyle(
-                fontFamily: 'Arial',color: Color(0xFF555555), fontSize: 14),
+              fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
           decoration: InputDecoration(
             isDense: true,
             filled: true,
             fillColor: Colors.white,
             contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             hintText: '',
-            hintStyle:
-            TextStyle(
-                fontFamily: 'Arial',fontSize: 14, color: Color(0xFF555555)),
+            hintStyle: TextStyle(
+                fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100),
             ),
@@ -457,20 +459,20 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
               ),
             ),
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               color: Color(0xFF555555),
             ),
             items: titleDown
                 .map((TitleDown item) => DropdownMenuItem<TitleDown>(
-              value: item,
-              child: Text(
-                item.status_name,
-                style: TextStyle(
-                fontFamily: 'Arial',
-                  fontSize: 14,
-                ),
-              ),
-            ))
+                      value: item,
+                      child: Text(
+                        item.status_name,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                        ),
+                      ),
+                    ))
                 .toList(),
             value: selectedItem,
             onChanged: (value) {
@@ -488,7 +490,7 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight:
-              200, // Height for displaying up to 5 lines (adjust as needed)
+                  200, // Height for displaying up to 5 lines (adjust as needed)
             ),
             menuItemStyleData: MenuItemStyleData(
               height: 40, // Height for each menu item
@@ -502,8 +504,9 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                   controller: _searchController,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
-                fontFamily: 'Arial',
-                      color: Color(0xFF555555), fontSize: 14),
+                      fontFamily: 'Arial',
+                      color: Color(0xFF555555),
+                      fontSize: 14),
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
@@ -514,8 +517,9 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                     ),
                     hintText: '$Search...',
                     hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                        fontSize: 14, color: Color(0xFF555555)),
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -547,5 +551,4 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
     TitleDown(status_id: '003', status_name: 'Application'),
     TitleDown(status_id: '004', status_name: 'Website'),
   ];
-
 }

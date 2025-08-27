@@ -133,7 +133,7 @@ class _StampMenuState extends State<StampMenu> {
             SizedBox(width: 8),
             Expanded(
               child: Text(
-                "latitude : ${userPosition!.latitude.toString()} , longitude : ${userPosition!.longitude.toString()}",
+                "latitude : ${double.parse(userPosition!.latitude.toStringAsFixed(6)).toString()} , longitude : ${double.parse(userPosition!.longitude.toStringAsFixed(6)).toString()}",
                 style: const TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,
@@ -224,7 +224,7 @@ class _StampMenuState extends State<StampMenu> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        if (stamp_type_in != 'in')
+        if (stamp_type_in == 'in')
           Stack(
             alignment: Alignment.center,
             children: [
@@ -249,7 +249,7 @@ class _StampMenuState extends State<StampMenu> {
             backgroundImage:
                 AssetImage('assets/images/stamp/stamp_button_disable.png'),
           ),
-        if (stamp_type_out != 'out')
+        if (timeList.last.status != 'in')
           Stack(
             alignment: Alignment.center,
             children: [
@@ -267,50 +267,6 @@ class _StampMenuState extends State<StampMenu> {
               ),
             ],
           ),
-      ],
-    );
-  }
-
-  Widget _subDetail(
-      String title, String _dataObject, IconData icon, Color CIcon) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: CIcon,
-          size: 28,
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                _dataObject,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                  color: Color(0xFFFF9900),
-                ),
-              ),
-              SizedBox(height: 12),
-            ],
-          ),
-        ),
       ],
     );
   }
@@ -347,27 +303,13 @@ class _StampMenuState extends State<StampMenu> {
       });
       // พิมพ์ข้อมูลเพิ่มเติมใน console
       print('Base64 Image: $_base64Image');
-      _timestamp(type);
+      stamp_type = type;
+      _fetchStampActivity();
     } catch (e) {
       print('Error picking image: $e');
     } finally {
       _isStamping = false;
     }
-  }
-
-  void _timestamp(String type) {
-    stamp_type = type;
-    setState(() {
-      if (stamp_type == 'in') {
-        time_in =
-            "${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}";
-        _fetchStampActivity();
-      } else if (stamp_type == 'out') {
-        time_out =
-            "${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}";
-        _fetchStampActivity();
-      }
-    });
   }
 
   void _showOutOfAreaMessage() {
@@ -387,8 +329,6 @@ class _StampMenuState extends State<StampMenu> {
     );
   }
 
-  String time_in = '';
-  String time_out = '';
   String stamp_type = '';
   Future<void> _fetchStampActivity() async {
     print('comp_id : ${widget.employee.comp_id}');
@@ -419,11 +359,12 @@ class _StampMenuState extends State<StampMenu> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         print('$jsonResponse');
-        setState(() {
-          time_in = jsonResponse['stamp_in'];
-          time_out = jsonResponse['stamp_out'];
-          _fetchGetTimeActivity();
-        });
+        if(stamp_type == 'in'){
+          get_time_in = jsonResponse['stamp_in'];
+        }else{
+          get_time_out = jsonResponse['stamp_out'];
+        }
+        await _fetchGetTimeActivity();
         showStampSnackBar(jsonResponse['message']);
       } else {
         throw Exception('Failed to load status data');
@@ -474,7 +415,11 @@ class _StampMenuState extends State<StampMenu> {
           stamp_type_in = 'in';
           stamp_type_out = 'out';
           get_time_out = lastTimeList.date_time;
+        } else {
+          stamp_type_in = 'in';
         }
+        print('object]]]]]]]]]]]]]] $stamp_type_in');
+        print('object]]]]]]]]]]]]]] $get_time_in');
       });
     } else {
       throw Exception('Failed to load personal data: ${response.reasonPhrase}');
