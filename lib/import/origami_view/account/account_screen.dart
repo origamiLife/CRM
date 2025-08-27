@@ -370,7 +370,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               (account.cus_tel_no == '')
                                   ? Container()
                                   : Text(
-                                      'Tel : ${account.cus_tel_no ?? ''}',
+                                      'Mobile : ${account.cus_tel_no ?? ''}',
                                       maxLines: 1,
                                       style: TextStyle(
                                         fontFamily: 'Arial',

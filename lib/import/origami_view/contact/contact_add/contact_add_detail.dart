@@ -201,7 +201,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
             ),
             _textController('Email', _emailController, false, Icons.numbers),
             _textController(
-                'Tel', _mobileController, false, Icons.phone_android_rounded),
+                'Mobile', _mobileController, false, Icons.phone_android_rounded),
             SizedBox(height: 16),
           ],
         ),

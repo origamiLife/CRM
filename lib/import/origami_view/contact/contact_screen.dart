@@ -438,7 +438,7 @@ class _ContactScreenState extends State<ContactScreen> {
                             // ),
                             // SizedBox(height: 5),
                             Text(
-                              'Tel : ${_telView(contact)}',
+                              'Mobile : ${_telView(contact)}',
                               maxLines: 1,
                               style: TextStyle(
                                 fontFamily: 'Arial',
@@ -587,7 +587,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       SizedBox(height: 8),
                       if (contact.cont_mobile != '' && contact.cont_tel != '')
                         Text(
-                          'Tel : ${contact.cont_mobile}',
+                          'Mobile : ${contact.cont_mobile}',
                           maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',
@@ -599,7 +599,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       else if (contact.cont_mobile != '' &&
                           contact.cont_tel == '')
                         Text(
-                          'Tel : ${contact.cont_mobile}',
+                          'Mobile : ${contact.cont_mobile}',
                           maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',
@@ -611,7 +611,7 @@ class _ContactScreenState extends State<ContactScreen> {
                       else if (contact.cont_mobile == '' &&
                           contact.cont_tel != '')
                         Text(
-                          'Tel : ${contact.cont_tel}',
+                          'Mobile : ${contact.cont_tel}',
                           maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',

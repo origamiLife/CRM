@@ -711,7 +711,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _textController('Name', _nameController, false, Icons.numbers),
-                _textController('Tel', _telController, false, Icons.numbers),
+                _textController('Mobile', _telController, false, Icons.numbers),
                 SizedBox(height: 16),
                 Text(
                   'Signature',

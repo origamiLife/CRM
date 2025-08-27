@@ -225,7 +225,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             'Description', _descriptionController, false, Icons.subject),
         _textController('Email', _emailController, false, Icons.mail),
         _textController(
-            'Tel', _telephoneController, false, Icons.phone_android_rounded),
+            'Mobile', _telephoneController, false, Icons.phone_android_rounded),
         SizedBox(height: 16),
       ],
     );

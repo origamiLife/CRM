@@ -433,7 +433,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                       Colors.grey.shade400),
                   _subDetail('Source', account.source_name, Icons.source,
                       Colors.grey.shade400),
-                  _subDetail('Tel', _telView(account),
+                  _subDetail('Mobile', _telView(account),
                       Icons.phone_android_outlined, Colors.grey.shade400),
                   _subDetail('Email', account.cus_email, Icons.email,
                       Colors.grey.shade400),
