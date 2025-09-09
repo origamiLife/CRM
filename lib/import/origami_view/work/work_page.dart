@@ -4,9 +4,7 @@ import 'package:origamilift/import/import.dart';
 import 'package:origamilift/import/origami_view/work/work_apply_add.dart';
 
 class WorkPage extends StatefulWidget {
-  const WorkPage(
-      {Key? key, required this.employee})
-      : super(key: key);
+  const WorkPage({Key? key, required this.employee}) : super(key: key);
   final Employee employee;
   @override
   _WorkPageState createState() => _WorkPageState();
@@ -45,6 +43,7 @@ class _WorkPageState extends State<WorkPage> {
               MaterialPageRoute(
                 builder: (context) => WorkApplyAdd(
                   employee: widget.employee,
+                  workList: _modelWorkList,
                 ),
               ),
             );
@@ -134,7 +133,7 @@ class _WorkPageState extends State<WorkPage> {
                             ),
                           ));
                         } else {
-                          return _historyWork(snapshot.data);
+                          return _historyWork(snapshot.data ?? []);
                         }
                       }),
                   FutureBuilder<List<ModelWork>>(
@@ -162,7 +161,7 @@ class _WorkPageState extends State<WorkPage> {
                             ),
                           ));
                         } else {
-                          return _statusWork(snapshot.data);
+                          return _statusWork(snapshot.data ?? []);
                         }
                       }),
                 ],
@@ -174,22 +173,24 @@ class _WorkPageState extends State<WorkPage> {
     );
   }
 
-  Widget _historyWork(List<ModelWorkList>? data) {
+  Widget _historyWork(List<ModelWorkList> dataWorkHistory) {
     return ListView.builder(
-      itemCount: data?.length ?? 0,
+      itemCount: dataWorkHistory.length,
       itemBuilder: (context, index) {
-        final approve = data?[index];
+        final approve = dataWorkHistory[index];
         return Padding(
           padding: const EdgeInsets.all(8),
           child: InkWell(
-            onTap: () => _showDialog(approve),
+            onTap: () => _showCustomDialog(approve),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
                 border: Border.all(
-                  color: Color(0xFFFF9900),
-                  width: 1.0,
+                  color: (approve.approve_del == 'del')
+                      ? Colors.red
+                      : Color(0xFFFF9900),
+                  width: (approve.approve_del == 'del') ? 2.0 : 1.0,
                 ),
               ),
               child: Padding(
@@ -200,7 +201,7 @@ class _WorkPageState extends State<WorkPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        '[ ${approve?.leave_name} ]',
+                        '[ ${approve.leave_name} ]',
                         style: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16,
@@ -213,8 +214,8 @@ class _WorkPageState extends State<WorkPage> {
                     ),
                     Divider(),
                     Text(
-                      'Reason : ${approve?.reason}',
-                      style: TextStyle(
+                      'Reason : ${approve.reason}',
+                      style: const TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 16,
                         color: Color(0xFF555555),
@@ -223,27 +224,33 @@ class _WorkPageState extends State<WorkPage> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                    Text(
-                      (approve?.approve_comment != null)
-                          ? approve?.approve_comment ?? ''
-                          : '[Waiting Approve]',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: (approve?.approve_comment != null)
-                            ? Colors.green
-                            : Color(0xFFFF9900),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    (approve.approve_del == 'del')
+                        ? Text(
+                            '[Waiting for Approve Delete]',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Colors.red.shade400,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : const Text(
+                            '[Waiting Approve]',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFFFF9900),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                     SizedBox(height: 8),
                     Row(
                       children: [
                         Image.asset('assets/images/ic_calen.png', height: 45),
                         SizedBox(width: 16),
                         Text(
-                          'Start : ${approve?.from_date} ${approve?.from_time}  '
-                          '\nEnd : ${approve?.to_date} ${approve?.to_time}',
+                          'Start : ${approve.from_date} ${approve.from_time}  '
+                          '\nEnd : ${approve.to_date} ${approve.to_time}',
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 16,
@@ -266,11 +273,11 @@ class _WorkPageState extends State<WorkPage> {
     );
   }
 
-  Widget _statusWork(List<ModelWork>? data) {
+  Widget _statusWork(List<ModelWork> dataWork) {
     return ListView.builder(
-      itemCount: data?.length ?? 0,
+      itemCount: dataWork.length ?? 0,
       itemBuilder: (context, index) {
-        final work = data?[index];
+        final work = dataWork[index];
         return Padding(
           padding: const EdgeInsets.all(8),
           child: Container(
@@ -288,7 +295,7 @@ class _WorkPageState extends State<WorkPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '[ ${work?.leave_type_name_en ?? ''} ]',
+                    '[ ${work.leave_type_name_en ?? ''} ]',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 16,
@@ -301,12 +308,12 @@ class _WorkPageState extends State<WorkPage> {
                   Divider(
                     color: Color(
                       int.parse(
-                          '0xFF${work?.leave_type_color?.substring(1) ?? '000000'}'),
+                          '0xFF${work.leave_type_color.substring(1) ?? '000000'}'),
                     ),
                     thickness: 4,
                   ),
                   Text(
-                    'Used : ${(work?.used == null) ? ' - ' : work?.used ?? ''} Hour',
+                    'Used : ${(work.used == '') ? ' - ' : work.used ?? ''} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 16,
@@ -318,7 +325,7 @@ class _WorkPageState extends State<WorkPage> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Available : ${(work?.available == null) ? ' - ' : work?.available ?? ''} Hour',
+                    'Available : ${(work.available == '') ? ' - ' : work.available ?? ''} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 16,
@@ -330,7 +337,7 @@ class _WorkPageState extends State<WorkPage> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Total : ${work?.total ?? ''} Hour',
+                    'Total : ${work.total ?? ''} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 16,
@@ -349,198 +356,117 @@ class _WorkPageState extends State<WorkPage> {
     );
   }
 
-  void _showDialog(ModelWorkList? approve) {
+  void _showCustomDialog(ModelWorkList approve) {
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Container(
-            width: MediaQuery.of(context).size.width,
-            child: Text(
-              '[${approve?.leave_name_th ?? ''}] ${approve?.reason ?? ''}',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF555555),
-              ),
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        const labelStyle = TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF555555),
+        );
+
+        const valueStyle = TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF555555),
+        );
+
+        Widget buildRow(String label, String? value, {TextStyle? style}) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 1, child: Text(label, style: labelStyle)),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(value?.isNotEmpty == true ? value! : '-',
+                      style: style ?? valueStyle),
+                ),
+              ],
             ),
+          );
+        }
+
+        return AlertDialog(
+          title: Text(
+            '[${approve.leave_name_th}] ${approve.reason}',
+            style: const TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF555555),
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
-          content: Container(
-            width: MediaQuery.of(context).size.width,
+          content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                buildRow(
+                    'From Date :', '${approve.from_date} ${approve.from_time}'),
+                buildRow('To Date :', '${approve.to_date} ${approve.to_time}'),
+                buildRow('Note :', approve.note),
+                buildRow('Hour Total :', approve.total_time),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'From Date :',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF555555),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
+                    const Expanded(
+                        flex: 1, child: Text('Approve :', style: labelStyle)),
+                    const SizedBox(width: 8),
                     Expanded(
                       flex: 2,
-                      child: Text(
-                        '${approve?.from_date ?? ''} ${approve?.from_time ?? ''}',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF555555),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'To Date :',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF555555),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        '${approve?.to_date ?? ''} ${approve?.to_time ?? ''}',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF555555),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'Note :',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF555555),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        '${approve?.note ?? ''}',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF555555),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'Hour Total :',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF555555),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        '${approve?.total_time ?? ''}',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF555555),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'Approve :',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF555555),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '${approve?.name_approve ?? ''} ',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF555555),
-                              ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${approve.name_approve} ',
+                            style: valueStyle,
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            (approve.approve_del == 'del')
+                                ? '[Waiting for Approve Delete]'
+                                : '[Waiting Approve]',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: (approve.approve_del == 'del')
+                                  ? Colors.red.shade400
+                                  : const Color(0xFFFF9900),
                             ),
-                            TextSpan(
-                              text:
-                              '${(approve?.approve_comment != null) ? approve?.approve_comment ?? '' : '[Waiting Approve]'}',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: (approve?.approve_comment != null)
-                                    ? Colors.green
-                                    : Color(0xFFFF9900),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                          // RichText(
+                          //   text: TextSpan(
+                          //     children: [
+                          //       TextSpan(
+                          //         text: '${approve.name_approve} ',
+                          //         style: valueStyle,
+                          //       ),
+                          //       TextSpan(
+                          //         text: (approve.approve_del == 'del')
+                          //             ? '[Waiting for Approve Delete]'
+                          //             : '[Waiting Approve]',
+                          //         style: TextStyle(
+                          //           fontFamily: 'Arial',
+                          //           fontSize: 14,
+                          //           fontWeight: FontWeight.w500,
+                          //           color: (approve.approve_del == 'del')
+                          //               ? Colors.red.shade400
+                          //               : const Color(0xFFFF9900),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                        ],
                       ),
                     ),
                   ],
@@ -549,15 +475,29 @@ class _WorkPageState extends State<WorkPage> {
             ),
           ),
           actions: [
+            if ((approve.approve_del != 'del'))
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  fetchWorkDelete(approve.see_id);
+                },
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.red,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(), // Cancel
-              child: Text(
-                'Close',
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text(
+                'Cancel',
                 style: TextStyle(
-                  fontFamily: 'Arial',
                   fontSize: 16,
-                  color: Color(0xFFFF9900),
-                  fontWeight: FontWeight.w700,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -567,6 +507,7 @@ class _WorkPageState extends State<WorkPage> {
     );
   }
 
+  List<ModelWorkList> _modelWorkList = [];
   Future<List<ModelWorkList>> fetchModelWorkList() async {
     final uri = Uri.parse("$hostDev/api/get_list_work.php");
     final response = await http.post(
@@ -584,7 +525,8 @@ class _WorkPageState extends State<WorkPage> {
       // เข้าถึงข้อมูลในคีย์ 'instructors'
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
-      return dataJson.map((json) => ModelWorkList.fromJson(json)).toList();
+      return _modelWorkList =
+          dataJson.map((json) => ModelWorkList.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load instructors');
     }
@@ -611,6 +553,51 @@ class _WorkPageState extends State<WorkPage> {
     } else {
       throw Exception('Failed to load instructors');
     }
+  }
+
+  Future<void> fetchWorkDelete(String request_id) async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/work/delete_work.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $token'},
+      body: {
+        'request_id': request_id,
+        'emp_id': widget.employee.emp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final message = jsonResponse['message'];
+      pushActivity(11);
+      showSnackBar(message);
+      throw Exception('Delete Activity Now.');
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
+  void pushActivity(int page) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            OrigamiPage(employee: widget.employee, popPage: page),
+      ),
+    );
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 }
 

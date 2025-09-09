@@ -114,8 +114,8 @@ class _TimeSampleState extends State<TimeSample> {
     final double radius =
         double.tryParse(widget.timestamp!.branch_radius) ?? 0.0;
 
-    final double userLat = userPosition!.latitude!;
-    final double userLng = userPosition!.longitude!;
+    final double userLat = userPosition!.latitude;
+    final double userLng = userPosition!.longitude;
     final double distance =
         _calculateDistance(branchLat, branchLng, userLat, userLng);
 

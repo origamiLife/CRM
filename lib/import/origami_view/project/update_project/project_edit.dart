@@ -169,8 +169,8 @@ class _ProjectEditState extends State<ProjectEdit> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Colors.white,
+        elevation: 2,
+        backgroundColor: Colors.orange,
         title: Center(
           child: Text(
             'Detail',
@@ -185,7 +185,7 @@ class _ProjectEditState extends State<ProjectEdit> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.orange,
+            color: Colors.white,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -271,7 +271,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                     _codeController.text = formaProjectcode(group_gen);
                   });
                 },
-                hint: project.project_type_name,
+                hint: project.project_type_name, icon: Icons.man,
               ),
             ),
             SizedBox(width: 8),
@@ -302,7 +302,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                       quarter_id = value?.quarter_id ?? '';
                     });
                   },
-                  hint: 'Q1 (Jan-Mar)',
+                  hint: 'Q1 (Jan-Mar)', icon: Icons.quora,
                 ),
               ),
             ),
@@ -320,7 +320,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                       year_id = value?.year_id ?? 0;
                     });
                   },
-                  hint: '$currentYear (This Year)',
+                  hint: '$currentYear (This Year)', icon: Icons.calendar_month,
                 ),
               ),
             ),
@@ -338,7 +338,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                 process_id = value?.process_id ?? '';
               });
             },
-            hint: project.project_process_name,
+            hint: project.project_process_name, icon: Icons.data_usage,
           ),
         ),
         Container(
@@ -353,7 +353,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                 priority_id = value?.priority_id ?? '';
               });
             },
-            hint: project.project_priority_name,
+            hint: project.project_priority_name, icon:Icons.format_list_numbered_sharp,
           ),
         ),
       ],
@@ -388,7 +388,7 @@ class _ProjectEditState extends State<ProjectEdit> {
               selectedAccount = null;
               print("account_name : $account_name");
             },
-            hint: contact_name,
+            hint: contact_name, icon: Icons.account_circle,
           ),
         ),
         _buildDropdown<AccountData>(
@@ -398,27 +398,7 @@ class _ProjectEditState extends State<ProjectEdit> {
           getLabel: (item) => item.cus_name_en ?? '',
           onChanged: (value) {},
           hint: account_name,
-          filled: true,
-        ),
-        Container(
-          child: _buildDropdown<AccountData>(
-            label: 'Account',
-            items: accountList,
-            selectedValue: selectedAccount,
-            getLabel: (item) => account_name,
-            onChanged: (value) {
-              // setState(() {
-              //   selectedAccount = value;
-              //   account_id = value?.cus_id ?? '';
-              //   if(account_id != ''){
-              //     cont_id = '';
-              //   }
-              // });
-              // _fetchContact();
-              // selectedContact = null;
-            },
-            hint: account_name,
-          ),
+          filled: true, icon: FontAwesomeIcons.building,
         ),
         // _DropdownSale(
         //     'Sale/Non Sale'), //0,1 => Sale Project , Non Sale Project
@@ -437,6 +417,7 @@ class _ProjectEditState extends State<ProjectEdit> {
               });
             },
             hint: project.project_sale_nonsale_name,
+            icon: Icons.checklist,
           ),
         ),
         Container(
@@ -451,7 +432,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                 project_support_id = value?.project_support_id ?? '';
               });
             },
-            hint: project.project_model_name,
+            hint: project.project_model_name, icon: Icons.paste_rounded,
           ),
         ),
         Container(
@@ -466,7 +447,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                 source_id = value?.source_id ?? '';
               });
             },
-            hint: project.project_source_name,
+            hint: project.project_source_name, icon: Icons.source,
           ),
         ),
         _textController(
@@ -547,7 +528,7 @@ class _ProjectEditState extends State<ProjectEdit> {
 
   Widget _buildDropdown<T>({
     required String label,
-    IconData? icon,
+    required IconData icon,
     bool? filled,
     required String hint,
     required List<T> items,
@@ -600,7 +581,8 @@ class _ProjectEditState extends State<ProjectEdit> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        (icon != null) ? Icon(icon, size: 24) : Container(),
+                        Icon(icon, size: 24,color: Colors.black87),
+                        SizedBox(width: 16),
                         Expanded(
                           child: Text(
                             getLabel(item),

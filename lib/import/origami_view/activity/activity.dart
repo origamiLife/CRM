@@ -37,11 +37,16 @@ class _ActivityScreenState extends State<ActivityScreen> {
     if (_isFirstTime) _isFirstTime = false;
     newActivities = await _fetchModelActivity();
     // กรอง ID ที่ยังไม่มีใน contactList
-    final existingIds = activityList.map((c) => c.activity_id).toSet(); // สมมุติว่า c.id คือ cus_cont_id
-    final uniqueNewContacts = newActivities.where((c) => !existingIds.contains(c.activity_id)).toList();
+    final existingIds = activityList
+        .map((c) => c.activity_id)
+        .toSet(); // สมมุติว่า c.id คือ cus_cont_id
+    final uniqueNewContacts = newActivities
+        .where((c) => !existingIds.contains(c.activity_id))
+        .toList();
 
     activityList.addAll(uniqueNewContacts);
-    activityList.sort((a, b) => b.activity_id.compareTo(a.activity_id)); // ถ้าใช้ DateTime
+    activityList.sort(
+        (a, b) => b.activity_id.compareTo(a.activity_id)); // ถ้าใช้ DateTime
     setState(() {
       // contactList = newContacts;
       filteredActivityList = activityList; // อัปเดตอันที่กรองด้วย
@@ -190,13 +195,19 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(height: 12, width: double.infinity, color: Colors.white),
+                          Container(
+                              height: 12,
+                              width: double.infinity,
+                              color: Colors.white),
                           SizedBox(height: 5),
-                          Container(height: 12, width: 100, color: Colors.white),
+                          Container(
+                              height: 12, width: 100, color: Colors.white),
                           SizedBox(height: 5),
-                          Container(height: 12, width: 150, color: Colors.white),
+                          Container(
+                              height: 12, width: 150, color: Colors.white),
                           SizedBox(height: 5),
-                          Container(height: 12, width: 120, color: Colors.white),
+                          Container(
+                              height: 12, width: 120, color: Colors.white),
                         ],
                       ),
                     ),
@@ -214,7 +225,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
           controller: _scrollController,
           itemCount: filteredActivityList.length,
           itemBuilder: (context, index) {
-            filteredActivityList.sort((a, b) => b.activity_id.compareTo(a.activity_id));
+            filteredActivityList
+                .sort((a, b) => b.activity_id.compareTo(a.activity_id));
             final activity = filteredActivityList[index];
             print('activityList.length : ${filteredActivityList.length}');
             return InkWell(
@@ -347,7 +359,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      "Place : ${activity.activity_place_type == 'in'?'Indoor':'Outdoor'}",
+                                      "Place : ${activity.activity_place_type == 'in' ? 'Indoor' : 'Outdoor'}",
                                       maxLines: 1,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
@@ -441,7 +453,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                     right: 2,
                     child: IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.cancel_sharp, size: 20,color: Colors.red),
+                      icon:
+                          Icon(Icons.cancel_sharp, size: 20, color: Colors.red),
                     ),
                   ),
                   Column(
@@ -455,7 +468,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 12,right: 12,top: 16),
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 16),
                         child: Text(
                           'ประเภทกิจกรรม [Activity Type]',
                           style: const TextStyle(
@@ -550,7 +564,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
               MaterialPageRoute(
                 builder: (context) => activityAdd(
                   employee: widget.employee,
-                  dataType: type, listType: list,
+                  dataType: type,
+                  listType: list,
                 ),
               ),
             ).then((value) {
@@ -580,7 +595,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   SizedBox(height: 16),
                   Center(
                     child: Text(
-                      type.type_name,
+                      type.activity_type_name,
                       style: TextStyle(
                           fontFamily: 'Arial',
                           color: Color(0xFF555555),
@@ -653,14 +668,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
   }
 
   Future<List<ActivityType>> fetchActivityType() async {
-    final uri = Uri.parse("$hostDev/crm/ios_activity_type.php");
+    final uri = Uri.parse("$hostDev/api/origami/crm/activity/component/type.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-        'Authorization': token,
       },
     );
     if (response.statusCode == 200) {
@@ -671,7 +684,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
       throw Exception('Failed to load instructors');
     }
   }
-
 }
 
 class GetActivity {
@@ -735,6 +747,7 @@ class GetActivity {
   final String activity_status_name;
   final String activity_priority_name;
   final String activity_type_name;
+  final String activity_before_day;
 
   GetActivity({
     required this.activity_id,
@@ -797,6 +810,7 @@ class GetActivity {
     required this.activity_status_name,
     required this.activity_priority_name,
     required this.activity_type_name,
+    required this.activity_before_day,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
@@ -838,11 +852,13 @@ class GetActivity {
       parent_activity_id: json['parent_activity_id'] ?? '',
       activity_join_status: json['activity_join_status'] ?? '',
       task_id: json['task_id'] ?? '',
-      activity_real_approve_pm_status: json['activity_real_approve_pm_status'] ?? '',
+      activity_real_approve_pm_status:
+          json['activity_real_approve_pm_status'] ?? '',
       activity_real_pm_comment: json['activity_real_pm_comment'] ?? '',
       activity_real_pm_remark: json['activity_real_pm_remark'] ?? '',
       activity_real_approve_pm_emp: json['activity_real_approve_pm_emp'] ?? '',
-      activity_real_approve_pm_date: json['activity_real_approve_pm_date'] ?? '',
+      activity_real_approve_pm_date:
+          json['activity_real_approve_pm_date'] ?? '',
       status: json['status'] ?? '',
       md_plan: json['md_plan'] ?? '',
       mh_plan: json['mh_plan'] ?? '',
@@ -862,6 +878,7 @@ class GetActivity {
       activity_status_name: json['activity_status_name'] ?? '',
       activity_priority_name: json['activity_priority_name'] ?? '',
       activity_type_name: json['activity_type_name'] ?? '',
+      activity_before_day: json['activity_before_day'] ?? '',
     );
   }
 }

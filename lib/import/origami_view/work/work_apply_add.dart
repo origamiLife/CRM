@@ -7,9 +7,12 @@ import 'package:origamilift/import/origami_view/work/work_page.dart';
 
 class WorkApplyAdd extends StatefulWidget {
   const WorkApplyAdd(
-      {Key? key, required this.employee})
+      {Key? key,
+      required this.employee,
+      required this.workList})
       : super(key: key);
   final Employee employee;
+  final List<ModelWorkList> workList;
 
   @override
   _WorkApplyAddState createState() => _WorkApplyAddState();
@@ -38,127 +41,22 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
   }
 
   DateTime _DateTimeNow = DateTime.now();
-  String startDate = '';
-  String endDate = '';
+  String today = '';
   String beginStartDate = '';
   String beginEndDate = '';
   void showDate() {
     DateTime now = DateTime.now();
     beginStartDate = DateFormat('yyyy-MM-dd HH:mm').format(now);
     beginEndDate = DateFormat('yyyy-MM-dd HH:mm').format(now);
-    startDate = DateFormat('yyyy-MM-dd').format(_DateTimeNow);
-    endDate = DateFormat('yyyy-MM-dd').format(_DateTimeNow);
-    print(startDate);
-  }
-
-  Future<void> _calendarStartDate(BuildContext context) async {
-    await showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Theme(
-          data: ThemeData(
-            primaryColor: Colors.teal,
-            colorScheme: ColorScheme.light(
-              primary: Color(0xFFFF9900),
-              onPrimary: Colors.white,
-              onSurface: Colors.teal,
-            ),
-            dialogBackgroundColor: Colors.teal[50],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CalendarDatePicker(
-                  initialDate: _DateTimeNow,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                  onDateChanged: (DateTime newDate) {
-                    setState(() {
-                      _DateTimeNow = newDate;
-                      startDate = DateFormat('yyyy-MM-dd').format(_DateTimeNow);
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _calendarEndDate(BuildContext context) async {
-    await showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Theme(
-          data: ThemeData(
-            primaryColor: Colors.teal,
-            colorScheme: ColorScheme.light(
-              primary: Color(0xFFFF9900),
-              onPrimary: Colors.white,
-              onSurface: Colors.teal,
-            ),
-            dialogBackgroundColor: Colors.teal[50],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CalendarDatePicker(
-                  initialDate: _DateTimeNow,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                  onDateChanged: (DateTime newDate) {
-                    setState(() {
-                      _DateTimeNow = newDate;
-                      endDate = DateFormat('yyyy-MM-dd').format(_DateTimeNow);
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _selectStartTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedStartTime ?? TimeOfDay.now(), // เวลาเริ่มต้น
-    );
-
-    if (picked != null && picked != selectedStartTime) {
-      setState(() {
-        selectedStartTime = picked;
-        _calendarStartDate(context);
-      });
-    }
-  }
-
-  Future<void> _selectEndTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedEndTime ?? TimeOfDay.now(), // เวลาเริ่มต้น
-    );
-
-    if (picked != null && picked != selectedEndTime) {
-      setState(() {
-        selectedEndTime = picked;
-        _calendarEndDate(context);
-      });
-    }
+    today = DateFormat('yyyy-MM-dd').format(_DateTimeNow);
+    request_from_date = DateFormat('yyyy-MM-dd').format(_DateTimeNow);
+    request_to_date = DateFormat('yyyy-MM-dd').format(_DateTimeNow);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xFFFF9900),
         title: Align(
@@ -181,378 +79,427 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          // InkWell(
-          //   onTap: () {
-          //     Navigator.pop(context);
-          //   },
-          //   child: Row(
-          //     children: [
-          //       Text(
-          //         'DONE',
-          //         style: TextStyle(
-          //       fontFamily: 'Arial',
-          //           fontSize: 14,
-          //           color: Colors.white,
-          //           fontWeight: FontWeight.w500,
-          //         ),
-          //       ),
-          //       SizedBox(width: 16)
-          //     ],
-          //   ),
-          // ),
+          InkWell(
+            onTap: () {
+              _fetchAddWork();
+            },
+            child: Row(
+              children: [
+                Text(
+                  'DONE',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 16)
+              ],
+            ),
+          ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-            child: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
               children: [
-                SizedBox(height: 8),
-                Expanded(
-                  child: SingleChildScrollView(
+                Image.asset(
+                  'assets/images/busienss1.jpg',
+                  fit: BoxFit.cover,
+                  height: 150,
+                  width: double.infinity,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.network(
+                      'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                      height: 160,
+                      fit: BoxFit.contain,
+                      color: Colors.grey.shade100,
+                    );
+                  },
+                ),
+                Positioned(
+                  bottom: -55,
+                  left: 0,
+                  right: 0,
+                  child: CircleAvatar(
+                    radius: 57,
+                    backgroundColor: Colors.grey.shade400,
+                    child: CircleAvatar(
+                      radius: 55,
+                      backgroundColor: Colors.white,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(
+                          widget.employee.emp_avatar,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(Icons.person, size: 50);
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 68), // ให้เว้นที่ไว้ใต้ Avatar
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Today: ',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 18,
+                    color: Color(0xFF555555),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  DateFormat('dd-MM-yyyy').format(_DateTimeNow),
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Column(
+                children: [
+                  SizedBox(height: 8),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Status: ',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          color: Color(0xFF555555),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        'วันทำงาน',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 8, bottom: 8),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.grey.shade400,
-                          child: CircleAvatar(
-                            radius: 49,
-                            backgroundColor: Colors.white,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: Image.network(
-                                widget.employee.emp_avatar ?? '',
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Date: ',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Text(
-                              startDate,
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Status: ',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Text(
-                              'วันทำงาน',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        // SizedBox(height: 8),
-                        // Text(
-                        //   '$startDate ${selectedStartTime?.format(context)??'00:00'} - '
-                        //       '$endDate ${selectedEndTime?.format(context)??'00:00'}',
-                        //   style: TextStyle(
-                        // fontFamily: 'Arial',
-                        //     fontSize: 14,
-                        //     color: Colors.grey,
-                        //     fontWeight: FontWeight.w500,
-                        //   ),
-                        // ),
-                        SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 8, bottom: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                child: _buildDropdown<ModelWork>(
-                                  label: 'Type of leave',
-                                  items: typeList,
-                                  selectedValue: selectedType,
-                                  getLabel: (item) => item.leave_type_name_en,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedType = value;
-                                      type_id = value?.leave_type_name_en??'';
-                                    });
-                                  }, hint: type_name,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 8, bottom: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Start Date',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              Container(
-                                // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1.0,
-                                  ),
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    _selectStartTime(context);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          '$startDate ${selectedStartTime?.format(context) ?? '00:00'}',
-                                          style: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 14,
-                                              color: Color(0xFF555555)),
-                                        ),
-                                        Spacer(),
-                                        Icon(
-                                          Icons.calendar_month,
-                                          color: Color(0xFF555555),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 8, bottom: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'End Date',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              Container(
-                                // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1.0,
-                                  ),
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    _selectEndTime(context);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          '$endDate ${selectedEndTime?.format(context) ?? '00:00'}',
-                                          style: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 14,
-                                              color: Color(0xFF555555)),
-                                        ),
-                                        Spacer(),
-                                        Icon(
-                                          Icons.calendar_month,
-                                          color: Color(0xFF555555),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 4, bottom: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Details',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              _Details('details', _reasonController),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, top: 4, bottom: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Insert Images',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              _showImagePhoto(),
-                            ],
+                        Container(
+                          child: _buildDropdown<ModelWork>(
+                            label: 'Type of leave',
+                            items: typeList,
+                            selectedValue: selectedType,
+                            getLabel: (item) => item.leave_type_name_en,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedType = value;
+                                leave_type_id = value?.leave_type_id ?? '';
+                                before_day = value?.before_day??'';
+                              });
+                            },
+                            hint: type_name,
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 8, bottom: 8),
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: Container(
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 8, bottom: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Start Date',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Color(0xFF555555),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
                             color: Colors.white,
                             border: Border.all(
-                              color: Colors.orange,
-                              width: 1,
+                              color: Colors.grey,
+                              width: 1.0,
                             ),
                           ),
                           child: InkWell(
                             onTap: () {
-                              Navigator.pop(context);
+                              _calendarStartDate(context);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  'CLOSE ',
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    color: Color(0xFF555555),
-                                    fontWeight: FontWeight.w700,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '$request_from_date ${selectedStartTime?.format(context) ?? '00:00'}',
+                                    style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFF555555)),
                                   ),
-                                ),
+                                  Spacer(),
+                                  Icon(
+                                    Icons.calendar_month,
+                                    color: Color(0xFF555555),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.orange,
-                              width: 1,
-                            ),
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  'SAVE ',
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    color: Color(0xFF555555),
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                // SizedBox(height: 8),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 8, bottom: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'End Date',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Color(0xFF555555),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              _calendarEndDate(context);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '$request_to_date ${selectedEndTime?.format(context) ?? '00:00'}',
+                                    style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFF555555)),
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    Icons.calendar_month,
+                                    color: Color(0xFF555555),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 4, bottom: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _textController(
+                            'Reason', _reasonController, false, Icons.paste),
+                        _textController(
+                            'Note', _noteController, false, Icons.paste),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 4, bottom: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Insert Images',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 16,
+                            color: Color(0xFF555555),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        _showImagePhoto(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(
+                  //       left: 16, right: 16, top: 4, bottom: 8),
+                  //   child: Row(
+                  //     children: [
+                  //       Checkbox(
+                  //         value: _isChecked,
+                  //         checkColor: Colors.white,
+                  //         activeColor: Color(0xFFFF9900),
+                  //         onChanged: (bool? value) {
+                  //           setState(() {
+                  //             _isChecked = value ?? false;
+                  //             _isChecked == false
+                  //                 ? request_no_money = 'N'
+                  //                 : request_no_money = 'Y';
+                  //           });
+                  //         },
+                  //       ),
+                  //       SizedBox(width: 16),
+                  //       Text(
+                  //         'Leave Without Pay',
+                  //         style: TextStyle(
+                  //           fontFamily: 'Arial',
+                  //           fontSize: 16,
+                  //           color: Color(0xFF555555),
+                  //           fontWeight: FontWeight.w700,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  final ImagePicker _picker = ImagePicker();
-  File? _image;
-  List<String> _addImage = [];
+  Widget _textController(String text, controller, bool key, IconData numbers) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            child: TextFormField(
+              controller: controller,
+              readOnly: key,
+              maxLines: null,
+              autofocus: false,
+              obscureText: false,
+              decoration: InputDecoration(
+                isDense: true,
+                fillColor:
+                    key == false ? Colors.grey.shade50 : Colors.grey.shade300,
+                labelStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                hintText: '',
+                hintStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade400,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: key == false
+                        ? Colors.orange.shade300
+                        : Colors.grey.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                // prefixIcon: Icon(numbers, color: Colors.black54),
+              ),
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: key ? Colors.black87 : Color(0xFF555555),
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  final ImagePicker _picker = ImagePicker();
+  List<String> _addImage = [];
+  bool _isStamping = false;
+  String _base64Image = '';
+  String imageName = '';
   Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+    if (_isStamping) return;
+    _isStamping = true;
+
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final _image = File(image.path);
+      final imageBytes = await _image.readAsBytes();
+      final base64String = base64Encode(imageBytes);
+
+      // ✅ ชื่อไฟล์
+      imageName = image.name;
       setState(() {
-        _image = File(image.path);
-        _addImage.add(_image!.path);
+        _base64Image = base64String;
+        _addImage.add(_image.path);
       });
+    } catch (e) {
+      print('Error picking image: $e');
+    } finally {
+      _isStamping = false;
     }
   }
 
@@ -678,51 +625,6 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           );
   }
 
-  Widget _Details(String title, TextEditingController textController) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 8),
-        TextFormField(
-          minLines: 5,
-          maxLines: null,
-          controller: textController,
-          keyboardType: TextInputType.text,
-          style: TextStyle(
-              fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
-          decoration: InputDecoration(
-            isDense: true,
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            hintText: '',
-            hintStyle: TextStyle(
-                fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(100),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey, // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey, // ขอบสีส้มตอนที่โฟกัส
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
-
   Widget _buildDropdown<T>({
     required String label,
     required String hint,
@@ -777,15 +679,15 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                       children: [
                         (imageUrl != null && imageUrl.isNotEmpty)
                             ? Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Image.network(
-                            imageUrl,
-                            width: 24,
-                            height: 24,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Icon(Icons.image_not_supported, size: 24),
-                          ),
-                        )
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Image.network(
+                                  imageUrl,
+                                  width: 24,
+                                  height: 24,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.image_not_supported, size: 24),
+                                ),
+                              )
                             : Container(),
                         Expanded(
                           child: Text(
@@ -841,7 +743,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -869,9 +771,114 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     );
   }
 
+  Future<void> _calendarStartDate(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Theme(
+          data: ThemeData(
+            primaryColor: Colors.teal,
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFFFF9900),
+              onPrimary: Colors.white,
+              onSurface: Colors.teal,
+            ),
+            dialogBackgroundColor: Colors.teal[50],
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CalendarDatePicker(
+                  initialDate: _DateTimeNow,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2101),
+                  onDateChanged: (DateTime newDate) {
+                    setState(() {
+                      _DateTimeNow = newDate;
+                      request_from_date =
+                          DateFormat('dd-MM-yyyy').format(_DateTimeNow);
+                    });
+                    _selectStartTime(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _calendarEndDate(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Theme(
+          data: ThemeData(
+            primaryColor: Colors.teal,
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFFFF9900),
+              onPrimary: Colors.white,
+              onSurface: Colors.teal,
+            ),
+            dialogBackgroundColor: Colors.teal[50],
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CalendarDatePicker(
+                  initialDate: _DateTimeNow,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2101),
+                  onDateChanged: (DateTime newDate) {
+                    setState(() {
+                      _DateTimeNow = newDate;
+                      request_to_date =
+                          DateFormat('dd-MM-yyyy').format(_DateTimeNow);
+                    });
+                    _selectEndTime(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _selectStartTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedStartTime ?? TimeOfDay.now(), // เวลาเริ่มต้น
+    );
+    // if (picked != null && picked != selectedStartTime) {
+    setState(() {
+      selectedStartTime = picked;
+    });
+    Navigator.pop(context);
+    // }
+  }
+
+  Future<void> _selectEndTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedEndTime ?? TimeOfDay.now(), // เวลาเริ่มต้น
+    );
+
+    // if (picked != null && picked != selectedEndTime) {
+    setState(() {
+      selectedEndTime = picked;
+    });
+    Navigator.pop(context);
+    // }
+  }
+
   ModelWork? selectedType;
   List<ModelWork> typeList = [];
-  String type_id = '';
+  String leave_type_id = '';
   String type_name = '';
   Future<void> fetchModelWork() async {
     final uri = Uri.parse("$hostDev/api/get_work.php");
@@ -888,12 +895,12 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       setState(() {
-        typeList =
-            dataJson.map((json) => ModelWork.fromJson(json)).toList();
+        typeList = dataJson.map((json) => ModelWork.fromJson(json)).toList();
         if (typeList.isNotEmpty && selectedType == null) {
           selectedType = typeList[0];
-          type_id = selectedType?.leave_type_id ?? '';
+          leave_type_id = selectedType?.leave_type_id ?? '';
           type_name = selectedType?.leave_type_name_en ?? '';
+          // _isChecked =
         }
       });
     } else {
@@ -901,11 +908,78 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     }
   }
 
-}
+  String request_no_money = 'N';
+  String request_from_date = '';
+  String request_to_date = '';
+  bool _isChecked = false;
+  String before_day = '';
+  Future<void> _fetchAddWork() async {
+    try {
+      final uri = Uri.parse("$hostDev/api/origami/crm/work/add_work.php");
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'leave_type_id': leave_type_id,
+          'request_subject': _reasonController.text,
+          'request_note': _noteController.text,
+          'request_from_date': request_from_date,
+          'request_to_date': request_to_date,
+          'request_from_time_': selectedStartTime?.format(context) ?? '00:00',
+          'request_to_time_': selectedEndTime?.format(context) ?? '00:00',
+          'request_attach': _base64Image ?? '', // ป้องกัน null
+          'request_attach_filename': imageName ?? '',
+          'leave_period_type': '0',
+          'request_no_money': request_no_money,
+          'before_day': before_day.toString(), // ส่งเป็น string ชัวร์
+        },
+      );
 
-class TitleDown {
-  final String status_id;
-  final String status_name;
+      if (response.statusCode == 200) {
+        // parse JSON ตรงนี้
+        final jsonResponse = json.decode(response.body);
 
-  TitleDown({required this.status_id, required this.status_name});
+        print("✅ Response JSON: $jsonResponse");
+
+        final status = jsonResponse['status'] as bool? ?? false;
+        final message = jsonResponse['message'] ?? '';
+
+        if (status) {
+          // สำเร็จ
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message.toString())),
+          );
+          _pushReplacement(11);
+        } else {
+          // API error (business logic)
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("❌ $message")),
+          );
+        }
+      } else {
+        // HTTP error
+        throw Exception("Server responded ${response.statusCode}");
+      }
+    } catch (e) {
+      // Catch JSON parse error, network error, etc.
+      print("🔥 Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("เกิดข้อผิดพลาด: $e")),
+      );
+    }
+  }
+
+  void _pushReplacement(int page) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            OrigamiPage(employee: widget.employee, popPage: page),
+      ),
+    );
+  }
 }

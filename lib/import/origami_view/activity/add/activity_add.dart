@@ -44,7 +44,7 @@ class _activityAddState extends State<activityAdd> {
     _fetchContact();
     fetchActivityStatus();
     _fetchPriority();
-    if(_costController.text == ''){
+    if (_costController.text == '') {
       _costController.text = '0';
     }
     _subjectController.addListener(() {
@@ -92,16 +92,15 @@ class _activityAddState extends State<activityAdd> {
         if (inOut == 'start') {
           selectedTimeIn = newTime;
           start_time =
-          '${selectedTimeIn.hour.toString().padLeft(2, '0')}:${selectedTimeIn.minute.toString().padLeft(2, '0')}';
+              '${selectedTimeIn.hour.toString().padLeft(2, '0')}:${selectedTimeIn.minute.toString().padLeft(2, '0')}';
         } else if (inOut == 'end') {
           selectedTimeOut = newTime;
           end_time =
-          '${selectedTimeOut.hour.toString().padLeft(2, '0')}:${selectedTimeOut.minute.toString().padLeft(2, '0')}';
+              '${selectedTimeOut.hour.toString().padLeft(2, '0')}:${selectedTimeOut.minute.toString().padLeft(2, '0')}';
         }
       });
     }
   }
-
 
   DateTime _selectedDateEnd = DateTime.now();
   String showlastDay = '';
@@ -197,14 +196,15 @@ class _activityAddState extends State<activityAdd> {
                               label: 'Type',
                               items: _modelType,
                               selectedValue: selectedType,
-                              getLabel: (item) => item.type_name,
+                              getLabel: (item) => item.activity_type_name,
                               onChanged: (value) {
                                 setState(() {
                                   selectedType = value;
-                                  type_id = value?.type_id ?? '';
+                                  type_id = value?.activity_type_id ?? '';
                                 });
                               },
-                              hint: selectedType?.type_name ?? '',
+                              hint: selectedType?.activity_type_name ?? '',
+                              icon: Icons.accessibility_new,
                             ),
                             _buildDropdown<ActivityProject>(
                               label: 'Project',
@@ -239,6 +239,7 @@ class _activityAddState extends State<activityAdd> {
                                 selectedContact = null;
                               },
                               hint: project_name,
+                              icon: Icons.insert_drive_file_outlined,
                             ),
                             _buildDropdown<ActivityContact>(
                               label: 'Contact',
@@ -271,6 +272,7 @@ class _activityAddState extends State<activityAdd> {
                               },
                               hint: contact_name,
                               filled: (contact_id == '') ? true : false,
+                              icon: Icons.account_circle,
                             ),
                             _buildDropdown<ActivityAccount>(
                               label: 'Account',
@@ -280,6 +282,7 @@ class _activityAddState extends State<activityAdd> {
                               onChanged: (value) {},
                               hint: account_name,
                               filled: true,
+                              icon: FontAwesomeIcons.building,
                             ),
                             // _lineWidget(),
                             _buildDropdown<ActivityStatus>(
@@ -294,6 +297,7 @@ class _activityAddState extends State<activityAdd> {
                                 });
                               },
                               hint: '',
+                              icon: Icons.account_tree_outlined,
                             ),
                             _buildDropdown<ActivityPriority>(
                               label: 'Priority',
@@ -307,9 +311,10 @@ class _activityAddState extends State<activityAdd> {
                                   project_id = value?.priority_id ?? '';
                                 });
                               },
+                              icon: Icons.format_list_numbered_sharp,
                             ),
                             _textController('Subject', _subjectController,
-                                false, Icons.numbers),
+                                false, Icons.subject),
                             _textController('Owner Activity Description',
                                 _descriptionController, false, Icons.numbers),
                             Row(
@@ -352,8 +357,8 @@ class _activityAddState extends State<activityAdd> {
                             ),
                             _textController('Location', _locationController,
                                 true, Icons.location_history),
-                            _textController('Cost', _costController, false,
-                                Icons.numbers),
+                            _textController(
+                                'Cost', _costController, false, Icons.numbers),
                             // _lineWidget(),
                             // Text(
                             //   'Other Contact',
@@ -483,7 +488,6 @@ class _activityAddState extends State<activityAdd> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 8),
                     Padding(
                       padding:
                           const EdgeInsets.only(left: 8, right: 8, bottom: 8),
@@ -513,7 +517,6 @@ class _activityAddState extends State<activityAdd> {
               ),
             ),
             SizedBox(height: 8),
-            Container(),
           ],
         ),
       ),
@@ -838,7 +841,7 @@ class _activityAddState extends State<activityAdd> {
 
   Widget _buildDropdown<T>({
     required String label,
-    IconData? icon,
+    required IconData icon,
     bool? filled,
     required String hint,
     required List<T> items,
@@ -891,7 +894,8 @@ class _activityAddState extends State<activityAdd> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        (icon != null) ? Icon(icon, size: 24) : Container(),
+                        Icon(icon, size: 24, color: Colors.black87),
+                        SizedBox(width: 16),
                         Expanded(
                           child: Text(
                             getLabel(item),
@@ -1134,7 +1138,7 @@ class _activityAddState extends State<activityAdd> {
 
   void _saveAddActivity() {
     if (type_id == '') {
-      type_id = selectedType?.type_id ?? '';
+      type_id = selectedType?.activity_type_id ?? '';
     }
     if (project_id == '') {
       project_id = selectedProject?.project_id.toString() ?? '';
@@ -1378,14 +1382,17 @@ class _activityAddState extends State<activityAdd> {
           'emp_id': widget.employee.emp_id,
           'activity_type_id': type_id,
           'project_id': project_id,
-          'account_id': account_id,
-          'contact_id': contact_id,
+          'cus_id': account_id,
+          'cont_id': contact_id,
           'activity_status_id': status_id,
           'activity_priority_id': priority_id,
-          'place_id': place_id,
-          'activity_location': _locationController.text,
-          // 'activity_lat': '',
-          // 'activity_lng': '',
+          'activity_place_type': place_id,
+          'activity_location':
+              (place_id == 'out') ? _locationController.text : '',
+          'activity_lat':
+              (place_id == 'out') ? userPosition!.latitude.toString() : '',
+          'activity_lng':
+              (place_id == 'out') ? userPosition!.longitude.toString() : '',
           'activity_project_name': activity_name,
           'activity_description': description,
           'activity_start_date': start_date,
@@ -1393,21 +1400,67 @@ class _activityAddState extends State<activityAdd> {
           'activity_end_date': end_date,
           'activity_end_time': end_time,
           'activity_cost': cost,
-          'contact_list': contact_list.join(","),
+          'activity_before_day': widget.dataType.activity_before_day,
+          'contact_list': widget.employee.emp_id,
         },
       );
       if (response.statusCode == 200) {
         print('true: ${response.statusCode}');
         final jsonResponse = jsonDecode(response.body);
         final message = jsonResponse['message'];
-        pushActivity(9);
-        showSnackBar(message);
+        print(message);
+        if (jsonResponse['status'] == true) {
+          pushActivity(9);
+          showSnackBar(message);
+        } else {
+          _showCustomDialog(message);
+        }
       } else {
         throw Exception('Failed to load status data');
       }
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
     }
+  }
+
+  void _showCustomDialog(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Warning!',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+                fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void pushActivity(int page) {
@@ -1488,22 +1541,40 @@ class ActivityProject {
 }
 
 class ActivityType {
-  String type_id;
-  String type_name;
-  String type_chage;
+  String activity_type_id;
+  String activity_type_name;
+  String activity_value_point;
+  String activity_radius;
+  String activity_before_day;
+  String activity_type_icon;
+  String activity_type_create_date;
+  String activity_type_generate;
+  String activity_chage;
 
   ActivityType({
-    required this.type_id,
-    required this.type_name,
-    required this.type_chage,
+    required this.activity_type_id,
+    required this.activity_type_name,
+    required this.activity_value_point,
+    required this.activity_radius,
+    required this.activity_before_day,
+    required this.activity_type_icon,
+    required this.activity_type_create_date,
+    required this.activity_type_generate,
+    required this.activity_chage,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ActivityType.fromJson(Map<String, dynamic> json) {
     return ActivityType(
-      type_id: json['type_id'] ?? '',
-      type_name: json['type_name'] ?? '',
-      type_chage: json['type_chage'] ?? '',
+      activity_type_id: json['activity_type_id'] ?? '',
+      activity_type_name: json['activity_type_name'] ?? '',
+      activity_value_point: json['activity_value_point'] ?? '',
+      activity_radius: json['activity_radius'] ?? '',
+      activity_before_day: json['activity_before_day'] ?? '',
+      activity_type_icon: json['activity_type_icon'] ?? '',
+      activity_type_create_date: json['activity_type_create_date'] ?? '',
+      activity_type_generate: json['activity_type_generate'] ?? '',
+      activity_chage: json['activity_chage'] ?? '',
     );
   }
 }

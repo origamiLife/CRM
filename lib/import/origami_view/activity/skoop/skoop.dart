@@ -8,10 +8,11 @@ class SkoopScreen extends StatefulWidget {
   const SkoopScreen({
     super.key,
     required this.employee,
-    required this.activity,
+    required this.activity, required this.place_id,
   });
   final Employee employee;
   final GetActivity activity;
+  final String place_id;
   @override
   _SkoopScreenState createState() => _SkoopScreenState();
 }
@@ -121,8 +122,8 @@ class _SkoopScreenState extends State<SkoopScreen> {
                   ),
                 );
               } else {
-                _fetchUpdateActivity();
-                _fetchSkoopDetail();
+                _showCustomDialog('Do you really want to save Skoop?');
+                // _fetchSkoopDetail();
               }
             },
             child: Row(
@@ -397,7 +398,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
     }
   }
 
-  Future<void> fetchSkoopActivity() async {
+  Future<void> _fetchSkoopActivity() async {
     final uri = Uri.parse("$hostDev/crm/ios_skoop_activity.php");
     try {
       final response = await http.post(
@@ -437,10 +438,11 @@ class _SkoopScreenState extends State<SkoopScreen> {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
           'activity_id': widget.activity.activity_id,
+          'condition': 'note',
           'activity_note': _descriptionController.text.trim(),
-          'activity_location': _locationController.text.trim(),
-          'activity_lat': '',
-          'activity_lng': '',
+          'activity_location': (widget.place_id == 'out')?_locationController.text:'',
+          'activity_lat': (widget.place_id == 'out')?userPosition!.latitude.toString():'',
+          'activity_lng': (widget.place_id == 'out')?userPosition!.longitude.toString():'',
         },
       );
       if (response.statusCode == 200) {
@@ -455,6 +457,61 @@ class _SkoopScreenState extends State<SkoopScreen> {
       throw Exception('Failed to load personal data: $e');
     }
   }
+
+  void _showCustomDialog(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Warning!',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+                fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                _fetchUpdateActivity();
+              },
+              child: Text(
+                'Ok',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
 
 class GetSkoopDetail {

@@ -183,21 +183,21 @@ class _ProjectJoinUserState extends State<ProjectJoinUser> {
         SizedBox(
           height: 8,
         ),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: TextButton(
-            onPressed: _addJoinUser,
-            child: Text(
-              'Tap here to select an Join User.',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFFFF9900),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
+        // Container(
+        //   alignment: Alignment.centerLeft,
+        //   child: TextButton(
+        //     onPressed: _addJoinUser,
+        //     child: Text(
+        //       'Tap here to select an Join User.',
+        //       style: TextStyle(
+        //         fontFamily: 'Arial',
+        //         fontSize: 14,
+        //         color: Color(0xFFFF9900),
+        //         fontWeight: FontWeight.w500,
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

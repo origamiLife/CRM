@@ -11,7 +11,6 @@ class ActivityEditNow extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.activity,
-
   }) : super(key: key);
   final Employee employee;
   final GetActivity activity;
@@ -33,15 +32,18 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   @override
   void initState() {
     super.initState();
+    // newId = int.parse(widget.employee.emp_id);
+    _fetchModelActivity();
     _fetchProject();
     _fetchContact();
     _fetchAccount();
     fetchActivityType();
     fetchActivityStatus();
-    fetchActivityPriority();
+    _fetchPriority();
     _getdataUpdate(widget.activity);
     contact_name = "${widget.activity.contact_name ?? ''}";
-    account_name = "${widget.activity.account_name_th} [${widget.activity.account_name_en}]";
+    account_name =
+        "${widget.activity.account_name_th} [${widget.activity.account_name_en}]";
   }
 
   Future<void> _getdataUpdate(GetActivity activity) async {
@@ -55,7 +57,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     location = _locationController.text = activity.activity_location ?? '';
     location_lat = activity.activity_lat ?? '';
     location_long = activity.activity_lng ?? '';
-    activity_name = _subjectController.text = activity.activity_project_name ?? '';
+    activity_name =
+        _subjectController.text = activity.activity_project_name ?? '';
     description =
         _descriptionController.text = activity.activity_description ?? '';
     real_date = start_date = showlastDay = activity.activity_start_date ?? '';
@@ -125,8 +128,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       });
     }
   }
-
-
 
   DateTime _selectedDateEnd = DateTime.now();
   String showlastDay = '';
@@ -228,16 +229,20 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                             children: [
                               _buildDropdown<ActivityType>(
                                 label: 'Type',
-                                hint: widget.activity.activity_type_name == ''?type_name:widget.activity.activity_type_name,
+                                hint: widget.activity.activity_type_name == ''
+                                    ? type_name
+                                    : widget.activity.activity_type_name,
                                 items: _modelType,
                                 selectedValue: selectedType,
-                                getLabel: (item) => item.type_name ?? '',
+                                getLabel: (item) =>
+                                    item.activity_type_name ?? '',
                                 onChanged: (value) {
                                   setState(() {
                                     selectedType = value;
-                                    type_id = value?.type_id ?? '';
+                                    type_id = value?.activity_type_id ?? '';
                                   });
                                 },
+                                icon: Icons.accessibility_new,
                               ),
                               _buildDropdown<ActivityProject>(
                                 label: 'Project',
@@ -254,16 +259,16 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                     project_name = value?.project_name ?? '';
                                     String name = value?.cus_cont_name ?? '';
                                     String last = value?.cus_cont_surname ?? '';
-                                    if(contact_id != ''){
+                                    if (contact_id != '') {
                                       contact_name = "$name $last";
-                                    }else{
+                                    } else {
                                       contact_name = '';
                                     }
-                                    String nameTH = value?.cus_name_th??'';
-                                    String nameEN = value?.cus_name_en??'';
-                                    if(account_id != ''){
+                                    String nameTH = value?.cus_name_th ?? '';
+                                    String nameEN = value?.cus_name_en ?? '';
+                                    if (account_id != '') {
                                       account_name = '$nameTH [$nameEN]';
-                                    } else{
+                                    } else {
                                       account_name = '';
                                     }
                                   });
@@ -272,14 +277,17 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                   selectedContact = null;
                                   selectedContact = null;
                                 },
+                                icon: Icons.insert_drive_file_outlined,
                               ),
                               Container(
                                 child: _buildDropdown<ActivityContact>(
                                   label: 'Contact',
-                                  hint: "${widget.activity.contact_name} ${widget.activity.contact_surname}",
+                                  hint:
+                                      "${widget.activity.contact_name} ${widget.activity.contact_surname}",
                                   items: _modelContact,
                                   selectedValue: selectedContact,
-                                  getLabel: (item) => "${item.contact_first} ${item.contact_last}",
+                                  getLabel: (item) =>
+                                      "${item.contact_first} ${item.contact_last}",
                                   onChanged: (value) {
                                     setState(() {
                                       selectedContact = value;
@@ -287,24 +295,24 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                       account_id = value?.cus_id ?? '';
                                       final name = value?.contact_first ?? '';
                                       final last = value?.contact_last ?? '';
-                                      if(contact_id != ''){
-
+                                      if (contact_id != '') {
                                         contact_name = "$name $last";
-                                      }else{
+                                      } else {
                                         contact_name = '';
                                       }
-                                      String nameTH = value?.cus_name_th??'';
-                                      String nameEN = value?.cus_name_en??'';
-                                      if(account_id != ''){
+                                      String nameTH = value?.cus_name_th ?? '';
+                                      String nameEN = value?.cus_name_en ?? '';
+                                      if (account_id != '') {
                                         account_name = '$nameTH [$nameEN]';
-                                      } else{
+                                      } else {
                                         account_name = '';
                                       }
                                     });
                                     _fetchAccount();
                                     selectedAccount = null;
                                   },
-                                  filled: (contact_id == '')?true:false,
+                                  filled: (contact_id == '') ? true : false,
+                                  icon: Icons.account_circle,
                                 ),
                               ),
                               Container(
@@ -321,6 +329,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                     });
                                   },
                                   filled: true,
+                                  icon: FontAwesomeIcons.building,
                                 ),
                               ),
                               // _lineWidget(),
@@ -336,6 +345,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                     status_id = value?.status_id ?? '';
                                   });
                                 },
+                                icon: Icons.account_tree_outlined,
                               ),
                               _buildDropdown<ActivityPriority>(
                                 label: 'Priority',
@@ -346,9 +356,10 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                 onChanged: (value) {
                                   setState(() {
                                     selectedPriority = value;
-                                    project_id = value?.priority_id ?? '';
+                                    priority_id = value?.priority_id ?? '';
                                   });
                                 },
+                                icon: Icons.format_list_numbered_sharp,
                               ),
                               _textController('Subject', _subjectController,
                                   false, Icons.numbers),
@@ -356,178 +367,45 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                   _descriptionController, false, Icons.numbers),
                               Row(
                                 children: [
-                                  Expanded(
-                                    child:
-                                        _DateBody('Start Date', true, 'bodyOn'),
-                                  ),
+                                  _DateBody('Start Date', true, 'bodyOn'),
                                   SizedBox(width: 16),
-                                  Expanded(
-                                    child: _TimeBody(
-                                        'Start Time', 'start', 'bodyOn'),
-                                  ),
+                                  _TimeBody('Start Time', 'start', 'bodyOn'),
                                 ],
                               ),
                               SizedBox(height: 8),
                               Row(
                                 children: [
-                                  Expanded(
-                                    child:
-                                        _DateBody('End Date', false, 'bodyOff'),
-                                  ),
+                                  _DateBody('End Date', false, 'bodyOff'),
                                   SizedBox(width: 16),
-                                  Expanded(
-                                    child:
-                                        _TimeBody('End Time', 'end', 'bodyOff'),
-                                  ),
+                                  _TimeBody('End Time', 'end', 'bodyOff'),
                                 ],
                               ),
                               SizedBox(height: 8),
                               _buildDropdown<ActivityPlace>(
                                 label: 'Place',
-                                hint: widget.activity.activity_place_type == 'out' ?'Outdoor':'Indoor',
+                                hint:
+                                    widget.activity.activity_place_type == 'out'
+                                        ? 'Outdoor'
+                                        : 'Indoor',
                                 items: _modelPlace,
                                 selectedValue: selectedPlace,
                                 getLabel: (item) => item.place_name ?? '',
                                 onChanged: (value) {
                                   setState(() {
                                     selectedPlace = value;
-                                    project_id = value?.place_id ?? '';
+                                    place_id = value?.place_id ?? '';
                                   });
                                 },
+                                icon: Icons.input,
                               ),
                               _textController('Location', _locationController,
                                   true, Icons.location_history),
                               _textController('Cost', _costController, false,
                                   Icons.numbers),
-                              // _lineWidget(),
-                              // Text(
-                              //   'Other Contact',
-                              //   maxLines: 1,
-                              //   overflow: TextOverflow.ellipsis,
-                              //   style: TextStyle(
-                              //     fontFamily: 'Arial',
-                              //     fontSize: 14,
-                              //     color: Color(0xFF555555),
-                              //     fontWeight: FontWeight.w700,
-                              //   ),
-                              // ),
-                              // SizedBox(height: 8),
-                              // Padding(
-                              //   padding:
-                              //       const EdgeInsets.symmetric(horizontal: 15),
-                              //   child: Column(
-                              //     children: List.generate(
-                              //         addNewContactList.length, (index) {
-                              //       final contact = addNewContactList[index];
-                              //       return Padding(
-                              //         padding: const EdgeInsets.only(bottom: 5),
-                              //         child: Column(
-                              //           mainAxisAlignment:
-                              //               MainAxisAlignment.center,
-                              //           crossAxisAlignment:
-                              //               CrossAxisAlignment.start,
-                              //           children: [
-                              //             Row(
-                              //               mainAxisAlignment:
-                              //                   MainAxisAlignment.start,
-                              //               crossAxisAlignment:
-                              //                   CrossAxisAlignment.center,
-                              //               children: [
-                              //                 Padding(
-                              //                   padding: const EdgeInsets.only(
-                              //                       bottom: 4, right: 8),
-                              //                   child: CircleAvatar(
-                              //                     radius: 20,
-                              //                     backgroundColor: Colors.grey,
-                              //                     child: CircleAvatar(
-                              //                       radius: 19,
-                              //                       backgroundColor:
-                              //                           Colors.white,
-                              //                       child: ClipRRect(
-                              //                         borderRadius:
-                              //                             BorderRadius.circular(
-                              //                                 100),
-                              //                         child: Image.network(
-                              //                           (contact.cus_cont_photo == '')
-                              //                               ? 'https://dev.origami.life/images/default.png'
-                              //                               : '$host//crm/${contact.cus_cont_photo}',
-                              //                           height: 100,
-                              //                           width: 100,
-                              //                           fit: BoxFit.cover,
-                              //                         ),
-                              //                       ),
-                              //                     ),
-                              //                   ),
-                              //                 ),
-                              //                 const SizedBox(width: 10),
-                              //                 Expanded(
-                              //                   child: Column(
-                              //                     mainAxisAlignment:
-                              //                         MainAxisAlignment.start,
-                              //                     crossAxisAlignment:
-                              //                         CrossAxisAlignment.start,
-                              //                     children: [
-                              //                       Text(
-                              //                         '${contact.contact_first} ${contact.contact_last}',
-                              //                         maxLines: 1,
-                              //                         overflow:
-                              //                             TextOverflow.ellipsis,
-                              //                         style: TextStyle(
-                              //                           fontFamily: 'Arial',
-                              //                           fontSize: 16,
-                              //                           color:
-                              //                               Color(0xFFFF9900),
-                              //                           fontWeight:
-                              //                               FontWeight.w700,
-                              //                         ),
-                              //                       ),
-                              //                       Text(
-                              //                         '${contact.cus_name_en} (${contact.cus_name_th})',
-                              //                         maxLines: 1,
-                              //                         overflow:
-                              //                             TextOverflow.ellipsis,
-                              //                         style: TextStyle(
-                              //                           fontFamily: 'Arial',
-                              //                           fontSize: 14,
-                              //                           color:
-                              //                               Color(0xFF555555),
-                              //                           fontWeight:
-                              //                               FontWeight.w500,
-                              //                         ),
-                              //                       ),
-                              //                       Divider(
-                              //                           color: Colors
-                              //                               .grey.shade300),
-                              //                     ],
-                              //                   ),
-                              //                 ),
-                              //               ],
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       );
-                              //     }),
-                              //   ),
-                              // ),
-                              // TextButton(
-                              //   onPressed: _addOtherContact,
-                              //   child: Text(
-                              //     'Add Other Contact',
-                              //     maxLines: 1,
-                              //     overflow: TextOverflow.ellipsis,
-                              //     style: TextStyle(
-                              //       fontFamily: 'Arial',
-                              //       fontSize: 14,
-                              //       color: Color(0xFFFF9900),
-                              //       fontWeight: FontWeight.w700,
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),
                       ),
-                      SizedBox(height: 8),
                       Padding(
                         padding:
                             const EdgeInsets.only(left: 8, right: 8, bottom: 8),
@@ -575,6 +453,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                             builder: (context) => SkoopScreen(
                               employee: widget.employee,
                               activity: widget.activity,
+                              place_id: place_id,
                             ),
                           ),
                         );
@@ -584,13 +463,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     ),
                   ),
                   // if (_skoopDetail?.skooped == '1')
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                          onTap: showCustomDialog,
-                          child: _gestureDetector(
-                              'Close', Icons.check, Color(0xFF53C507))),
-                    ),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                        onTap: showCustomDialog,
+                        child: _gestureDetector(
+                            'Close', Icons.check, Color(0xFF53C507))),
+                  ),
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
@@ -949,7 +828,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
 
   Widget _buildDropdown<T>({
     required String label,
-    IconData? icon,
+    required IconData icon,
     bool? filled,
     required String hint,
     required List<T> items,
@@ -975,8 +854,9 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           InputDecorator(
             decoration: InputDecoration(
               isDense: true,
-              filled: filled != true ? false:true, // ✅ เติมพื้นหลังเมื่อ disabled
-              fillColor: filled != true? Colors.white:Colors.grey.shade300,
+              filled:
+                  filled != true ? false : true, // ✅ เติมพื้นหลังเมื่อ disabled
+              fillColor: filled != true ? Colors.white : Colors.grey.shade300,
               contentPadding: EdgeInsets.only(top: 12, bottom: 12),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -1001,7 +881,12 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        (icon != null) ? Icon(icon, size: 24) : Container(),
+                        Icon(
+                          icon,
+                          size: 24,
+                          color: Colors.black87,
+                        ),
+                        SizedBox(width: 16),
                         Expanded(
                           child: Text(
                             getLabel(item),
@@ -1056,7 +941,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         hintText: 'search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -1120,8 +1005,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               borderRadius: BorderRadius.circular(10),
               color: (ontap == true) ? Colors.white : Colors.grey.shade300,
               border: Border.all(
-                color:
-                    (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
+                color: Colors.grey.shade400,
                 width: 1.0,
               ),
             ),
@@ -1168,8 +1052,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               borderRadius: BorderRadius.circular(10),
               color: (ontap == true) ? Colors.white : Colors.grey.shade300,
               border: Border.all(
-                color:
-                (ontap == true) ? Color(0xFFFF9900) : Colors.grey.shade400,
+                color: Colors.grey.shade400,
                 width: 1.0,
               ),
             ),
@@ -1241,7 +1124,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
               border: Border.all(
-                color: Color(0xFFFF9900),
+                color: Colors.grey.shade400,
                 width: 1.0,
               ),
             ),
@@ -1290,7 +1173,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
               border: Border.all(
-                color: Color(0xFFFF9900),
+                color: Colors.grey.shade400,
                 width: 1.0,
               ),
             ),
@@ -1304,10 +1187,10 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                       close == 'bodyOn'
                           ? start_time
                           : (close == 'bodyOff')
-                          ? end_time
-                          : (close == 'closeOn')
-                          ? start_time_close
-                          : end_time_close,
+                              ? end_time
+                              : (close == 'closeOn')
+                                  ? start_time_close
+                                  : end_time_close,
                       style: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 14,
@@ -1345,13 +1228,12 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   String end_date = '';
   String end_time = '';
   String cost = '';
-  String contact_list = '';
 
   ActivityProject? selectedProject;
   List<ActivityProject> projectList = [];
   Future<void> _fetchProject() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/activity/component/project.php");
+        Uri.parse("$hostDev/api/origami/crm/activity/component/project.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -1367,10 +1249,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       setState(() {
         projectList =
             dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-        // if (projectList.isNotEmpty && selectedProject == null) {
-        //   selectedProject = projectList[0];
-        //   project_id = selectedProject?.project_id??'';
-        // }
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -1381,7 +1259,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   List<ActivityAccount> accountList = [];
   Future<void> _fetchAccount() async {
     final uri =
-    Uri.parse("$hostDev/api/origami/crm/activity/component/account.php");
+        Uri.parse("$hostDev/api/origami/crm/activity/component/account.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -1407,14 +1285,15 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   List<ActivityContact> addNewContactList = [];
   String cus_cont_id = '';
   Future<void> _fetchContact() async {
-    final uri = Uri.parse('$hostDev/api/origami/crm/activity/component/contact.php');
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/activity/component/contact.php');
     try {
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'cus_cont_id' : contact_id,
+          'cus_cont_id': contact_id,
         },
       );
       if (response.statusCode == 200) {
@@ -1424,15 +1303,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           _modelContact = dataJson.map((json) {
             return ActivityContact.fromJson(json);
           }).toList();
-
-          // first = dataJson
-          //     .map((item) =>
-          //         item.contact_first = widget.skoopDetail?.contact_first ?? '')
-          //     .join(', ');
-
-          // if (_modelContact.isNotEmpty && selectedContact == null) {
-          //   selectedContact = _modelContact[0];
-          // }
         });
       } else {
         throw Exception('Failed to load status data');
@@ -1445,35 +1315,31 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   ActivityType? selectedType;
   List<ActivityType> _modelType = [];
   String type_name = '';
-  Future<void> fetchActivityType() async {
-    final uri = Uri.parse('$hostDev/crm/ios_activity_type.php');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer $token'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': token,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
-        setState(() {
-          _modelType =
-              dataJson.map((json) => ActivityType.fromJson(json)).toList();
-          if (widget.activity.activity_type_name == '') {
-            selectedType = _modelType[0];
-            type_id = selectedType?.type_id??'';
-            type_name = selectedType?.type_name??'';
-          }
-        });
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+  Future<List<ActivityType>> fetchActivityType() async {
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/activity/component/type.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $token'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        _modelType =
+            dataJson.map((json) => ActivityType.fromJson(json)).toList();
+        if (widget.activity.activity_type_name == '') {
+          selectedType = _modelType[0];
+          type_id = selectedType?.activity_type_id ?? '';
+          type_name = selectedType?.activity_type_name ?? '';
+        }
+      });
+      return dataJson.map((json) => ActivityType.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load instructors');
     }
   }
 
@@ -1497,9 +1363,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         setState(() {
           _modelStatus =
               dataJson.map((json) => ActivityStatus.fromJson(json)).toList();
-          // if (_modelStatus.isNotEmpty && selectedStatus == null) {
-          //   selectedStatus = _modelStatus[0];
-          // }
         });
       } else {
         throw Exception('Failed to load status data');
@@ -1511,30 +1374,26 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
 
   ActivityPriority? selectedPriority;
   List<ActivityPriority> _modelPriority = [];
-  Future<void> fetchActivityPriority() async {
-    final uri = Uri.parse('$hostDev/crm/ios_activity_priority.php');
+  Future<void> _fetchPriority() async {
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/activity/component/priority');
     try {
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': token,
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'];
+        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
         setState(() {
           _modelPriority =
               dataJson.map((json) => ActivityPriority.fromJson(json)).toList();
-          // if (_modelPriority.isNotEmpty && selectedPriority == null) {
-          //   selectedPriority = _modelPriority[0];
-          // }
         });
       } else {
-        throw Exception('Failed to load status data');
+        throw Exception('Failed to load instructors');
       }
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
@@ -1563,55 +1422,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     }
   }
 
-  // String skoop_detail = '';
-  // Future<void> _fetchUpDateActivity() async {
-  //   final uri = Uri.parse('$hostDev/crm/ios_update_activity.php');
-  //   try {
-  //     final response = await http.post(
-  //       uri,
-  //       headers: {'Authorization': 'Bearer $authorization'},
-  //       body: {
-  //         'comp_id': widget.employee.comp_id,
-  //         'emp_id': widget.employee.emp_id,
-  //         'Authorization': authorization,
-  //         'activity_id': widget.activity.activity_id,
-  //         'type_id': type_id,
-  //         'project_id': project_id,
-  //         'account_id': account_id,
-  //         'contact_id': contact_id,
-  //         'status_id': status_id,
-  //         'priority_id': priority_id,
-  //         'place_id': place_id,
-  //         'location': location,
-  //         'location_lat': location_lat,
-  //         'location_long': location_long,
-  //         'activity_name': _subjectController.text.trim(),
-  //         'description': _descriptionController.text.trim(),
-  //         'start_date': start_date,
-  //         'start_time': start_time,
-  //         'end_date': end_date,
-  //         'end_time': end_time,
-  //         'cost': _costController.text.trim(),
-  //         'contact_list': contact_list,
-  //         'skoop_detail': _skoopDetail?.activity_id,
-  //       },
-  //     );
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-  //       final List<dynamic> dataJson = jsonResponse['data'];
-  //       final message = jsonResponse['message'];
-  //       pushActivity(9);
-  //       showSnackBar(message);
-  //       throw Exception('UpDate Activity');
-  //     } else {
-  //       throw Exception('Failed to load status data');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Failed to load personal data: $e');
-  //   }
-  // }
-
-  void pushActivity(int page){
+  void pushActivity(int page) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -1642,10 +1453,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   String? activity_alert48_status;
   Future<void> fetchUpdateActivity() async {
     end_date = start_date;
-    // List<String> contactIds = ['12', '15', '18'];
-    List<String> contactIds = [];
-    String contactList1 = contactIds.join(','); // => "12,15,18"
-    final uri = Uri.parse("$hostDev/api/origami/crm/activity/update_activity.php");
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/activity/update_activity.php');
     try {
       final response = await http.post(
         uri,
@@ -1654,37 +1463,41 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
           'activity_id': widget.activity.activity_id,
+          'condition': 'update',
           'activity_type_id': type_id,
           'project_id': project_id,
-          'account_id': account_id,
-          'contact_id': contact_id,
+          'cus_id': account_id,
+          'cont_id': contact_id,
           'activity_status_id': status_id,
           'activity_priority_id': priority_id,
-          'place_id': place_id,
-          'activity_location': _locationController.text,
-          'activity_lat': '',
-          'activity_lng': '',
+          'activity_place_type': place_id,
+          'activity_location':
+              (place_id == 'out') ? _locationController.text : '',
+          'activity_lat':
+              (place_id == 'out') ? userPosition!.latitude.toString() : '',
+          'activity_lng':
+              (place_id == 'out') ? userPosition!.longitude.toString() : '',
           'activity_project_name': _subjectController.text.trim(),
           'activity_description': _descriptionController.text.trim(),
           'activity_start_date': start_date,
-          'activity_start_time': start_time,
+          'activity_start_time_': start_time,
           'activity_end_date': end_date,
-          'activity_end_time': end_time,
+          'activity_end_time_': end_time,
           'activity_cost': cost,
-          'activity_real_start_date': real_date,
-          'activity_real_start_time': real_start_time,
-          'activity_real_end_date': real_date,
-          'activity_real_end_time': real_end_time,
-          'activity_status': activity_status,
-          'contact_list': contactList1,
+          'activity_before_day': widget.activity.activity_before_day,
         },
       );
       if (response.statusCode == 200) {
         print('true: ${response.statusCode}');
         final jsonResponse = jsonDecode(response.body);
         final message = jsonResponse['message'];
-        pushActivity(9);
-        showSnackBar(message);
+        if (jsonResponse['status'] == true) {
+          pushActivity(9);
+          showSnackBar(message);
+        } else {
+          _showCustomDialog(message);
+        }
+        print('close activity success --> $message');
       } else {
         throw Exception('Failed to load status data');
       }
@@ -1693,8 +1506,49 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     }
   }
 
+  void _showCustomDialog(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Warning!',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+                fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _fetchCloseActivity() async {
-    final uri = Uri.parse('$hostDev/api/origami/crm/activity/update_activity.php');
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/activity/update_activity.php');
     try {
       final response = await http.post(
         uri,
@@ -1703,6 +1557,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
           'activity_id': widget.activity.activity_id,
+          'condition': 'close',
           'activity_real_start_date': real_date,
           'activity_real_start_time': real_start_time,
           'activity_real_end_date': real_date,
@@ -1799,13 +1654,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               Row(
                 children: [
                   Expanded(
-                    child:
-                    _realDate('Start Date', true, 'bodyOn'),
+                    child: _realDate('Start Date', true, 'bodyOn'),
                   ),
                   SizedBox(width: 16),
                   Expanded(
-                    child: _realTime(
-                        'Start Time', 'bodyOn'),
+                    child: _realTime('Start Time', 'bodyOn'),
                   ),
                 ],
               ),
@@ -1813,13 +1666,11 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               Row(
                 children: [
                   Expanded(
-                    child:
-                    _realDate('End Date', false, 'bodyOff'),
+                    child: _realDate('End Date', false, 'bodyOff'),
                   ),
                   SizedBox(width: 16),
                   Expanded(
-                    child:
-                    _realTime('End Time', 'bodyOff'),
+                    child: _realTime('End Time', 'bodyOff'),
                   ),
                 ],
               ),
@@ -1841,9 +1692,41 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             ),
             TextButton(
               onPressed: () {
-                activity_alert48_status = 'Y';
-                activity_status = 'close';
-                _fetchCloseActivity();
+                if(widget.activity.activity_note == ''){
+                  _showCustomDialog('Please Skoop before close activity.');
+                }else{
+                  String mainStart = widget.activity.activity_start_time_;
+                  String mainEnd   = widget.activity.activity_end_time_;
+
+                  bool hasOverlap = false;
+
+                  // ✅ เอา main ไปเช็คกับ activityList
+                  for (var act in activityList) {
+                    if (isOverlap(act.activity_start_time_, act.activity_end_time_, mainStart, mainEnd)) {
+                      hasOverlap = true;
+                      print("❌ Main ชนกับ ${act.activity_id} (${act.activity_start_time_} - ${act.activity_end_time_})");
+                    }
+                  }
+
+                  if (hasOverlap) {
+                    // ❌ ถ้ามีชน => ไม่ให้ close
+                    Navigator.pop(context);
+                    _showCustomDialog('Sorry, the activity is already active at this time!');
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Text("ไม่สามารถปิดกิจกรรมได้ เพราะช่วงเวลาชนกับกิจกรรมอื่น"),
+                    //     backgroundColor: Colors.red,
+                    //   ),
+                    // );
+                  } else {
+                    // ✅ ถ้าไม่ชน => ดำเนินการปิดได้
+                    activity_alert48_status = 'Y';
+                    activity_status = 'close';
+                    Navigator.pop(context);
+                    print('_fetchCloseActivity ======= TRUE');
+                    _fetchCloseActivity();
+                  }
+                }
               },
               child: Text(
                 'Ok',
@@ -1853,7 +1736,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-            ),
+            )
             // Confirm Button
           ],
         );
@@ -1862,7 +1745,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   }
 
   Future<void> _fetchDeleteActivity() async {
-    final uri = Uri.parse('$hostDev/api/origami/crm/activity/delete_activity.php');
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/activity/delete_activity.php');
     try {
       final response = await http.post(
         uri,
@@ -1887,6 +1771,77 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     }
   }
 
+  bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
+  bool _isFirstTime = true;
+  int indexItems = 0;
+  int sum = 0;
+  List<GetActivity> activityList = [];
+  List<GetActivity> newActivities = [];
+  List<GetActivity> filteredActivityList = [];
+  bool isOverlap(String start1, String end1, String start2, String end2) {
+    int toMinutes(String time) {
+      final parts = time.split(":");
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      return hour * 60 + minute;
+    }
+
+    final start1Minutes = toMinutes(start1);
+    final end1Minutes = toMinutes(end1);
+    final start2Minutes = toMinutes(start2);
+    final end2Minutes = toMinutes(end2);
+
+    return start1Minutes < end2Minutes && start2Minutes < end1Minutes;
+  }
+
+  String mainStart = '';
+  String mainEnd = '';
+  Future<void> _fetchModelActivity() async {
+    final uri = Uri.parse(
+        "$hostDev/api/origami/crm/activity/component/filter_close.php");
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'activity_end_date': widget.activity.activity_end_date,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final List<dynamic> activityJson = jsonResponse['data'] ?? [];
+
+        newActivities = activityJson
+            .map((json) => GetActivity.fromJson(json))
+            .where((a) => a.activity_del != 'del')
+            .toList();
+
+        setState(() {
+          Set<String> seenIds = activityList.map((e) => e.activity_id).toSet();
+          newActivities =
+              newActivities.where((a) => seenIds.add(a.activity_id)).toList();
+
+          activityList.addAll(newActivities);
+          activityList.sort((a, b) => b.activity_id.compareTo(a.activity_id));
+
+          if (_isFirstTime) {
+            filteredActivityList = activityList;
+            _isFirstTime = false;
+          }
+          isAtEnd = false;
+        });
+      } else {
+        throw Exception(
+            'Failed to load data, status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
   void _showCustomDeleteDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -1905,9 +1860,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
           content: Text(
             'Do you want to delete this activity?',
             style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 16,
-                color: Color(0xFF555555)),
+                fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
           ),
           actions: [
             TextButton(

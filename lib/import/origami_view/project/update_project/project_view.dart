@@ -100,20 +100,21 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.orange,
+        elevation: 2,
         title: Text(
           page,
           style: TextStyle(
             fontFamily: 'Arial',
             fontSize: 24,
-            color: Colors.orange,
+            color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
         ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.orange,
+            color: Colors.white,
           ),
           onPressed: () => Navigator.pop(context),
         ),

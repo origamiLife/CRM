@@ -949,14 +949,22 @@ class Employee {
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) {
+    String avatarPath = json['emp_avatar'] ?? '';
+    String logoPath = json['comp_logo'] ?? '';
+    String fullAvatar = avatarPath.isNotEmpty
+        ? "$hostDev${avatarPath.replaceAll("\\", "/")}"
+        : '';
+    String fullLogo = logoPath.isNotEmpty
+        ? "$hostDev${logoPath.replaceAll("\\", "/")}"
+        : '';
     return Employee(
-      comp_id: json['comp_id'] = '2',
-      emp_id: json['emp_id'] = '17',
+      comp_id: json['comp_id'] ??'',
+      emp_id: json['emp_id'] ??'',
       emp_code: json['emp_code'] ?? '',
       emp_name: json['emp_name'] ?? '',
-      emp_avatar: json['emp_avatar'] ?? '',
+      emp_avatar: fullAvatar,
       comp_name: json['comp_name'] ?? '',
-      comp_logo: json['comp_logo'] ?? '',
+      comp_logo: fullLogo,
       dept_name: json['dept_name'] ?? '',
       dna_color: json['dna_color'] ?? '',
       password_verify: json['password_verify'] ?? '',

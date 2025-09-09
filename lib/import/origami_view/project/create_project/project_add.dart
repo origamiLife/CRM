@@ -143,14 +143,15 @@ class _ProjectAddState extends State<ProjectAdd> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.orange,
+        elevation: 2,
         title: Center(
           child: Text(
             (widget.project_sale_id == '0') ? 'Sale' : 'Non Sale',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 24,
-              color: Colors.orange,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -158,7 +159,7 @@ class _ProjectAddState extends State<ProjectAdd> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.orange,
+            color: Colors.white,
           ),
           onPressed: () => Navigator.pop(context),
         ),

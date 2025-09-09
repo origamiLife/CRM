@@ -8,6 +8,7 @@ import '../activity.dart';
 import '../signature_page/signature_page.dart';
 import '../skoop/skoop.dart';
 import 'activity_edit_detail.dart';
+import 'join_user_activity.dart';
 
 class ActivityEditView extends StatefulWidget {
   const ActivityEditView({
@@ -27,7 +28,7 @@ class ActivityEditView extends StatefulWidget {
 class _ActivityEditViewState extends State<ActivityEditView> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _telController = TextEditingController();
-  TextEditingController _searchfilterController = TextEditingController();
+
   int _index = 0;
   String parent_id = '';
   String ownerStr = '';
@@ -41,7 +42,6 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     } else {
       parent_id = widget.activity.parent_activity_id;
     }
-    _fetchJoinActivity();
     showDate();
     updateTime();
     Timer.periodic(Duration(seconds: 1), (Timer t) => updateTime());
@@ -75,7 +75,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
       case 0:
         return _activity(activity);
       case 1:
-        return _showJoinUser(activity); //_activityImage();
+        return JoinUserScreenActivity(employee: widget.employee, activity: activity,); //_activityImage();
       case 2:
         return StampActivity(
             employee: widget.employee, activity: activity);
@@ -105,7 +105,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
       title: 'Activity',
     ),
     TabItem(
-      icon: FontAwesomeIcons.images,
+      icon: Icons.person,
       title: 'Join User',
     ),
     TabItem(
@@ -344,7 +344,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
         Column(
           children: [
             Text(
-              activity.project_name ?? '',
+              widget.employee.emp_name,
               maxLines: 1,
               style: TextStyle(
                 fontFamily: 'Arial',
@@ -484,144 +484,6 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     );
   }
 
-  Widget _showJoinUser(GetActivity modelActivity) {
-    return Column(
-      children: [
-        Column(
-            children: List.generate(joinList.length, (index) {
-          final join = joinList[index];
-          return Padding(
-            padding: const EdgeInsets.all(4),
-            child: Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset: Offset(1, 3), // x, y
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                join.emp_code,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16,
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Text(
-                              join.emp_id == widget.employee.emp_id
-                                  ? ownerStr
-                                  : '',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.w700,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                        Divider(),
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.grey.shade400,
-                              child: CircleAvatar(
-                                radius: 31,
-                                backgroundColor: Colors.white,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.network(
-                                    join.emp_pic,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            _switch(join),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                _lineWidget()
-              ],
-            ),
-          );
-        })),
-        SizedBox(
-          height: 8,
-        ),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: TextButton(
-            onPressed: _addJoinUser,
-            child: Text(
-              'Tap here to select an Join User.',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFFFF9900),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _switch(JoinActivity join) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${join.title} ${join.firstname} ${join.lastname} (${join.nickname})',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 16,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.w700,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          _description(Icons.apartment, '${join.posi_description}'),
-          _description(Icons.work, '${join.dept_description}'),
-          SizedBox(height: 8),
-        ],
-      ),
-    );
-  }
-
   Widget _lineWidget() {
     return Padding(
       padding: EdgeInsets.only(top: 18, bottom: 18),
@@ -640,37 +502,6 @@ class _ActivityEditViewState extends State<ActivityEditView> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _description(IconData icon, String join_user) {
-    return Padding(
-      padding: const EdgeInsets.all(4),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.grey, size: 16),
-          SizedBox(width: 8),
-          Text(
-            '${join_user}',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 14,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _checkBox(String title, String is_owner) {
-    return CheckBoxWidget(
-      title: title,
-      isOwner: is_owner,
-      onChanged: (value) {
-        print("ค่าใหม่: $value"); // Y , N
-      },
     );
   }
 
@@ -919,141 +750,6 @@ class _ActivityEditViewState extends State<ActivityEditView> {
             ),
           );
   }
-
-  Widget _getJoinUser() {
-    return FutureBuilder<List<Object>>(
-      future: null,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          return Column(
-            children: [
-              Expanded(child: SizedBox()),
-              Stack(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 16),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(10),
-                        ),
-                      ),
-                      child: Scaffold(
-                        backgroundColor: Colors.transparent,
-                        body: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                controller: _searchfilterController,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    color: Color(0xFF555555),
-                                    fontSize: 14),
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 12),
-                                  hintText: 'Search',
-                                  hintStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14,
-                                      color: Color(0xFF555555)),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Color(0xFFFF9900),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFFF9900),
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFFF9900),
-                                      width: 1.0,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  setState(() {}); // รีเฟรช UI เมื่อค้นหา
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: Container()),
-                      IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: Icon(Icons.cancel, color: Colors.red)),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          );
-        }
-      },
-    );
-  }
-
-  void _addJoinUser() {
-    showModalBottomSheet<void>(
-      barrierColor: Colors.black87,
-      backgroundColor: Colors.transparent,
-      context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (BuildContext context) {
-        return _getJoinUser();
-      },
-    );
-  }
-
-  List<JoinActivity> joinList = [];
-  Future<void> _fetchJoinActivity() async {
-    final uri = Uri.parse("$hostDev/api/origami/crm/activity/join_user.php");
-    final response = await http.post(
-      uri,
-      headers: {'Authorization': 'Bearer $token'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'activity_id': parent_id,
-        'parent_activity_id': parent_id,
-      },
-    );
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-
-      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-      setState(() {
-        joinList = dataJson.map((json) => JoinActivity.fromJson(json)).toList();
-      });
-    } else {
-      throw Exception('Failed to load personal data: ${response.reasonPhrase}');
-    }
-  }
 }
 
 class TitleDown {
@@ -1080,6 +776,7 @@ class JoinActivity {
   final String age;
   final String emp_pic;
   final String nickname;
+  final String dept_code;
   final String dept_description;
   final String posi_description;
 
@@ -1098,6 +795,7 @@ class JoinActivity {
     required this.age,
     required this.emp_pic,
     required this.nickname,
+    required this.dept_code,
     required this.dept_description,
     required this.posi_description,
   });
@@ -1119,6 +817,7 @@ class JoinActivity {
       age: json['age'] ?? '',
       emp_pic: json['emp_pic'] ?? '',
       nickname: json['nickname'] ?? '',
+      dept_code: json['dept_code'] ?? '',
       dept_description: json['dept_description'] ?? '',
       posi_description: json['posi_description'] ?? '',
     );
