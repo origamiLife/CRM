@@ -234,182 +234,223 @@ class _AccountEditViewState extends State<AccountEditView> {
   Widget _viewDetail(ModelAccount account) {
     return Column(
       children: [
-        Row(
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 16, right: 8, bottom: 16, top: 8),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: Image.network(
-                        account.cus_logo,
-                        height: 105,
-                        fit: BoxFit.contain,
-                        color: Colors.grey.shade100,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.network(
-                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            height: 105,
-                            fit: BoxFit.contain,
-                            color: Colors.grey.shade100,
-                          );
-                        },
-                      ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16,left: 16,right: 16),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    account.cus_code,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Color(0xFF555555),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: Image.network(
-                        account.cus_logo,
-                        height: 100,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.network(
-                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            height: 100,
-                            fit: BoxFit.contain,
-                          );
-                        },
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      children: [
+                        Image.network(
+                          account.cus_logo,
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.network(
+                              'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                              width: 90,
+                              height: 90,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (account.account_name_en != '')
+                                Text(
+                                  (account.registration_name == '')
+                                      ? account.account_name_en
+                                      : '${account.registration_name ?? ''} : ${account.account_name_en}',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14,
+                                    color: Color(0xFFFF9900),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              else
+                                Text(
+                                  (account.registration_name == '')
+                                      ? account.account_name_th
+                                      : '${account.registration_name ?? ''} : ${account.account_name_th}',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14,
+                                    color: Color(0xFFFF9900),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              SizedBox(height: 5),
+                              Text(
+                                'Grop : ${account.cus_group_name}',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                'Type : ${account.cus_type_name ?? ''}',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              (account.cus_tel_no == '')
+                                  ? Container()
+                                  : Text(
+                                'Mobile : ${account.cus_tel_no ?? ''}',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              (account.cus_email == '')
+                                  ? Container()
+                                  : Text(
+                                'Email : ${account.cus_email}',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      account.cus_code,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                          fontWeight: FontWeight.w900),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      account.account_name_en,
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      'Start Date : ${account.create_date}',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 10,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      'End Date : ${account.last_activity_date}',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 10,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            Divider(color: Colors.grey),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade100,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Icon(Icons.mail, color: Colors.orange.shade400),
-                  ),
-                ),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          // _makePhoneCall(_telView(account));
-                          _makePhoneCall(account.cus_tel_no);
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Icon(Icons.call, color: Colors.red.shade400),
-                      ),
-                    )),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Icon(Icons.camera_alt, color: Colors.grey),
-                    )),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Icon(Icons.location_history,
-                          color: Colors.green.shade400),
-                    )),
-              ),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       Expanded(
+        //         child: Container(
+        //           padding: EdgeInsets.all(8),
+        //           decoration: BoxDecoration(
+        //             color: Colors.orange.shade100,
+        //             borderRadius: BorderRadius.circular(100),
+        //           ),
+        //           child: Padding(
+        //             padding: const EdgeInsets.all(4),
+        //             child: Icon(Icons.mail, color: Colors.orange.shade400),
+        //           ),
+        //         ),
+        //       ),
+        //       SizedBox(width: 16),
+        //       Expanded(
+        //         child: Container(
+        //             padding: EdgeInsets.all(8),
+        //             decoration: BoxDecoration(
+        //               color: Colors.orange.shade100,
+        //               borderRadius: BorderRadius.circular(100),
+        //             ),
+        //             child: GestureDetector(
+        //               onTap: () {
+        //                 setState(() {
+        //                   // _makePhoneCall(_telView(account));
+        //                   _makePhoneCall(account.cus_tel_no);
+        //                 });
+        //               },
+        //               child: Padding(
+        //                 padding: const EdgeInsets.all(4),
+        //                 child: Icon(Icons.call, color: Colors.red.shade400),
+        //               ),
+        //             )),
+        //       ),
+        //       SizedBox(width: 16),
+        //       Expanded(
+        //         child: Container(
+        //             padding: EdgeInsets.all(8),
+        //             decoration: BoxDecoration(
+        //               color: Colors.orange.shade100,
+        //               borderRadius: BorderRadius.circular(100),
+        //             ),
+        //             child: Padding(
+        //               padding: const EdgeInsets.all(4),
+        //               child: Icon(Icons.camera_alt, color: Colors.grey),
+        //             )),
+        //       ),
+        //       SizedBox(width: 16),
+        //       Expanded(
+        //         child: Container(
+        //             padding: EdgeInsets.all(8),
+        //             decoration: BoxDecoration(
+        //               color: Colors.orange.shade100,
+        //               borderRadius: BorderRadius.circular(100),
+        //             ),
+        //             child: Padding(
+        //               padding: const EdgeInsets.all(4),
+        //               child: Icon(Icons.location_history,
+        //                   color: Colors.green.shade400),
+        //             )),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Flexible(
           child: Container(
             color: Colors.white,
@@ -423,24 +464,24 @@ class _AccountEditViewState extends State<AccountEditView> {
                       'Group',
                       "${account.cus_group_name} (${account.cus_code})",
                       Icons.groups,
-                      Colors.grey.shade400),
+                      Colors.black54),
                   _subDetail('Type Name', account.cus_type_name,
-                      Icons.merge_type, Colors.grey.shade400),
+                      Icons.merge_type, Colors.black54),
                   _subDetail(
                       'Registered Capital',
                       "${account.account_name_th} (${account.registration_name})",
                       Icons.app_registration,
-                      Colors.grey.shade400),
+                      Colors.black54),
                   _subDetail('Source', account.source_name, Icons.source,
-                      Colors.grey.shade400),
+                      Colors.black54),
                   _subDetail('Mobile', _telView(account),
-                      Icons.phone_android_outlined, Colors.grey.shade400),
+                      Icons.phone_android_outlined, Colors.black54),
                   _subDetail('Email', account.cus_email, Icons.email,
-                      Colors.grey.shade400),
+                      Colors.black54),
                   _subDetail('Class', account.cus_class_name, Icons.lan,
-                      Colors.grey.shade400),
+                      Colors.black54),
                   _subDetail('DESCRIPTION', account.cus_description,
-                      Icons.subject, Colors.grey.shade400),
+                      Icons.subject, Colors.black54),
                 ],
               ),
             ),
@@ -506,7 +547,7 @@ class _AccountEditViewState extends State<AccountEditView> {
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
-                      color: Color(0xFFFF9900),
+                      color: Colors.grey,
                     ),
                   ),
                 ],
@@ -556,10 +597,10 @@ class _AccountEditViewState extends State<AccountEditView> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: Text(
-            'Delete',
+            'Delete Account',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 22,
@@ -570,16 +611,18 @@ class _AccountEditViewState extends State<AccountEditView> {
           content: Text(
             (widget.account.registration_name == '')
                 ? 'Do you want to delete account ${widget.account.account_name_en}?'
-                : 'Do you want to delete account ${widget.account.registration_name ?? ''} : ${widget.account.account_name_en}?',
+                : 'Do you want to delete account ${widget.account.registration_name} : ${widget.account.account_name_en}?',
             style: const TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555)),
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
           ),
           actions: [
             TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
+              onPressed: () {
+                Navigator.pop(dialogContext);
               },
               child: Text(
                 'Cancel',
@@ -592,11 +635,11 @@ class _AccountEditViewState extends State<AccountEditView> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
                 _fetchDeleteAccount();
               },
               child: Text(
-                'Ok',
+                'Delete',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.orange,
@@ -604,7 +647,6 @@ class _AccountEditViewState extends State<AccountEditView> {
                 ),
               ),
             ),
-            // Confirm Button
           ],
         );
       },

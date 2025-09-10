@@ -510,8 +510,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                               (project.can_delete == 'Y')
                                   ? InkWell(
                                       onTap: () {
-                                        _showCustomDialog(project.project_id,project.project_name);
-                                      },
+                                        _showCustomDeleteDialog(project.project_id,project.project_name);
+                                        },
                                       child: Icon(
                                         Icons.delete,
                                         color: Colors.red,
@@ -858,14 +858,14 @@ class _ProjectScreenState extends State<ProjectScreen> {
     }
   }
 
-  void _showCustomDialog(String project_id , String project_name) {
+  void _showCustomDeleteDialog(String project_id, String project_name) {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text(
-            'Delete',
+          title: Text(
+            'Delete Project',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 22,
@@ -873,23 +873,19 @@ class _ProjectScreenState extends State<ProjectScreen> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Do you want to delete project $project_name}?',
-                style: const TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555)),
-              ),
-              SizedBox(height: 16),
-            ],
+          content: Text(
+            'Do you want to delete this $project_name?',
+            style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 16,
+                color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
           ),
           actions: [
             TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
+              onPressed: () {
+                Navigator.pop(dialogContext);
               },
               child: Text(
                 'Cancel',
@@ -902,7 +898,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
                 fetchDeleteProject(project_id);
               },
               child: Text(
@@ -920,54 +916,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
       },
     );
   }
-
-  // ModelType? selectedItem;
-  IssueModelType? selectedProject;
-  IssueModelType? selectedRaisedBy;
-  IssueModelType? selectedInCharge;
-  IssueModelType? selectedPriority;
-  IssueModelType? selectedStatus;
-  List<IssueModelType> _modelProject = [
-    IssueModelType(id: '001', name: 'All Project'),
-    IssueModelType(id: '002', name: 'marketing meetings'),
-    IssueModelType(id: '003', name: 'NTZ Singning Ceremony'),
-    IssueModelType(id: '004', name: 'OFFICE PANTHEP นราธิวาส'),
-    IssueModelType(id: '005', name: 'ห้องละหมาด เดอะมอล รามคำแหง'),
-  ];
-
-  List<IssueModelType> _modelRaisedBy = [
-    IssueModelType(id: '001', name: 'All Raised By'),
-    IssueModelType(id: '002', name: 'ACC'),
-    IssueModelType(id: '003', name: 'Ajima'),
-    IssueModelType(id: '004', name: 'Account'),
-    IssueModelType(id: '005', name: 'HR'),
-    IssueModelType(id: '006', name: 'Nan'),
-    IssueModelType(id: '007', name: 'NTZ'),
-  ];
-
-  List<IssueModelType> _modelInCharge = [
-    IssueModelType(id: '001', name: 'All In-Charge'),
-    IssueModelType(id: '002', name: 'Jirapat Jangsawang'),
-    IssueModelType(id: '003', name: 'dhavisa dhavisa'),
-  ];
-
-  List<IssueModelType> _modelPriority = [
-    IssueModelType(id: '001', name: 'All Priority'),
-    IssueModelType(id: '002', name: 'Low'),
-    IssueModelType(id: '003', name: 'Medium'),
-    IssueModelType(id: '004', name: 'High'),
-    IssueModelType(id: '005', name: 'Very High'),
-  ];
-
-  List<IssueModelType> _modelStatus = [
-    IssueModelType(id: '001', name: 'All Status'),
-    IssueModelType(id: '002', name: 'Canceled'),
-    IssueModelType(id: '002', name: 'Closed'),
-    IssueModelType(id: '003', name: 'In-Progress'),
-    IssueModelType(id: '004', name: 'Need to Confirm'),
-    IssueModelType(id: '005', name: 'open'),
-    IssueModelType(id: '006', name: 'panding'),
-  ];
+  
 }
 
 class ModelProject {

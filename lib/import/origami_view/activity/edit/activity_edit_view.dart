@@ -365,36 +365,6 @@ class _ActivityEditViewState extends State<ActivityEditView> {
               ),
             ),
             SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Status : ',
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  (activity.activity_status == '')
-                      ? 'plan'
-                      : activity.activity_status ?? '',
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: (activity.activity_status == '')
-                        ? Colors.blue.shade300
-                        : Colors.orange,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
           ],
         ),
         Padding(
@@ -422,6 +392,51 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                       '${activity.account_name_en} (${activity.account_name_th})',
                       FontAwesomeIcons.building,
                       Color(0xFF555555)),
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.paperPlane,
+                        color: Color(0xFF555555),
+                        size: 28,
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'STATUS : ',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              (activity.activity_status == '')
+                                  ? 'plan'
+                                  : activity.activity_status ?? '',
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: (activity.activity_status == '')
+                                    ? Colors.blue.shade300
+                                    : Colors.orange,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
               _lineWidget(),

@@ -1878,8 +1878,8 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(dialogContext); // ปิด dialog ก่อน
-                _fetchDeleteActivity(); // แล้วค่อยไปลบ
+                Navigator.pop(dialogContext);
+                _fetchDeleteActivity();
               },
               child: Text(
                 'Delete',

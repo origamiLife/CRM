@@ -197,11 +197,11 @@ class _ProjectEditState extends State<ProjectEdit> {
             child: Row(
               children: [
                 Text(
-                  'SAVE',
+                  'DONE',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
-                    color: Colors.orange,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

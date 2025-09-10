@@ -213,52 +213,86 @@ class _WorkPageState extends State<WorkPage> {
                       ),
                     ),
                     Divider(),
-                    Text(
-                      'Reason : ${approve.reason}',
-                      style: const TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16,
-                        color: Color(0xFF555555),
-                        fontWeight: FontWeight.w700,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                    (approve.approve_del == 'del')
-                        ? Text(
-                            '[Waiting for Approve Delete]',
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14,
-                              color: Colors.red.shade400,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        : const Text(
-                            '[Waiting Approve]',
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14,
-                              color: Color(0xFFFF9900),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                    SizedBox(height: 8),
                     Row(
                       children: [
-                        Image.asset('assets/images/ic_calen.png', height: 45),
-                        SizedBox(width: 16),
-                        Text(
-                          'Start : ${approve.from_date} ${approve.from_time}  '
-                          '\nEnd : ${approve.to_date} ${approve.to_time}',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(2),
+                          child: Image.network(
+                            'https://icons.iconarchive.com/icons/paomedia/small-n-flat/256/calendar-icon.png',
+                            width: 75,
+                            height: 75,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.network(
+                                'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                                width: 75,
+                                height: 75,
+                                fit: BoxFit.cover,
+                              );
+                            },
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
+                        ),
+                        SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Reason : ${approve.reason}',
+                              style: const TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
+                                fontWeight: FontWeight.w700,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'End : ${approve.to_date} ${approve.to_time}',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                            Text(
+                              'Start : ${approve.from_date} ${approve.from_time}  ',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                            SizedBox(height: 4),
+                            (approve.approve_del == 'del' &&
+                                    (approve.del_status == 'Y' ||
+                                        approve.del_status == 'N'))
+                                ? Text(
+                                    '[Waiting for Approve Delete]',
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Colors.red.shade400,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                : const Text(
+                                    '[Waiting Approve]',
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Color(0xFFFF9900),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                          ],
                         ),
                       ],
                     ),

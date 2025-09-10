@@ -5,6 +5,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'import/import.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'import/origami_view/language/translate.dart';
+
 String hostDev = 'https://dev.origami.life';
 String host = 'https://www.origami.life';
 String token = 'ori20#17gami'; // m_application

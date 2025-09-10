@@ -149,7 +149,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                   _fetchUpdateContact();
                 },
                 child: Text(
-                  'Done',
+                  'DONE',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 18,
@@ -628,6 +628,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                             onTap: () {
                               setState(() {
                                 _image = null;
+                                _base64Image = '';
                               });
                             },
                             child: Stack(
@@ -886,6 +887,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   emotionContact? selectedEmotion;
   List<emotionContact> emotionList = [];
   String emo_icon_title = '';
+  String emo_icon_path = '';
   Future<void> _fetchEmotionContact() async {
     final uri =
         Uri.parse("$hostDev/api/origami/crm/contact/component/emotion.php");
@@ -902,18 +904,10 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
       setState(() {
         emotionList =
             dataJson.map((json) => emotionContact.fromJson(json)).toList();
-        if (emotionList.isNotEmpty && selectedEmotion == null) {
-          // selectedEmotion = emotionList[0];
-          for (int i = 0; i < emotionList.length; i++) {
-            print(
-                '${widget.contact.cus_cont_emo} ==== ${emotionList[i].emo_icon_path}');
-            if (widget.contact.cus_cont_emo == emotionList[i].emo_icon_path) {
-              cont_emo = emotionList[i].emo_icon_path;
-              emo_icon_title = emotionList[i].emo_icon_title;
-            } else {
-              selectedEmotion = emotionList[0];
-              cont_emo = selectedEmotion?.emo_icon_path ?? '';
-            }
+        cont_emo = widget.contact.cus_cont_emo;
+        for (int i = 0; i < emotionList.length; i++) {
+          if(cont_emo == emotionList[i].emo_icon_path){
+            emo_icon_title = emotionList[i].emo_icon_title;
           }
         }
       });
@@ -977,7 +971,9 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     );
 
     if (response.statusCode == 200) {
-      await updateContactPhoto();
+      if(_base64Image != ''){
+        await updateContactPhoto();
+      }
       final jsonResponse = jsonDecode(response.body);
       final message = jsonResponse['message'];
       Navigator.pushReplacement(

@@ -173,7 +173,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
-                    color: Colors.orange,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

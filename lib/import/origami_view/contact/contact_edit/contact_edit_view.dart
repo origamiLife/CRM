@@ -88,7 +88,8 @@ class _ContactViewState extends State<ContactView> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ContactEditDetail(
-                            employee: widget.employee, contact: widget.contact)),
+                            employee: widget.employee,
+                            contact: widget.contact)),
                   );
                 },
                 child: Text(
@@ -104,11 +105,13 @@ class _ContactViewState extends State<ContactView> {
               VerticalDivider(
                 color: Colors.white,
                 thickness: 1,
-                indent: 16,       // ขอบด้านบน
-                endIndent: 16,    // ขอบด้านล่าง
+                indent: 16, // ขอบด้านบน
+                endIndent: 16, // ขอบด้านล่าง
               ),
               InkWell(
-                onTap: (){_showCustomDialog();},
+                onTap: () {
+                  _showCustomDeleteDialog();
+                },
                 child: Text(
                   'Delete',
                   style: TextStyle(
@@ -175,184 +178,175 @@ class _ContactViewState extends State<ContactView> {
   Widget _viewDetail(ModelContact contact) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 16, right: 8, bottom: 16, top: 8),
+        Padding(
+          padding: const EdgeInsets.only(top: 16,left: 16,right: 16),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(2),
                   child: Image.network(
                     contact.cus_cont_photo,
-                    height: 100,
-                    fit: BoxFit.contain,
+                    width: 90,
+                    height: 90,
+                    fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.network(
                         'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
-                        height: 100,
-                        fit: BoxFit.contain,
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.cover,
                       );
                     },
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${contact.cus_name}",
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 18,
-                        color: Colors.orange,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      contact.cont_type,
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "name : ${contact.cont_name}",
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 2),
-                    // Text(
-                    //   'Gender : ${(contact.gender_name == '') ? 'ไม่ระบุ' : contact.gender_name}',
-                    //   style: TextStyle(
-                    //     fontFamily: 'Arial',
-                    //     fontSize: 14,
-                    //     color: Colors.grey,
-                    //     fontWeight: FontWeight.w500,
-                    //   ),
-                    //   maxLines: 10,
-                    //   overflow: TextOverflow.ellipsis,
-                    // ),
-
-                    SizedBox(height: 2),
-                    Text(
-                      'Tel : ${_telView(contact)}',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 10,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      'Email : ${contact.cont_email}',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 10,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
+              const SizedBox(
+                width: 10,
               ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
               Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade100,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Icon(Icons.mail, color: Colors.orange.shade400),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${contact.cus_name}",
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          color: Colors.orange,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        contact.cont_type,
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        "name : ${contact.cont_name}",
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'Tel : ${_telView(contact)}',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 10,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        'Email : ${contact.cont_email}',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 10,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          // _makePhoneCall(_telView(account));
-                          // _makePhoneCall(account.cus_tel_no);
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Icon(Icons.call, color: Colors.red.shade400),
-                      ),
-                    )),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Icon(Icons.camera_alt, color: Colors.grey),
-                    )),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Icon(Icons.location_history,
-                          color: Colors.green.shade400),
-                    )),
               ),
             ],
           ),
         ),
+        Divider(),
+        // Padding(
+        //   padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       Expanded(
+        //         child: Container(
+        //           padding: EdgeInsets.all(8),
+        //           decoration: BoxDecoration(
+        //             color: Colors.orange.shade100,
+        //             borderRadius: BorderRadius.circular(100),
+        //           ),
+        //           child: Padding(
+        //             padding: const EdgeInsets.all(4),
+        //             child: Icon(Icons.mail, color: Colors.orange.shade400),
+        //           ),
+        //         ),
+        //       ),
+        //       SizedBox(width: 16),
+        //       Expanded(
+        //         child: Container(
+        //             padding: EdgeInsets.all(8),
+        //             decoration: BoxDecoration(
+        //               color: Colors.orange.shade100,
+        //               borderRadius: BorderRadius.circular(100),
+        //             ),
+        //             child: GestureDetector(
+        //               onTap: () {
+        //                 setState(() {
+        //                   // _makePhoneCall(_telView(account));
+        //                   // _makePhoneCall(account.cus_tel_no);
+        //                 });
+        //               },
+        //               child: Padding(
+        //                 padding: const EdgeInsets.all(4),
+        //                 child: Icon(Icons.call, color: Colors.red.shade400),
+        //               ),
+        //             )),
+        //       ),
+        //       SizedBox(width: 16),
+        //       Expanded(
+        //         child: Container(
+        //             padding: EdgeInsets.all(8),
+        //             decoration: BoxDecoration(
+        //               color: Colors.orange.shade100,
+        //               borderRadius: BorderRadius.circular(100),
+        //             ),
+        //             child: Padding(
+        //               padding: const EdgeInsets.all(4),
+        //               child: Icon(Icons.camera_alt, color: Colors.grey),
+        //             )),
+        //       ),
+        //       SizedBox(width: 16),
+        //       Expanded(
+        //         child: Container(
+        //             padding: EdgeInsets.all(8),
+        //             decoration: BoxDecoration(
+        //               color: Colors.orange.shade100,
+        //               borderRadius: BorderRadius.circular(100),
+        //             ),
+        //             child: Padding(
+        //               padding: const EdgeInsets.all(4),
+        //               child: Icon(Icons.location_history,
+        //                   color: Colors.green.shade400),
+        //             )),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Flexible(
           child: Container(
             color: Colors.white,
@@ -362,28 +356,22 @@ class _ContactViewState extends State<ContactView> {
                 padding: EdgeInsets.zero,
                 children: [
                   SizedBox(height: 4),
-                  _subDetail(
-                      'Name',
-                      "${contact.cont_name}",
-                      Icons.person,
-                      Colors.grey.shade400),
-                  _subDetail(
-                      'Nickname',
-                      "${contact.cus_cont_nick}",
-                      Icons.person,
-                      Colors.grey.shade400),
+                  _subDetail('Name', "${contact.cont_name}", Icons.person,
+                      Colors.black54),
+                  _subDetail('Nickname', "${contact.cus_cont_nick}",
+                      Icons.person, Colors.black54),
                   _subDetail('Gender', "${contact.gender_name}",
-                      Icons.merge_type, Colors.grey.shade400),
+                      Icons.merge_type, Colors.black54),
                   _subDetail('Email', contact.cont_email, Icons.email,
-                      Colors.grey.shade400),
+                      Colors.black54),
                   _subDetail('Tel', _telView(contact),
-                      Icons.phone_android_outlined, Colors.grey.shade400),
+                      Icons.phone_android_outlined, Colors.black54),
                   _subDetail('Position', contact.cus_posi_id,
-                      Icons.work_history_outlined, Colors.grey.shade400),
+                      Icons.work_history_outlined, Colors.black54),
                   _subDetail('Role', contact.role_name,
-                      Icons.workspaces_outline, Colors.grey.shade400),
+                      Icons.workspaces_outline, Colors.black54),
                   _subDetail('Emotion', contact.cus_cont_emo,
-                      Icons.donut_large_rounded, Colors.grey.shade400),
+                      Icons.donut_large_rounded, Colors.black54),
                   // _subDetail('Operation', contact.cus_cont_emo,
                   //     Icons.workspaces_outline, Colors.grey.shade400),
                   // _subDetail('Marital', contact.status, Icons.source,
@@ -404,10 +392,13 @@ class _ContactViewState extends State<ContactView> {
       padding: EdgeInsets.only(top: 18, bottom: 18),
       child: Column(
         children: [
-          Container(
-            color: Colors.orange.shade50,
-            height: 3,
-            width: double.infinity,
+          Padding(
+            padding: const EdgeInsets.only(left: 4,right: 4),
+            child: Container(
+              color: Colors.orange.shade50,
+              height: 3,
+              width: double.infinity,
+            ),
           ),
           SizedBox(height: 1),
           Container(
@@ -469,7 +460,8 @@ class _ContactViewState extends State<ContactView> {
   }
 
   Future<void> _fetchDeleteContact() async {
-    final uri = Uri.parse('$hostDev/api/origami/crm/contact/delete_contact.php');
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/contact/delete_contact.php');
     try {
       final response = await http.post(
         uri,
@@ -493,21 +485,22 @@ class _ContactViewState extends State<ContactView> {
         );
         showSnackBar(message);
       } else {
-        throw Exception('Failed to load personal data: ${response.reasonPhrase}');
+        throw Exception(
+            'Failed to load personal data: ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
     }
   }
 
-  void _showCustomDialog() {
+  void _showCustomDeleteDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: Text(
-            'Delete',
+            'Delete Contact',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 22,
@@ -515,23 +508,19 @@ class _ContactViewState extends State<ContactView> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Do you want to delete contact ${widget.contact.firstname_th} ${widget.contact.lastname_th}?',
-                style: const TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555)),
-              ),
-              SizedBox(height: 16),
-            ],
+          content: Text(
+            'Do you want to delete this ${widget.contact.firstname_th} ${widget.contact.lastname_th}?',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
           ),
           actions: [
             TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
+              onPressed: () {
+                Navigator.pop(dialogContext);
               },
               child: Text(
                 'Cancel',
@@ -544,11 +533,11 @@ class _ContactViewState extends State<ContactView> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
                 _fetchDeleteContact();
               },
               child: Text(
-                'Ok',
+                'Delete',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.orange,
@@ -563,7 +552,7 @@ class _ContactViewState extends State<ContactView> {
     );
   }
 
-  void showSnackBar(String message){
+  void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -576,5 +565,4 @@ class _ContactViewState extends State<ContactView> {
       ),
     );
   }
-
 }

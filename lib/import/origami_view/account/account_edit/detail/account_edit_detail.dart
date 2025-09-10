@@ -59,6 +59,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     _emailController.text = widget.account.cus_email;
     _groupController.text = widget.account.cus_code;
     _telephoneController.text = _telePhone(widget.account);
+    widget.account.cus_type == "0"?selected_name = 'Customer':selected_name = 'Supplier';
   }
 
 
@@ -141,13 +142,13 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         actions: [
           Row(
             children: [
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   _fetchUpdateAccount();
                 },
                 child: Center(
                   child: Text(
-                    'SAVE',
+                    'DONE',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 16,
@@ -404,6 +405,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                             onTap: () {
                               setState(() {
                                 _image = null;
+                                _base64Image = '';
                               });
                             },
                             child: Stack(
@@ -489,7 +491,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                     cus_type = value?.cus_type ?? '';
                   });
                 },
-                hint: account.cus_type_name,
+                hint: selected_name,
               ),
             ),
             SizedBox(width: 8),
@@ -873,6 +875,28 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     }
   }
 
+
+  bool isBase64(String input) {
+    try {
+      Uint8List bytes = base64.decode(input);
+      return bytes.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  void checkImage(dynamic _image) async {
+    if (_image is File) {
+      // ถ้าเป็น File → ใช้งานได้เลย
+      await updateAccountPhoto();
+    } else if (_image is String && isBase64(_image)) {
+      // ถ้าเป็น String และเป็น base64 → ใช้งานได้เลย
+      await updateAccountPhoto();
+    } else {
+      print("รูปไม่ถูกต้อง");
+    }
+  }
+
   Future<void> _fetchUpdateAccount() async {
     final uri = Uri.parse("$hostDev/api/origami/crm/account/update_account.php");
     final response = await http.post(
@@ -900,7 +924,9 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     if (response.statusCode == 200) {
       if(_image == null){
         await _fetchDeletePhotoAccount();
-      }else{
+      }
+      if (_base64Image != '') {
+        // ถ้าเป็น File → ใช้งานได้เลย
         await updateAccountPhoto();
       }
       final jsonResponse = jsonDecode(response.body);
@@ -986,6 +1012,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   }
 
   CustomerType? selectedType;
+  String selected_name = '';
   final List<CustomerType> _modelType = [
     CustomerType(cus_type: '0', selected_name: 'Customer'),
     CustomerType(cus_type: '1', selected_name: 'Supplier'),
