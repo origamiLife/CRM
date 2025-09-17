@@ -257,7 +257,7 @@ class _WorkPageState extends State<WorkPage> {
             : Padding(
                 padding: const EdgeInsets.all(8),
                 child: InkWell(
-                  onTap: () => _showCustomRequestDialog(approve),
+                  onTap: () => _showRequestDialog(approve),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -374,14 +374,13 @@ class _WorkPageState extends State<WorkPage> {
                                     )
                                   else
                                     Text(
-                                      (approve.approve_status == 'N' &&
-                                              approve.approve_comment == '')
+                                      (approve.approve_status == '')
                                           ? '[Waiting Approve]'
                                           : approve.approve_comment,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 12,
-                                        color: (approve.approve_status == 'N')
+                                        color: (approve.approve_status == '')
                                             ? Colors.orange
                                             : Colors.green,
                                         fontWeight: FontWeight.w600,
@@ -411,7 +410,7 @@ class _WorkPageState extends State<WorkPage> {
           padding: const EdgeInsets.all(8),
           child: InkWell(
             onTap: () {
-              _showCustomApproveDialog(approve,index);
+              _showApproveDialog(approve,index);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -435,9 +434,9 @@ class _WorkPageState extends State<WorkPage> {
                         '[ ${approve.leave_type_name_en} ]',
                         style: TextStyle(
                           fontFamily: 'Arial',
-                          fontSize: 16,
-                          color: Color(0xFF555555),
-                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: hexToColor(approve.leave_type_color),
+                          fontWeight: FontWeight.w500,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -623,7 +622,7 @@ class _WorkPageState extends State<WorkPage> {
     );
   }
 
-  void _showCustomRequestDialog(HistoryWorkModel approve) {
+  void _showRequestDialog(HistoryWorkModel approve) {
     showDialog(
       context: context,
       barrierColor: Colors.black54,
@@ -774,7 +773,7 @@ class _WorkPageState extends State<WorkPage> {
     );
   }
 
-  void _showCustomApproveDialog(ApprovedWorkModel approve, int index) {
+  void _showApproveDialog(ApprovedWorkModel approve, int index) {
     showDialog(
       context: context,
       barrierColor: Colors.black54,
@@ -839,18 +838,31 @@ class _WorkPageState extends State<WorkPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 14),
                   child: Center(
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.orange,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.network(
-                          widget.employee.emp_avatar,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Image.network(
-                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
-                            fit: BoxFit.contain,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade400,
+                        borderRadius: BorderRadius.circular(100),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orange,
+                            blurRadius: 20,
+                            offset: Offset(0, -2),
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.orange,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.network(
+                            workEmployee?.emp_avatar??'',
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Image.network(
+                              'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
@@ -859,7 +871,7 @@ class _WorkPageState extends State<WorkPage> {
                 ),
                 Center(
                   child: Text(
-                    '${_ApprovedWork[index].name_approve}',
+                    '${workEmployee?.emp_prefix??''} ${workEmployee?.emp_firstname??''} ${workEmployee?.emp_lastname??''}',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
@@ -1062,8 +1074,9 @@ class _WorkPageState extends State<WorkPage> {
             approve_emp_id = widget.employee.emp_id;
             print('approve_emp_id : $approve_emp_id ,\n employee_id : $employee_id');
           }
-          employee_id = _ApprovedWork[i].emp_id;
+          work_emp_id = employee_id = _ApprovedWork[i].emp_id;
         }
+        _fetchWorkEmployee();
       });
     } else {
       throw Exception('Failed to load instructors');
@@ -1222,6 +1235,29 @@ class _WorkPageState extends State<WorkPage> {
       pushActivity(11);
       showSnackBar(message);
       throw Exception('Delete Activity Now.');
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
+  WorkEmployee? workEmployee ;
+  Future<WorkEmployee> _fetchWorkEmployee() async {
+    final uri = Uri.parse("$hostDev/api/origami/profile/profile.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $token'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': work_emp_id,
+        'Authorization': token,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      // เข้าถึงข้อมูลในคีย์ 'instructors'
+      final Map<String, dynamic> dataJson = jsonResponse['employee_data'] ?? [];
+      // แปลงข้อมูลจาก JSON เป็น List<Instructor>
+      return workEmployee = WorkEmployee.fromJson(dataJson);
     } else {
       throw Exception('Failed to load instructors');
     }
@@ -1455,3 +1491,59 @@ class ApprovedWorkModel {
     );
   }
 }
+
+String work_comp_id = '';
+String work_emp_id = '';
+
+class WorkEmployee {
+  final String emp_prefix;
+  final String emp_firstname;
+  final String emp_lastname;
+  final String emp_nickname;
+  final String dna_color;
+  final String dna_name;
+  final String dna_logo;
+  final String emp_birthday;
+  final String emp_age;
+  final String emp_start_date;
+  final String home_location;
+  final String signature_drawing;
+  final String emp_avatar;
+
+  // Constructor
+  WorkEmployee({
+    required this.emp_prefix,
+    required this.emp_firstname,
+    required this.emp_lastname,
+    required this.emp_nickname,
+    required this.dna_color,
+    required this.dna_name,
+    required this.dna_logo,
+    required this.emp_birthday,
+    required this.emp_age,
+    required this.emp_start_date,
+    required this.home_location,
+    required this.signature_drawing,
+    required this.emp_avatar,
+  });
+
+  // Factory constructor to create an Employee instance from a JSON map
+  factory WorkEmployee.fromJson(Map<String, dynamic> json) {
+    return WorkEmployee(
+      emp_prefix: json['emp_prefix'] ?? '',
+      emp_firstname: json['emp_firstname'] ?? '',
+      emp_lastname: json['emp_lastname'] ?? '',
+      emp_nickname: json['emp_nickname'] ?? '',
+      dna_color: json['dna_color'] ?? '',
+      dna_name: json['dna_name'] ?? '',
+      dna_logo: json['dna_logo'] ?? '',
+      emp_birthday: json['emp_birthday'] ?? '',
+      emp_age: json['emp_age'] ?? '',
+      emp_start_date: json['emp_start_date'] ?? '',
+      home_location: json['home_location'] ?? '',
+      signature_drawing: json['signature_drawing'] ?? '',
+      emp_avatar: json['emp_avatar'] ?? '',
+    );
+  }
+}
+
