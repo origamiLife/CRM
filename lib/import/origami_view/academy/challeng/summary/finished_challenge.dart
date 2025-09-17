@@ -47,7 +47,7 @@
 //                     SizedBox(
 //                         height: 12),
 //                     Text(
-//                       '$loadingTS...',
+//                       'Loading...',
 //                       style: TextStyle(
 //                         fontFamily: 'Arial',
 //                         fontSize: 16,

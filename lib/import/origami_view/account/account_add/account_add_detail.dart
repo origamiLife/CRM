@@ -432,7 +432,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                         isDense: true,
                         contentPadding:
                         EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        hintText: 'search...',
+                        hintText: 'Search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

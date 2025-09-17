@@ -7,7 +7,6 @@ class CalendarScreen extends StatefulWidget {
     Key? key,
     required this.employee,
     required this.pageInput,
-
   }) : super(key: key);
   final Employee employee;
   final String pageInput;
@@ -42,7 +41,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
     DateFormat formatter = DateFormat('yyyy/MM/dd');
     showlastDay = formatter.format(_selectedDate);
   }
-  final CalendarController _scheduleController = CalendarController(); // เพิ่มตรงนี้
+
+  final CalendarController _scheduleController =
+      CalendarController(); // เพิ่มตรงนี้
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,33 +67,35 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(4),
                     child: SfCalendar(
-                      cellBorderColor:Colors.transparent,
-                      view: CalendarView.month,
-                      dataSource: MeetingDataSource(getAppointments()),
-                      monthViewSettings: const MonthViewSettings(
-                        appointmentDisplayMode: MonthAppointmentDisplayMode
-                            .appointment, // แสดงเหตุการณ์ในเดือน
+                        cellBorderColor: Colors.transparent,
+                        view: CalendarView.month,
+                        dataSource: MeetingDataSource(getAppointments()),
+                        monthViewSettings: const MonthViewSettings(
+                          appointmentDisplayMode: MonthAppointmentDisplayMode
+                              .appointment, // แสดงเหตุการณ์ในเดือน
                           // showAgenda: true
-                      ),
-                      appointmentTextStyle: const TextStyle(
-                        fontFamily: 'Arial',
-                        color: Colors.white, // สีของข้อความในเหตุการณ์
-                        fontSize: 14,
-                      ),
+                        ),
+                        appointmentTextStyle: const TextStyle(
+                          fontFamily: 'Arial',
+                          color: Colors.white, // สีของข้อความในเหตุการณ์
+                          fontSize: 14,
+                        ),
                         onTap: (CalendarTapDetails details) {
-                          if (details.targetElement == CalendarElement.calendarCell) {
+                          if (details.targetElement ==
+                              CalendarElement.calendarCell) {
                             final DateTime selectedDate = details.date!;
-                            final List<Appointment> appointments = getAppointments();
+                            final List<Appointment> appointments =
+                                getAppointments();
                             final List<String> events = appointments
-                                .where((appointment) =>
-                                isSameDate(appointment.startTime, selectedDate))
+                                .where((appointment) => isSameDate(
+                                    appointment.startTime, selectedDate))
                                 .map((appointment) => appointment.subject)
                                 .toList();
-        
+
                             // 👉 เลื่อนไปยังวันที่ที่ถูกกดใน schedule view
                             _scheduleController.displayDate = selectedDate;
-                          }}
-                    ),
+                          }
+                        }),
                   ),
                 ),
               ),
@@ -105,7 +108,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       color: Colors.white,
                       child: SfCalendar(
                         view: CalendarView.schedule,
-                        controller: _scheduleController, // เชื่อม controller ตรงนี้
+                        controller:
+                            _scheduleController, // เชื่อม controller ตรงนี้
                         dataSource: MeetingDataSource(getAppointments()),
                         monthViewSettings: MonthViewSettings(
                           appointmentDisplayMode: MonthAppointmentDisplayMode
@@ -128,9 +132,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     appointment.startTime, selectedDate))
                                 .map((appointment) => appointment.subject)
                                 .toList();
-        
+
                             if (events.isNotEmpty) {
                               showDialog(
+                                barrierColor: Colors.black54,
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
@@ -145,16 +150,26 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     ),
                                     content: Text(events.join('\n')),
                                     actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: Text(
-                                          'ปิด',
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.w500,
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.25,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: const Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16,
+                                              color: Color(0xFF555555),
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -220,7 +235,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       Appointment(
         startTime: DateTime(2025, 6, 3, 9, 0, 0),
         endTime: DateTime(2025, 6, 3, 10, 0, 0),
-        subject: 'วันเฉลิมพระชนมพรรษาฯ สมเด็จพระนางเจ้าสุทิดา พัชรสุธาพิมลลักษณ พระบรมราชินี',
+        subject:
+            'วันเฉลิมพระชนมพรรษาฯ สมเด็จพระนางเจ้าสุทิดา พัชรสุธาพิมลลักษณ พระบรมราชินี',
         color: Colors.amber,
       ),
       Appointment(
@@ -250,7 +266,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       Appointment(
         startTime: DateTime(2025, 10, 13, 9, 0, 0),
         endTime: DateTime(2025, 10, 13, 10, 0, 0),
-        subject: 'วันคล้ายวันสวรรคต พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร',
+        subject:
+            'วันคล้ายวันสวรรคต พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร',
         color: Colors.redAccent,
       ),
       Appointment(
@@ -294,12 +311,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
     ThaiHoliday(name: 'วันสงกรานต์', date: DateTime(2025, 4, 15)),
     ThaiHoliday(name: 'วันฉัตรมงคล', date: DateTime(2025, 5, 5)),
     ThaiHoliday(name: 'วันวิสาขบูชา', date: DateTime(2025, 5, 12)),
-    ThaiHoliday(name: 'วันเฉลิมพระชนมพรรษาฯ สมเด็จพระนางเจ้าสุทิดา พัชรสุธาพิมลลักษณ พระบรมราชินี', date: DateTime(2025, 6, 3)),
+    ThaiHoliday(
+        name:
+            'วันเฉลิมพระชนมพรรษาฯ สมเด็จพระนางเจ้าสุทิดา พัชรสุธาพิมลลักษณ พระบรมราชินี',
+        date: DateTime(2025, 6, 3)),
     ThaiHoliday(name: 'วันอาสาฬหบูชา', date: DateTime(2025, 7, 13)),
     ThaiHoliday(name: 'วันเข้าพรรษา', date: DateTime(2025, 7, 14)),
-    ThaiHoliday(name: 'วันเฉลิมพระชนมพรรษาฯ พระบาทสมเด็จพระวชิรเกล้าเจ้าอยู่หัว', date: DateTime(2025, 7, 28)),
+    ThaiHoliday(
+        name: 'วันเฉลิมพระชนมพรรษาฯ พระบาทสมเด็จพระวชิรเกล้าเจ้าอยู่หัว',
+        date: DateTime(2025, 7, 28)),
     ThaiHoliday(name: 'วันแม่แห่งชาติ', date: DateTime(2025, 8, 12)),
-    ThaiHoliday(name: 'วันคล้ายวันสวรรคต พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร', date: DateTime(2025, 10, 13)),
+    ThaiHoliday(
+        name:
+            'วันคล้ายวันสวรรคต พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร',
+        date: DateTime(2025, 10, 13)),
     ThaiHoliday(name: 'วันปิยมหาราช', date: DateTime(2025, 10, 23)),
     ThaiHoliday(name: 'วันพ่อแห่งชาติ', date: DateTime(2025, 12, 5)),
     ThaiHoliday(name: 'วันสิ้นปี', date: DateTime(2025, 12, 31)),

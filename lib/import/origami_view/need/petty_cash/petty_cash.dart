@@ -538,7 +538,7 @@ class _PettyCashState extends State<PettyCash> {
                                     horizontal: 12,
                                     vertical: 8,
                                   ),
-                                  hintText: '$Search...',
+                                  hintText: 'Search...',
                                   hintStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 14,
@@ -844,7 +844,7 @@ class _PettyCashState extends State<PettyCash> {
                             actions: <Widget>[
                               TextButton(
                                 child: Text(
-                                  '$Cancel',
+                                  'Cancel',
                                   style: TextStyle(
                                     fontFamily: 'Arial',
                                     color: const Color(0xFF555555),
@@ -950,7 +950,7 @@ class _PettyCashState extends State<PettyCash> {
                 width: 12,
               ),
               Text(
-                '$Loading...',
+                'Loading...',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,
@@ -1384,7 +1384,7 @@ class _PettyCashState extends State<PettyCash> {
                               horizontal: 12,
                               vertical: 12,
                             ),
-                            hintText: '$Search...',
+                            hintText: 'Search...',
                             hintStyle: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 14,
@@ -1600,7 +1600,7 @@ class _PettyCashState extends State<PettyCash> {
                                     horizontal: 12,
                                     vertical: 12,
                                   ),
-                                  hintText: '$Search...',
+                                  hintText: 'Search...',
                                   hintStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 14,

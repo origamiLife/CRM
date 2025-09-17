@@ -111,7 +111,7 @@ class _MiniPriorityState extends State<MiniPriority> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '$SearchFor',
+                              'Search',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 16,

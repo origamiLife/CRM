@@ -16,45 +16,27 @@ class WorkApplyPage extends StatefulWidget {
 }
 
 class _WorkApplyPageState extends State<WorkApplyPage> {
-  TextEditingController _searchDivision = TextEditingController();
   TextEditingController _searchController = TextEditingController();
   TextEditingController _reasonController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
+
+  DateTime _selectedDateEnd = DateTime.now();
+  String showlastDay = '';
   bool _isChecked = false;
-  String _searchText = '';
-  bool _showDown = false;
 
   @override
   void initState() {
     super.initState();
-    showDate();
-    _searchDivision.addListener(() {
-      print("Current text: ${_searchDivision.text}");
-    });
-    _searchController.addListener(() {
-      // _search = _searchController.text;
-      print("Current text: ${_searchController.text}");
-    });
-    _reasonController.addListener(() {
-      print("Current text: ${_reasonController.text}");
-    });
-    _noteController.addListener(() {
-      print("Current text: ${_noteController.text}");
-    });
+    DateFormat formatter = DateFormat('dd/MM/yyyy');
+    showlastDay = formatter.format(_selectedDateEnd);
   }
 
   @override
   void dispose() {
-    _searchDivision.dispose();
     _searchController.dispose();
+    _reasonController.dispose();
+    _noteController.dispose();
     super.dispose();
-  }
-
-  DateTime _selectedDateEnd = DateTime.now();
-  String showlastDay = '';
-  void showDate() {
-    DateFormat formatter = DateFormat('dd/MM/yyyy');
-    showlastDay = formatter.format(_selectedDateEnd);
   }
 
   Future<void> _calendar(BuildContext context) async {
@@ -515,7 +497,7 @@ class _WorkApplyPageState extends State<WorkApplyPage> {
                       horizontal: 10,
                       vertical: 8,
                     ),
-                    hintText: '$Search...',
+                    hintText: 'Search...',
                     hintStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14,

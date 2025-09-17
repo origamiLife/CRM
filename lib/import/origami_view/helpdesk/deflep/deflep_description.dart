@@ -866,7 +866,7 @@ class _HelpDescriptionState extends State<HelpDescription> {
                     horizontal: 10,
                     vertical: 8,
                   ),
-                  hintText: '$Search...',
+                  hintText: 'Search...',
                   hintStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,

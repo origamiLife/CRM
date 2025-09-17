@@ -115,7 +115,7 @@ class _DiscussionState extends State<Discussion> {
                 width: 12,
               ),
               Text(
-                '$loadingTS...',
+                'Loading...',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,
@@ -428,7 +428,7 @@ class _DiscussionState extends State<Discussion> {
                             width: 12,
                           ),
                           Text(
-                            '$loadingTS...',
+                            'Loading...',
                             style: TextStyle(
                               fontFamily: 'Arial',
                               fontSize: 16,
@@ -655,6 +655,7 @@ class _DiscussionState extends State<Discussion> {
   void _showDialogB(ReplyData reply) {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       barrierDismissible: true,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
@@ -724,41 +725,62 @@ class _DiscussionState extends State<Discussion> {
             ],
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text(
-                '$CancelTS',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: const Color(0xFF555555),
-                ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
               ),
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
-            ),
-            TextButton(
-              child: Text(
-                '$editTS',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: const Color(0xFF555555),
-                  fontWeight: FontWeight.w700,
+              child: TextButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: const Color(0xFF555555),
+                  ),
                 ),
-              ),
-              onPressed: () {
-                if (_commentB == "") {
-                  return;
-                } else {
-                  DiscussionSave(
-                    discussionId,
-                    "edit",
-                    reply.reply_id,
-                    _commentB,
-                  );
+                onPressed: () {
                   Navigator.pop(dialogContext);
-                  Navigator.pop(context);
-                }
-              },
+                },
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                child: Text(
+                  'edit',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: const Color(0xFF555555),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                onPressed: () {
+                  if (_commentB == "") {
+                    return;
+                  } else {
+                    DiscussionSave(
+                      discussionId,
+                      "edit",
+                      reply.reply_id,
+                      _commentB,
+                    );
+                    Navigator.pop(dialogContext);
+                    Navigator.pop(context);
+                  }
+                },
+              ),
             ),
           ],
         );
@@ -769,6 +791,7 @@ class _DiscussionState extends State<Discussion> {
   void _showDialogC(ReplyData reply) {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       barrierDismissible: true,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
@@ -790,37 +813,59 @@ class _DiscussionState extends State<Discussion> {
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text(
-                '$CancelTS',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: const Color(0xFF555555),
-                ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
               ),
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
+              child: TextButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: const Color(0xFF555555),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+              ),
             ),
-            TextButton(
-              child: Text(
-                '$deleteTS',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: const Color(0xFF555555),
-                  fontWeight: FontWeight.w700,
-                ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.red.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.red,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
               ),
-              onPressed: () {
-                DiscussionSave(
-                  discussionId,
-                  "delete",
-                  reply.reply_id,
-                  "",
-                );
-                Navigator.pop(dialogContext);
-                Navigator.pop(context);
-              },
+              child: TextButton(
+                child: Text(
+                  'Delete',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: const Color(0xFF555555),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  Navigator.pop(context);
+                  DiscussionSave(
+                    discussionId,
+                    "delete",
+                    reply.reply_id,
+                    "",
+                  );
+
+                },
+              ),
             ),
           ],
         );

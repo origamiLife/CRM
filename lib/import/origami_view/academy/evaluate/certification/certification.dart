@@ -55,7 +55,7 @@ class _CertificationState extends State<Certification> {
                 width: 12,
               ),
               Text(
-                '$loadingTS...',
+                'Loading...',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,
@@ -372,7 +372,7 @@ class _CertificationState extends State<Certification> {
             Icon(Icons.cloud_download, color: Colors.white),
             SizedBox(width: 4),
             Text(
-              '$DownloadTS',
+              'Download',
               style: _getTextStyle(14.0, FontWeight.w600, Color(0xFF555555)),
             ),
           ],

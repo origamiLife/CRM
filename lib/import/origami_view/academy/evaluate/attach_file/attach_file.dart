@@ -81,7 +81,7 @@ class _AttachFileState extends State<AttachFile> {
                 width: 12,
               ),
               Text(
-                '$loadingTS...',
+                'Loading...',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,

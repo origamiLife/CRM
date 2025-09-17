@@ -116,7 +116,7 @@ class _MiniProjectState extends State<MiniProject> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '$SearchFor',
+                              'Search',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 16,

@@ -111,7 +111,7 @@ class _MiniEmployeeState extends State<MiniEmployee> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '$SearchFor',
+                              'Search',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 16,

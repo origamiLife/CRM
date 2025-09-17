@@ -318,6 +318,7 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
   void _showCustomDialog(CalendarApi cal) {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -365,16 +366,23 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
             //     ),
             //   ),
             // ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.orange,
-                  fontWeight: FontWeight.w500,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),

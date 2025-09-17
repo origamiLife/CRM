@@ -55,7 +55,7 @@ class _ProjectJoinUserState extends State<ProjectJoinUser> {
                       width: 12,
                     ),
                     Text(
-                      '$Loading...',
+                      'Loading...',
                       style: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 16,

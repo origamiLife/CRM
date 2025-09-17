@@ -58,7 +58,7 @@ class _StampActivityState extends State<StampActivity> {
       child: Column(
         children: [
           Text(
-            '$currentTime น.',
+            '$currentTime',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 55,

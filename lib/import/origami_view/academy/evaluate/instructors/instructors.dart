@@ -65,7 +65,7 @@ class _InstructorsState extends State<Instructors> {
                 width: 12,
               ),
               Text(
-                '$loadingTS...',
+                'Loading...',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,

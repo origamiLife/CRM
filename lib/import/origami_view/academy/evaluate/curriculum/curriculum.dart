@@ -59,7 +59,7 @@ class _CurriculumState extends State<Curriculum> {
                 width: 12,
               ),
               Text(
-                '$loadingTS...',
+                'Loading...',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,

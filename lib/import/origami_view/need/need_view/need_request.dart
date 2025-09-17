@@ -18,7 +18,6 @@ class NeedRequest extends StatefulWidget {
 }
 
 class _NeedRequestState extends State<NeedRequest> {
-
   TextEditingController _commentAController = TextEditingController();
   TextEditingController _commentBController = TextEditingController();
   TextEditingController _commentCController = TextEditingController();
@@ -68,168 +67,178 @@ class _NeedRequestState extends State<NeedRequest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: (ApprovelList!.length != 0)?Colors.grey.shade50:Colors.white,
-      body: FutureBuilder<String>(
-        future: futureLoadData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(color: Color(0xFFFF9900),),
-                SizedBox(width: 12,),
-                Text(
-                  '$Loading...',
-                  style: TextStyle(
-                fontFamily: 'Arial',
-                      fontSize: 16, fontWeight: FontWeight.bold,color: Color(0xFF555555),),
-                ),
-              ],
-            ));
-          } else {
-            return _getContentWidget();
-          }
-        },
-      )
-    );
+        backgroundColor:
+            (ApprovelList!.length != 0) ? Colors.grey.shade50 : Colors.white,
+        body: FutureBuilder<String>(
+          future: futureLoadData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Color(0xFFFF9900),
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  Text(
+                    'Loading...',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF555555),
+                    ),
+                  ),
+                ],
+              ));
+            } else {
+              return _getContentWidget();
+            }
+          },
+        ));
   }
 
   Widget _getContentWidget() {
     return SafeArea(
       child: (ApprovelList!.length != 0)
           ? ListView.builder(
-        controller: ScrollController(),
-        itemCount: ApprovelList.length,
-        itemBuilder: (context, indexA) {
-          return Column(
-            children: [
-              Padding(
-                padding:
-                const EdgeInsets.only(left: 16, right: 16, top: 16),
-                child: Card(
-                  elevation: 0,
-                  color: Colors.white,
-                  // shape: RoundedRectangleBorder(
-                  //   borderRadius: BorderRadius.circular(15),
-                  //   side: BorderSide(width: 1,color: Color(0xFF555555)),
-                  // ),
-                  child: InkWell(
-                    onTap: (){
-                      setState(() {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NeedDetailApprove(
-                              employee: widget.employee,
-                              request_id: ApprovelList[indexA]
-                                  .mny_request_id ??
-                                  '',
+              controller: ScrollController(),
+              itemCount: ApprovelList.length,
+              itemBuilder: (context, indexA) {
+                return Column(
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 16, right: 16, top: 16),
+                      child: Card(
+                        elevation: 0,
+                        color: Colors.white,
+                        // shape: RoundedRectangleBorder(
+                        //   borderRadius: BorderRadius.circular(15),
+                        //   side: BorderSide(width: 1,color: Color(0xFF555555)),
+                        // ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NeedDetailApprove(
+                                    employee: widget.employee,
+                                    request_id:
+                                        ApprovelList[indexA].mny_request_id ??
+                                            '',
 
-                              // approvelList:ApprovelList[indexA],
+                                    // approvelList:ApprovelList[indexA],
+                                  ),
+                                ),
+                              );
+                            });
+                          },
+                          child: ListTile(
+                            title: Text(
+                              ApprovelList[indexA].need_subject ?? '',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 18,
+                                color: Color(0xFFFF9900),
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
                             ),
-                          ),
-                        );
-                      });
-                    },
-                    child: ListTile(
-                      title: Text(
-                        ApprovelList[indexA].need_subject ?? '',
-                        style: TextStyle(
-                fontFamily: 'Arial',
-                          fontSize: 18,
-                          color: Color(0xFFFF9900),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                      ),
-                      subtitle: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            subtitle: Row(
                               children: [
-                                Text(
-                                  '${ApprovelList[indexA].mny_type_name ?? ''} - ${ApprovelList?[indexA].mny_request_generate_code ?? ''}',
-                                  style: TextStyle(
-                fontFamily: 'Arial',
-                                    fontSize: 14.0,
-                                    color: Color(0xFF555555),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "$Date : ${ApprovelList[indexA].create_date_display ?? ''} ",
-                                  style: TextStyle(
-                fontFamily: 'Arial',
-                                    fontSize: 14.0,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "$Amount : ${ApprovelList[indexA].need_amount ?? ''} $Baht",
-                                  style: TextStyle(
-                fontFamily: 'Arial',
-                                    fontSize: 14.0,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        "$Status1 : ${ApprovelList?[indexA].need_status ?? ''}",
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${ApprovelList[indexA].mny_type_name ?? ''} - ${ApprovelList?[indexA].mny_request_generate_code ?? ''}',
                                         style: TextStyle(
-                fontFamily: 'Arial',
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.0,
+                                          color: Color(0xFF555555),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        "$Date : ${ApprovelList[indexA].create_date_display ?? ''} ",
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
                                           fontSize: 14.0,
                                           color: Colors.grey,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        "$Amount : ${ApprovelList[indexA].need_amount ?? ''} $Baht",
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.0,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "$Status1 : ${ApprovelList?[indexA].need_status ?? ''}",
+                                              style: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 14.0,
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                        child:
+                                            buttomCard(ApprovelList[indexA])),
                                   ],
                                 ),
                               ],
                             ),
+                            // Add more details as needed
                           ),
-                          Column(
-                            children: [
-                              Container(
-                                  child: buttomCard(ApprovelList[indexA])),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
-                      // Add more details as needed
                     ),
+                  ],
+                );
+              },
+            )
+          : Center(
+              child: Container(
+                child: Text(
+                  'No Data Available in table.',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
-            ],
-          );
-        },
-      )
-          : Center(
-        child: Container(
-          child: Text(
-            '$Empty',
-            style: TextStyle(
-                fontFamily: 'Arial',
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
             ),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-        ),
-      ),
     );
   }
 
@@ -244,52 +253,76 @@ class _NeedRequestState extends State<NeedRequest> {
           onTap: () {
             showDialog(
               context: context,
-              barrierDismissible : false,
+              barrierColor: Colors.black54,
+              barrierDismissible: false,
               builder: (BuildContext dialogContext) {
                 return WillPopScope(
                   onWillPop: () async {
                     return await showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        elevation: 0,
-                        title: Text(
-                          '$Exit Approve',
-                          style: TextStyle(
-                fontFamily: 'Arial',
-                            color: Color(0xFF555555),
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: Text(
-                              '$NotNow',
+                          context: context,
+                          barrierColor: Colors.black54,
+                          builder: (context) => AlertDialog(
+                            elevation: 0,
+                            title: Text(
+                              '$Exit Approve',
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 color: Color(0xFF555555),
                               ),
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _commentY = "";
-                              });
-                              Navigator.of(context).pop(false);
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              '$Ok',
-                              style: TextStyle(
-                fontFamily: 'Arial',
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.bold,
+                            actions: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: Text(
+                                    '$NotNow',
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      color: Color(0xFF555555),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.shade400,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.orange,
+                                      blurRadius: 10,
+                                      offset: Offset(0, -2),
+                                    ),
+                                  ],
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _commentY = "";
+                                    });
+                                    Navigator.of(context).pop(false);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    '$Ok',
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      color: Color(0xFF555555),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ) ??
+                        ) ??
                         false;
                   },
                   child: AlertDialog(
@@ -298,9 +331,10 @@ class _NeedRequestState extends State<NeedRequest> {
                     title: Text(
                       'Approve',
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          fontWeight: FontWeight.bold,
-                        color: Color(0xFF555555),),
+                        fontFamily: 'Arial',
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF555555),
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -318,16 +352,18 @@ class _NeedRequestState extends State<NeedRequest> {
                         keyboardType: TextInputType.text,
                         controller: _commentAController,
                         style: TextStyle(
-                fontFamily: 'Arial',
-                            color: Color(0xFF555555), fontSize: 14),
+                            fontFamily: 'Arial',
+                            color: Color(0xFF555555),
+                            fontSize: 14),
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
                           fillColor: Colors.white,
                           hintText: '$Type_something...',
                           hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                              fontSize: 14, color: Color(0xFF555555)),
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFF555555)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                             borderSide: BorderSide.none,
@@ -344,9 +380,9 @@ class _NeedRequestState extends State<NeedRequest> {
                     actions: <Widget>[
                       TextButton(
                         child: Text(
-                          '$Cancel',
+                          'Cancel',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                         ),
@@ -361,14 +397,15 @@ class _NeedRequestState extends State<NeedRequest> {
                         child: Text(
                           '$Ok',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF555555),
                           ),
                         ),
                         onPressed: () {
                           setState(() {
-                            fetchApprovelMassage(setApprovel?.mny_request_id,"Y",_commentY);
+                            fetchApprovelMassage(
+                                setApprovel?.mny_request_id, "Y", _commentY);
                           });
                           Navigator.pop(context);
                         },
@@ -392,52 +429,55 @@ class _NeedRequestState extends State<NeedRequest> {
           onTap: () {
             showDialog(
               context: context,
-              barrierDismissible : false,
+              barrierColor: Colors.black54,
+              barrierDismissible: false,
               builder: (BuildContext dialogContext) {
                 return WillPopScope(
                   onWillPop: () async {
                     return await showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        elevation: 0,
-                        title: Text(
-                          '$Exit Information',
-                          style: TextStyle(
-                fontFamily: 'Arial',
-                            color: Color(0xFF555555),
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: Text(
-                              '$NotNow',
+                          context: context,
+                          barrierColor: Colors.black54,
+                          builder: (context) => AlertDialog(
+                            elevation: 0,
+                            title: Text(
+                              '$Exit Information',
                               style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 color: Color(0xFF555555),
                               ),
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _commentI = "";
-                              });
-                              Navigator.of(context).pop(false);
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              '$Ok',
-                              style: TextStyle(
-                fontFamily: 'Arial',
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.bold,
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: Text(
+                                  '$NotNow',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                  ),
+                                ),
                               ),
-                            ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _commentI = "";
+                                  });
+                                  Navigator.of(context).pop(false);
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  '$Ok',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ) ??
+                        ) ??
                         false;
                   },
                   child: AlertDialog(
@@ -446,9 +486,10 @@ class _NeedRequestState extends State<NeedRequest> {
                     title: Text(
                       'Information',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF555555),),
+                        color: Color(0xFF555555),
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -466,16 +507,18 @@ class _NeedRequestState extends State<NeedRequest> {
                         keyboardType: TextInputType.text,
                         controller: _commentBController,
                         style: TextStyle(
-                fontFamily: 'Arial',
-                            color: Color(0xFF555555), fontSize: 14),
+                            fontFamily: 'Arial',
+                            color: Color(0xFF555555),
+                            fontSize: 14),
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
                           fillColor: Colors.white,
                           hintText: '$Type_something...',
                           hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                              fontSize: 14, color: Color(0xFF555555)),
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFF555555)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                             borderSide: BorderSide.none,
@@ -492,9 +535,9 @@ class _NeedRequestState extends State<NeedRequest> {
                     actions: <Widget>[
                       TextButton(
                         child: Text(
-                          '$Cancel',
+                          'Cancel',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                         ),
@@ -509,14 +552,15 @@ class _NeedRequestState extends State<NeedRequest> {
                         child: Text(
                           '$Ok',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF555555),
                           ),
                         ),
                         onPressed: () {
                           setState(() {
-                            fetchApprovelMassage(setApprovel?.mny_request_id,"I",_commentI);
+                            fetchApprovelMassage(
+                                setApprovel?.mny_request_id, "I", _commentI);
                           });
                           Navigator.pop(context);
                         },
@@ -540,63 +584,67 @@ class _NeedRequestState extends State<NeedRequest> {
           onTap: () {
             showDialog(
               context: context,
-              barrierDismissible : false,
+              barrierColor: Colors.black54,
+              barrierDismissible: false,
               builder: (BuildContext dialogContext) {
                 return WillPopScope(
                   onWillPop: () async {
                     return await showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        elevation: 0,
-                        title: Text(
-                          '$Exit Not Approve',
-                          style: TextStyle(
-                fontFamily: 'Arial',
-                            color: Color(0xFF555555),
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: Text(
-                              '$NotNow',
+                          context: context,
+                          barrierColor: Colors.black54,
+                          builder: (context) => AlertDialog(
+                            elevation: 0,
+                            title: Text(
+                              '$Exit Not Approve',
                               style: TextStyle(
-                fontFamily: 'Arial',
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _commentN = "";
-                              });
-                              Navigator.of(context).pop(false);
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              '$Ok',
-                              style: TextStyle(
-                fontFamily: 'Arial',
+                                fontFamily: 'Arial',
                                 color: Color(0xFF555555),
                               ),
                             ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: Text(
+                                  '$NotNow',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _commentN = "";
+                                  });
+                                  Navigator.of(context).pop(false);
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  '$Ok',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    color: Color(0xFF555555),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ) ??
+                        ) ??
                         false;
                   },
-                  child:AlertDialog(
+                  child: AlertDialog(
                     elevation: 0,
                     backgroundColor: Colors.white,
                     title: Text(
                       'Not Approve',
                       style: TextStyle(
-                fontFamily: 'Arial',
-                          fontWeight: FontWeight.bold,
-                        color: Color(0xFF555555),),
+                        fontFamily: 'Arial',
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF555555),
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -614,16 +662,18 @@ class _NeedRequestState extends State<NeedRequest> {
                         keyboardType: TextInputType.text,
                         controller: _commentCController,
                         style: TextStyle(
-                fontFamily: 'Arial',
-                            color: Color(0xFF555555), fontSize: 14),
+                            fontFamily: 'Arial',
+                            color: Color(0xFF555555),
+                            fontSize: 14),
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
                           fillColor: Colors.white,
                           hintText: '$Type_something...',
                           hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                              fontSize: 14, color: Color(0xFF555555)),
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: Color(0xFF555555)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                             borderSide: BorderSide.none,
@@ -640,9 +690,9 @@ class _NeedRequestState extends State<NeedRequest> {
                     actions: <Widget>[
                       TextButton(
                         child: Text(
-                          '$Cancel',
+                          'Cancel',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             color: Color(0xFF555555),
                           ),
                         ),
@@ -657,14 +707,15 @@ class _NeedRequestState extends State<NeedRequest> {
                         child: Text(
                           '$Ok',
                           style: TextStyle(
-                fontFamily: 'Arial',
+                            fontFamily: 'Arial',
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF555555),
                           ),
                         ),
                         onPressed: () {
                           setState(() {
-                            fetchApprovelMassage(setApprovel?.mny_request_id,"N",_commentN);
+                            fetchApprovelMassage(
+                                setApprovel?.mny_request_id, "N", _commentN);
                           });
                           Navigator.pop(context);
                         },
@@ -699,11 +750,11 @@ class _NeedRequestState extends State<NeedRequest> {
   List<ApprovelData> ApprovelList = [];
 
   Future<void> fetchApprovel() async {
-    final uri =
-        Uri.parse('$host/api/origami/need/approval.php');
+    final uri = Uri.parse('$host/api/origami/need/approval.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer $token'},
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -734,11 +785,11 @@ class _NeedRequestState extends State<NeedRequest> {
   }
 
   Future<void> fetchApprovelMassage(need_id, approve_flag, comment) async {
-    final uri = Uri.parse(
-        '$host/api/origami/need/approval_manage.php');
+    final uri = Uri.parse('$host/api/origami/need/approval_manage.php');
     try {
       final response = await http.post(
-        uri, headers: {'Authorization': 'Bearer $token'},
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

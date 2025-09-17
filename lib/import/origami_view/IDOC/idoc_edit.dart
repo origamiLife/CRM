@@ -381,7 +381,7 @@ class _IdocEditState extends State<IdocEdit> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Secrets : ',
+                  'Search : ',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -1101,7 +1101,7 @@ class _IdocEditState extends State<IdocEdit> {
         // else if (!snapshot.hasData || snapshot.data!.isEmpty) {
         //   return Center(
         //       child: Text(
-        //         '$Empty',
+        //         'No Data Available in table.',
         //         style: TextStyle(
         //         fontFamily: 'Arial',
         //           color: Color(0xFF555555),
@@ -1405,7 +1405,7 @@ class _IdocEditState extends State<IdocEdit> {
       //             horizontal: 10,
       //             vertical: 8,
       //           ),
-      //           hintText: '$Search...',
+      //           hintText: 'Search...',
       //           hintStyle: TextStyle(
       //               fontFamily: 'Arial',
       //               fontSize: 14,

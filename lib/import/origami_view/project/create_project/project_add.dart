@@ -593,7 +593,7 @@ class _ProjectAddState extends State<ProjectAdd> {
                         isDense: true,
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        hintText: 'search...',
+                        hintText: 'Search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

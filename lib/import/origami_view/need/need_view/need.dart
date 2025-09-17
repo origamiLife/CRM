@@ -149,7 +149,7 @@ class _NeedsViewState extends State<NeedsView> {
                   width: double.infinity,
                   child: Center(
                     child: Text(
-                      '$Save',
+                      'Save',
                       style: TextStyle(fontFamily: 'Arial', fontSize: 16.0),
                     ),
                   ),
@@ -240,7 +240,7 @@ class _NeedsViewState extends State<NeedsView> {
               fillColor: Colors.white,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              hintText: '$SearchTS...',
+              hintText: 'Search...',
               hintStyle: const TextStyle(
                   fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
               border: InputBorder.none, // เอาขอบปกติออก
@@ -473,7 +473,7 @@ class _NeedsViewState extends State<NeedsView> {
                 width: 12,
               ),
               Text(
-                '$Loading...',
+                'Loading...',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,
@@ -688,7 +688,7 @@ class _NeedsViewState extends State<NeedsView> {
         : Center(
             child: Container(
               child: Text(
-                '$Empty',
+                'No Data Available in table.',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
@@ -982,7 +982,7 @@ class _NeedsViewState extends State<NeedsView> {
   String search = "";
   Future<List<NeedRespond>> fetchNeedResponse() async {
     final uri = Uri.parse(
-        "$host/api/origami/need/need.php?need_type=$need_type&need_status=$need_status&search=$search");
+        "$host/api/origami/need/need.php?need_type=$need_type&need_status=$need_status&search=Search");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},

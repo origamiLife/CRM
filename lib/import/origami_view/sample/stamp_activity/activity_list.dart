@@ -144,7 +144,7 @@ class _ActivityListState extends State<ActivityList> {
               fillColor: Colors.white,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              hintText: '$SearchTS...',
+              hintText: 'Search...',
               hintStyle: const TextStyle(
                   fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
               border: InputBorder.none, // เอาขอบปกติออก

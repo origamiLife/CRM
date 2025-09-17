@@ -178,309 +178,163 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
   Widget _ProjectDetail(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 16, right: 8, bottom: 16, top: 8),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(2),
-                  child: Image.network(
-                    project.owner_avatar,
-                    height: 100,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.network(
-                        'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
-                        height: 100,
-                        fit: BoxFit.contain,
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // Text(
-                    //   project.owner_name,
-                    //   style: TextStyle(
-                    //     fontFamily: 'Arial',
-                    //     fontSize: 22,
-                    //     color: Color(0xFF555555),
-                    //     fontWeight: FontWeight.w700,
-                    //   ),
-                    //   maxLines: 10,
-                    //   overflow: TextOverflow.ellipsis,
-                    // ),
-
-                    Text(
-                      project.account_name,
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 18,
-                        color: Colors.orange,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4),
-                    _buildText(project.project_code, 14, Colors.grey,
-                        FontWeight.w500),
-                    SizedBox(height: 4),
-                    Text(
-                      'Start Date : ${project.project_create}',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 10,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'End Date : ${project.last_activity}',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 10,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
         Padding(
-          padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          padding: const EdgeInsets.only(top: 16,left: 16,right: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade100,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Icon(Icons.mail, color: Colors.orange.shade400),
+              Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  project.project_code,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    color: Color(0xFF555555),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          // _makePhoneCall(_telView(account));
-                          // _makePhoneCall(account.cus_tel_no);
-                        });
+              Divider(),
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: Image.network(
+                      'https://dev.origami.life/images/project_default.jpg',
+                      height: 90,
+                      width: 90,
+                      fit: BoxFit.cover,
+                      cacheWidth: 100,
+                      loadingBuilder:
+                          (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.orange.shade100,
+                            value: loadingProgress
+                                .expectedTotalBytes !=
+                                null
+                                ? loadingProgress
+                                .cumulativeBytesLoaded /
+                                (loadingProgress
+                                    .expectedTotalBytes ??
+                                    1)
+                                : 0,
+                          ),
+                        );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Icon(Icons.call, color: Colors.red.shade400),
-                      ),
-                    )),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade100,
-                      borderRadius: BorderRadius.circular(10),
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                            height: 60,
+                            width: 60,
+                            child: Icon(Icons
+                                .error)); // แสดงไอคอนเมื่อโหลดภาพไม่สำเร็จ
+                      },
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Icon(Icons.camera_alt, color: Colors.grey),
-                    )),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade100,
-                      borderRadius: BorderRadius.circular(10),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          project.project_name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Colors.orange,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          '${project.account_name}',
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 12,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          '${project.project_sale_nonsale_name}',
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 12,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '${project.project_create}',
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8,right: 8),
+                              child: Text(
+                                '-',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              '${project.last_activity}',
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          '${project.project_process_name}',
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 12,
+                            color: Color(0xFF555555),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Icon(Icons.location_history,
-                          color: Colors.green.shade400),
-                    )),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Container(
+                  color: Colors.grey.shade100,
+                  height: 8,
+                  width: double.infinity,
               ),
             ],
           ),
         ),
-        // Row(
-        //   children: [
-        //     Padding(
-        //       padding: const EdgeInsets.only(left: 16, right: 8, bottom: 16),
-        //       child: Stack(
-        //         alignment: Alignment.center,
-        //         children: [
-        //           ClipRRect(
-        //             borderRadius: BorderRadius.circular(10),
-        //             child: Image.network(
-        //               project.owner_avatar,
-        //               height: 180,
-        //               fit: BoxFit.fill,
-        //               color: Colors.grey.shade100,
-        //               errorBuilder: (context, error, stackTrace) {
-        //                 return Image.network(
-        //                   'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-        //                   width: MediaQuery.of(context).size.width * 0.2,
-        //                   fit: BoxFit.fill,
-        //                 );
-        //               },
-        //             ),
-        //           ),
-        //           ClipRRect(
-        //             borderRadius: BorderRadius.circular(10),
-        //             child: Image.network(
-        //               project.owner_avatar,
-        //               height: 170,
-        //               fit: BoxFit.fill,
-        //               errorBuilder: (context, error, stackTrace) {
-        //                 return Image.network(
-        //                   'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-        //                   width: MediaQuery.of(context).size.width * 0.2,
-        //                   fit: BoxFit.fill,
-        //                 );
-        //               },
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //     Flexible(
-        //       child: Padding(
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: Column(
-        //           children: [
-        //             Column(
-        //               crossAxisAlignment: CrossAxisAlignment.start,
-        //               children: [
-        //                 Text(
-        //                   project.owner_name,
-        //                   style: TextStyle(
-        //                     fontFamily: 'Arial',
-        //                     fontSize: 22,
-        //                     color: Color(0xFF555555),
-        //                     fontWeight: FontWeight.w700,
-        //                   ),
-        //                   maxLines: 10,
-        //                   overflow: TextOverflow.ellipsis,
-        //                 ),
-        //                 _buildText(project.project_code, 12, Colors.grey,
-        //                     FontWeight.w500),
-        //                 SizedBox(height: 8),
-        //                 Text(
-        //                   project.account_name,
-        //                   style: TextStyle(
-        //                     fontFamily: 'Arial',
-        //                     fontSize: 14,
-        //                     color: Colors.grey,
-        //                     fontWeight: FontWeight.w500,
-        //                   ),
-        //                   maxLines: 10,
-        //                   overflow: TextOverflow.ellipsis,
-        //                 ),
-        //                 Text(
-        //                   'Start Date : ${project.project_create} \nEnd Date : ${project.last_activity}',
-        //                   style: TextStyle(
-        //                     fontFamily: 'Arial',
-        //                     fontSize: 14,
-        //                     color: Colors.grey,
-        //                     fontWeight: FontWeight.w500,
-        //                   ),
-        //                   maxLines: 10,
-        //                   overflow: TextOverflow.ellipsis,
-        //                 ),
-        //               ],
-        //             ),
-        //             Padding(
-        //               padding: const EdgeInsets.only(top: 16),
-        //               child: Padding(
-        //                 padding: const EdgeInsets.all(8.0),
-        //                 child: Row(
-        //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //                   children: [
-        //                     Container(
-        //                       decoration: BoxDecoration(
-        //                         color: Colors.orange.shade100,
-        //                         borderRadius: BorderRadius.circular(10),
-        //                       ),
-        //                       child: Padding(
-        //                         padding: const EdgeInsets.all(4),
-        //                         child: Icon(Icons.mail,
-        //                             color: Colors.orange.shade400),
-        //                       ),
-        //                     ),
-        //                     Container(
-        //                         decoration: BoxDecoration(
-        //                           color: Colors.orange.shade100,
-        //                           borderRadius: BorderRadius.circular(10),
-        //                         ),
-        //                         child: Padding(
-        //                           padding: const EdgeInsets.all(4),
-        //                           child: Icon(Icons.call,
-        //                               color: Colors.red.shade400),
-        //                         )),
-        //                     Container(
-        //                         decoration: BoxDecoration(
-        //                           color: Colors.orange.shade100,
-        //                           borderRadius: BorderRadius.circular(10),
-        //                         ),
-        //                         child: Padding(
-        //                           padding: const EdgeInsets.all(4),
-        //                           child: Icon(Icons.camera_alt,
-        //                               color: Colors.grey),
-        //                         )),
-        //                     Container(
-        //                         decoration: BoxDecoration(
-        //                           color: Colors.orange.shade100,
-        //                           borderRadius: BorderRadius.circular(10),
-        //                         ),
-        //                         child: Padding(
-        //                           padding: const EdgeInsets.all(4),
-        //                           child: Icon(Icons.location_history,
-        //                               color: Colors.green.shade400),
-        //                         )),
-        //                   ],
-        //                 ),
-        //               ),
-        //             )
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //     SizedBox(width: 16)
-        //   ],
-        // ),
         Flexible(
           child: Container(
             color: Colors.white,
@@ -489,7 +343,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  SizedBox(height: 22),
+                  // SizedBox(height: 22),
                   _subData('Contact', project.contact_name),
                   _subData('Account', project.account_name),
                   _subData('Type', project.project_type_name),
@@ -625,7 +479,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 4, bottom: 4),
+          padding: const EdgeInsets.only(top: 20, bottom: 20),
           child: Row(
             children: [
               _buildText('$label : ', 14, Color(0xFF555555), FontWeight.w700),
@@ -635,7 +489,11 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
             ],
           ),
         ),
-        _lineWidget(),
+        Container(
+          color: Colors.grey.shade100,
+          height: 8,
+          width: double.infinity,
+        ),
       ],
     );
   }
@@ -692,6 +550,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
   void _showCustomDialog() {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -718,30 +577,51 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                await fetchDeleteProject();
-              },
-              child: Text(
-                'Delete',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.orange,
-                  fontWeight: FontWeight.w700,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.red.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.red,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  await fetchDeleteProject();
+                },
+                child: Text(
+                  'Delete',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),

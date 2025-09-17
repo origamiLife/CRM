@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../import.dart';
 import 'account_add/account_add_detail.dart';
 import 'account_add/account_add_view.dart';
@@ -154,7 +154,7 @@ class _AccountScreenState extends State<AccountScreen> {
               fillColor: Colors.white,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              hintText: '$SearchTS...',
+              hintText: 'Search...',
               hintStyle: const TextStyle(
                   fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
               border: InputBorder.none, // เอาขอบปกติออก
@@ -210,13 +210,19 @@ class _AccountScreenState extends State<AccountScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(height: 12, width: double.infinity, color: Colors.white),
+                          Container(
+                              height: 12,
+                              width: double.infinity,
+                              color: Colors.white),
                           SizedBox(height: 5),
-                          Container(height: 12, width: 100, color: Colors.white),
+                          Container(
+                              height: 12, width: 100, color: Colors.white),
                           SizedBox(height: 5),
-                          Container(height: 12, width: 150, color: Colors.white),
+                          Container(
+                              height: 12, width: 150, color: Colors.white),
                           SizedBox(height: 5),
-                          Container(height: 12, width: 120, color: Colors.white),
+                          Container(
+                              height: 12, width: 120, color: Colors.white),
                         ],
                       ),
                     ),
@@ -244,7 +250,8 @@ class _AccountScreenState extends State<AccountScreen> {
                   MaterialPageRoute(
                     builder: (context) => AccountEditView(
                       employee: widget.employee,
-                      pageInput: widget.pageInput, account: account,
+                      pageInput: widget.pageInput,
+                      account: account,
                     ),
                   ),
                 ).then((value) {
@@ -428,7 +435,6 @@ class _AccountScreenState extends State<AccountScreen> {
   Future<List<ModelAccount>> fetchModelAccount() async {
     final uri = Uri.parse(
         "$hostDev/api/origami/crm/account/list-account.php?search=$_search");
-
     try {
       final response = await http.post(
         uri,
@@ -449,8 +455,8 @@ class _AccountScreenState extends State<AccountScreen> {
             .map((json) => ModelAccount.fromJson(json))
             .where((contact) {
           // กรอง id ที่ซ้ำ
-          return !accountList.any(
-                  (existing) => existing.cus_id == contact.cus_id);
+          return !accountList
+              .any((existing) => existing.cus_id == contact.cus_id);
         }).toList();
 
         // จัดการ indexItems และ isAtEnd (อัปเดตภายนอกได้)
@@ -470,7 +476,6 @@ class _AccountScreenState extends State<AccountScreen> {
       return []; // ถ้า error ส่งกลับลิสต์ว่าง
     }
   }
-
 }
 
 class ModelAccount {

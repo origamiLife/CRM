@@ -65,7 +65,6 @@ class _ContactScreenState extends State<ContactScreen> {
   List<ModelContact> filteredContactList = [];
   void _onSearchChanged() {
     final query = _searchController.text.toLowerCase();
-
     setState(() {
       filteredContactList = contactList.where((contact) {
         final name =
@@ -109,45 +108,49 @@ class _ContactScreenState extends State<ContactScreen> {
   @override
   Widget build(BuildContext context) {
     return (widget.pageInput != 'origami')
-        ? Scaffold(
-            backgroundColor: Colors.white,
-            body: _getContentWidget(),
+        ? SafeArea(
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: _getContentWidget(),
+            ),
           )
-        : Scaffold(
-            backgroundColor: Colors.white,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ContactAddView(
-                      employee: widget.employee,
+        : SafeArea(
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ContactAddView(
+                        employee: widget.employee,
+                      ),
                     ),
-                  ),
-                ).then((value) {
-                  // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-                  setState(() {
-                    indexItems = 0;
-                    // fetchModelContactVoid(); // เรียกฟังก์ชันโหลด API ใหม่
+                  ).then((value) {
+                    // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
+                    setState(() {
+                      indexItems = 0;
+                      // fetchModelContactVoid(); // เรียกฟังก์ชันโหลด API ใหม่
+                    });
                   });
-                });
-              },
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(100),
-                  bottomLeft: Radius.circular(100),
-                  bottomRight: Radius.circular(100),
-                  topLeft: Radius.circular(100),
+                },
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(100),
+                    bottomLeft: Radius.circular(100),
+                    bottomRight: Radius.circular(100),
+                    topLeft: Radius.circular(100),
+                  ),
+                ),
+                elevation: 0,
+                backgroundColor: Color(0xFFFF9900),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
                 ),
               ),
-              elevation: 0,
-              backgroundColor: Color(0xFFFF9900),
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
+              body: _getContentWidget(),
             ),
-            body: _getContentWidget(),
           );
   }
 
@@ -197,7 +200,7 @@ class _ContactScreenState extends State<ContactScreen> {
               fillColor: Colors.white,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              hintText: '$SearchTS...',
+              hintText: 'Search...',
               hintStyle: const TextStyle(
                   fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
               border: InputBorder.none, // เอาขอบปกติออก
@@ -316,7 +319,6 @@ class _ContactScreenState extends State<ContactScreen> {
                             Expanded(
                               child: Text(
                                 contact.cus_name,
-                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontFamily: 'Arial',
@@ -331,7 +333,6 @@ class _ContactScreenState extends State<ContactScreen> {
                               child: Center(
                                 child: Text(
                                   contact.cont_type,
-                                  maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontFamily: 'Arial',
@@ -382,7 +383,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                 contact.cus_cont_nick == '')
                               Text(
                                 contact.cont_name,
-                                maxLines: 1,
                                 style: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14,
@@ -394,7 +394,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                 contact.cus_cont_nick != '')
                               Text(
                                 contact.cus_cont_nick,
-                                maxLines: 1,
                                 style: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14,
@@ -406,7 +405,6 @@ class _ContactScreenState extends State<ContactScreen> {
                                 contact.cus_cont_nick != '')
                               Text(
                                 '${contact.cont_name} (${contact.cus_cont_nick})',
-                                maxLines: 1,
                                 style: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14,
@@ -416,8 +414,7 @@ class _ContactScreenState extends State<ContactScreen> {
                               ),
                             SizedBox(height: 5),
                             Text(
-                              'Gender : ${(contact.gender_name == '') ? 'ไม่ระบุ' : contact.gender_name}',
-                              maxLines: 1,
+                              'Gender : ${(contact.gender_name == '') ? 'Not specified' : contact.gender_name}',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 12,
@@ -427,8 +424,7 @@ class _ContactScreenState extends State<ContactScreen> {
                             ),
                             SizedBox(height: 5),
                             // Text(
-                            //   'Birthday : ${(contact.cont_birthday == '') ? 'ไม่ระบุ' : contact.cont_birthday}',
-                            //   maxLines: 1,
+                            //   'Birthday : ${(contact.cont_birthday == '') ? 'Not specified' : contact.cont_birthday}',
                             //   style: TextStyle(
                             //     fontFamily: 'Arial',
                             //     fontSize: 12,
@@ -439,7 +435,6 @@ class _ContactScreenState extends State<ContactScreen> {
                             // SizedBox(height: 5),
                             Text(
                               'Mobile : ${_telView(contact)}',
-                              maxLines: 1,
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 12,
@@ -450,7 +445,6 @@ class _ContactScreenState extends State<ContactScreen> {
                             SizedBox(height: 5),
                             Text(
                               'Email : ${contact.cont_email}',
-                              maxLines: 1,
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 12,
@@ -551,7 +545,6 @@ class _ContactScreenState extends State<ContactScreen> {
                           contact.cus_cont_nick == '')
                         Text(
                           contact.cont_name,
-                          maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 14,
@@ -563,7 +556,6 @@ class _ContactScreenState extends State<ContactScreen> {
                           contact.cus_cont_nick != '')
                         Text(
                           contact.cus_cont_nick,
-                          maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 14,
@@ -575,7 +567,6 @@ class _ContactScreenState extends State<ContactScreen> {
                           contact.cus_cont_nick != '')
                         Text(
                           '${contact.cont_name} (${contact.cus_cont_nick})',
-                          maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 14,
@@ -587,7 +578,6 @@ class _ContactScreenState extends State<ContactScreen> {
                       if (contact.cont_mobile != '' && contact.cont_tel != '')
                         Text(
                           'Mobile : ${contact.cont_mobile}',
-                          maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 12,
@@ -599,7 +589,6 @@ class _ContactScreenState extends State<ContactScreen> {
                           contact.cont_tel == '')
                         Text(
                           'Mobile : ${contact.cont_mobile}',
-                          maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 12,
@@ -611,7 +600,6 @@ class _ContactScreenState extends State<ContactScreen> {
                           contact.cont_tel != '')
                         Text(
                           'Mobile : ${contact.cont_tel}',
-                          maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 12,
@@ -649,7 +637,7 @@ class _ContactScreenState extends State<ContactScreen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('ไม่สามารถโทรออกได้')),
+        SnackBar(content: Text('Unable to make calls')),
       );
     }
   }
@@ -724,54 +712,6 @@ class _ContactScreenState extends State<ContactScreen> {
     }
   }
 
-  // Future<void> fetchModelContactCall() async {
-  //   final uri = Uri.parse(
-  //       "$hostDev/api/origami/crm/contact/list-contact.php?search=$_search");
-  //   try {
-  //     final response = await http.post(
-  //       uri,
-  //       headers: {'Authorization': 'Bearer ${authorization}'},
-  //       body: {
-  //         'comp_id': widget.employee.comp_id,
-  //         'emp_id': widget.employee.emp_id,
-  //         'index': indexItems.toString(),
-  //       },
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-  //       final List<dynamic> contactJson = jsonResponse['contact_data'] ?? [];
-  //       bool nextPage = jsonResponse['next_page'];
-  //
-  //       List<ModelContact> newContacts = contactJson
-  //           .map((json) => ModelContact.fromJson(json))
-  //           .where((contact) {
-  //         // กรอง id ที่ซ้ำ
-  //         return !contactList.any(
-  //             (existing) => existing.cus_cont_id == contact.cus_cont_id);
-  //       }).toList();
-  //
-  //       setState(() {
-  //         contactList.sort(
-  //                 (a, b) => b.cus_cont_id.compareTo(a.cus_cont_id));
-  //         contactList.addAll(newContacts);
-  //         if (nextPage) {
-  //           indexItems += 1;
-  //           fetchModelContactCall();
-  //           // Recursive call removed to avoid unnecessary API calls
-  //         } else {
-  //           isAtEnd = true;
-  //         }
-  //       });
-  //     } else {
-  //       throw Exception(
-  //           'Failed to load data, status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching data: $e');
-  //     // handle error (e.g., show a message to the user)
-  //   }
-  // }
 }
 
 class ModelContact {

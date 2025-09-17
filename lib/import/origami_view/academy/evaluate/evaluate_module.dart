@@ -150,7 +150,7 @@ class _EvaluateModuleState extends State<EvaluateModule>
                   width: 12,
                 ),
                 Text(
-                  '$loadingTS...',
+                  'Loading...',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16,

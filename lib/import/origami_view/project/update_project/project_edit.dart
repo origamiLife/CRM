@@ -100,6 +100,7 @@ class _ProjectEditState extends State<ProjectEdit> {
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
       initialTime: selectedTime,
+      // initialEntryMode: TimePickerEntryMode.input,
     );
 
     if (newTime != null) {

@@ -323,7 +323,7 @@ class _HelpDesk2State extends State<HelpDesk2> {
                       horizontal: 10,
                       vertical: 8,
                     ),
-                    hintText: '$Search...',
+                    hintText: 'Search...',
                     hintStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14,

@@ -101,7 +101,7 @@
 //                           ),
 //                           SizedBox(width: 12),
 //                           Text(
-//                             '$loadingTS...',
+//                             'Loading...',
 //                             style: TextStyle(
 //                               fontFamily: 'Arial',
 //                               fontSize: 16,
@@ -175,7 +175,7 @@
 //             filled: true,
 //             fillColor: Colors.white,
 //             contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-//             hintText: '$SearchTS...',
+//             hintText: 'Search...',
 //             hintStyle: TextStyle(
 //               fontFamily: 'Arial',
 //               fontSize: 14,
@@ -262,7 +262,7 @@
 //   //                     color: Colors.white,
 //   //                     fontWeight: FontWeight.w700,
 //   //                   ),
-//   //                   cancelBtnText: '$CancelTS',
+//   //                   cancelBtnText: 'Cancel',
 //   //                   cancelBtnTextStyle: const TextStyle(
 //   //                     fontSize: 18,
 //   //                     color: Colors.grey,
@@ -296,7 +296,7 @@
 //   //                             color: Colors.white,
 //   //                             fontWeight: FontWeight.w700,
 //   //                           ),
-//   //                           cancelBtnText: '$CancelTS',
+//   //                           cancelBtnText: 'Cancel',
 //   //                           cancelBtnTextStyle: const TextStyle(
 //   //                             fontSize: 18,
 //   //                             color: Colors.grey,
@@ -832,7 +832,7 @@
 //         color: Colors.white,
 //         fontWeight: FontWeight.w700,
 //       ),
-//       cancelBtnText: '$CancelTS',
+//       cancelBtnText: 'Cancel',
 //       cancelBtnTextStyle: const TextStyle(
 //         fontSize: 18,
 //         color: Colors.grey,
@@ -905,7 +905,7 @@
 //             //     color: Colors.white,
 //             //     fontWeight: FontWeight.w700,
 //             //   ),
-//             //   cancelBtnText: '$CancelTS',
+//             //   cancelBtnText: 'Cancel',
 //             //   cancelBtnTextStyle: const TextStyle(
 //             //     fontSize: 18,
 //             //     color: Colors.grey,
@@ -1035,7 +1035,7 @@
 //                 Navigator.pop(context); // Close the dialog
 //               },
 //               child: Text(
-//                 '$CancelTS',
+//                 'Cancel',
 //                 style: TextStyle(
 //                   fontSize: 14,
 //                   color: Colors.grey,

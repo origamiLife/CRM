@@ -540,7 +540,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
                         isDense: true,
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        hintText: 'search...',
+                        hintText: 'Search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -682,6 +682,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   void _imageDialog() {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           elevation: 0,

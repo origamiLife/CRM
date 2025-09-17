@@ -137,7 +137,7 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: (addNewContactList.isEmpty)
                 ? const Text(
-                    'ไม่พบข้อมูลในตาราง.',
+                    'No Data Available in table.',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -262,7 +262,7 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
               child: Text(
-            '$Empty',
+            'No Data Available in table.',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 14,

@@ -346,7 +346,7 @@ class _NeedDetailState extends State<NeedDetail> {
                         width: 12,
                       ),
                       Text(
-                        '$Loading...',
+                        'Loading...',
                         style: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 16,
@@ -614,6 +614,7 @@ class _NeedDetailState extends State<NeedDetail> {
                       employeeId == '') {
                     showDialog(
                       context: context,
+                      barrierColor:Colors.black54,
                       builder: (BuildContext dialogContext) {
                         return AlertDialog(
                           elevation: 0,
@@ -693,7 +694,7 @@ class _NeedDetailState extends State<NeedDetail> {
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(16),
                     child: Text(
-                      '$Save',
+                      'Save',
                       style: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 16.0,
@@ -1194,7 +1195,7 @@ class _NeedDetailState extends State<NeedDetail> {
                             width: double.infinity,
                             child: Center(
                               child: Text(
-                                '$SaveTS',
+                                'Save',
                                 style: TextStyle(
                                     fontFamily: 'Arial', fontSize: 16.0),
                               ),
@@ -1297,6 +1298,7 @@ class _NeedDetailState extends State<NeedDetail> {
   void showErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           elevation: 0,
@@ -1533,7 +1535,7 @@ class _NeedDetailState extends State<NeedDetail> {
             body: saveItemList.isEmpty
                 ? Center(
                     child: Text(
-                      '$Empty',
+                      'No Data Available in table.',
                       style: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14,

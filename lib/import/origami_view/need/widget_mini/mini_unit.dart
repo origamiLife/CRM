@@ -110,7 +110,7 @@ class _MiniUnitState extends State<MiniUnit> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '$SearchFor',
+                              'Search',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 16,

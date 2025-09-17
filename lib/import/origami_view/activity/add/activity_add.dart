@@ -72,13 +72,12 @@ class _activityAddState extends State<activityAdd> {
   String currentTime = '';
   TimeOfDay selectedTimeIn = TimeOfDay(hour: 09, minute: 00);
   TimeOfDay selectedTimeOut = TimeOfDay(hour: 18, minute: 00);
-  TimeOfDay selectedTimeInClose = TimeOfDay(hour: 09, minute: 00);
-  TimeOfDay selectedTimeOutClose = TimeOfDay(hour: 18, minute: 00);
 
   Future<void> _selectTime(BuildContext context, String inOut) async {
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
       initialTime: inOut == 'start' ? selectedTimeIn : selectedTimeOut,
+      // initialEntryMode: TimePickerEntryMode.input,
       builder: (BuildContext context, Widget? child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
@@ -567,7 +566,7 @@ class _activityAddState extends State<activityAdd> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
               child: Text(
-            '$Empty',
+            'No Data Available in table.',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 14,
@@ -1426,6 +1425,7 @@ class _activityAddState extends State<activityAdd> {
   void _showCustomDialog(String message) {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
@@ -1444,16 +1444,23 @@ class _activityAddState extends State<activityAdd> {
                 fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),

@@ -114,7 +114,7 @@
 //                       CircularProgressIndicator(color: Color(0xFFFF9900)),
 //                       SizedBox(width: 12),
 //                       Text(
-//                         '$loadingTS...',
+//                         'Loading...',
 //                         style: TextStyle(
 //                             fontFamily: 'Arial',
 //                             fontSize: 16,

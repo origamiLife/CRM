@@ -222,6 +222,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
   void _imageDialog() {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           elevation: 0,
@@ -723,7 +724,7 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
                           horizontal: 10,
                           vertical: 8,
                         ),
-                        hintText: 'search...',
+                        hintText: 'Search...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

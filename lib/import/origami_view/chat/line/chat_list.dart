@@ -164,7 +164,7 @@ class _ChatListState extends State<ChatList> {
                                   fillColor: Colors.white,
                                   contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 12),
-                                  hintText: '$Search...',
+                                  hintText: 'Search...',
                                   hintStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 14,

@@ -227,7 +227,7 @@ class _IssueLogScreenState extends State<IssueLogScreen> {
                             child: Padding(
                               padding: const EdgeInsets.all(14),
                               child: Text(
-                                '$Save',
+                                'Save',
                                 style: const TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 16.0,

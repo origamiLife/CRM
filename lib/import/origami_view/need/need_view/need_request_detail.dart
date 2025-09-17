@@ -140,7 +140,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                   width: 12,
                 ),
                 Text(
-                  '$Loading...',
+                  'Loading...',
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16,
@@ -686,7 +686,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                 ? Center(
                     child: Container(
                       child: Text(
-                        '$Empty',
+                        'No Data Available in table.',
                         style: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 14,

@@ -461,6 +461,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
   void _showCustomDialog(String message) {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
@@ -479,30 +480,51 @@ class _SkoopScreenState extends State<SkoopScreen> {
                 fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-                _fetchUpdateActivity();
-              },
-              child: Text(
-                'Ok',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.orange,
-                  fontWeight: FontWeight.w700,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  _fetchUpdateActivity();
+                },
+                child: Text(
+                  'Ok',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.orange,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),

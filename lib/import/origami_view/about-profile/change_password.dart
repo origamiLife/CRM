@@ -155,15 +155,30 @@ class _ChangePasswordState extends State<ChangePassword> {
                       _oldPassword == _confirmPassword) {
                     showDialog(
                       context: context, // Assuming context is available
+                      barrierColor:Colors.black54,
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text("Invalid Password"),
                           content: Text(
                               "The new password must be different from your old password. Please enter the new password again."),
                           actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              decoration: BoxDecoration(
+                                color: Colors.orange.shade400,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.orange,
+                                    blurRadius: 10,
+                                    offset: Offset(0, -2),
+                                  ),
+                                ],
+                              ),
+                              child: TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("OK"),
+                              ),
                             ),
                           ],
                         );
@@ -188,7 +203,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   width: double.infinity,
                   child: Center(
                     child: Text(
-                      '$Save',
+                      'Save',
                       style: TextStyle(fontFamily: 'Arial', fontSize: 16.0),
                     ),
                   ),

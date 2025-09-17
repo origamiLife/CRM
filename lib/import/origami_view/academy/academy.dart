@@ -132,7 +132,7 @@ class _AcademyPageState extends State<AcademyPage> {
                         width: 12,
                       ),
                       Text(
-                        '$loadingTS...',
+                        'Loading...',
                         style: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16,
@@ -233,7 +233,7 @@ class _AcademyPageState extends State<AcademyPage> {
               fillColor: Colors.white,
               contentPadding:
               const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              hintText: '$SearchTS...',
+              hintText: 'Search...',
               hintStyle: const TextStyle(
                   fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
               border: InputBorder.none, // เอาขอบปกติออก
@@ -362,8 +362,8 @@ class _AcademyPageState extends State<AcademyPage> {
                             SizedBox(height: 8),
                             Text(
                               academyItem.academy_date == "Time Out"
-                                  ? '$timeoutTS'
-                                  : '$startTS : ${academyItem.academy_date}',
+                                  ? 'Time Out'
+                                  : 'Start : ${academyItem.academy_date}',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 color: academyItem.academy_date == "Time Out"

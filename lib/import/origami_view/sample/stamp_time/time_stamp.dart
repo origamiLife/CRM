@@ -183,7 +183,7 @@ class _TimeSampleState extends State<TimeSample> {
                     width: 12,
                   ),
                   Text(
-                    '$Loading...',
+                    'Loading...',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 16,
@@ -206,7 +206,7 @@ class _TimeSampleState extends State<TimeSample> {
                     width: 12,
                   ),
                   Text(
-                    '$Loading...',
+                    'Loading...',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 16,

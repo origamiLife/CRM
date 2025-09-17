@@ -111,7 +111,7 @@ class _MiniDepartmentState extends State<MiniDepartment> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '$SearchFor',
+                              'Search',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 16,

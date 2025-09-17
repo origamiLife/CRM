@@ -138,6 +138,7 @@ class _ThaiHolidayCalendarPageState extends State<ThaiHolidayCalendarPage> {
                       if (events.isNotEmpty) {
                         showDialog(
                           context: context,
+                          barrierColor:Colors.black54,
                           builder: (_) => AlertDialog(
                             title: Text('เหตุการณ์ในวันที่ ${DateFormat('yyyy/MM/dd').format(selectedDate)}'),
                             content: Text(events.join('\n')),

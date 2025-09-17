@@ -41,23 +41,41 @@ class _ProjectScreenState extends State<ProjectScreen> {
     });
   }
 
+  // void _filterActivityList() {
+  //   setState(() {
+  //     String query = _searchController.text.toLowerCase();
+  //     filteredProjectList = modelProjectList.where((project) {
+  //       return project.project_name.toLowerCase().contains(query) ?? false;
+  //     }).toList();
+  //   });
+  //   fetchModelProject();
+  // }
+
   void _filterActivityList() {
+    if (!mounted) return;
     setState(() {
       String query = _searchController.text.toLowerCase();
       filteredProjectList = modelProjectList.where((project) {
-        return project.project_name.toLowerCase().contains(query) ?? false;
+        return project.project_name.toLowerCase().contains(query);
       }).toList();
     });
-    fetchModelProject();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _searchController.removeListener(_filterActivityList); // เพิ่มบรรทัดนี้
     _searchController.dispose();
+    super.dispose();
   }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _scrollController.removeListener(_onScroll);
+  //   _scrollController.dispose();
+  //   _searchController.dispose();
+  // }
 
   void addProject(String non_sale) {
     // ปิด Dialog ก่อนการนำทาง
@@ -87,7 +105,6 @@ class _ProjectScreenState extends State<ProjectScreen> {
         });
       }
     });
-
     _searchController.clear();
   }
 
@@ -104,6 +121,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
               onPressed: () {
                 showDialog(
                   context: context,
+                  barrierColor:Colors.black54,
                   builder: (BuildContext dialogContext) {
                     return AlertDialog(
                       elevation: 0,
@@ -257,7 +275,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                 filled: true,
                 fillColor: Colors.white,
                 contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                 hintText: 'Search...',
                 hintStyle: TextStyle(
                     fontFamily: 'Arial',
@@ -326,6 +344,242 @@ class _ProjectScreenState extends State<ProjectScreen> {
     );
   }
 
+  Widget _getContentWidget(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: ListView.builder(
+          controller: _scrollController,
+          itemCount: filteredProjectList.length,
+          itemBuilder: (context, index) {
+            modelProjectAll = modelProjectList;
+            modelProjectList
+                .sort((a, b) => b.project_id.compareTo(a.project_id));
+            final project = filteredProjectList[index];
+            print('activityList.length : ${filteredProjectList.length}');
+            return Column(
+              children: [
+                Container(
+                    color: Colors.grey.shade100,
+                    height: 4,
+                    width: double.infinity),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProjectListUpdate(
+                          employee: widget.employee,
+                          project: project,
+                          pageInput: widget.pageInput,
+                        ),
+                      ),
+                    ).then((value) {
+                      // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
+                      setState(() {
+                        indexItems = 0;
+                        isAtEnd = false; // ครั้งแรก
+                        modelProjectList.clear();
+                        fetchModelProject();
+                      });
+                    });
+                    _searchController.clear();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4, top: 8),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: Text(
+                                          project.project_code,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 12,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 8.0),
+                                      child: Text(
+                                        project.project_priority_name,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 12,
+                                          color: Color(0xFF555555),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 1, // ความกว้างของเส้น
+                                height: 16, // ความสูงของเส้น
+                                color: Colors.grey, // สีของเส้น
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 8), // ระยะห่างจาก IconButton
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  _showCustomDeleteDialog(
+                                      project.project_id, project.project_name);
+                                },
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                  size: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  'https://dev.origami.life/images/project_default.jpg',
+                                  height: 60,
+                                  width: 60,
+                                  fit: BoxFit.cover,
+                                  cacheWidth: 100,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.orange.shade100,
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                (loadingProgress
+                                                        .expectedTotalBytes ??
+                                                    1)
+                                            : 0,
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                        height: 60,
+                                        width: 60,
+                                        child: Icon(Icons
+                                            .error)); // แสดงไอคอนเมื่อโหลดภาพไม่สำเร็จ
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 16,
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    project.project_name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14,
+                                      color: Colors.orange,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${project.account_name}',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${project.project_sale_nonsale_name}',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${project.project_process_name}',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Color(0xFF555555),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'view detail',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14,
+                                color: Colors.orange.shade400,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                    color: Colors.grey.shade100,
+                    height: 4,
+                    width: double.infinity),
+              ],
+            );
+          }),
+    );
+  }
+
   Widget _Header() {
     return Row(
       children: [
@@ -357,7 +611,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                   hintText: 'Search...',
                   hintStyle: TextStyle(
                       fontFamily: 'Arial',
@@ -412,235 +666,6 @@ class _ProjectScreenState extends State<ProjectScreen> {
               )),
         ),
       ],
-    );
-  }
-
-  Widget _getContentWidget(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: ListView.builder(
-          controller: _scrollController,
-          itemCount: filteredProjectList.length,
-          itemBuilder: (context, index) {
-            modelProjectAll = modelProjectList;
-            modelProjectList
-                .sort((a, b) => b.project_id.compareTo(a.project_id));
-            final project = filteredProjectList[index];
-            print('activityList.length : ${filteredProjectList.length}');
-            return Column(
-              children: [
-                Container(
-                    color: Colors.grey.shade100, height: 4, width: double.infinity),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProjectListUpdate(
-                          employee: widget.employee,
-                          project: project,
-                          pageInput: widget.pageInput,
-                        ),
-                      ),
-                    ).then((value) {
-                      // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-                      setState(() {
-                        indexItems = 0;
-                        isAtEnd = false; // ครั้งแรก
-                        modelProjectList.clear();
-                        fetchModelProject();
-                      });
-                    });
-                    _searchController.clear();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4,top: 8),
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
-                                        child: Text(
-                                          project.project_code,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 12,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: Text(
-                                        project.project_priority_name,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 12,
-                                          color: Color(0xFF555555),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: 1, // ความกว้างของเส้น
-                                height: 16, // ความสูงของเส้น
-                                color: Colors.grey, // สีของเส้น
-                                margin: EdgeInsets.symmetric(
-                                    horizontal:
-                                        8), // ระยะห่างจาก IconButton
-                              ),
-                              (project.can_delete == 'Y')
-                                  ? InkWell(
-                                      onTap: () {
-                                        _showCustomDeleteDialog(project.project_id,project.project_name);
-                                        },
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                        size: 18,
-                                      ),
-                                    )
-                                  : Icon(
-                                      Icons.delete,
-                                      color: Colors.grey,
-                                      size: 18,
-                                    ),
-                            ],
-                          ),
-                        ),
-                        Divider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  'https://dev.origami.life/images/project_default.jpg',
-                                  height: 60,
-                                  width: 60,
-                                  fit: BoxFit.cover,
-                                  cacheWidth: 100,
-                                  loadingBuilder: (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.orange.shade100,
-                                        value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded /
-                                            (loadingProgress.expectedTotalBytes ?? 1)
-                                            : 0,
-                                      ),
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(height: 60,
-                                        width: 60,child: Icon(Icons.error)); // แสดงไอคอนเมื่อโหลดภาพไม่สำเร็จ
-                                  },
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    project.project_name,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14,
-                                      color: Colors.orange,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${project.account_name}',
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${project.project_sale_nonsale_name}',
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${project.project_process_name}',
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 12,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              'รายละเอียด',
-                              style: GoogleFonts.roboto(
-                                fontSize: 14,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                    color: Colors.grey.shade100, height: 4, width: double.infinity),
-              ],
-            );
-          }),
     );
   }
 
@@ -730,7 +755,6 @@ class _ProjectScreenState extends State<ProjectScreen> {
     }
   }
 
-
   bool _isFirstTime = true;
   bool _isLoading = false;
   bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
@@ -743,8 +767,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
     _isLoading = true;
     try {
       await fetchModelProjectGetSum();
-      final uri =
-      Uri.parse("$hostDev/api/origami/crm/project/get.php?search=${_search}");
+      final uri = Uri.parse(
+          "$hostDev/api/origami/crm/project/get.php?search=${_search}");
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer $token'},
@@ -763,10 +787,12 @@ class _ProjectScreenState extends State<ProjectScreen> {
             activityJson.map((json) => ModelProject.fromJson(json)).toList();
         setState(() {
           // สร้าง set id เดิม
-          Set<String> seenIds = modelProjectList.map((e) => e.project_id).toSet();
+          Set<String> seenIds =
+              modelProjectList.map((e) => e.project_id).toSet();
 
           // กรอง newActivities ที่ซ้ำออก
-          newActivities = newActivities.where((a) => seenIds.add(a.project_id)).toList();
+          newActivities =
+              newActivities.where((a) => seenIds.add(a.project_id)).toList();
 
           // เพิ่มข้อมูลใหม่เข้า list หลัก
           modelProjectList.addAll(newActivities);
@@ -785,7 +811,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
           print("indexItems : $indexItems ,max : $max");
           if ((check - sum) >= max) {
             indexItems = sum - 1;
-            isAtEnd = true;  // ถึงจุดสิ้นสุดข้อมูล
+            isAtEnd = true; // ถึงจุดสิ้นสุดข้อมูล
           } else {
             indexItems += 1;
             filteredProjectList = List.from(modelProjectList);
@@ -832,7 +858,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
   }
 
   Future<void> fetchDeleteProject(String project_id) async {
-    final uri = Uri.parse("$hostDev/api/origami/crm/project/delete_project.php");
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/project/delete_project.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -861,6 +888,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   void _showCustomDeleteDialog(String project_id, String project_name) {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
@@ -876,37 +904,58 @@ class _ProjectScreenState extends State<ProjectScreen> {
           content: Text(
             'Do you want to delete this $project_name?',
             style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 16,
-                color: Color(0xFF555555),
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
               fontWeight: FontWeight.w500,
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(dialogContext);
-                fetchDeleteProject(project_id);
-              },
-              child: Text(
-                'Delete',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.orange,
-                  fontWeight: FontWeight.w700,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.red.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.red,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.pop(dialogContext);
+                  fetchDeleteProject(project_id);
+                },
+                child: Text(
+                  'Delete',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
@@ -916,7 +965,6 @@ class _ProjectScreenState extends State<ProjectScreen> {
       },
     );
   }
-  
 }
 
 class ModelProject {

@@ -139,7 +139,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
               fillColor: Colors.white,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              hintText: '$SearchTS...',
+              hintText: 'Search...',
               hintStyle: const TextStyle(
                   fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
               border: InputBorder.none, // เอาขอบปกติออก
@@ -231,22 +231,26 @@ class _ActivityScreenState extends State<ActivityScreen> {
             print('activityList.length : ${filteredActivityList.length}');
             return InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ActivityEditView(
-                      employee: widget.employee,
-                      activity: activity,
-                      index: index,
+                if (activity.activity_join_status == '0') {
+                  _showCustomApproveDialog(activity);
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActivityEditView(
+                        employee: widget.employee,
+                        activity: activity,
+                        index: index,
+                      ),
                     ),
-                  ),
-                ).then((value) {
-                  // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-                  setState(() {
-                    indexItems = 0;
-                    _fetchModelActivity(); // เรียกฟังก์ชันโหลด API ใหม่
+                  ).then((value) {
+                    // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
+                    setState(() {
+                      indexItems = 0;
+                      _fetchModelActivity(); // เรียกฟังก์ชันโหลด API ใหม่
+                    });
                   });
-                });
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 5),
@@ -369,36 +373,101 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    // height: 28,
-                                    padding: const EdgeInsets.only(
-                                        left: 18, right: 18),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          (activity.activity_status == 'close')
-                                              ? Color(0xFFFF9900)
-                                              : Colors.blue.shade200,
-                                      border: Border.all(
-                                        color: (activity.activity_status ==
-                                                'close')
-                                            ? Color(0xFFFF9900)
-                                            : Colors.blue.shade200,
-                                      ),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        (activity.activity_status == '')
-                                            ? 'plan'
-                                            : activity.activity_status,
-                                        style: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ),
+                                  (activity.activity_join_status == '0')
+                                      ? Row(
+                                          children: [
+                                            Container(
+                                              // height: 28,
+                                              padding: const EdgeInsets.only(
+                                                  left: 16,
+                                                  right: 16,
+                                                  top: 2,
+                                                  bottom: 2),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red.shade400,
+                                                border: Border.all(
+                                                  color: Colors.red.shade400,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  'delete',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 4),
+                                            Container(
+                                              // height: 28,
+                                              padding: const EdgeInsets.only(
+                                                  left: 16,
+                                                  right: 16,
+                                                  top: 2,
+                                                  bottom: 2),
+                                              decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                border: Border.all(
+                                                  color: Colors.green,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  'approve',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Container(
+                                          // height: 28,
+                                          padding: const EdgeInsets.only(
+                                              left: 16,
+                                              right: 16,
+                                              top: 2,
+                                              bottom: 2),
+                                          decoration: BoxDecoration(
+                                            color: (activity.activity_status ==
+                                                    'close')
+                                                ? Color(0xFFFF9900)
+                                                : Colors.blue.shade200,
+                                            border: Border.all(
+                                              color:
+                                                  (activity.activity_status ==
+                                                          'close')
+                                                      ? Color(0xFFFF9900)
+                                                      : Colors.blue.shade200,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              (activity.activity_status == '')
+                                                  ? 'plan'
+                                                  : activity.activity_status,
+                                              style: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ),
                                 ],
                               ),
                             ],
@@ -471,7 +540,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         padding:
                             const EdgeInsets.only(left: 12, right: 12, top: 16),
                         child: Text(
-                          'ประเภทกิจกรรม [Activity Type]',
+                          'Select Activity Type',
                           style: const TextStyle(
                             fontFamily: 'Arial',
                             fontWeight: FontWeight.w600,
@@ -498,7 +567,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                       width: 12,
                                     ),
                                     Text(
-                                      '$Loading...',
+                                      'Loading...',
                                       style: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 16,
@@ -521,7 +590,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                   snapshot.data!.isEmpty) {
                                 return Center(
                                     child: Text(
-                                  '$Empty',
+                                  'No Data Available in table.',
                                   style: TextStyle(
                                     fontFamily: 'Arial',
                                     fontSize: 14,
@@ -668,7 +737,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
   }
 
   Future<List<ActivityType>> fetchActivityType() async {
-    final uri = Uri.parse("$hostDev/api/origami/crm/activity/component/type.php");
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/activity/component/type.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -683,6 +753,167 @@ class _ActivityScreenState extends State<ActivityScreen> {
     } else {
       throw Exception('Failed to load instructors');
     }
+  }
+
+  Future<void> _fetchDeleteActivity(String activity_id) async {
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/activity/delete_activity.php');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'activity_id': activity_id,
+        },
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+        pushScreen(9);
+        throw Exception('Delete Activity Now.');
+      } else {
+        throw Exception('Failed to load status data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
+    }
+  }
+
+  Future<void> fetchUpdateActivity(
+      String activity_id, String activity_join_status) async {
+    final uri =
+        Uri.parse('$hostDev/api/origami/crm/activity/update_activity.php');
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'activity_id': activity_id,
+          'condition': 'approve',
+          'activity_join_status': activity_join_status,
+        },
+      );
+      if (response.statusCode == 200) {
+        print('true: ${response.statusCode}');
+        final jsonResponse = jsonDecode(response.body);
+        final message = jsonResponse['message'];
+        if (jsonResponse['status'] == true) {
+          pushScreen(9);
+        }
+        print('close activity success --> $message');
+      } else {
+        throw Exception('Failed to load status data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load personal data: $e');
+    }
+  }
+
+  void pushScreen(int page) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            OrigamiPage(employee: widget.employee, popPage: page),
+      ),
+    );
+  }
+
+  void _showCustomApproveDialog(GetActivity activity) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Are you sure?',
+            style: const TextStyle(
+              fontFamily: 'Arial',
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF555555),
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          content: SingleChildScrollView(
+            child: Text(
+              'Do you really want to Approve Request these records? This process cannot be undone.',
+              style: const TextStyle(
+                fontFamily: 'Arial',
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF555555),
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.red.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.red,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  _fetchDeleteActivity(activity.activity_id);
+                },
+                child: const Text(
+                  'Delete ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.green.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.green,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () {
+                  String activity_join = '1';
+                  Navigator.pop(dialogContext);
+                  fetchUpdateActivity(activity.activity_id, activity_join);
+                },
+                child: const Text(
+                  'Approve Request ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

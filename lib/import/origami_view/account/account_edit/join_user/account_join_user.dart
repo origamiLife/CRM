@@ -71,7 +71,7 @@ class _AccountJoinUserState extends State<AccountJoinUser> {
                     width: 12,
                   ),
                   Text(
-                    '$Loading...',
+                    'Loading...',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 16,
@@ -204,7 +204,7 @@ class _AccountJoinUserState extends State<AccountJoinUser> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'ไม่พบข้อมูลในตาราง.',
+              'No data found in the table.',
               style: TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 16,

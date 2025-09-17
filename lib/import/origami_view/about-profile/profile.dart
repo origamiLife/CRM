@@ -117,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: 12,
               ),
               Text(
-                '$Loading...',
+                'Loading...',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,
@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: 12,
               ),
               Text(
-                '$Loading...',
+                'Loading...',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,

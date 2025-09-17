@@ -75,10 +75,12 @@ class _ActivityEditViewState extends State<ActivityEditView> {
       case 0:
         return _activity(activity);
       case 1:
-        return JoinUserScreenActivity(employee: widget.employee, activity: activity,); //_activityImage();
+        return JoinUserScreenActivity(
+          employee: widget.employee,
+          activity: activity,
+        ); //_activityImage();
       case 2:
-        return StampActivity(
-            employee: widget.employee, activity: activity);
+        return StampActivity(employee: widget.employee, activity: activity);
       case 3:
         return _activityLyzen();
       default:
@@ -152,7 +154,8 @@ class _ActivityEditViewState extends State<ActivityEditView> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          (widget.activity.activity_status != '')
+          (widget.activity.activity_status != '' ||
+                  widget.activity.activity_join_status == '0')
               ? Container()
               : InkWell(
                   onTap: () {
@@ -271,8 +274,8 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               SizedBox(height: 4),
@@ -283,7 +286,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
-                  color: Color(0xFFFF9900),
+                  color: Colors.black54,
                 ),
               ),
               SizedBox(height: 12),
@@ -412,11 +415,25 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 16,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                             SizedBox(height: 4),
+                            widget.activity.activity_join_status == '0'?
+                            Text(
+                              (activity.activity_status == '')
+                                  ? 'Request Join'
+                                  : activity.activity_status ?? '',
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Colors.blue.shade600,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                                :
                             Text(
                               (activity.activity_status == '')
                                   ? 'plan'

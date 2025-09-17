@@ -40,7 +40,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
           child: Text(
             'Budgeting',
             style: TextStyle(
-                fontFamily: 'Arial',
+              fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -92,8 +92,9 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                 hintText: 'Search...',
                 hintStyle: TextStyle(
-                fontFamily: 'Arial',
-                    fontSize: 14, color: Color(0xFF555555)),
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(100),
                 ),
@@ -124,7 +125,8 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
               itemCount: modelBubgets.length,
               itemBuilder: (context, index) {
                 final modelBubget = modelBubgets[index];
-                total = double.parse(modelBubget.budgeting_balance??'') + double.parse(modelBubget.budgeting_balance??'');
+                total = double.parse(modelBubget.budgeting_balance ?? '') +
+                    double.parse(modelBubget.budgeting_balance ?? '');
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -157,7 +159,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                                   modelBubget.mny_category_name ?? '',
                                   maxLines: 1,
                                   style: TextStyle(
-                fontFamily: 'Arial',
+                                    fontFamily: 'Arial',
                                     fontSize: 14,
                                     color: Color(0xFF555555),
                                     fontWeight: FontWeight.w700,
@@ -168,7 +170,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                                 '${modelBubget.budgeting_balance ?? ''}',
                                 maxLines: 1,
                                 style: TextStyle(
-                fontFamily: 'Arial',
+                                  fontFamily: 'Arial',
                                   fontSize: 14,
                                   color: Color(0xFF555555),
                                   fontWeight: FontWeight.w500,
@@ -196,7 +198,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     'Total',
                     maxLines: 1,
                     style: TextStyle(
-                fontFamily: 'Arial',
+                      fontFamily: 'Arial',
                       fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
@@ -207,7 +209,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                   '${total}',
                   maxLines: 1,
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -224,6 +226,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
   void _showDialog(ModelBubget? modelBubget) {
     showDialog(
       context: context,
+      barrierColor: Colors.black54,
       builder: (context) {
         return AlertDialog(
           title: Container(
@@ -232,11 +235,11 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  modelBubget?.mny_category_name??'',
+                  modelBubget?.mny_category_name ?? '',
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: TextStyle(
-                fontFamily: 'Arial',
+                    fontFamily: 'Arial',
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: const Color(0xFF555555),
@@ -250,7 +253,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                       child: Text(
                         'Balance :',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -259,9 +262,9 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      '${modelBubget?.budgeting_balance??''}',
+                      '${modelBubget?.budgeting_balance ?? ''}',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -277,7 +280,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                       child: Text(
                         'New :',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -286,9 +289,9 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      modelBubget?.budgeting_new??'',
+                      modelBubget?.budgeting_new ?? '',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -304,7 +307,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                       child: Text(
                         'In Progress :',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -313,9 +316,9 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      modelBubget?.budgeting_progress??'',
+                      modelBubget?.budgeting_progress ?? '',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -331,7 +334,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                       child: Text(
                         'Approve :',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -340,9 +343,9 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      modelBubget?.budgeting_approve??'',
+                      modelBubget?.budgeting_approve ?? '',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -358,7 +361,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                       child: Text(
                         'Process :',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -367,9 +370,9 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      modelBubget?.budgeting_process??'',
+                      modelBubget?.budgeting_process ?? '',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -385,7 +388,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                       child: Text(
                         'Paid :',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -394,9 +397,9 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      modelBubget?.budgeting_paid??'',
+                      modelBubget?.budgeting_paid ?? '',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -412,7 +415,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                       child: Text(
                         'Not Approve :',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -421,9 +424,9 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      modelBubget?.budgeting_notapprove??'',
+                      modelBubget?.budgeting_notapprove ?? '',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -439,7 +442,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                       child: Text(
                         'Reject :',
                         style: TextStyle(
-                fontFamily: 'Arial',
+                          fontFamily: 'Arial',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: const Color(0xFF555555),
@@ -448,9 +451,9 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      modelBubget?.budgeting_reject??'',
+                      modelBubget?.budgeting_reject ?? '',
                       style: TextStyle(
-                fontFamily: 'Arial',
+                        fontFamily: 'Arial',
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: const Color(0xFF555555),
@@ -463,15 +466,29 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(), // Cancel
-              child: Text(
-                'Close',
-                style: TextStyle(
-                fontFamily: 'Arial',
-                  fontSize: 16,
-                  color: Color(0xFFFF9900),
-                  fontWeight: FontWeight.w700,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.red,
+                //     blurRadius: 10,
+                //     offset: Offset(0, -2),
+                //   ),
+                // ],
+              ),
+              child: TextButton(
+                onPressed: () => Navigator.of(context).pop(), // Cancel
+                child: Text(
+                  'Close',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
@@ -481,7 +498,7 @@ class _ProjectBudgetingState extends State<ProjectBudgeting> {
     );
   }
 
-  double  total = 0.0;
+  double total = 0.0;
   List<ModelBubget> modelBubgets = [
     ModelBubget(
       budgeting_approve: "0.00",

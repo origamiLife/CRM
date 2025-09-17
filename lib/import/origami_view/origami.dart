@@ -78,6 +78,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
   @override
   void initState() {
     super.initState();
+    print(widget.employee.emp_id);
     _index = widget.popPage;
     if (_index == 0) {
       _index = 5;
@@ -85,32 +86,34 @@ class _OrigamiPageState extends State<OrigamiPage> {
     fetchBranch();
   }
 
+  Future<bool> _handleBackPressed() async {
+    final now = DateTime.now();
+    const maxDuration = Duration(seconds: 3);
+
+    final isWarning = lastPressed == null || now.difference(lastPressed!) > maxDuration;
+
+    if (isWarning) {
+      lastPressed = now;
+      if (_index != 12) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Press back again to exit the origami application.',
+              style: TextStyle(fontFamily: 'Arial', color: Colors.white),
+            ),
+            duration: maxDuration,
+          ),
+        );
+      }
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        final now = DateTime.now();
-        const maxDuration = Duration(seconds: 3);
-        final isWarning =
-            lastPressed == null || now.difference(lastPressed!) > maxDuration;
-
-        if (isWarning) {
-          lastPressed = now;
-          if (_index != 12) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Press back again to exit the origami application.',
-                  style: TextStyle(fontFamily: 'Arial', color: Colors.white),
-                ),
-                duration: maxDuration,
-              ),
-            );
-          }
-          return false;
-        }
-        return true;
-      },
+      onWillPop: _handleBackPressed,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -128,30 +131,49 @@ class _OrigamiPageState extends State<OrigamiPage> {
           ),
           actions: (_index == 5) ? _buildAppBarTimeStamp() : null,
         ),
-        drawer: Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: Drawer(
-            elevation: 1,
-            backgroundColor: Colors.white,
-            child: Column(
-              children: [
-                _drawerHeader(),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: _getContentWidget(),
-                        ),
-                      ),
-                      _logoutWidget(),
-                    ],
-                  ),
+        drawer: Drawer(
+          elevation: 1,
+          backgroundColor: Colors.white,
+          child: Column(
+            children: [
+              _drawerHeader(),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _getContentWidget(),
+                    const SizedBox(height: 10),
+                    _logoutWidget(),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
+        // Container(
+        //   width: MediaQuery.of(context).size.width * 0.8,
+        //   child: Drawer(
+        //     elevation: 1,
+        //     backgroundColor: Colors.white,
+        //     child: Column(
+        //       children: [
+        //         _drawerHeader(),
+        //         Expanded(
+        //           child: Column(
+        //             children: [
+        //               Expanded(
+        //                 child: SingleChildScrollView(
+        //                   child: _getContentWidget(),
+        //                 ),
+        //               ),
+        //               _logoutWidget(),
+        //             ],
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
         body: SafeArea(
           child: Center(
             child: _buildScreen(),
@@ -161,25 +183,55 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
+  // Widget _drawerHeader() {
+  //   return Container(
+  //     width: double.infinity,
+  //     decoration: const BoxDecoration(
+  //       image: DecorationImage(
+  //         image: AssetImage('assets/images/logoOrigami/default_bg.png'),
+  //         fit: BoxFit.cover,
+  //       ),
+  //     ),
+  //     child: SafeArea(
+  //       bottom: false,
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(16.0),
+  //         child: _employeeInfo(),
+  //       ),
+  //     ),
+  //   );
+  // }
+
   Widget _drawerHeader() {
-    return Stack(
-      alignment: Alignment.bottomLeft,
-      children: [
-        const UserAccountsDrawerHeader(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/logoOrigami/default_bg.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          accountName: null,
-          accountEmail: null,
+    return UserAccountsDrawerHeader(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/logoOrigami/default_bg.png'),
+          fit: BoxFit.cover,
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16, right: 8, bottom: 25),
-          child: _employeeInfo(),
+      ),
+      currentAccountPicture: CircleAvatar(
+        backgroundImage: NetworkImage(widget.employee.emp_avatar),
+        onBackgroundImageError: (_, __) {},
+      ),
+      accountName: Text(
+        widget.employee.emp_name,
+        style: const TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
         ),
-      ],
+      ),
+      accountEmail: Text(
+        widget.employee.dept_name,
+        style: const TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
@@ -659,6 +711,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
       // IconButton(
       //   icon: const Icon(Icons.history, color: Colors.orange),
       //   onPressed: () => showDialog(
+      //     barrierColor:Colors.black54,
       //     context: context,
       //     builder: (_) => Dialog(
       //       elevation: 0,
@@ -746,6 +799,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == 200) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  LoginPage(num: 1, popPage: 0, company_id: 0),
+            ),
+          );
         } else {
           throw Exception('ไม่สามารถออกจากระบบ: ${jsonResponse['message']}');
         }
@@ -760,6 +820,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
   void showCustomDialog(BuildContext context) {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -782,38 +843,51 @@ class _OrigamiPageState extends State<OrigamiPage> {
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                fetchLogout();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        LoginPage(num: 1, popPage: 0, company_id: 0),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
                   ),
-                  (route) => false,
-                );
-              },
-              child: Text(
-                'Ok',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w700,
+                ],
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  fetchLogout();
+                },
+                child: Text(
+                  'Log Out',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
@@ -903,6 +977,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
   void _confirmLogout() {
     showDialog(
       context: context,
+      barrierColor:Colors.black54,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           elevation: 0,

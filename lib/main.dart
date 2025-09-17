@@ -211,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_begin == false && _isLoading) {
       _loadBegin();
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         body: SafeArea(
           child: Stack(
             alignment: Alignment.center,
@@ -236,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Image.asset(
                     'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.25,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       return Container();
@@ -246,12 +246,27 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     // color: Colors.white,
                     child: Center(
-                      child: LoadingAnimationWidget.horizontalRotatingDots(
-                        size: 65,
-                        color: Colors.orange,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Loading...',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              color: Colors.white54,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 30,
+                            ),
+                          ),
+                          LoadingAnimationWidget.horizontalRotatingDots(
+                            size: 65,
+                            color: Colors.white54,
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                  SizedBox(height: 16),
                 ],
               ),
             ],
@@ -379,7 +394,7 @@ class _LoginPageState extends State<LoginPage> {
               // if (isMobile)
               Image.asset(
                 'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
-                width: constraints.maxWidth * 0.4,
+                width: constraints.maxWidth * 0.3,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -416,19 +431,18 @@ class _LoginPageState extends State<LoginPage> {
                   fontFamily: 'Arial',
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
-                  fontSize: 50,
+                  fontSize: 30,
                 ),
               ),
-              // Text(
-              //   titleComponent,
-              //   style: const TextStyle(
-              //     fontFamily: 'Arial',
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w500,
-              //     fontSize: 40,
-              //   ),
-              // ),
-
+              Text(
+                'Sign in to access the system',
+                style: const TextStyle(
+                  fontFamily: 'Arial',
+                  color: Colors.white,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 24,
+                ),
+              ),
               SizedBox(height: constraints.maxWidth * 0.04),
               Form(
                 key: _formKey,

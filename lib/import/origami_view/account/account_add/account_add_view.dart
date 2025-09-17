@@ -461,7 +461,7 @@ class _AccountAddViewState extends State<AccountAddView> {
                   horizontal: 10,
                   vertical: 8,
                 ),
-                hintText: '$Search...',
+                hintText: 'Search...',
                 hintStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
@@ -512,7 +512,7 @@ class _AccountAddViewState extends State<AccountAddView> {
         // else if (!snapshot.hasData || snapshot.data!.isEmpty) {
         //   return Center(
         //       child: Text(
-        //         '$Empty',
+        //         'No Data Available in table.',
         //         style: TextStyle(
         //         fontFamily: 'Arial',
         //           color: Color(0xFF555555),
