@@ -288,10 +288,7 @@ class _ContactScreenState extends State<ContactScreen> {
         controller: _scrollController,
         itemCount: filteredContactList.length,
         itemBuilder: (context, index) {
-          // filteredContactList.sort(
-          //         (a, b) => b.cus_cont_id.compareTo(a.cus_cont_id));
           ModelContact contact = filteredContactList[index];
-          print('cus_cont_photo cus_cont_photo ${contact.cus_cont_photo}');
           return InkWell(
             onTap: () {
               Navigator.push(

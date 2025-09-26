@@ -465,8 +465,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
                                   'https://dev.origami.life/images/project_default.jpg',
-                                  height: 60,
-                                  width: 60,
+                                  height: 80,
+                                  width: 80,
                                   fit: BoxFit.cover,
                                   cacheWidth: 100,
                                   loadingBuilder:
@@ -516,8 +516,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
+                                  SizedBox(height: 5),
                                   Text(
-                                    '${project.account_name}',
+                                    project.account_name,
                                     maxLines: 1,
                                     style: TextStyle(
                                       fontFamily: 'Arial',
@@ -526,8 +527,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
+                                  SizedBox(height: 5),
                                   Text(
-                                    '${project.project_sale_nonsale_name}',
+                                    project.project_sale_nonsale_name,
                                     maxLines: 1,
                                     style: TextStyle(
                                       fontFamily: 'Arial',
@@ -536,8 +538,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
+                                  SizedBox(height: 5),
                                   Text(
-                                    '${project.project_process_name}',
+                                    project.project_process_name,
                                     maxLines: 1,
                                     style: TextStyle(
                                       fontFamily: 'Arial',

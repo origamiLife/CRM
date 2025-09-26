@@ -446,7 +446,7 @@ class _ContactViewState extends State<ContactView> {
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
-                      color: Color(0xFFFF9900),
+                      color: Colors.grey,
                     ),
                   ),
                 ],

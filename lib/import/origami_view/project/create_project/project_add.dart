@@ -809,7 +809,7 @@ class _ProjectAddState extends State<ProjectAdd> {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+        final List<dynamic> dataJson = jsonResponse['source_data'] ?? [];
         setState(() {
           sourceList =
               dataJson.map((json) => SourceData.fromJson(json)).toList();
@@ -917,7 +917,7 @@ class _ProjectAddState extends State<ProjectAdd> {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+        final List<dynamic> dataJson = jsonResponse['priority_data'] ?? [];
         setState(() {
           priorityList =
               dataJson.map((json) => PriorityData.fromJson(json)).toList();
@@ -1147,8 +1147,8 @@ class SourceData {
 
   factory SourceData.fromJson(Map<String, dynamic> json) {
     return SourceData(
-      source_id: json['project_comefrom_id'] ?? '',
-      source_name: json['project_comefrom_name'] ?? '',
+      source_id: json['source_id'] ?? '',
+      source_name: json['source_name'] ?? '',
     );
   }
 }
@@ -1224,8 +1224,8 @@ class PriorityData {
 
   factory PriorityData.fromJson(Map<String, dynamic> json) {
     return PriorityData(
-      priority_id: json['project_sale_status_id'] ?? '',
-      priority_name: json['project_sale_status_name'] ?? '',
+      priority_id: json['priority_id'] ?? '',
+      priority_name: json['priority_name'] ?? '',
     );
   }
 }

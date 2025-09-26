@@ -49,7 +49,8 @@ class _TimeSampleState extends State<TimeSample> {
   @override
   void initState() {
     super.initState();
-    _CheckPlatform();
+    _platform();
+    getLocation();
     Timer.periodic(Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() {
@@ -83,7 +84,7 @@ class _TimeSampleState extends State<TimeSample> {
   }
 
   StreamSubscription<Position>? _positionStream;
-  void requestLocationPermission() async {
+  Future<void> requestLocationPermission() async {
     var status = await Permission.location.request();
     if (status.isGranted) {
       _positionStream = Geolocator.getPositionStream(
@@ -104,7 +105,7 @@ class _TimeSampleState extends State<TimeSample> {
     }
   }
 
-  void _checkUserInRadius() {
+  Future<void> _checkUserInRadius() async {
     if (userPosition == null || widget.timestamp == null) return;
 
     final double branchLat =
@@ -147,7 +148,7 @@ class _TimeSampleState extends State<TimeSample> {
     return earthRadius * 2 * asin(sqrt(a));
   }
 
-  void _CheckPlatform() {
+  void _platform() {
     if (Platform.isAndroid) {
       _checkPlatform = 'Android';
       print("Running on Android");
@@ -255,27 +256,6 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
-  // void _onMapTapped(LatLng latLng) {
-  //   setState(() {
-  //     _tappedLocation = latLng;
-  //     // สร้าง Position จาก LatLng
-  //     userPosition = Position(
-  //       longitude: latLng.longitude,
-  //       latitude: latLng.latitude,
-  //       timestamp: DateTime.now(),
-  //       accuracy: 0,
-  //       altitude: 0,
-  //       heading: 0,
-  //       speed: 0,
-  //       speedAccuracy: 0, altitudeAccuracy: 0.0, headingAccuracy: 0.0,
-  //     );
-  //
-  //     _mapController.animateCamera(
-  //       CameraUpdate.newLatLng(latLng),
-  //     );
-  //   });
-  // }
-
   Widget _buildGoogleMap(GetTimeStampSim branch) {
     return GoogleMap(
       onMapCreated: (controller) => _mapController = controller,
@@ -297,15 +277,6 @@ class _TimeSampleState extends State<TimeSample> {
                     BitmapDescriptor.hueRed),
               ),
             },
-      // onTap: (LatLng latLng) {
-      //   // เมื่อผู้ใช้แตะที่แผนที่
-      //   // setState(() {
-      //   //   _tappedLocation = latLng; // เก็บตำแหน่งที่แตะไว้ใน state
-      //   // });
-      //   _onMapTapped(latLng);
-      //   // แสดงพิกัดใน console
-      //   print('Tapped location: ${latLng.latitude}, ${latLng.longitude}');
-      // },
       initialCameraPosition: CameraPosition(
           target: LatLng(
             double.parse(branch.branch_lat),
@@ -483,6 +454,7 @@ class _TimeSampleState extends State<TimeSample> {
 
   bool _isStamping = false;
   Future<void> _pickImage(ImageSource source, GetTimeStampSim b) async {
+    await _checkUserInRadius();
     if (_isStamping) return;
     _isStamping = true;
 
@@ -490,13 +462,11 @@ class _TimeSampleState extends State<TimeSample> {
       if (_checkInOut == true || b.branch_fixed == 'N') {
         final XFile? image = await _picker.pickImage(source: source);
         if (image == null) return;
-
-        final directory = await getApplicationDocumentsDirectory();
-        final filePath = path.join(
-          directory.path,
-          'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
-        );
-
+        // final directory = await getApplicationDocumentsDirectory();
+        // final filePath = path.join(
+        //   directory.path,
+        //   'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
+        // );
         final file = File(image.path);
         final imageBytes = await file.readAsBytes();
         final base64String = base64Encode(imageBytes);

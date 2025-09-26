@@ -22,7 +22,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // รอการ initialize
   // เตรียมข้อมูลสำหรับ Locale ภาษาไทย
   await initializeDateFormatting('th', null);
-  getLocation();
   // ตั้งค่า Hive
   var appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
@@ -85,7 +84,7 @@ class MyApp extends StatelessWidget {
           seedColor: Theme.of(context).colorScheme.inversePrimary,
           brightness: Brightness.light,
         ),
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           displayLarge: TextStyle(
             fontFamily: 'Arial',
             fontSize: 72,
@@ -802,11 +801,11 @@ class _LoginPageState extends State<LoginPage> {
     if (username.isEmpty || password.isEmpty) {
       String errorMessage = '';
       if (username.isEmpty && password.isEmpty) {
-        errorMessage = 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน';
+        errorMessage = 'Please enter your username and password.';
       } else if (username.isEmpty) {
-        errorMessage = 'กรุณากรอกชื่อผู้ใช้';
+        errorMessage = 'Please enter your username.';
       } else {
-        errorMessage = 'กรุณากรอกรหัสผ่าน';
+        errorMessage = 'Please enter your password.';
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

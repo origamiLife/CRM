@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
+import 'package:origamilift/import/origami_view/work/work_quote.dart';
 import 'package:origamilift/import/origami_view/work/work_apply_add.dart';
 
 class WorkPage extends StatefulWidget {
@@ -207,34 +208,7 @@ class _WorkPageState extends State<WorkPage> {
                               return _approvedWork(snapshot.data ?? []);
                             }
                           }),
-                    FutureBuilder<List<StatusWork>>(
-                        future: fetchStatusWork(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(
-                                child: Text(
-                              'Error: ${snapshot.error}',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                color: const Color(0xFF555555),
-                              ),
-                            ));
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
-                            return Center(
-                                child: Text(
-                              'No Data Available in table.',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
-                              ),
-                            ));
-                          } else {
-                            return _contactWork(snapshot.data ?? []);
-                          }
-                        }),
+                    WorkQuote(employee: widget.employee),
                   ],
                 ),
               ),
@@ -252,7 +226,7 @@ class _WorkPageState extends State<WorkPage> {
         final approve = dataWorkHistory[index];
         DateTime dt = DateTime.parse(approve.create_datetime);
         final create_date = DateFormat('yyyy-MM-dd').format(dt);
-        return approve.approve_status == 'Y' && approve.approve_del == 'del'
+        return approve.del_status == 'Y' && approve.approve_del == 'del'
             ? Container()
             : Padding(
                 padding: const EdgeInsets.all(8),
@@ -312,16 +286,35 @@ class _WorkPageState extends State<WorkPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Reason : ${approve.request_subject}',
-                                    style: const TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: Text(
+                                          'Reason : ${approve.request_subject}',
+                                          style: const TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 15,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                      if(approve.approve_del == 'del')
+                                      const Text(
+                                        '[delete]',
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 14,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(height: 4),
                                   Text(
@@ -347,7 +340,7 @@ class _WorkPageState extends State<WorkPage> {
                                     maxLines: 2,
                                   ),
                                   Text(
-                                    'Create Date : $create_date',
+                                    'Create Date : $create_date ${approve.create_datetime}',
                                     style: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 14,
@@ -358,31 +351,23 @@ class _WorkPageState extends State<WorkPage> {
                                     maxLines: 2,
                                   ),
                                   SizedBox(height: 4),
-                                  if (approve.approve_del == 'del')
+                                  if (approve.approve_status == 'N')
                                     Text(
-                                      (approve.approve_status == 'N')
-                                          ? '[Waiting for Approve Delete]'
-                                          : approve.approve_comment,
+                                      (approve.approve_comment == '')?'[Waiting Approve]':approve.approve_comment,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 12,
-                                        color: (approve.approve_status == 'N')
-                                            ? Colors.red.shade400
-                                            : Colors.green,
+                                        color: (approve.approve_comment == '')?Colors.orange.shade400:Colors.red.shade400,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     )
                                   else
                                     Text(
-                                      (approve.approve_status == '')
-                                          ? '[Waiting Approve]'
-                                          : approve.approve_comment,
+                                      approve.approve_comment,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 12,
-                                        color: (approve.approve_status == '')
-                                            ? Colors.orange
-                                            : Colors.green,
+                                        color: Colors.green,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -410,7 +395,7 @@ class _WorkPageState extends State<WorkPage> {
           padding: const EdgeInsets.all(8),
           child: InkWell(
             onTap: () {
-              _showApproveDialog(approve,index);
+              _showApproveDialog(approve, index);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -420,7 +405,10 @@ class _WorkPageState extends State<WorkPage> {
                   color: (approve.approve_del == 'del')
                       ? Colors.red
                       : Color(0xFFFF9900),
-                  width: (approve.approve_del == 'del'|| approve.approve_status == 'Y') ? 2.0 : 1.0,
+                  width: (approve.approve_del == 'del' ||
+                          approve.approve_status == 'Y')
+                      ? 2.0
+                      : 1.0,
                 ),
               ),
               child: Padding(
@@ -539,89 +527,6 @@ class _WorkPageState extends State<WorkPage> {
     );
   }
 
-  Widget _contactWork(List<StatusWork> dataWork) {
-    return ListView.builder(
-      itemCount: dataWork.length ?? 0,
-      itemBuilder: (context, index) {
-        final work = dataWork[index];
-        return Padding(
-          padding: const EdgeInsets.all(8),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-              border: Border.all(
-                color: Color(0xFFFF9900),
-                width: 1.0,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '[ ${work.leave_type_name_en ?? ''} ]',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Color(0xFF555555),
-                      fontWeight: FontWeight.w700,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  Divider(
-                    color: Color(
-                      int.parse(
-                          '0xFF${work.leave_type_color.substring(1) ?? '000000'}'),
-                    ),
-                    thickness: 4,
-                  ),
-                  Text(
-                    'Used : ${(work.used == '') ? ' - ' : work.used ?? ''} Hour',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Available : ${(work.available == '') ? ' - ' : work.available ?? ''} Hour',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Total : ${work.total ?? ''} Hour',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   void _showRequestDialog(HistoryWorkModel approve) {
     showDialog(
       context: context,
@@ -645,6 +550,7 @@ class _WorkPageState extends State<WorkPage> {
             ),
           );
         }
+
         return AlertDialog(
           title: Text(
             'Reason: ${approve.request_subject}',
@@ -755,7 +661,13 @@ class _WorkPageState extends State<WorkPage> {
                 child: TextButton(
                   onPressed: () {
                     Navigator.pop(dialogContext);
-                    fetchWorkDelete(approve.request_id);
+                    // รอบแรก
+                    if (approve.approve_comment != '' &&
+                        approve.del_status == '') {
+                      fetchWorkDelete(approve.request_id, 'approve');
+                    } else {
+                      fetchWorkDelete(approve.request_id, 'not');
+                    }
                   },
                   child: const Text(
                     'Delete',
@@ -777,7 +689,7 @@ class _WorkPageState extends State<WorkPage> {
     showDialog(
       context: context,
       barrierColor: Colors.black54,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext dialogContext) {
         Widget buildRow(String label, String? value, {TextStyle? style}) {
           return Padding(
@@ -796,6 +708,7 @@ class _WorkPageState extends State<WorkPage> {
             ),
           );
         }
+
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10), // ขอบโคร้ง
@@ -856,7 +769,7 @@ class _WorkPageState extends State<WorkPage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Image.network(
-                            workEmployee?.emp_avatar??'',
+                            workEmployee?.emp_avatar ?? '',
                             width: double.infinity,
                             fit: BoxFit.cover,
                             errorBuilder: (_, __, ___) => Image.network(
@@ -871,7 +784,7 @@ class _WorkPageState extends State<WorkPage> {
                 ),
                 Center(
                   child: Text(
-                    '${workEmployee?.emp_prefix??''} ${workEmployee?.emp_firstname??''} ${workEmployee?.emp_lastname??''}',
+                    '${workEmployee?.emp_prefix ?? ''} ${workEmployee?.emp_firstname ?? ''} ${workEmployee?.emp_lastname ?? ''}',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
@@ -904,9 +817,9 @@ class _WorkPageState extends State<WorkPage> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            (approve.approve_del == 'del')
-                                ? '[Waiting for Approve Delete]'
-                                : '[Waiting Approve]',
+                            (approve.del_status == '')
+                                ? '[Waiting Approve]'
+                                : '[Waiting for Approve Delete]',
                             style: TextStyle(
                               fontFamily: 'Arial',
                               fontSize: 14,
@@ -927,55 +840,85 @@ class _WorkPageState extends State<WorkPage> {
             ),
           ),
           actions: [
+            // if()
+            // Container(
+            //   width: MediaQuery.of(context).size.width * 0.25,
+            //   decoration: BoxDecoration(
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(10),
+            //   ),
+            //   child: TextButton(
+            //     onPressed: () => Navigator.pop(dialogContext),
+            //     child: const Text(
+            //       'Cancel',
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         color: Colors.black87,
+            //         fontWeight: FontWeight.w700,
+            //       ),
+            //     ),
+            //   ),
+            // )else
             Container(
               width: MediaQuery.of(context).size.width * 0.25,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.red.shade400,
                 borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.red,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
               ),
               child: TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: const Text(
-                  'Cancel',
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  is_status = 'N';
+                  fetchApproved(approve.request_id, approve_emp_id, is_status,
+                      _commentController.text, 'not', approve.del_status);
+                },
+                child: Text(
+                  'Not Approve',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.black87,
+                    color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ),
-            if (_isApproved == true)
-              Container(
-                width: MediaQuery.of(context).size.width * 0.25,
-                decoration: BoxDecoration(
-                  color: Colors.green.shade400,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.green,
-                      blurRadius: 10,
-                      offset: Offset(0, -2),
-                    ),
-                  ],
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(dialogContext);
-                    fetchApproved(approve.request_id, approve_emp_id, is_status,
-                        _commentController.text);
-                  },
-                  child: Text(
-                    'Approve',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.green.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.green,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  is_status = 'Y';
+                  fetchApproved(approve.request_id, approve_emp_id, is_status,
+                      _commentController.text, 'approve', approve.del_status);
+                },
+                child: Text(
+                  'Approve',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
-
+            ),
           ],
         );
       },
@@ -1072,7 +1015,8 @@ class _WorkPageState extends State<WorkPage> {
             _isApproved = true;
             is_status = 'Y';
             approve_emp_id = widget.employee.emp_id;
-            print('approve_emp_id : $approve_emp_id ,\n employee_id : $employee_id');
+            print(
+                'approve_emp_id : $approve_emp_id ,\n employee_id : $employee_id');
           }
           work_emp_id = employee_id = _ApprovedWork[i].emp_id;
         }
@@ -1084,7 +1028,8 @@ class _WorkPageState extends State<WorkPage> {
   }
 
   Future<List<ApprovedWorkModel>> fetchGetApproveWork() async {
-    print('approve_emp_id ::::: $approve_emp_id , employee_id ::::::: $employee_id');
+    print(
+        'approve_emp_id ::::: $approve_emp_id , employee_id ::::::: $employee_id');
     final uri =
         Uri.parse("$hostDev/api/origami/crm/work/get_approved_work.php");
     final response = await http.post(
@@ -1136,36 +1081,15 @@ class _WorkPageState extends State<WorkPage> {
     }
   }
 
-  Future<List<StatusWork>> fetchStatusWork() async {
-    final uri = Uri.parse("$hostDev/api/get_work.php");
-    final response = await http.post(
-      uri,
-      headers: {'Authorization': 'Bearer $token'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-        'Authorization': token,
-      },
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      print(jsonResponse);
-      // เข้าถึงข้อมูลในคีย์ 'instructors'
-      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-      // แปลงข้อมูลจาก JSON เป็น List<Instructor>
-      return dataJson.map((json) => StatusWork.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load instructors');
-    }
-  }
-
   Future<void> fetchApproved(
-    String requestId,
-    String approveEmpId,
-    String statusApproved,
-    String approveComment,
-  ) async {
-    print('${widget.employee.emp_id} ,$requestId , $approveEmpId , $statusApproved , $approveComment');
+      String request_id,
+      String approve_emp_id,
+      String approve_status,
+      String approve_comment,
+      String action,
+      String del_status) async {
+    print(
+        '$employee_id ,$action,$request_id , $approve_emp_id , $approve_status , $approve_comment');
     final uri = Uri.parse('$hostDev/api/origami/crm/work/approved_work.php');
     try {
       final response = await http.post(
@@ -1175,11 +1099,13 @@ class _WorkPageState extends State<WorkPage> {
         },
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': employee_id, //widget.employee.emp_id,
-          'request_id': requestId,
-          'approve_emp_id': approveEmpId,
-          'approve_status': statusApproved,
-          'approve_comment': approveComment,
+          'emp_id': employee_id,
+          'action': action,
+          'request_id': request_id,
+          'approve_emp_id': approve_emp_id,
+          'approve_status': approve_status,
+          'approve_comment': approve_comment,
+          'del_status': del_status,
         },
       );
 
@@ -1219,7 +1145,7 @@ class _WorkPageState extends State<WorkPage> {
     }
   }
 
-  Future<void> fetchWorkDelete(String request_id) async {
+  Future<void> fetchWorkDelete(String request_id, String action) async {
     final uri = Uri.parse("$hostDev/api/origami/crm/work/delete_work.php");
     final response = await http.post(
       uri,
@@ -1227,6 +1153,7 @@ class _WorkPageState extends State<WorkPage> {
       body: {
         'request_id': request_id,
         'emp_id': widget.employee.emp_id,
+        'action': action,
       },
     );
     if (response.statusCode == 200) {
@@ -1240,7 +1167,7 @@ class _WorkPageState extends State<WorkPage> {
     }
   }
 
-  WorkEmployee? workEmployee ;
+  WorkEmployee? workEmployee;
   Future<WorkEmployee> _fetchWorkEmployee() async {
     final uri = Uri.parse("$hostDev/api/origami/profile/profile.php");
     final response = await http.post(
@@ -1359,7 +1286,7 @@ class HistoryWorkModel {
       firstname: json['firstname'] ?? '',
       lastname: json['lastname'] ?? '',
       name_approve: json['name_approve'] ?? '',
-      approve_comment: json['approve_comment'] ?? '',
+      approve_comment: json['approve_comment'] ?? '[Waiting Approved]',
       approve_del: json['approve_del'] ?? '',
       del_status: json['del_status'] ?? '',
     );
@@ -1546,4 +1473,3 @@ class WorkEmployee {
     );
   }
 }
-

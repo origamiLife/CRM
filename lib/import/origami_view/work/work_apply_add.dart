@@ -90,7 +90,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           InkWell(
             onTap: () {
               if (isAfter(selectedStartTime!, selectedEndTime!)) {
-                _fetchAddWork();
+                _checkaddwork();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -1082,8 +1082,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     return DateFormat("HH:mm:ss").format(dt); // ต้อง import intl
   }
 
-  Future<void> _fetchAddWork() async {
-    start_time = '${selectedStartTime!.format(context)}:00';
+  void _checkaddwork(){
     print('${leave_type_id}\n'
         '${_reasonController.text}\n'
         '${_noteController.text}\n'
@@ -1093,6 +1092,11 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
         '\n${_formatTimeOfDay(selectedEndTime!)}'
         '\n${imageName}'
         '\n${request_no_money}\n${_base64Image}');
+    _fetchAddWork();
+  }
+
+  Future<void> _fetchAddWork() async {
+    start_time = '${selectedStartTime!.format(context)}:00';
     isSelected == true ? request_no_money = 'Y' : request_no_money = 'N';
     try {
       final uri = Uri.parse("$hostDev/api/origami/crm/work/add_work.php");
@@ -1109,11 +1113,13 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           'request_to_date': request_to_date,
           'request_from_time_': _formatTimeOfDay(selectedStartTime!),
           'request_to_time_': _formatTimeOfDay(selectedEndTime!),
-          'request_attach': _base64Image ?? '', // ป้องกัน null
-          'request_attach_filename': imageName ?? '',
+          'request_attach': _base64Image,
+          'request_attach_filename': imageName,
           'leave_period_type': '0',
           'request_no_money': request_no_money,
-          'before_day': before_day.toString(), // ส่งเป็น string ชัวร์
+          'approve_status': 'N',
+          'before_day': before_day.toString(),
+          // 'usedMinutes': '',
         },
       );
 

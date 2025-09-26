@@ -832,7 +832,7 @@ class _ProjectEditState extends State<ProjectEdit> {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+        final List<dynamic> dataJson = jsonResponse['source_data'] ?? [];
         setState(() {
           sourceList =
               dataJson.map((json) => SourceData.fromJson(json)).toList();
@@ -925,7 +925,7 @@ class _ProjectEditState extends State<ProjectEdit> {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+        final List<dynamic> dataJson = jsonResponse['priority_data'] ?? [];
         setState(() {
           priorityList =
               dataJson.map((json) => PriorityData.fromJson(json)).toList();
