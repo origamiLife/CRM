@@ -1093,8 +1093,10 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
         '\n${imageName}'
         '\n${request_no_money}\n${_base64Image}');
     _fetchAddWork();
+    // print('12345');
   }
 
+  String holiday = '';
   Future<void> _fetchAddWork() async {
     start_time = '${selectedStartTime!.format(context)}:00';
     isSelected == true ? request_no_money = 'Y' : request_no_money = 'N';
@@ -1118,7 +1120,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           'leave_period_type': '0',
           'request_no_money': request_no_money,
           'approve_status': 'N',
-          'before_day': before_day.toString(),
+          // 'this_is_holiday': holiday,
+          'before_day': before_day,
           // 'usedMinutes': '',
         },
       );

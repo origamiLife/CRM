@@ -30,6 +30,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
   void initState() {
     super.initState();
     _getAPI();
+    cus_type = _modelType.first.cus_type;
   }
 
   @override
@@ -170,7 +171,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
                     selectedType = value;
                     cus_type = value?.cus_type ?? '';
                   });
-                }, hint: '',
+                }, hint: _modelType.first.selected_name,
               ),
             ),
             SizedBox(width: 8),

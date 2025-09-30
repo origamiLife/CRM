@@ -123,6 +123,10 @@ class _ProjectJoinUserState extends State<ProjectJoinUser> {
                                       child: Image.network(
                                         join_user.emp_pic,
                                         fit: BoxFit.fill,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Icon(Icons.person,size: 50,color: Colors.black54,);
+                                        },
                                       ),
                                     ),
                                   ),

@@ -142,75 +142,81 @@ class _ChangePasswordState extends State<ChangePassword> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFFFF9900),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                ),
-                onPressed: () {
-                  if (isValid && _oldPassword == _newPassword ||
-                      _oldPassword == _confirmPassword) {
-                    showDialog(
-                      context: context, // Assuming context is available
-                      barrierColor:Colors.black54,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text("Invalid Password"),
-                          content: Text(
-                              "The new password must be different from your old password. Please enter the new password again."),
-                          actions: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.25,
-                              decoration: BoxDecoration(
-                                color: Colors.orange.shade400,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.orange,
-                                    blurRadius: 10,
-                                    offset: Offset(0, -2),
-                                  ),
-                                ],
-                              ),
-                              child: TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("OK"),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'The new password must be different from your old password. Please enter the new password again.',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            color: Colors.white,
+              child: _buildButton(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(12),
+          backgroundColor: Colors.red,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        ),
+        onPressed: (){
+          if (isValid && _oldPassword == _newPassword ||
+              _oldPassword == _confirmPassword) {
+            showDialog(
+              context: context, // Assuming context is available
+              barrierColor:Colors.black54,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Invalid Password"),
+                  content: Text(
+                      "The new password must be different from your old password. Please enter the new password again."),
+                  actions: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade400,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orange,
+                            blurRadius: 10,
+                            offset: Offset(0, -2),
                           ),
-                        ),
+                        ],
                       ),
-                    );
-                  } else if (isValid && _newPassword == _confirmPassword) {
-                    _fetchChangePassword();
-                  }
-                },
-                child: Container(
-                  width: double.infinity,
-                  child: Center(
-                    child: Text(
-                      'Save',
-                      style: TextStyle(fontFamily: 'Arial', fontSize: 16.0),
+                      child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("OK"),
+                      ),
                     ),
+                  ],
+                );
+              },
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'The new password must be different from your old password. Please enter the new password again.',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Colors.white,
                   ),
                 ),
               ),
-            ),
-          ],
+            );
+          } else if (isValid && _newPassword == _confirmPassword) {
+            _showCustomChangeDialog();
+          }
+        },
+        child: Text(
+          'Send',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );
@@ -366,6 +372,15 @@ class _ChangePasswordState extends State<ChangePassword> {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['status'] == false) {
         final message = jsonResponse['message'];
+        setState(() {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  OrigamiPage(employee: widget.employee, popPage: 10),
+            ),
+          );
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -389,5 +404,86 @@ class _ChangePasswordState extends State<ChangePassword> {
     } else {
       throw Exception('Failed to load projects');
     }
+  }
+
+  void _showCustomChangeDialog() {
+    showDialog(
+      context: context,
+      barrierColor:Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Change Password',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Please confirm your password change.',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange,
+                    blurRadius: 10,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.pop(dialogContext);
+                  _fetchChangePassword();
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
   }
 }

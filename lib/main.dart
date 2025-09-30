@@ -128,7 +128,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   DateTime? lastPressed;
   bool isPass = true;
-  bool _forgot = false;
   bool _begin = false;
   int countPage = 0;
 
@@ -356,41 +355,6 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // if (isMobile)
-              //   Image.network(
-              //     logoComponent, // ใส่โลโก้
-              //     width: 300,
-              //     fit: BoxFit.contain,
-              //     errorBuilder: (context, error, stackTrace) {
-              //       return Container(
-              //         color: Colors.transparent,
-              //         child: Center(
-              //           child: LoadingAnimationWidget.horizontalRotatingDots(
-              //             size: 65,
-              //             color: Colors.orange,
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //   )
-              // else
-              //   Image.network(
-              //     logoComponent, // ใส่โลโก้
-              //     width: 400,
-              //     fit: BoxFit.contain,
-              //     errorBuilder: (context, error, stackTrace) {
-              //       return Container(
-              //         color: Colors.transparent,
-              //         child: Center(
-              //           child: LoadingAnimationWidget.horizontalRotatingDots(
-              //             size: 65,
-              //             color: Colors.orange,
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //   ),
-              // if (isMobile)
               Image.asset(
                 'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
                 width: constraints.maxWidth * 0.3,
@@ -408,22 +372,6 @@ class _LoginPageState extends State<LoginPage> {
                 },
               ),
               SizedBox(height: 24),
-              // Image.network(
-              //   logoComponent, // ใส่โลโก้
-              //   width: 300,
-              //   fit: BoxFit.contain,
-              //   errorBuilder: (context, error, stackTrace) {
-              //     return Container(
-              //       color: Colors.transparent,
-              //       child: Center(
-              //         child: LoadingAnimationWidget.horizontalRotatingDots(
-              //           size: 65,
-              //           color: Colors.orange,
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // ),
               Text(
                 'Origami Platform',
                 style: const TextStyle(
@@ -455,7 +403,7 @@ class _LoginPageState extends State<LoginPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () => _forgotWidget(constraints),
+                        onPressed: () => _showCustomForgotDialog(),
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -488,167 +436,293 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _onForgotPasswordPressed() {
-    setState(() => _forgot = true);
-  }
-
-  Widget _forgotWidget(BoxConstraints constraints) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
-      child: Center(
-        child: Container(
-          width: constraints.maxWidth * 0.85,
-          decoration: BoxDecoration(
-            // color: Colors.black12,
-            borderRadius: BorderRadius.circular(20),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: Colors.black12,
-            //     blurRadius: 10,
-            //     offset: Offset(0, 4),
-            //   )
-            // ],
+  void _showCustomForgotDialog() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
-                width: constraints.maxWidth * 0.4,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.transparent,
-                    child: Center(
-                      child: LoadingAnimationWidget.horizontalRotatingDots(
-                        size: 65,
-                        color: Colors.orange,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              SizedBox(height: 24),
-              // Container(
-              //   // color: Colors.white,
-              //   width: MediaQuery.of(context).size.width * 0.5,
-              //   child: Image.network(
-              //     logoComponent, // ใส่โลโก้
-              //     width: MediaQuery.of(context).size.width * 0.5,
-              //     fit: BoxFit.contain,
-              //     errorBuilder: (context, error, stackTrace) {
-              //       return Container();
-              //     },
-              //   ),
-              // ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Text(
-                      '$messageforgotPwdTS',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '    $messageRestPwdTS',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          color: Colors.orange.shade50,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _forgotController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r'[a-zA-Z0-9@#%&*_!$^(),.?":;{}|<>-]')),
-                      ],
-                      style: TextStyle(
-                          fontFamily: 'Arial', color: Color(0xFF555555)),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: 'Email',
-                        hintStyle: TextStyle(
-                            fontFamily: 'Arial', color: Color(0xFF555555)),
-                        prefixIcon: Icon(Icons.email, color: Color(0xFF555555)),
-                      ),
-                    ),
-                    SizedBox(height: 30.0),
-                    Container(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.all(1),
-                          foregroundColor: Colors.red,
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                        ),
-                        onPressed: () => _fetchForgetMail(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 60, right: 60, bottom: 12, top: 12),
-                          child: Text(
-                            '$sendTS',
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _forgot = false;
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.chevron_left,
-                                color: Colors.white, size: 20),
-                            SizedBox(width: 8),
-                            Text(
-                              '$returnLoginTS',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+          title: Text(
+            'Forgot your password?',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Please enter your email address to request a password reset.',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  controller: _forgotController,
+                  keyboardType: TextInputType.emailAddress,
+                  autofocus: true,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'[a-zA-Z0-9@._-]')),
                   ],
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Color(0xFF555555),
+                  ),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: 'Email',
+                    hintStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      color: Color(0xFF999999),
+                    ),
+                    prefixIcon: Icon(Icons.email, color: Color(0xFF555555)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () {
+                  if (_forgotController.text.isEmpty ||
+                      !_forgotController.text.contains("@")) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Please enter a valid email address."),
+                      ),
+                    );
+                    return;
+                  }
+                  Navigator.pop(context);
+                  _fetchForgetMail();
+                },
+                child: Text(
+                  'Send',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
+
+  // Widget _forgotWidget(BoxConstraints constraints) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 18),
+  //     child: Center(
+  //       child: Container(
+  //         width: constraints.maxWidth * 0.85,
+  //         decoration: BoxDecoration(
+  //           // color: Colors.black12,
+  //           borderRadius: BorderRadius.circular(20),
+  //           // boxShadow: [
+  //           //   BoxShadow(
+  //           //     color: Colors.black12,
+  //           //     blurRadius: 10,
+  //           //     offset: Offset(0, 4),
+  //           //   )
+  //           // ],
+  //         ),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           children: [
+  //             Image.asset(
+  //               'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
+  //               width: constraints.maxWidth * 0.4,
+  //               fit: BoxFit.contain,
+  //               errorBuilder: (context, error, stackTrace) {
+  //                 return Container(
+  //                   color: Colors.transparent,
+  //                   child: Center(
+  //                     child: LoadingAnimationWidget.horizontalRotatingDots(
+  //                       size: 65,
+  //                       color: Colors.orange,
+  //                     ),
+  //                   ),
+  //                 );
+  //               },
+  //             ),
+  //             SizedBox(height: 24),
+  //             // Container(
+  //             //   // color: Colors.white,
+  //             //   width: MediaQuery.of(context).size.width * 0.5,
+  //             //   child: Image.network(
+  //             //     logoComponent, // ใส่โลโก้
+  //             //     width: MediaQuery.of(context).size.width * 0.5,
+  //             //     fit: BoxFit.contain,
+  //             //     errorBuilder: (context, error, stackTrace) {
+  //             //       return Container();
+  //             //     },
+  //             //   ),
+  //             // ),
+  //             Form(
+  //               key: _formKey,
+  //               child: Column(
+  //                 children: [
+  //                   Text(
+  //                     'Forgot your password?',
+  //                     style: TextStyle(
+  //                       fontFamily: 'Arial',
+  //                       color: Colors.white,
+  //                       fontSize: 28,
+  //                       fontWeight: FontWeight.w500,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 8),
+  //                   Padding(
+  //                     padding: const EdgeInsets.only(top: 8,bottom: 8,right: 8,left: 12),
+  //                     child: Text(
+  //                       'Please enter your email address to request a password reset.',
+  //                       style: TextStyle(
+  //                         fontFamily: 'Arial',
+  //                         color: Colors.orange.shade50,
+  //                         fontSize: 16,
+  //                         fontWeight: FontWeight.w400,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 16),
+  //                   TextFormField(
+  //                     controller: _forgotController,
+  //                     inputFormatters: [
+  //                       FilteringTextInputFormatter.allow(
+  //                           RegExp(r'[a-zA-Z0-9@#%&*_!$^(),.?":;{}|<>-]')),
+  //                     ],
+  //                     style: TextStyle(
+  //                         fontFamily: 'Arial', color: Color(0xFF555555)),
+  //                     decoration: InputDecoration(
+  //                       filled: true,
+  //                       fillColor: Colors.white,
+  //                       hintText: 'Email',
+  //                       hintStyle: TextStyle(
+  //                           fontFamily: 'Arial', color: Color(0xFF555555)),
+  //                       prefixIcon: Icon(Icons.email, color: Color(0xFF555555)),
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 30.0),
+  //                   Container(
+  //                     width: double.infinity,
+  //                     child: ElevatedButton(
+  //                       style: ElevatedButton.styleFrom(
+  //                         padding: const EdgeInsets.all(1),
+  //                         foregroundColor: Colors.red,
+  //                         backgroundColor: Colors.red,
+  //                         shape: RoundedRectangleBorder(
+  //                           borderRadius: BorderRadius.circular(100),
+  //                         ),
+  //                       ),
+  //                       onPressed: () => _fetchForgetMail(),
+  //                       child: Padding(
+  //                         padding: const EdgeInsets.only(
+  //                             left: 60, right: 60, bottom: 12, top: 12),
+  //                         child: Text(
+  //                           'SEND',
+  //                           style: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             color: Colors.white,
+  //                             fontSize: 20,
+  //                             fontWeight: FontWeight.w700,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 8),
+  //                   TextButton(
+  //                     onPressed: () {
+  //                       setState(() {
+  //                         _forgot = false;
+  //                       });
+  //                     },
+  //                     child: Padding(
+  //                       padding: const EdgeInsets.all(8.0),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.start,
+  //                         children: [
+  //                           Icon(Icons.chevron_left,
+  //                               color: Colors.white, size: 20),
+  //                           SizedBox(width: 8),
+  //                           Text(
+  //                             'Return to login.',
+  //                             style: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               color: Colors.white,
+  //                               fontWeight: FontWeight.w500,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildTextField(
       TextEditingController controller, String hintText, IconData icon) {
@@ -707,7 +781,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         onPressed: _login,
         child: Text(
-          '$loginTS',
+          'LOGIN',
           style: TextStyle(
             fontFamily: 'Arial',
             color: Colors.white,
@@ -733,7 +807,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  'เลือกสถานที่ที่ต้องการเข้าใช้งาน',
+                  'Select the location you want to access.',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,

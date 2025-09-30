@@ -49,18 +49,18 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       icon: Icons.person_add_alt_1_rounded,
       title: 'JoinUser',
     ),
-    TabItem(
-      icon: Icons.supervisor_account,
-      title: 'Account',
-    ),
-    TabItem(
-      icon: Icons.contact_emergency,
-      title: 'Contact',
-    ),
-    TabItem(
-      icon: Icons.accessibility_new,
-      title: 'Activity',
-    ),
+    // TabItem(
+    //   icon: Icons.supervisor_account,
+    //   title: 'Account',
+    // ),
+    // TabItem(
+    //   icon: Icons.contact_emergency,
+    //   title: 'Contact',
+    // ),
+    // TabItem(
+    //   icon: Icons.accessibility_new,
+    //   title: 'Activity',
+    // ),
     // TabItem(
     //   icon: FontAwesomeIcons.podcast,
     //   title: 'Skoop',
@@ -85,13 +85,14 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
         page = "Detail";
       } else if (index == 1) {
         page = "JoinUser";
-      } else if (index == 2) {
-        page = "Account";
-      } else if (index == 3) {
-        page = "Contact";
-      } else if (index == 4) {
-        page = "Activity";
       }
+      // else if (index == 2) {
+      //   page = "Account";
+      // } else if (index == 3) {
+      //   page = "Contact";
+      // } else if (index == 4) {
+      //   page = "Activity";
+      // }
     });
   }
 
@@ -149,26 +150,26 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
           pageInput: widget.pageInput,
           project: project,
         );
-      case 2:
-        return ActivityScreen(
-          employee: widget.employee,
-          pageInput: widget.pageInput,
-        ); //'Close' or 'Plan'
-      case 3:
-        return AccountScreen(
-          employee: widget.employee,
-          pageInput: 'project',
-        );
-      case 4:
-        return ContactScreen(
-          employee: widget.employee,
-          pageInput: 'project',
-        );
-      case 5:
-        return ActivityScreen(
-          employee: widget.employee,
-          pageInput: widget.pageInput,
-        );
+      // case 2:
+      //   return ActivityScreen(
+      //     employee: widget.employee,
+      //     pageInput: widget.pageInput,
+      //   ); //'Close' or 'Plan'
+      // case 3:
+      //   return AccountScreen(
+      //     employee: widget.employee,
+      //     pageInput: 'project',
+      //   );
+      // case 4:
+      //   return ContactScreen(
+      //     employee: widget.employee,
+      //     pageInput: 'project',
+      //   );
+      // case 5:
+      //   return ActivityScreen(
+      //     employee: widget.employee,
+      //     pageInput: widget.pageInput,
+      //   );
       default:
         return ProjectOther(
             employee: widget.employee, pageInput: widget.pageInput);
@@ -245,7 +246,6 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                       children: [
                         Text(
                           project.project_name,
-                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontFamily: 'Arial',
@@ -254,26 +254,17 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
+                        SizedBox(height: 4),
                         Text(
-                          '${project.account_name}',
-                          maxLines: 1,
+                          project.account_name,
                           style: TextStyle(
                             fontFamily: 'Arial',
-                            fontSize: 12,
+                            fontSize: 14,
                             color: Colors.grey,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        Text(
-                          '${project.project_sale_nonsale_name}',
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 12,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        SizedBox(height: 8),
                         Row(
                           children: [
                             Text(
@@ -311,12 +302,13 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 4),
                         Text(
                           '${project.project_process_name}',
                           maxLines: 1,
                           style: TextStyle(
                             fontFamily: 'Arial',
-                            fontSize: 12,
+                            fontSize: 14,
                             color: Color(0xFF555555),
                             fontWeight: FontWeight.w600,
                           ),
@@ -355,7 +347,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                           : project.sub_status_name),
                   _subData('Source', project.project_source_name),
                   _subData('Process', project.project_process_name),
-                  _subData('Sales', project.project_sale_nonsale_name),
+                  _subData('Sale', project.project_sale_nonsale_name),
                   _subData('Priority', project.project_priority_name),
                   // _OpportunitySection([
                   //   project.opportunity_line1,
@@ -430,7 +422,8 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                               ),
                             ),
                             onPressed: () {
-                              _showCustomDialog();
+                              _showCustomDeleteDialog(
+                                  project.project_id, project.project_name);
                             },
                             child: Center(
                               child: Text(
@@ -519,16 +512,16 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     );
   }
 
-  Future<void> fetchDeleteProject() async {
+  Future<void> fetchDeleteProject(String project_id) async {
     final uri =
-        Uri.parse("$hostDev/api/origami/crm/project/delete_project.php");
+    Uri.parse("$hostDev/api/origami/crm/project/delete_project.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'project_id': project.project_id,
+        'project_id': project_id,
       },
     );
 
@@ -547,15 +540,15 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
     }
   }
 
-  void _showCustomDialog() {
+  void _showCustomDeleteDialog(String project_id, String project_name) {
     showDialog(
       context: context,
       barrierColor:Colors.black54,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: Text(
-            'Delete',
+            'Delete Project',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 22,
@@ -563,18 +556,14 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Do you want to delete project ${widget.project.project_name}?',
-                style: const TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555)),
-              ),
-              SizedBox(height: 16),
-            ],
+          content: Text(
+            'Do you want to delete this $project_name?',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
           ),
           actions: [
             Container(
@@ -584,8 +573,8 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextButton(
-                onPressed: () async {
-                  Navigator.pop(context);
+                onPressed: () {
+                  Navigator.pop(dialogContext);
                 },
                 child: Text(
                   'Cancel',
@@ -612,13 +601,13 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
               ),
               child: TextButton(
                 onPressed: () async {
-                  Navigator.pop(context);
-                  await fetchDeleteProject();
+                  Navigator.pop(dialogContext);
+                  fetchDeleteProject(project_id);
                 },
                 child: Text(
                   'Delete',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
@@ -633,47 +622,3 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
   }
 }
 
-class _OpportunitySection extends StatelessWidget {
-  final List<String> opportunities;
-  _OpportunitySection(this.opportunities);
-
-  Widget _buildText(String text, double size, Color color, FontWeight weight) {
-    return Text(
-      text,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-          fontFamily: 'Arial',
-          fontSize: size,
-          color: color,
-          fontWeight: weight),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: Colors.transparent,
-      child: Column(
-        children: List.generate(opportunities.length, (index) {
-          return Visibility(
-            visible: opportunities[index].isNotEmpty,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Row(
-                children: [
-                  _buildText(index == 0 ? 'Opportunity : ' : '', 16,
-                      Color(0xFF555555), FontWeight.w700),
-                  Flexible(
-                      child: _buildText(opportunities[index], 14, Colors.grey,
-                          FontWeight.w500)),
-                ],
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-}

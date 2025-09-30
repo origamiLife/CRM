@@ -117,7 +117,7 @@ class _ProjectEditState extends State<ProjectEdit> {
   void showDate() {
     DateFormat formatter = DateFormat('yyyy/MM/dd');
     showlastDay = formatter.format(_selectedDateEnd);
-    project_start = widget.project.project_create;
+    project_start = widget.project.project_start;
     project_end = widget.project.project_end;
   }
 
@@ -679,7 +679,7 @@ class _ProjectEditState extends State<ProjectEdit> {
               fontFamily: 'Arial',
               fontSize: 14,
               color: Color(0xFF555555),
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
             ),
           ),
           SizedBox(height: 8),

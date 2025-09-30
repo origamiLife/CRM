@@ -4,6 +4,8 @@ import 'package:origamilift/import/import.dart';
 import 'package:origamilift/import/origami_view/work/work_quote.dart';
 import 'package:origamilift/import/origami_view/work/work_apply_add.dart';
 
+import '../about-profile/profile.dart';
+
 class WorkPage extends StatefulWidget {
   const WorkPage({Key? key, required this.employee}) : super(key: key);
   final Employee employee;
@@ -1018,7 +1020,7 @@ class _WorkPageState extends State<WorkPage> {
             print(
                 'approve_emp_id : $approve_emp_id ,\n employee_id : $employee_id');
           }
-          work_emp_id = employee_id = _ApprovedWork[i].emp_id;
+          employee_id = _ApprovedWork[i].emp_id;
         }
         _fetchWorkEmployee();
       });
@@ -1167,15 +1169,15 @@ class _WorkPageState extends State<WorkPage> {
     }
   }
 
-  WorkEmployee? workEmployee;
-  Future<WorkEmployee> _fetchWorkEmployee() async {
+  ProfileResponse? workEmployee;
+  Future<ProfileResponse> _fetchWorkEmployee() async {
     final uri = Uri.parse("$hostDev/api/origami/profile/profile.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'emp_id': work_emp_id,
+        'emp_id': employee_id,
         'Authorization': token,
       },
     );
@@ -1184,7 +1186,7 @@ class _WorkPageState extends State<WorkPage> {
       // เข้าถึงข้อมูลในคีย์ 'instructors'
       final Map<String, dynamic> dataJson = jsonResponse['employee_data'] ?? [];
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
-      return workEmployee = WorkEmployee.fromJson(dataJson);
+      return workEmployee = ProfileResponse.fromJson(dataJson);
     } else {
       throw Exception('Failed to load instructors');
     }
@@ -1415,61 +1417,6 @@ class ApprovedWorkModel {
       approve_comment: json['approve_comment'] ?? '',
       approve_del: json['approve_del'] ?? '',
       del_status: json['del_status'] ?? '',
-    );
-  }
-}
-
-String work_comp_id = '';
-String work_emp_id = '';
-
-class WorkEmployee {
-  final String emp_prefix;
-  final String emp_firstname;
-  final String emp_lastname;
-  final String emp_nickname;
-  final String dna_color;
-  final String dna_name;
-  final String dna_logo;
-  final String emp_birthday;
-  final String emp_age;
-  final String emp_start_date;
-  final String home_location;
-  final String signature_drawing;
-  final String emp_avatar;
-
-  // Constructor
-  WorkEmployee({
-    required this.emp_prefix,
-    required this.emp_firstname,
-    required this.emp_lastname,
-    required this.emp_nickname,
-    required this.dna_color,
-    required this.dna_name,
-    required this.dna_logo,
-    required this.emp_birthday,
-    required this.emp_age,
-    required this.emp_start_date,
-    required this.home_location,
-    required this.signature_drawing,
-    required this.emp_avatar,
-  });
-
-  // Factory constructor to create an Employee instance from a JSON map
-  factory WorkEmployee.fromJson(Map<String, dynamic> json) {
-    return WorkEmployee(
-      emp_prefix: json['emp_prefix'] ?? '',
-      emp_firstname: json['emp_firstname'] ?? '',
-      emp_lastname: json['emp_lastname'] ?? '',
-      emp_nickname: json['emp_nickname'] ?? '',
-      dna_color: json['dna_color'] ?? '',
-      dna_name: json['dna_name'] ?? '',
-      dna_logo: json['dna_logo'] ?? '',
-      emp_birthday: json['emp_birthday'] ?? '',
-      emp_age: json['emp_age'] ?? '',
-      emp_start_date: json['emp_start_date'] ?? '',
-      home_location: json['home_location'] ?? '',
-      signature_drawing: json['signature_drawing'] ?? '',
-      emp_avatar: json['emp_avatar'] ?? '',
     );
   }
 }

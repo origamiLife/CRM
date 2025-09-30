@@ -23,10 +23,10 @@ class _WorkQuoteState extends State<WorkQuote> {
   String showlastDay = '';
   bool _isChecked = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   void dispose() {
@@ -64,7 +64,7 @@ class _WorkQuoteState extends State<WorkQuote> {
                     ),
                   ));
             } else {
-              return _qoutetWork(snapshot.data ?? []);
+              return _qouteWork(snapshot.data ?? []);
             }
           }),
     );
@@ -87,11 +87,12 @@ class _WorkQuoteState extends State<WorkQuote> {
 // format HH:mm:ss
     availableStr =
         "${duration.inHours}:${twoDigits(duration.inMinutes.remainder(60))}:${twoDigits(duration.inSeconds.remainder(60))}";
+    print('object');
 
   }
   String availableStr = '';
 
-  Widget _qoutetWork(List<StatusWork> dataWork) {
+  Widget _qouteWork(List<StatusWork> dataWork) {
     return ListView.builder(
       itemCount: dataWork.length,
       itemBuilder: (context, index) {

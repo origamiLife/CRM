@@ -29,21 +29,20 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   void initState() {
     super.initState();
-    _loadAccounts();
+    // _loadAccounts();
+    fetchModelAccount('');
     _scrollController.addListener(_scrollListener);
-    _searchController.addListener(() {
-      _search = _searchController.text;
-      indexItems = 0;
-      print('$indexItems');
-      accountList = [];
-      fetchModelAccount();
-    });
+    // _searchController.addListener(() {
+    //   // indexItems = 0;
+    //   // accountList = [];
+    //   fetchModelAccount();
+    // });
   }
 
   void _loadAccounts() async {
     setState(() => isLoading = true);
 
-    final newAccount = await fetchModelAccount();
+    final newAccount = await fetchModelAccount(_searchController.text);
 
     setState(() {
       if (_isFirstTime) _isFirstTime = false;
@@ -143,6 +142,9 @@ class _AccountScreenState extends State<AccountScreen> {
           child: TextFormField(
             controller: _searchController,
             keyboardType: TextInputType.text,
+            onChanged: (value){
+              fetchModelAccount(value);
+            },
             style: const TextStyle(
               fontFamily: 'Arial',
               color: Color(0xFF555555),
@@ -186,54 +188,54 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _getContentWidget() {
-    if (isLoading) {
-      // แสดง shimmer loading แทน
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        child: ListView.builder(
-          itemCount: 20, // จำนวน shimmer item ที่แสดงระหว่างโหลด
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.only(bottom: 10),
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
-                highlightColor: Colors.grey.shade100,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                              height: 12,
-                              width: double.infinity,
-                              color: Colors.white),
-                          SizedBox(height: 5),
-                          Container(
-                              height: 12, width: 100, color: Colors.white),
-                          SizedBox(height: 5),
-                          Container(
-                              height: 12, width: 150, color: Colors.white),
-                          SizedBox(height: 5),
-                          Container(
-                              height: 12, width: 120, color: Colors.white),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      );
-    }
+    // if (isLoading) {
+    //   // แสดง shimmer loading แทน
+    //   return Padding(
+    //     padding: EdgeInsets.symmetric(horizontal: 15),
+    //     child: ListView.builder(
+    //       itemCount: 20, // จำนวน shimmer item ที่แสดงระหว่างโหลด
+    //       itemBuilder: (context, index) {
+    //         return Padding(
+    //           padding: EdgeInsets.only(bottom: 10),
+    //           child: Shimmer.fromColors(
+    //             baseColor: Colors.grey.shade300,
+    //             highlightColor: Colors.grey.shade100,
+    //             child: Row(
+    //               children: [
+    //                 Container(
+    //                   width: 100,
+    //                   height: 100,
+    //                   color: Colors.white,
+    //                 ),
+    //                 const SizedBox(width: 10),
+    //                 Expanded(
+    //                   child: Column(
+    //                     crossAxisAlignment: CrossAxisAlignment.start,
+    //                     children: [
+    //                       Container(
+    //                           height: 12,
+    //                           width: double.infinity,
+    //                           color: Colors.white),
+    //                       SizedBox(height: 5),
+    //                       Container(
+    //                           height: 12, width: 100, color: Colors.white),
+    //                       SizedBox(height: 5),
+    //                       Container(
+    //                           height: 12, width: 150, color: Colors.white),
+    //                       SizedBox(height: 5),
+    //                       Container(
+    //                           height: 12, width: 120, color: Colors.white),
+    //                     ],
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         );
+    //       },
+    //     ),
+    //   );
+    // }
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15),
@@ -420,7 +422,7 @@ class _AccountScreenState extends State<AccountScreen> {
         setState(() {
           isAtEnd = true;
         });
-        fetchModelAccount();
+        fetchModelAccount(_searchController.text);
       }
     } else {
       setState(() {
@@ -432,9 +434,9 @@ class _AccountScreenState extends State<AccountScreen> {
   bool _isFirstTime = true;
   int indexItems = 0;
   List<ModelAccount> accountList = [];
-  Future<List<ModelAccount>> fetchModelAccount() async {
+  Future<List<ModelAccount>> fetchModelAccount(String value) async {
     final uri = Uri.parse(
-        "$hostDev/api/origami/crm/account/list-account.php?search=$_search");
+        "$hostDev/api/origami/crm/account/list-account.php?search=$value");
     try {
       final response = await http.post(
         uri,
@@ -451,13 +453,13 @@ class _AccountScreenState extends State<AccountScreen> {
         final List<dynamic> accountJson = jsonResponse['account_data'] ?? [];
         bool nextPage = jsonResponse['next_page'];
 
-        List<ModelAccount> newAccount = accountJson
-            .map((json) => ModelAccount.fromJson(json))
-            .where((contact) {
-          // กรอง id ที่ซ้ำ
-          return !accountList
-              .any((existing) => existing.cus_id == contact.cus_id);
-        }).toList();
+        // List<ModelAccount> newAccount = accountJson
+        //     .map((json) => ModelAccount.fromJson(json))
+        //     .where((contact) {
+        //   // กรอง id ที่ซ้ำ
+        //   return !accountList
+        //       .any((existing) => existing.cus_id == contact.cus_id);
+        // }).toList();
 
         // จัดการ indexItems และ isAtEnd (อัปเดตภายนอกได้)
         if (nextPage) {
@@ -465,8 +467,12 @@ class _AccountScreenState extends State<AccountScreen> {
         } else {
           isAtEnd = true;
         }
-
-        return newAccount;
+        setState(() {
+          accountList =
+              accountJson.map((json) => ModelAccount.fromJson(json)).toList();
+          accountList.sort((a, b) => b.create_date.compareTo(a.create_date));
+        });
+        return accountList;
       } else {
         throw Exception(
             'Failed to load data, status code: ${response.statusCode}');
