@@ -66,7 +66,7 @@ class _NeedsViewState extends State<NeedsView> {
                   Container(
                     padding: EdgeInsets.only(top: 16),
                     child: Text(
-                      '$Priority : ',
+                      'Priority : ',
                       style: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16,

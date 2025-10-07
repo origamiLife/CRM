@@ -14,6 +14,7 @@ import '../OCRScreen/OcrTessdata.dart';
 import '../OCRScreen/OCRScreen2.dart';
 import '../call/ticket_page.dart';
 import '../job/job.dart';
+import '../noti.dart';
 import 'IDOC/idoc_view.dart';
 import 'about-profile/profile.dart';
 import 'academy/academy.dart';
@@ -49,6 +50,8 @@ class OrigamiPage extends StatefulWidget {
 }
 
 class _OrigamiPageState extends State<OrigamiPage> {
+  // final _controllerOwner = ValueNotifier<bool>(false);
+  bool _isChecked = false;
   DateTime? lastPressed;
   bool isNeed = false;
   bool isBranch = false;
@@ -78,6 +81,8 @@ class _OrigamiPageState extends State<OrigamiPage> {
   @override
   void initState() {
     super.initState();
+    _initController();
+    // _initController();
     print(widget.employee.emp_id);
     _index = widget.popPage;
     if (_index == 0) {
@@ -86,11 +91,39 @@ class _OrigamiPageState extends State<OrigamiPage> {
     fetchBranch();
   }
 
+  Future<void> _initController() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (notiHour != 0 || notiMinute != 0) {
+        _isChecked= true;
+        final notiService = NotiService();
+        notiService.initNotifications().then((_) {
+          notiService.scheduleNotification(
+            title: 'TIME STAMP',
+            body: "You haven't stamped your work time yet.",
+            hour: notiHour,
+            minute: notiMinute,
+          );
+        });
+        /*NotiService().scheduleNotification(
+          title: 'TIME STAMP',
+          body: "You haven't stamped your work time yet.",
+          hour: notiHour,
+          minute: notiMinute,
+        );*/
+        print("✅ FINAL: _controllerOwner.value = $_isChecked");
+      } else {
+        _isChecked = false;
+        NotiService().cancelNotification(1);
+      }
+    });
+  }
+
   Future<bool> _handleBackPressed() async {
     final now = DateTime.now();
     const maxDuration = Duration(seconds: 3);
 
-    final isWarning = lastPressed == null || now.difference(lastPressed!) > maxDuration;
+    final isWarning =
+        lastPressed == null || now.difference(lastPressed!) > maxDuration;
 
     if (isWarning) {
       lastPressed = now;
@@ -143,6 +176,72 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   children: [
                     _getContentWidget(),
                     const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 18),
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            child: Text(
+                              'Notifications  ',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                color: Color(0xFF555555),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          FlutterSwitch(
+                            value: _isChecked,
+                            width: 70,
+                            height: 30,
+                            activeColor: Colors.orange,
+                            // inactiveColor: Colors.grey,
+                            activeText: "ON",
+                            inactiveText: "OFF",
+                            showOnOff: true,
+                            onToggle: (value) async {
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              setState(() {
+                                _isChecked = value;
+                              });
+                              if (_isChecked == true) {
+                                _isChecked = true;
+                              } else {
+                                _isChecked = false;
+                                notiHour = 0;
+                                notiMinute = 0;
+                                prefs.setInt('notiHour', notiHour);
+                                prefs.setInt('notiMinute', notiMinute);
+                                prefs.setInt('selectedNoti', selectedNoti);
+                                NotiService().cancelNotification(1);
+                              }
+                            },
+                          ),
+                          // AdvancedSwitch(
+                          //   activeChild: Text(
+                          //     'ON',
+                          //     style: TextStyle(
+                          //       fontFamily: 'Arial',
+                          //     ),
+                          //   ),
+                          //   inactiveChild: Text(
+                          //     'OFF',
+                          //     style: TextStyle(
+                          //       fontFamily: 'Arial',
+                          //     ),
+                          //   ),
+                          //   borderRadius: BorderRadius.circular(100),
+                          //   height: 25,
+                          //   controller: _controllerOwner,
+                          //   // enabled: true,
+                          // ),
+                        ],
+                      ),
+                    ),
                     _logoutWidget(),
                   ],
                 ),
@@ -150,30 +249,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
             ],
           ),
         ),
-        // Container(
-        //   width: MediaQuery.of(context).size.width * 0.8,
-        //   child: Drawer(
-        //     elevation: 1,
-        //     backgroundColor: Colors.white,
-        //     child: Column(
-        //       children: [
-        //         _drawerHeader(),
-        //         Expanded(
-        //           child: Column(
-        //             children: [
-        //               Expanded(
-        //                 child: SingleChildScrollView(
-        //                   child: _getContentWidget(),
-        //                 ),
-        //               ),
-        //               _logoutWidget(),
-        //             ],
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
         body: SafeArea(
           child: Center(
             child: _buildScreen(),
@@ -182,25 +257,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
       ),
     );
   }
-
-  // Widget _drawerHeader() {
-  //   return Container(
-  //     width: double.infinity,
-  //     decoration: const BoxDecoration(
-  //       image: DecorationImage(
-  //         image: AssetImage('assets/images/logoOrigami/default_bg.png'),
-  //         fit: BoxFit.cover,
-  //       ),
-  //     ),
-  //     child: SafeArea(
-  //       bottom: false,
-  //       child: Padding(
-  //         padding: const EdgeInsets.all(16.0),
-  //         child: _employeeInfo(),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _drawerHeader() {
     return UserAccountsDrawerHeader(
@@ -374,7 +430,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
         employee: widget.employee,
         page: widget.page ?? '',
       ),
-      3: const TranslatePage(),
+      3: TranslatePage(employee: widget.employee),
       4: Text('Index 6: LogOut', style: optionStyle),
       5: TimeSample(
         employee: widget.employee,
@@ -446,11 +502,11 @@ class _OrigamiPageState extends State<OrigamiPage> {
   }
 
   final List<String> _TitleHeader = [
-    need, // 0
-    request, // 1
+    "need", // 0
+    "request", // 1
     "Academy", // 2
     "Language", // 3
-    logoutTS, // 4
+    "Log out", // 4
     "Time", // 5
     "Profile", // 6
     "HELPDESK", // 7
@@ -753,7 +809,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
   void showCustomDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierColor:Colors.black54,
+      barrierColor: Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -777,7 +833,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
           ),
           actions: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -797,15 +853,15 @@ class _OrigamiPageState extends State<OrigamiPage> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.orange,
-                    blurRadius: 10,
-                    offset: Offset(0, -2),
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -823,122 +879,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   ),
                 ),
               ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // void showCustomDialog() {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false, // Prevent dismissing by tapping outside
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             Text(
-  //               'Login', // Title of the dialog
-  //               style: TextStyle(
-  //                 fontFamily: 'Arial',
-  //                 fontSize: 22,
-  //                 color: Colors.black87,
-  //                 fontWeight: FontWeight.w700,
-  //               ),
-  //             ),
-  //             SizedBox(height: 16),
-  //             Text(
-  //               'Do you want to log out?',
-  //               style: TextStyle(
-  //                 fontFamily: 'Arial',
-  //                 fontSize: 16,
-  //                 color: Colors.black87,
-  //                 fontWeight: FontWeight.w500,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         actions: [
-  //           Flexible(
-  //             child: TextButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context); // Close the dialog
-  //               },
-  //               child: Text(
-  //                 'Cancel',
-  //                 style: TextStyle(
-  //                   fontSize: 16,
-  //                   color: Colors.grey,
-  //                   fontWeight: FontWeight.w500,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //           Flexible(
-  //             child: TextButton(
-  //               onPressed: () {
-  //                 if (mounted) {
-  //                   Navigator.pushAndRemoveUntil(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                       builder: (context) =>
-  //                           LoginPage(num: 1, popPage: 0, company_id: 0),
-  //                     ),
-  //                     (route) => false,
-  //                   );
-  //                 }
-  //               },
-  //               child: Text(
-  //                 'Ok',
-  //                 style: TextStyle(
-  //                   fontSize: 16,
-  //                   color: Colors.grey,
-  //                   fontWeight: FontWeight.w700,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //           // Confirm Button
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  void _confirmLogout() {
-    showDialog(
-      context: context,
-      barrierColor:Colors.black54,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          elevation: 0,
-          title: Text('Do you want to log out?', style: styleGrey),
-          actions: <Widget>[
-            TextButton(
-              child: Text(CancelTS, style: styleGrey),
-              onPressed: () => Navigator.of(dialogContext).pop(),
-            ),
-            TextButton(
-              child: Text(
-                logoutTS,
-                style: const TextStyle(
-                  fontFamily: 'Arial',
-                  color: Color(0xFF555555),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => LoginPage(num: 1, popPage: 0),
-                  ),
-                  (route) => false,
-                );
-              },
             ),
           ],
         );

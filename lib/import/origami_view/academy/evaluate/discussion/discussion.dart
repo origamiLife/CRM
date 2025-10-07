@@ -726,7 +726,7 @@ class _DiscussionState extends State<Discussion> {
           ),
           actions: <Widget>[
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -745,15 +745,15 @@ class _DiscussionState extends State<Discussion> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.orange,
-                    blurRadius: 10,
-                    offset: Offset(0, -2),
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -814,7 +814,7 @@ class _DiscussionState extends State<Discussion> {
           ),
           actions: <Widget>[
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -833,15 +833,15 @@ class _DiscussionState extends State<Discussion> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.red.shade400,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.red,
-                    blurRadius: 10,
-                    offset: Offset(0, -2),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),

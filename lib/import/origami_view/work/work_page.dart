@@ -397,7 +397,17 @@ class _WorkPageState extends State<WorkPage> {
           padding: const EdgeInsets.all(8),
           child: InkWell(
             onTap: () {
-              _showApproveDialog(approve, index);
+              setState(() async {
+                isOne = true;
+                approveList = dataWorkHistory;
+                Index = index;
+                employee_id = approve.emp_id;
+                request_id = approve.request_id;
+                print('request_id::: ${request_id}');
+                // await fetchGetApproveWork(approve.request_id);
+                _fetchWorkEmployee(employee_id);
+
+              });
             },
             child: Container(
               decoration: BoxDecoration(
@@ -572,7 +582,7 @@ class _WorkPageState extends State<WorkPage> {
                     '${approve.request_from_date} ${approve.request_from_time_}'),
                 buildRow('To Date :',
                     '${approve.request_to_date} ${approve.request_to_time_}'),
-                buildRow('Note :', approve.request_note),
+                buildRow('Comment :', approve.request_note),
                 buildRow('Hour Total :', approve.request_total_time),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -629,7 +639,7 @@ class _WorkPageState extends State<WorkPage> {
           ),
           actions: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -641,22 +651,22 @@ class _WorkPageState extends State<WorkPage> {
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black87,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
             ),
             if (approve.approve_del != 'del')
               Container(
-                width: MediaQuery.of(context).size.width * 0.25,
+                width: MediaQuery.of(context).size.width * 0.35,
                 decoration: BoxDecoration(
                   color: Colors.red.shade400,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.red,
-                      blurRadius: 10,
-                      offset: Offset(0, -2),
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
                     ),
                   ],
                 ),
@@ -687,7 +697,8 @@ class _WorkPageState extends State<WorkPage> {
     );
   }
 
-  void _showApproveDialog(ApprovedWorkModel approve, int index) {
+  void _showApproveDialog() {
+    final approve = approveList[Index];
     showDialog(
       context: context,
       barrierColor: Colors.black54,
@@ -760,7 +771,7 @@ class _WorkPageState extends State<WorkPage> {
                         boxShadow: [
                           BoxShadow(
                             color: Colors.orange,
-                            blurRadius: 20,
+                            blurRadius: 1,
                             offset: Offset(0, -2),
                           ),
                         ],
@@ -771,7 +782,7 @@ class _WorkPageState extends State<WorkPage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Image.network(
-                            workEmployee?.emp_avatar ?? '',
+                            profile?.emp_avatar ?? '',
                             width: double.infinity,
                             fit: BoxFit.cover,
                             errorBuilder: (_, __, ___) => Image.network(
@@ -786,7 +797,7 @@ class _WorkPageState extends State<WorkPage> {
                 ),
                 Center(
                   child: Text(
-                    '${workEmployee?.emp_prefix ?? ''} ${workEmployee?.emp_firstname ?? ''} ${workEmployee?.emp_lastname ?? ''}',
+                    '${profile?.emp_firstname??''} ${profile?.emp_lastname??''}',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
@@ -800,7 +811,7 @@ class _WorkPageState extends State<WorkPage> {
                     '${approve.request_from_date} ${approve.request_from_time_}'),
                 buildRow('To Date :',
                     '${approve.request_to_date} ${approve.request_to_time_}'),
-                buildRow('Note :', approve.request_note),
+                buildRow('Comment :', approve.request_note),
                 buildRow('Hour Total :', approve.request_total_time),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -862,15 +873,15 @@ class _WorkPageState extends State<WorkPage> {
             //   ),
             // )else
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.red.shade400,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.red,
-                    blurRadius: 10,
-                    offset: Offset(0, -2),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -878,7 +889,7 @@ class _WorkPageState extends State<WorkPage> {
                 onPressed: () {
                   Navigator.pop(dialogContext);
                   is_status = 'N';
-                  fetchApproved(approve.request_id, approve_emp_id, is_status,
+                  fetchApproved(approve.request_id, widget.employee.emp_id, is_status,
                       _commentController.text, 'not', approve.del_status);
                 },
                 child: Text(
@@ -886,21 +897,21 @@ class _WorkPageState extends State<WorkPage> {
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.green.shade400,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.green,
-                    blurRadius: 10,
-                    offset: Offset(0, -2),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -908,7 +919,7 @@ class _WorkPageState extends State<WorkPage> {
                 onPressed: () {
                   Navigator.pop(dialogContext);
                   is_status = 'Y';
-                  fetchApproved(approve.request_id, approve_emp_id, is_status,
+                  fetchApproved(approve.request_id, widget.employee.emp_id, is_status,
                       _commentController.text, 'approve', approve.del_status);
                 },
                 child: Text(
@@ -989,11 +1000,10 @@ class _WorkPageState extends State<WorkPage> {
 
   ////////////////////////////////////////////////////////////////////////////////////
 
-  List<ApprovedWorkModel> _ApprovedWork = [];
   bool _isApproved = false;
   String is_status = 'N';
-  String approve_emp_id = '';
   String employee_id = '';
+
   Future<void> fetchApprovedWork() async {
     final uri = Uri.parse("$hostDev/api/origami/crm/work/get_set_approved.php");
     final response = await http.post(
@@ -1007,31 +1017,31 @@ class _WorkPageState extends State<WorkPage> {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       print(jsonResponse);
       // เข้าถึงข้อมูลในคีย์ 'instructors'
-
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       setState(() {
-        _ApprovedWork =
+        final _ApprovedWork =
             dataJson.map((json) => ApprovedWorkModel.fromJson(json)).toList();
         for (int i = 0; i < _ApprovedWork.length; i++) {
-          if (_ApprovedWork[i].approve_emp_id == widget.employee.emp_id) {
+          if (_ApprovedWork[i].info_emp_id == widget.employee.emp_id) {
             _isApproved = true;
             is_status = 'Y';
-            approve_emp_id = widget.employee.emp_id;
-            print(
-                'approve_emp_id : $approve_emp_id ,\n employee_id : $employee_id');
           }
-          employee_id = _ApprovedWork[i].emp_id;
         }
-        _fetchWorkEmployee();
       });
     } else {
       throw Exception('Failed to load instructors');
     }
   }
 
+  String request_id = '';
+  bool isOne = false;
+  int Index = 0;
+  List<ApprovedWorkModel> approveList = [];
   Future<List<ApprovedWorkModel>> fetchGetApproveWork() async {
-    print(
-        'approve_emp_id ::::: $approve_emp_id , employee_id ::::::: $employee_id');
+    print('approve_emp_id ::: ${widget.employee.emp_id} '
+        '\n employee_id ::: $employee_id '
+        '\n request_id ::: $request_id '
+        '\n index ::: $Index');
     final uri =
         Uri.parse("$hostDev/api/origami/crm/work/get_approved_work.php");
     final response = await http.post(
@@ -1040,16 +1050,27 @@ class _WorkPageState extends State<WorkPage> {
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'approve_emp_id': approve_emp_id,
-        'employee_id': employee_id,
+        'approve_emp_id': widget.employee.emp_id,
+        'request_id': request_id,
       },
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       print(jsonResponse);
-      // เข้าถึงข้อมูลในคีย์ 'instructors'
-      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-      // แปลงข้อมูลจาก JSON เป็น List<Instructor>
+      if (jsonResponse['status'] == false) {
+        print('API Error: ${jsonResponse['message']}');
+        return [];
+      }
+
+      List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      if (isOne) {
+        setState(() {
+          request_id = '';
+          isOne = false;
+        });
+        _showApproveDialog();
+      }
+
       return dataJson.map((json) => ApprovedWorkModel.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load instructors');
@@ -1090,8 +1111,6 @@ class _WorkPageState extends State<WorkPage> {
       String approve_comment,
       String action,
       String del_status) async {
-    print(
-        '$employee_id ,$action,$request_id , $approve_emp_id , $approve_status , $approve_comment');
     final uri = Uri.parse('$hostDev/api/origami/crm/work/approved_work.php');
     try {
       final response = await http.post(
@@ -1169,8 +1188,9 @@ class _WorkPageState extends State<WorkPage> {
     }
   }
 
-  ProfileResponse? workEmployee;
-  Future<ProfileResponse> _fetchWorkEmployee() async {
+  ProfileResponse? profile;
+  String emp_id_pro = '';
+  Future<void> _fetchWorkEmployee(String employee_id) async {
     final uri = Uri.parse("$hostDev/api/origami/profile/profile.php");
     final response = await http.post(
       uri,
@@ -1186,7 +1206,9 @@ class _WorkPageState extends State<WorkPage> {
       // เข้าถึงข้อมูลในคีย์ 'instructors'
       final Map<String, dynamic> dataJson = jsonResponse['employee_data'] ?? [];
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
-      return workEmployee = ProfileResponse.fromJson(dataJson);
+      setState(() {
+        profile = ProfileResponse.fromJson(dataJson);
+      });
     } else {
       throw Exception('Failed to load instructors');
     }
@@ -1336,8 +1358,6 @@ class StatusWork {
 
 class ApprovedWorkModel {
   String emp_id;
-  String approve_emp_id;
-  String step_number;
   String request_id;
   String type;
   String request_from_date;
@@ -1360,11 +1380,10 @@ class ApprovedWorkModel {
   String approve_comment;
   String approve_del;
   String del_status;
+  String info_emp_id;
 
   ApprovedWorkModel({
     required this.emp_id,
-    required this.approve_emp_id,
-    required this.step_number,
     required this.request_id,
     required this.type,
     required this.request_from_date,
@@ -1387,14 +1406,13 @@ class ApprovedWorkModel {
     required this.approve_comment,
     required this.approve_del,
     required this.del_status,
+    required this.info_emp_id,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ApprovedWorkModel.fromJson(Map<String, dynamic> json) {
     return ApprovedWorkModel(
-      emp_id: json['emp_id'] ?? '',
-      approve_emp_id: json['approve_emp_id'] ?? '',
-      step_number: json['step_number'] ?? '',
+      emp_id: json['emp'] ?? '',
       request_id: json['see_id'] ?? '',
       type: json['TYPE'] ?? '',
       request_from_date: json['from_date'] ?? '',
@@ -1417,6 +1435,7 @@ class ApprovedWorkModel {
       approve_comment: json['approve_comment'] ?? '',
       approve_del: json['approve_del'] ?? '',
       del_status: json['del_status'] ?? '',
+      info_emp_id: json['info_emp_id'] ?? '',
     );
   }
 }

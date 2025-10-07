@@ -11,7 +11,7 @@ Future<void> TH() async {
   Date = 'วันที่';
   Amount = 'ผลรวม';
   request_date = 'วันที่ร้องขอ';
-  Priority = 'ระดับความสำคัญ';
+  // Priority = 'ระดับความสำคัญ';
   Department = 'ฝ่าย';
   all_Department = 'ฝ่ายทั้งหมด';
   Project = 'โครงการ';

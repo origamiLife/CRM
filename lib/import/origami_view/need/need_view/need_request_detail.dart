@@ -256,7 +256,7 @@ class _NeedDetailApproveState extends State<NeedDetailApprove> {
                   Container(
                     padding: const EdgeInsets.only(left: 8),
                     child: Text(
-                      '$Priority',
+                      'Priority',
                       style: optionStyle,
                     ),
                   ),

@@ -854,15 +854,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
           ),
           actions: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.red.shade400,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.red,
-                    blurRadius: 10,
-                    offset: Offset(0, -2),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -874,7 +874,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 child: const Text(
                   'Delete ',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
@@ -882,15 +882,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.green.shade400,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.green,
-                    blurRadius: 10,
-                    offset: Offset(0, -2),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -903,7 +903,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 child: const Text(
                   'Approve Request ',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),

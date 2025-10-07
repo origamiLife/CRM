@@ -272,7 +272,7 @@ class _NeedRequestState extends State<NeedRequest> {
                             ),
                             actions: [
                               Container(
-                                width: MediaQuery.of(context).size.width * 0.25,
+                                width: MediaQuery.of(context).size.width * 0.35,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),
@@ -290,15 +290,15 @@ class _NeedRequestState extends State<NeedRequest> {
                                 ),
                               ),
                               Container(
-                                width: MediaQuery.of(context).size.width * 0.25,
+                                width: MediaQuery.of(context).size.width * 0.35,
                                 decoration: BoxDecoration(
                                   color: Colors.orange.shade400,
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.orange,
-                                      blurRadius: 10,
-                                      offset: Offset(0, -2),
+                                      color: Colors.orange.shade200,
+                                      blurRadius: 8,
+                                      offset: Offset(0, 2),
                                     ),
                                   ],
                                 ),
@@ -395,7 +395,7 @@ class _NeedRequestState extends State<NeedRequest> {
                       ),
                       TextButton(
                         child: Text(
-                          '$Ok',
+                          'Ok',
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontWeight: FontWeight.bold,
@@ -467,7 +467,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                   Navigator.pop(context);
                                 },
                                 child: Text(
-                                  '$Ok',
+                                  'Ok',
                                   style: TextStyle(
                                     fontFamily: 'Arial',
                                     color: Color(0xFF555555),

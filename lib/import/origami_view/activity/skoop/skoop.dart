@@ -481,7 +481,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
           ),
           actions: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -501,15 +501,15 @@ class _SkoopScreenState extends State<SkoopScreen> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.orange,
-                    blurRadius: 10,
-                    offset: Offset(0, -2),
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
                 ],
               ),
@@ -519,7 +519,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
                   _fetchUpdateActivity();
                 },
                 child: Text(
-                  'Ok',
+                  'Skoop',
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.orange,

@@ -416,7 +416,7 @@ class _NeedDetailState extends State<NeedDetail> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle('$Priority'),
+                  _buildSectionTitle('Priority'),
                   _priority(priorityOption),
                 ],
               ),
@@ -1312,7 +1312,7 @@ class _NeedDetailState extends State<NeedDetail> {
           actions: [
             TextButton(
               child: Text(
-                '$Close',
+                'Close',
                 style: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
               ),
               onPressed: () => Navigator.pop(dialogContext),

@@ -255,7 +255,7 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
                   Container(
                     padding: const EdgeInsets.only(left: 8),
                     child: Text(
-                      '$Priority',
+                      'Priority',
                       style: optionStyle,
                     ),
                   ),

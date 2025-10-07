@@ -63,7 +63,6 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
     setState(() {
       _appointments = loadedAppointments;
       appointmentMap = tempMap;
-
     });
   }
 
@@ -79,8 +78,7 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
           view: CalendarView.month,
           dataSource: MeetingDataSource(_appointments),
           monthViewSettings: const MonthViewSettings(
-            appointmentDisplayMode:
-            MonthAppointmentDisplayMode.appointment,
+            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
           ),
           appointmentTextStyle: const TextStyle(
             fontFamily: 'Arial',
@@ -135,82 +133,120 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
                   child: TabBarView(
                     children: [
                       // ===== Month View =====
-                      isLoading
-                          ? _buildShimmerCalendar()
-                          :Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.all(4),
-                        child: SfCalendar(
-                          cellBorderColor: Colors.transparent,
-                          view: CalendarView.month,
-                          dataSource: MeetingDataSource(_appointments),
-                          monthViewSettings: const MonthViewSettings(
-                            appointmentDisplayMode:
-                                MonthAppointmentDisplayMode.appointment,
+                      Column(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              color: Colors.white,
+                              padding: const EdgeInsets.all(4),
+                              child: SfCalendar(
+                                showNavigationArrow : false,
+                                showDatePickerButton : true,
+                                showTodayButton : true,
+                                cellBorderColor: Colors.transparent,
+                                view: CalendarView.month,
+                                dataSource: MeetingDataSource(_appointments),
+                                monthViewSettings: const MonthViewSettings(
+                                  appointmentDisplayMode:
+                                      MonthAppointmentDisplayMode.appointment,
+                                ),
+                                appointmentTextStyle: const TextStyle(
+                                  fontFamily: 'Arial',
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                ),
+                                onTap: (details) {
+                                  if (details.targetElement ==
+                                      CalendarElement.calendarCell) {
+                                    _scheduleController.displayDate =
+                                        details.date!;
+                                  }
+                                  if (details.targetElement ==
+                                          CalendarElement.appointment ||
+                                      details.targetElement ==
+                                          CalendarElement.calendarCell) {
+                                    final Appointment? appt =
+                                        details.appointments?.first;
+                                    if (appt != null) {
+                                      final CalendarApi cal =
+                                          appointmentMap[appt]!; // lookup
+                                      _showCustomDialog(cal);
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
                           ),
-                          appointmentTextStyle: const TextStyle(
-                            fontFamily: 'Arial',
-                            color: Colors.white,
-                            fontSize: 8,
-                          ),
-                          onTap: (details) {
-                            if (details.targetElement ==
-                                CalendarElement.calendarCell) {
-                              _scheduleController.displayDate = details.date!;
-                            }
-                            if (details.targetElement ==
-                                    CalendarElement.appointment ||
-                                details.targetElement ==
-                                    CalendarElement.calendarCell) {
-                              final Appointment? appt =
-                                  details.appointments?.first;
-                              if (appt != null) {
-                                final CalendarApi cal =
-                                    appointmentMap[appt]!; // lookup
-                                _showCustomDialog(cal);
-                              }
-                            }
-                          },
-                        ),
+                          Expanded(
+                              child: Container(
+                            child: isLoading
+                                ? const Center(
+                                    child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        color: Color(0xFFFF9900),
+                                      ),
+                                      SizedBox(
+                                        width: 12,
+                                      ),
+                                      Text(
+                                        'Loading...',
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: Color(0xFF555555),
+                                        ),
+                                      ),
+                                    ],
+                                  ))
+                                : Container(),
+                          ))
+                        ],
                       ),
                       // ===== Schedule View =====
                       isLoading
                           ? _buildShimmerCalendar()
-                          :Container(
-                        color: Colors.orange.shade50,
-                        padding: const EdgeInsets.only(top: 4, bottom: 4),
-                        child: Container(
-                          color: Colors.white,
-                          child: SfCalendar(
-                              view: CalendarView.schedule,
-                              controller: _scheduleController,
-                              dataSource: MeetingDataSource(_appointments),
-                              monthViewSettings: const MonthViewSettings(
-                                appointmentDisplayMode:
-                                    MonthAppointmentDisplayMode.appointment,
+                          : Container(
+                              color: Colors.orange.shade50,
+                              padding: const EdgeInsets.only(top: 4, bottom: 4),
+                              child: Container(
+                                color: Colors.white,
+                                child: SfCalendar(
+                                    headerHeight: 80,
+                                    view: CalendarView.schedule,
+                                    controller: _scheduleController,
+                                    dataSource:
+                                        MeetingDataSource(_appointments),
+                                    monthViewSettings: const MonthViewSettings(
+                                      appointmentDisplayMode:
+                                          MonthAppointmentDisplayMode
+                                              .appointment,
+                                    ),
+                                    appointmentTextStyle: const TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16,
+                                      color: Color(0xFF555555),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    onTap: (details) {
+                                      if (details.targetElement ==
+                                              CalendarElement.appointment ||
+                                          details.targetElement ==
+                                              CalendarElement.calendarCell) {
+                                        final Appointment? appt =
+                                            details.appointments?.first;
+                                        if (appt != null) {
+                                          final CalendarApi cal =
+                                              appointmentMap[appt]!; // lookup
+                                          _showCustomDialog(cal);
+                                        }
+                                      }
+                                    }),
                               ),
-                              appointmentTextStyle: const TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.w500,
-                              ),
-                              onTap: (details) {
-                                if (details.targetElement ==
-                                        CalendarElement.appointment ||
-                                    details.targetElement ==
-                                        CalendarElement.calendarCell) {
-                                  final Appointment? appt =
-                                      details.appointments?.first;
-                                  if (appt != null) {
-                                    final CalendarApi cal =
-                                        appointmentMap[appt]!; // lookup
-                                    _showCustomDialog(cal);
-                                  }
-                                }
-                              }),
-                        ),
-                      ),
+                            ),
                     ],
                   ),
                 ),
@@ -318,7 +354,7 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
   void _showCustomDialog(CalendarApi cal) {
     showDialog(
       context: context,
-      barrierColor:Colors.black54,
+      barrierColor: Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -367,7 +403,7 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
             //   ),
             // ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),

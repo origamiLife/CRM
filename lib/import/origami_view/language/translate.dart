@@ -30,7 +30,6 @@ String Search = '';
 String Date = '';
 String Amount = '';
 String request_date = '';
-String Priority = '';
 String Department = '';
 String all_Department = '';
 String Project = '';

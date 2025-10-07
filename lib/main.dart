@@ -4,8 +4,12 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'import/import.dart';
 import 'package:geolocator/geolocator.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'import/noti.dart';
 import 'import/origami_view/language/translate.dart';
+import 'import/origami_view/language/translate_page.dart';
 
 String hostDev = 'https://dev.origami.life';
 String host = 'https://www.origami.life';
@@ -26,11 +30,87 @@ void main() async {
   var appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   await Hive.openBox('userBox');
-
+  await initializeNotification();
+  await platformAndroid();
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: MyApp(),
   ));
+}
+
+Future<void> platformAndroid() async {
+  // ในฟังก์ชัน initializeNotification() หรือหลังจากนั้น
+  if (Platform.isAndroid) {
+    // ขอสิทธิ์แสดง Notification
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+
+    if (androidImplementation != null) {
+      final bool? granted = await androidImplementation.requestNotificationsPermission();
+      // คุณอาจต้องจัดการกรณีที่ผู้ใช้ไม่อนุญาต
+    }
+  }
+}
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> initializeNotification() async {
+  // 1. ตั้งค่า Timezone (สำคัญสำหรับการตั้งเวลา)
+  // tz.initializeTimeZones();
+  // โหลด timezone database
+  tz.initializeTimeZones();
+
+  // ดึง timezone ที่ต้องการ
+  final location = tz.getLocation('Asia/Bangkok');
+
+  // ตั้ง timezone default
+  tz.setLocalLocation(location);
+
+  // 2. ตั้งค่าเฉพาะ Android (กำหนดไอคอนที่จะแสดง)
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  // 3. ตั้งค่าเฉพาะ iOS/macOS (สามารถกำหนดการขอสิทธิ์ได้ที่นี่)
+  final DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings(
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
+  );
+
+  // 4. รวมการตั้งค่าทั้งหมด
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsDarwin,
+  );
+
+  // 5. Initialize
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    // กำหนด Callback เมื่อผู้ใช้แตะ Notification (ตอนแอปเปิดอยู่)
+    onDidReceiveNotificationResponse:
+        (NotificationResponse notificationResponse) async {
+      // โค้ดที่คุณต้องการให้ทำงานเมื่อแตะ
+    },
+    // กำหนด Callback เมื่อผู้ใช้แตะ Notification (ตอนแอปปิดอยู่/Background)
+    onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+
+  );
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  selectedRadio = prefs.getInt('selectedRadio') ?? 2;
+  notiHour = prefs.getInt('notiHour') ?? 0;
+  notiMinute = prefs.getInt('notiMinute') ?? 0;
+  selectedNoti = prefs.getInt('selectedNoti') ?? 0;
+  Translate();
+}
+
+// ต้องเป็น Top-level หรือ Static function สำหรับ Background Notification
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  // จัดการการตอบสนองเมื่อแอปไม่ได้ทำงานอยู่ (Background/Terminated)
 }
 
 Position? userPosition;
@@ -215,56 +295,45 @@ class _LoginPageState extends State<LoginPage> {
             alignment: Alignment.center,
             children: [
               Container(
-                decoration: BoxDecoration(
-                    image: backgroudComponent.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(backgroudComponent),
-                            fit: BoxFit.cover,
-                          )
-                        : DecorationImage(
-                            image: AssetImage(
-                                'assets/images/logoOrigami/default_bg.png'),
-                            fit: BoxFit.cover,
-                          ) // หรือใช้ภาพจาก assets แทน
-                    ),
+                color: Colors.white,
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
-                    width: MediaQuery.of(context).size.width * 0.25,
+                  Image.network(
+                    'https://www.origami.life/images/ogm_logo.png?v=1759716751369', // ใส่โลโก้
+                    width: MediaQuery.of(context).size.width * 0.5,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       return Container();
                     },
                   ),
                   SizedBox(height: 16),
-                  Container(
-                    // color: Colors.white,
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Loading...',
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              color: Colors.white54,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 30,
-                            ),
-                          ),
-                          LoadingAnimationWidget.horizontalRotatingDots(
-                            size: 65,
-                            color: Colors.white54,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16),
+                  // Container(
+                  //   // color: Colors.white,
+                  //   child: Center(
+                  //     child: Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: [
+                  //         const Text(
+                  //           'Loading...',
+                  //           style: TextStyle(
+                  //             fontFamily: 'Arial',
+                  //             color: Colors.white54,
+                  //             fontWeight: FontWeight.w700,
+                  //             fontSize: 30,
+                  //           ),
+                  //         ),
+                  //         LoadingAnimationWidget.horizontalRotatingDots(
+                  //           size: 65,
+                  //           color: Colors.white54,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 16),
                 ],
               ),
             ],
@@ -355,9 +424,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
-                width: constraints.maxWidth * 0.3,
+              Image.network(
+                'https://www.origami.life/images/ogm_logo.png?v=1759716751369', // ใส่โลโก้
+                width: constraints.maxWidth * 0.6,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -371,25 +440,7 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
               ),
-              SizedBox(height: 24),
-              Text(
-                'Origami Platform',
-                style: const TextStyle(
-                  fontFamily: 'Arial',
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 30,
-                ),
-              ),
-              Text(
-                'Sign in to access the system',
-                style: const TextStyle(
-                  fontFamily: 'Arial',
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
-                  fontSize: 24,
-                ),
-              ),
+              SizedBox(height: 16),
               SizedBox(height: constraints.maxWidth * 0.04),
               Form(
                 key: _formKey,
@@ -504,7 +555,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           actions: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -524,7 +575,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
                 borderRadius: BorderRadius.circular(10),
@@ -565,164 +616,6 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
-  // Widget _forgotWidget(BoxConstraints constraints) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 18),
-  //     child: Center(
-  //       child: Container(
-  //         width: constraints.maxWidth * 0.85,
-  //         decoration: BoxDecoration(
-  //           // color: Colors.black12,
-  //           borderRadius: BorderRadius.circular(20),
-  //           // boxShadow: [
-  //           //   BoxShadow(
-  //           //     color: Colors.black12,
-  //           //     blurRadius: 10,
-  //           //     offset: Offset(0, 4),
-  //           //   )
-  //           // ],
-  //         ),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.center,
-  //           children: [
-  //             Image.asset(
-  //               'assets/images/logoOrigami/origami_logo.png', // ใส่โลโก้
-  //               width: constraints.maxWidth * 0.4,
-  //               fit: BoxFit.contain,
-  //               errorBuilder: (context, error, stackTrace) {
-  //                 return Container(
-  //                   color: Colors.transparent,
-  //                   child: Center(
-  //                     child: LoadingAnimationWidget.horizontalRotatingDots(
-  //                       size: 65,
-  //                       color: Colors.orange,
-  //                     ),
-  //                   ),
-  //                 );
-  //               },
-  //             ),
-  //             SizedBox(height: 24),
-  //             // Container(
-  //             //   // color: Colors.white,
-  //             //   width: MediaQuery.of(context).size.width * 0.5,
-  //             //   child: Image.network(
-  //             //     logoComponent, // ใส่โลโก้
-  //             //     width: MediaQuery.of(context).size.width * 0.5,
-  //             //     fit: BoxFit.contain,
-  //             //     errorBuilder: (context, error, stackTrace) {
-  //             //       return Container();
-  //             //     },
-  //             //   ),
-  //             // ),
-  //             Form(
-  //               key: _formKey,
-  //               child: Column(
-  //                 children: [
-  //                   Text(
-  //                     'Forgot your password?',
-  //                     style: TextStyle(
-  //                       fontFamily: 'Arial',
-  //                       color: Colors.white,
-  //                       fontSize: 28,
-  //                       fontWeight: FontWeight.w500,
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 8),
-  //                   Padding(
-  //                     padding: const EdgeInsets.only(top: 8,bottom: 8,right: 8,left: 12),
-  //                     child: Text(
-  //                       'Please enter your email address to request a password reset.',
-  //                       style: TextStyle(
-  //                         fontFamily: 'Arial',
-  //                         color: Colors.orange.shade50,
-  //                         fontSize: 16,
-  //                         fontWeight: FontWeight.w400,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 16),
-  //                   TextFormField(
-  //                     controller: _forgotController,
-  //                     inputFormatters: [
-  //                       FilteringTextInputFormatter.allow(
-  //                           RegExp(r'[a-zA-Z0-9@#%&*_!$^(),.?":;{}|<>-]')),
-  //                     ],
-  //                     style: TextStyle(
-  //                         fontFamily: 'Arial', color: Color(0xFF555555)),
-  //                     decoration: InputDecoration(
-  //                       filled: true,
-  //                       fillColor: Colors.white,
-  //                       hintText: 'Email',
-  //                       hintStyle: TextStyle(
-  //                           fontFamily: 'Arial', color: Color(0xFF555555)),
-  //                       prefixIcon: Icon(Icons.email, color: Color(0xFF555555)),
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 30.0),
-  //                   Container(
-  //                     width: double.infinity,
-  //                     child: ElevatedButton(
-  //                       style: ElevatedButton.styleFrom(
-  //                         padding: const EdgeInsets.all(1),
-  //                         foregroundColor: Colors.red,
-  //                         backgroundColor: Colors.red,
-  //                         shape: RoundedRectangleBorder(
-  //                           borderRadius: BorderRadius.circular(100),
-  //                         ),
-  //                       ),
-  //                       onPressed: () => _fetchForgetMail(),
-  //                       child: Padding(
-  //                         padding: const EdgeInsets.only(
-  //                             left: 60, right: 60, bottom: 12, top: 12),
-  //                         child: Text(
-  //                           'SEND',
-  //                           style: TextStyle(
-  //                             fontFamily: 'Arial',
-  //                             color: Colors.white,
-  //                             fontSize: 20,
-  //                             fontWeight: FontWeight.w700,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   SizedBox(height: 8),
-  //                   TextButton(
-  //                     onPressed: () {
-  //                       setState(() {
-  //                         _forgot = false;
-  //                       });
-  //                     },
-  //                     child: Padding(
-  //                       padding: const EdgeInsets.all(8.0),
-  //                       child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.start,
-  //                         children: [
-  //                           Icon(Icons.chevron_left,
-  //                               color: Colors.white, size: 20),
-  //                           SizedBox(width: 8),
-  //                           Text(
-  //                             'Return to login.',
-  //                             style: TextStyle(
-  //                               fontFamily: 'Arial',
-  //                               color: Colors.white,
-  //                               fontWeight: FontWeight.w500,
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _buildTextField(
       TextEditingController controller, String hintText, IconData icon) {
@@ -1043,12 +936,11 @@ class Employee {
     String fullAvatar = avatarPath.isNotEmpty
         ? "$hostDev${avatarPath.replaceAll("\\", "/")}"
         : '';
-    String fullLogo = logoPath.isNotEmpty
-        ? "$hostDev${logoPath.replaceAll("\\", "/")}"
-        : '';
+    String fullLogo =
+        logoPath.isNotEmpty ? "$hostDev${logoPath.replaceAll("\\", "/")}" : '';
     return Employee(
-      comp_id: json['comp_id'] ??'',
-      emp_id: json['emp_id'] ??'',
+      comp_id: json['comp_id'] ?? '',
+      emp_id: json['emp_id'] ?? '',
       emp_code: json['emp_code'] ?? '',
       emp_name: json['emp_name'] ?? '',
       emp_avatar: fullAvatar,
