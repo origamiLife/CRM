@@ -231,7 +231,7 @@ class _MiniContactState extends State<MiniContact> {
   String? data_Id = "";
   Future<void> fetchContact(Contact_number, Contact_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/contact.php?page=$Contact_number&search=$Contact_name');
+        '$hostWeb/api/origami/need/contact.php?page=$Contact_number&search=$Contact_name');
     try {
       final response = await http.post(
         uri,

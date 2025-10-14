@@ -245,7 +245,7 @@
 //   }
 //
 //   Future<List<HistoryChallenge>> fetchHistoryChallenge() async {
-//     final uri = Uri.parse("$host/api/origami/challenge/history-challenge.php");
+//     final uri = Uri.parse("$hostWeb/api/origami/challenge/history-challenge.php");
 //     try {
 //       final response = await http.post(
 //         uri,

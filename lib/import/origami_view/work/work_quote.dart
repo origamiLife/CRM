@@ -23,10 +23,10 @@ class _WorkQuoteState extends State<WorkQuote> {
   String showlastDay = '';
   bool _isChecked = false;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -42,7 +42,30 @@ class _WorkQuoteState extends State<WorkQuote> {
       body: FutureBuilder<List<StatusWork>>(
           future: fetchStatusWork(),
           builder: (context, snapshot) {
-            if (snapshot.hasError) {
+            if (snapshot.connectionState ==
+                ConnectionState.waiting) {
+              return Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        color: Color(0xFFFF9900),
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        'Loading...',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF555555),
+                        ),
+                      ),
+                    ],
+                  ));
+            } else if (snapshot.hasError) {
               return Center(
                   child: Text(
                     'Error: ${snapshot.error}',
@@ -75,7 +98,7 @@ class _WorkQuoteState extends State<WorkQuote> {
     List<String> parts = work.used.split(":");
     int usedHours = int.parse(parts[0]);
     int minutes = usedHours * 60;
-    int total = int.parse(work.total) * 60;
+    int total = double.parse(work.total).toInt() * 60;
     int usedMinutes = total - minutes;
     Duration duration = Duration(minutes: usedMinutes);
 
@@ -133,7 +156,7 @@ class _WorkQuoteState extends State<WorkQuote> {
                     thickness: 4,
                   ),
                   Text(
-                    'Total : ${work.total}:00:00 Hour',
+                    'Total : ${work.total} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 16,

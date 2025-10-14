@@ -914,7 +914,7 @@ class _IdocEditState extends State<IdocEdit> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: Image.network(
-                                    '$host/uploads/employee/5/employee/19777.jpg?v=1730343291',
+                                    '$hostWeb/uploads/employee/5/employee/19777.jpg?v=1730343291',
                                     fit: BoxFit.fill,
                                   ),
                                 ),

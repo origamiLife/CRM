@@ -7,14 +7,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'import/noti.dart';
 import 'import/origami_view/language/translate.dart';
 import 'import/origami_view/language/translate_page.dart';
 
-String hostDev = 'https://dev.origami.life';
-String host = 'https://www.origami.life';
-String token = 'ori20#17gami'; // m_application
-String tokenMD5 = 'aeb674f8c49dd404dabc759f81f15918'; // m_application
+String hostWeb = 'https://www.origami.life';
+String hostDev = 'https://www.origami.life';
+String token = 'ori20#17gami';
+String tokenMD5 = 'aeb674f8c49dd404dabc759f81f15918';
 int selectedRadio = 2;
 // bool isAndroid = false;
 // bool isTablet = false;
@@ -32,7 +31,7 @@ void main() async {
   await Hive.openBox('userBox');
   await initializeNotification();
   await platformAndroid();
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
     home: MyApp(),
   ));
@@ -43,11 +42,12 @@ Future<void> platformAndroid() async {
   if (Platform.isAndroid) {
     // ขอสิทธิ์แสดง Notification
     final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
 
     if (androidImplementation != null) {
-      final bool? granted = await androidImplementation.requestNotificationsPermission();
+      final bool? granted =
+          await androidImplementation.requestNotificationsPermission();
       // คุณอาจต้องจัดการกรณีที่ผู้ใช้ไม่อนุญาต
     }
   }
@@ -96,7 +96,6 @@ Future<void> initializeNotification() async {
     },
     // กำหนด Callback เมื่อผู้ใช้แตะ Notification (ตอนแอปปิดอยู่/Background)
     onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-
   );
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -180,6 +179,7 @@ class MyApp extends StatelessWidget {
         num: 0, // num 1 ยังไม่ได้ login
         popPage: 5,
         company_id: 0,
+        begin: false,
       ),
     );
   }
@@ -191,10 +191,12 @@ class LoginPage extends StatefulWidget {
     required this.num,
     required this.popPage,
     this.company_id,
+    this.begin,
   });
   final int num;
   final int popPage;
   final int? company_id;
+  final bool? begin;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -215,6 +217,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     countPage = widget.num;
+    _begin = widget.begin ?? false;
+    print('_begin ::: $_begin');
     print(widget.popPage);
     print(widget.company_id);
     // _fetchComponent();
@@ -279,129 +283,133 @@ class _LoginPageState extends State<LoginPage> {
     // print('Password: $password');
   }
 
-  Future<void> _loadBegin() async {
-    await Future.delayed(Duration(seconds: 5));
+  void _loadBegin() {
+    Future.delayed(Duration(seconds: 2));
     _begin = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_begin == false && _isLoading) {
+    if (!_begin) {
       _loadBegin();
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: SafeArea(
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                color: Colors.white,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.network(
-                    'https://www.origami.life/images/ogm_logo.png?v=1759716751369', // ใส่โลโก้
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container();
-                    },
-                  ),
-                  SizedBox(height: 16),
-                  // Container(
-                  //   // color: Colors.white,
-                  //   child: Center(
-                  //     child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.center,
-                  //       children: [
-                  //         const Text(
-                  //           'Loading...',
-                  //           style: TextStyle(
-                  //             fontFamily: 'Arial',
-                  //             color: Colors.white54,
-                  //             fontWeight: FontWeight.w700,
-                  //             fontSize: 30,
-                  //           ),
-                  //         ),
-                  //         LoadingAnimationWidget.horizontalRotatingDots(
-                  //           size: 65,
-                  //           color: Colors.white54,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(height: 16),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return PopScope(
-        onPopInvoked: (didPop) {
-          if (!didPop) {
-            final now = DateTime.now();
-            final maxDuration = Duration(seconds: 2);
-            final isWarning = lastPressed == null ||
-                now.difference(lastPressed!) > maxDuration;
+    }
+    return !_begin
+        ? _loading()
+        : PopScope(
+            onPopInvoked: (didPop) {
+              if (!didPop) {
+                final now = DateTime.now();
+                final maxDuration = Duration(seconds: 2);
+                final isWarning = lastPressed == null ||
+                    now.difference(lastPressed!) > maxDuration;
 
-            if (isWarning) {
-              lastPressed = now;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    exitApp2TS,
-                    style: const TextStyle(
-                        fontFamily: 'Arial', color: Colors.white),
-                  ),
-                  duration: maxDuration,
-                ),
-              );
-            } else {
-              SystemNavigator.pop();
-            }
-          }
-        },
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      image: backgroudComponent.isNotEmpty
-                          ? DecorationImage(
-                              image: NetworkImage(backgroudComponent),
-                              fit: BoxFit.cover,
-                            )
-                          : DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/logoOrigami/default_bg.png'),
-                              fit: BoxFit.cover,
-                            ) // หรือใช้ภาพจาก assets แทน
+                if (isWarning) {
+                  lastPressed = now;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        exitApp2TS,
+                        style: const TextStyle(
+                            fontFamily: 'Arial', color: Colors.white),
                       ),
-                ),
-                LayoutBuilder(builder: (context, constraints) {
-                  return SingleChildScrollView(
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: constraints.maxHeight,
-                        ),
-                        child: _loginWidget(constraints)),
+                      duration: maxDuration,
+                    ),
                   );
-                }),
+                } else {
+                  SystemNavigator.pop();
+                }
+              }
+            },
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: SafeArea(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          image: backgroudComponent.isNotEmpty
+                              ? DecorationImage(
+                                  image: NetworkImage(backgroudComponent),
+                                  fit: BoxFit.cover,
+                                )
+                              : const DecorationImage(
+                                  image: AssetImage(
+                                      'assets/images/logoOrigami/default_bg.png'),
+                                  fit: BoxFit.cover,
+                                ) // หรือใช้ภาพจาก assets แทน
+                          ),
+                    ),
+                    LayoutBuilder(builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: constraints.maxHeight,
+                            ),
+                            child: _loginWidget(constraints)),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            ),
+          );
+  }
+
+  Widget _loading() {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              color: Colors.white,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.network(
+                  'https://www.origami.life/images/ogm_logo.png?v=1759716751369', // ใส่โลโก้
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container();
+                  },
+                ),
+                SizedBox(height: 16),
+                // Container(
+                //   // color: Colors.white,
+                //   child: Center(
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.center,
+                //       children: [
+                //         const Text(
+                //           'Loading...',
+                //           style: TextStyle(
+                //             fontFamily: 'Arial',
+                //             color: Colors.white54,
+                //             fontWeight: FontWeight.w700,
+                //             fontSize: 30,
+                //           ),
+                //         ),
+                //         LoadingAnimationWidget.horizontalRotatingDots(
+                //           size: 65,
+                //           color: Colors.white54,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(height: 16),
               ],
             ),
-          ),
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 
   Widget _loginWidget(BoxConstraints constraints) {
@@ -914,6 +922,7 @@ class Employee {
   final String dept_name;
   final String dna_color;
   final String password_verify;
+  final String pass_pro;
   final String endpoint;
 
   const Employee({
@@ -927,28 +936,30 @@ class Employee {
     required this.dept_name,
     required this.dna_color,
     required this.password_verify,
+    required this.pass_pro,
     required this.endpoint,
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) {
-    String avatarPath = json['emp_avatar'] ?? '';
-    String logoPath = json['comp_logo'] ?? '';
-    String fullAvatar = avatarPath.isNotEmpty
-        ? "$hostDev${avatarPath.replaceAll("\\", "/")}"
-        : '';
-    String fullLogo =
-        logoPath.isNotEmpty ? "$hostDev${logoPath.replaceAll("\\", "/")}" : '';
+    // String avatarPath = json['emp_avatar'] ?? '';
+    // String logoPath = json['comp_logo'] ?? '';
+    // String fullAvatar = avatarPath.isNotEmpty
+    //     ? "${avatarPath.replaceAll("\\", "/")}"
+    //     : '';
+    // String fullLogo =
+    //     logoPath.isNotEmpty ? "${logoPath.replaceAll("\\", "/")}" : '';
     return Employee(
       comp_id: json['comp_id'] ?? '',
       emp_id: json['emp_id'] ?? '',
       emp_code: json['emp_code'] ?? '',
       emp_name: json['emp_name'] ?? '',
-      emp_avatar: fullAvatar,
+      emp_avatar: json['emp_avatar'] ?? '',
       comp_name: json['comp_name'] ?? '',
-      comp_logo: fullLogo,
+      comp_logo: json['comp_logo'] ?? '',
       dept_name: json['dept_name'] ?? '',
       dna_color: json['dna_color'] ?? '',
       password_verify: json['password_verify'] ?? '',
+      pass_pro: json['pass_pro'] ?? '',
       endpoint: json['endpoint'] ?? '',
     );
   }

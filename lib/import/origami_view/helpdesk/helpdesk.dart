@@ -445,7 +445,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(50),
                                                 child: Image.network(
-                                                  '$host/${ticket.create_pic}',
+                                                  '$hostWeb/${ticket.create_pic}',
                                                   fit: BoxFit.fill,
                                                   errorBuilder: (context, error,
                                                       stackTrace) {

@@ -336,7 +336,7 @@ class _NetworkVideoPlayerState extends State<NetworkVideoPlayer> {
   }
 
   Future<void> fetchStatus(int videoViewedInMillisec) async {
-    final uri = Uri.parse("$host/api/origami/academy/save.php");
+    final uri = Uri.parse("$hostWeb/api/origami/academy/save.php");
     try {
       final response = await http.post(
         uri,

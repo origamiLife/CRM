@@ -289,6 +289,10 @@ class _ContactScreenState extends State<ContactScreen> {
         itemCount: filteredContactList.length,
         itemBuilder: (context, index) {
           ModelContact contact = filteredContactList[index];
+          if(isEmpId == false){
+            isEmpId = contact.list_emp_id.contains(widget.employee.emp_id);
+            print('isEmpId ::: $isEmpId');
+          }
           return InkWell(
             onTap: () {
               Navigator.push(
@@ -658,6 +662,7 @@ class _ContactScreenState extends State<ContactScreen> {
 
   bool _isFirstTime = true;
   int indexItems = 0;
+  bool isEmpId = false;
   List<ModelContact> newContacts = [];
   Future<List<ModelContact>> fetchModelContact() async {
     final uri = Uri.parse("$hostDev/api/origami/crm/contact/list-contact.php");
@@ -746,6 +751,7 @@ class ModelContact {
   final String lastname_th;
   final String nfc_card_license;
   final String gender_name;
+  final String list_emp_id;
 
   ModelContact({
     required this.cus_cont_id,
@@ -782,6 +788,7 @@ class ModelContact {
     required this.lastname_th,
     required this.nfc_card_license,
     required this.gender_name,
+    required this.list_emp_id,
   });
 
   factory ModelContact.fromJson(Map<String, dynamic> json) {
@@ -820,6 +827,7 @@ class ModelContact {
       lastname_th: json['lastname_th'] ?? '',
       nfc_card_license: json['nfc_card_license'] ?? '',
       gender_name: json['gender_name'] ?? '',
+      list_emp_id: json['list_emp_id'] ?? '',
     );
   }
 }

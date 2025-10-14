@@ -1856,7 +1856,7 @@ class _PettyCashState extends State<PettyCash> {
   }
 
   Future<List<CashData>> fetchCash() async {
-    final uri = Uri.parse("$host/api/origami/pettyCash/cash.php");
+    final uri = Uri.parse("$hostWeb/api/origami/pettyCash/cash.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -1884,7 +1884,7 @@ class _PettyCashState extends State<PettyCash> {
   String cash_id = '';
   String status_id = '';
   Future<List<UsedData>> fetchUsed() async {
-    final uri = Uri.parse("$host/api/origami/pettyCash/used.php");
+    final uri = Uri.parse("$hostWeb/api/origami/pettyCash/used.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -1909,7 +1909,7 @@ class _PettyCashState extends State<PettyCash> {
 
   DetailData? detailData;
   Future<void> fetchDetail() async {
-    final uri = Uri.parse("$host/api/origami/pettyCash/detail.php");
+    final uri = Uri.parse("$hostWeb/api/origami/pettyCash/detail.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -1946,7 +1946,7 @@ class _PettyCashState extends State<PettyCash> {
   StatusCash? selectedStatus;
   List<StatusCash> statusList = [];
   Future<void> fetchStatus() async {
-    final uri = Uri.parse("$host/api/origami/pettyCash/status.php");
+    final uri = Uri.parse("$hostWeb/api/origami/pettyCash/status.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -2007,7 +2007,7 @@ class _PettyCashState extends State<PettyCash> {
   }
 
   Future<void> fetchSaveCash() async {
-    final uri = Uri.parse("$host/api/origami/pettyCash/save.php");
+    final uri = Uri.parse("$hostWeb/api/origami/pettyCash/save.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -2041,7 +2041,7 @@ class _PettyCashState extends State<PettyCash> {
 
   String used_id = '';
   Future<void> fetchDeleteCash() async {
-    final uri = Uri.parse("$host/api/origami/pettyCash/delete.php");
+    final uri = Uri.parse("$hostWeb/api/origami/pettyCash/delete.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -2071,7 +2071,7 @@ class _PettyCashState extends State<PettyCash> {
   List<UnitData> unitList2 = [];
   Future<void> fetchUnit() async {
     final uri = Uri.parse(
-        "$host/api/origami/need/unit.php?page=$unitNumber&search=$unitName");
+        "$hostWeb/api/origami/need/unit.php?page=$unitNumber&search=$unitName");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -2101,7 +2101,7 @@ class _PettyCashState extends State<PettyCash> {
   List<ItemData> itemList = [];
   Future<void> fetchItem() async {
     final uri = Uri.parse(
-        '$host/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=EP');
+        '$hostWeb/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=EP');
     try {
       final response = await http.post(
         uri,
@@ -2132,7 +2132,7 @@ class _PettyCashState extends State<PettyCash> {
   String need_subject = '';
   String need_description = '';
   Future<void> fetchExpenseCash() async {
-    final uri = Uri.parse("$host/api/origami/pettyCash/expense.php");
+    final uri = Uri.parse("$hostWeb/api/origami/pettyCash/expense.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},

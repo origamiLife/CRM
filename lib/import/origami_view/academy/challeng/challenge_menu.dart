@@ -1109,7 +1109,7 @@
 //   }
 //
 //   Future<List<GetChallenge>> fetchGetChallenge() async {
-//     final uri = Uri.parse("$host/api/origami/challenge/get-challenge.php");
+//     final uri = Uri.parse("$hostWeb/api/origami/challenge/get-challenge.php");
 //     final response = await http.post(
 //       uri,
 //       headers: {'Authorization': 'Bearer ${widget.Authorization}'},

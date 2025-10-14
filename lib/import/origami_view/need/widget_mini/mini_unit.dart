@@ -208,7 +208,7 @@ class _MiniUnitState extends State<MiniUnit> {
   String? Unit_id = "";
   Future<void> fetchUnit(Unit_number, Unit_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/unit.php?page=$Unit_number&search=$Unit_name');
+        '$hostWeb/api/origami/need/unit.php?page=$Unit_number&search=$Unit_name');
     try {
       final response = await http.post(
         uri,

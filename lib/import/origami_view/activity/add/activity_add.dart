@@ -705,7 +705,7 @@ class _activityAddState extends State<activityAdd> {
                                                         contact.cus_cont_photo ==
                                                             '')
                                                     ? 'https://dev.origami.life/images/default.png'
-                                                    : '$host//crm/${contact.cus_cont_photo}',
+                                                    : '$hostWeb//crm/${contact.cus_cont_photo}',
                                                 height: 100,
                                                 width: 100,
                                                 fit: BoxFit.cover,
@@ -1447,18 +1447,25 @@ class _activityAddState extends State<activityAdd> {
             Container(
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.orange.shade400,
                 borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
               ),
               child: TextButton(
-                onPressed: () {
-                  Navigator.pop(dialogContext);
+                onPressed: () async {
+                  Navigator.pop(context);
                 },
                 child: Text(
                   'Cancel',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

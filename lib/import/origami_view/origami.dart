@@ -57,7 +57,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
   bool isBranch = false;
   List<GetTimeStampSim> _branches = [];
   GetTimeStampSim? _branche;
-  int _index = 12;
+  int _index = 5;
 
   TextStyle optionStyle = const TextStyle(
     fontFamily: 'Arial',
@@ -78,11 +78,13 @@ class _OrigamiPageState extends State<OrigamiPage> {
     color: Color(0xFF555555),
   );
 
+  String emp_id = '';
   @override
   void initState() {
     super.initState();
     _initController();
-    // _initController();
+    fetchModelContact();
+    emp_id = widget.employee.emp_id;
     print(widget.employee.emp_id);
     _index = widget.popPage;
     if (_index == 0) {
@@ -94,7 +96,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
   Future<void> _initController() async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (notiHour != 0 || notiMinute != 0) {
-        _isChecked= true;
+        _isChecked = true;
         final notiService = NotiService();
         notiService.initNotifications().then((_) {
           notiService.scheduleNotification(
@@ -176,76 +178,59 @@ class _OrigamiPageState extends State<OrigamiPage> {
                   children: [
                     _getContentWidget(),
                     const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 18),
-                      child: Row(
-                        children: [
-                          const Expanded(
-                            child: Text(
-                              'Notifications  ',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Color(0xFF555555),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          FlutterSwitch(
-                            value: _isChecked,
-                            width: 70,
-                            height: 30,
-                            activeColor: Colors.orange,
-                            // inactiveColor: Colors.grey,
-                            activeText: "ON",
-                            inactiveText: "OFF",
-                            showOnOff: true,
-                            onToggle: (value) async {
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              setState(() {
-                                _isChecked = value;
-                              });
-                              if (_isChecked == true) {
-                                _isChecked = true;
-                              } else {
-                                _isChecked = false;
-                                notiHour = 0;
-                                notiMinute = 0;
-                                prefs.setInt('notiHour', notiHour);
-                                prefs.setInt('notiMinute', notiMinute);
-                                prefs.setInt('selectedNoti', selectedNoti);
-                                NotiService().cancelNotification(1);
-                              }
-                            },
-                          ),
-                          // AdvancedSwitch(
-                          //   activeChild: Text(
-                          //     'ON',
-                          //     style: TextStyle(
-                          //       fontFamily: 'Arial',
-                          //     ),
-                          //   ),
-                          //   inactiveChild: Text(
-                          //     'OFF',
-                          //     style: TextStyle(
-                          //       fontFamily: 'Arial',
-                          //     ),
-                          //   ),
-                          //   borderRadius: BorderRadius.circular(100),
-                          //   height: 25,
-                          //   controller: _controllerOwner,
-                          //   // enabled: true,
-                          // ),
-                        ],
-                      ),
-                    ),
-                    _logoutWidget(),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(
+                    //       vertical: 8, horizontal: 18),
+                    //   child: Row(
+                    //     children: [
+                    //       const Expanded(
+                    //         child: Text(
+                    //           'Notifications  ',
+                    //           maxLines: 1,
+                    //           overflow: TextOverflow.ellipsis,
+                    //           style: TextStyle(
+                    //             fontFamily: 'Arial',
+                    //             fontSize: 16,
+                    //             color: Color(0xFF555555),
+                    //             fontWeight: FontWeight.w500,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       FlutterSwitch(
+                    //         value: _isChecked,
+                    //         width: 70,
+                    //         height: 30,
+                    //         activeColor: Colors.orange,
+                    //         // inactiveColor: Colors.grey,
+                    //         activeText: "ON",
+                    //         inactiveText: "OFF",
+                    //         showOnOff: true,
+                    //         onToggle: (value) async {
+                    //           SharedPreferences prefs = await SharedPreferences.getInstance();
+                    //           setState(() {
+                    //             _isChecked = value;
+                    //           });
+                    //           if (_isChecked == true) {
+                    //             _isChecked = true;
+                    //           } else {
+                    //             _isChecked = false;
+                    //             notiHour = 0;
+                    //             notiMinute = 0;
+                    //             prefs.setInt('notiHour', notiHour);
+                    //             prefs.setInt('notiMinute', notiMinute);
+                    //             prefs.setInt('selectedNoti', selectedNoti);
+                    //             NotiService().cancelNotification(1);
+                    //           }
+                    //         },
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+
                   ],
                 ),
               ),
+              _logoutWidget(),
             ],
           ),
         ),
@@ -348,7 +333,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
 
   Widget _getContentWidget() {
     return Column(
-      children: menuItems.map((item) {
+      children: _getMenuItems().map((item) {
         return _viewMenu(
           item['index'],
           item['title'],
@@ -359,64 +344,67 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
-  final List<Map<String, dynamic>> menuItems = [
-    {
-      'index': 13,
-      'title': 'Account',
-      'icon': FontAwesomeIcons.user,
-    },
-    {
-      'index': 12,
-      'title': 'Contact',
-      'icon': FontAwesomeIcons.vcard,
-    },
-    {
-      'index': 10,
-      'title': 'Project',
-      'icon': FontAwesomeIcons.projectDiagram,
-    },
-    {
-      'index': 9,
-      'title': 'Activity',
-      'icon': FontAwesomeIcons.running,
-    },
-    {
-      'index': 14,
-      'title': 'Calendar',
-      'icon': FontAwesomeIcons.calendar,
-    },
-    {
-      'index': 5,
-      'title': 'Time',
-      'icon': FontAwesomeIcons.clock,
-    },
-    {
-      'index': 11,
-      'title': 'Work',
-      'icon': FontAwesomeIcons.briefcase,
-    },
-    // {
-    //   'index': 2,
-    //   'title': 'Academy',
-    //   'icon': FontAwesomeIcons.university,
-    // },
-    {
-      'index': 3,
-      'title': 'Language',
-      'icon': FontAwesomeIcons.language,
-    },
-    {
-      'index': 6,
-      'title': 'About',
-      'icon': FontAwesomeIcons.user,
-    },
-    // {
-    //   'index': 7,
-    //   'title': 'HELPDESK (ไม่มี API)',
-    //   'icon': Icons.message,
-    // },
-    // เพิ่มอีกเมนูได้ที่นี่...
-  ];
+  List<Map<String, dynamic>> _getMenuItems() {
+    return [
+      {
+        'index': 13,
+        'title': 'Account',
+        'icon': FontAwesomeIcons.user,
+      },
+      if (isEmpId)
+        {
+          'index': 12,
+          'title': 'Contact',
+          'icon': FontAwesomeIcons.vcard,
+        },
+      {
+        'index': 10,
+        'title': 'Project',
+        'icon': FontAwesomeIcons.projectDiagram,
+      },
+      {
+        'index': 9,
+        'title': 'Activity',
+        'icon': FontAwesomeIcons.running,
+      },
+      {
+        'index': 14,
+        'title': 'Calendar',
+        'icon': FontAwesomeIcons.calendar,
+      },
+      {
+        'index': 5,
+        'title': 'Time',
+        'icon': FontAwesomeIcons.clock,
+      },
+      {
+        'index': 11,
+        'title': 'Work',
+        'icon': FontAwesomeIcons.briefcase,
+      },
+      // {
+      //   'index': 2,
+      //   'title': 'Academy',
+      //   'icon': FontAwesomeIcons.university,
+      // },
+      {
+        'index': 3,
+        'title': 'Language',
+        'icon': FontAwesomeIcons.language,
+      },
+      {
+        'index': 6,
+        'title': 'About',
+        'icon': FontAwesomeIcons.user,
+      },
+      // {
+      //   'index': 7,
+      //   'title': 'HELPDESK (ไม่มี API)',
+      //   'icon': Icons.message,
+      // },
+      // เพิ่มอีกเมนูได้ที่นี่...
+    ];
+  }
 
   Widget _buildScreen() {
     final pages = {
@@ -735,7 +723,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        padding: const EdgeInsets.only(left: 4,right: 4,top: 8,bottom: 8),
         decoration: BoxDecoration(
           color: Colors.orange.shade50,
         ),
@@ -792,7 +780,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  LoginPage(num: 1, popPage: 0, company_id: 0),
+                  LoginPage(num: 1, popPage: 0, company_id: 0,begin: true,),
             ),
           );
         } else {
@@ -835,8 +823,15 @@ class _OrigamiPageState extends State<OrigamiPage> {
             Container(
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.black12,
                 borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.white,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
               ),
               child: TextButton(
                 onPressed: () {
@@ -884,5 +879,53 @@ class _OrigamiPageState extends State<OrigamiPage> {
         );
       },
     );
+  }
+
+  List<ModelContact> contactList = [];
+  int indexItems = 0;
+  bool isEmpId = false;
+  Future<List<ModelContact>> fetchModelContact() async {
+    final uri = Uri.parse("$hostDev/api/origami/crm/contact/list-contact.php");
+    try {
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'index': indexItems.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final List<dynamic> contactJson = jsonResponse['contact_data'] ?? [];
+        bool nextPage = jsonResponse['next_page'];
+        final newContacts = contactJson
+            .map((json) => ModelContact.fromJson(json))
+            .where((contact) {
+          // กรอง id ที่ซ้ำ
+          return !contactList
+              .any((existing) => existing.cus_cont_id == contact.cus_cont_id);
+        }).toList();
+
+        setState(() {
+          contactList.addAll(newContacts);
+          indexItems += 1;
+          isEmpId = contactList[indexItems]
+              .list_emp_id
+              .contains(widget.employee.emp_id);
+          print('isEmpId ::: $isEmpId');
+        });
+
+        return contactJson.map((json) => ModelContact.fromJson(json)).toList();
+      } else {
+        throw Exception(
+            'Failed to load data, status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+      return []; // หรือ throw ก็ได้ ขึ้นอยู่กับว่าอยาก handle ยังไง
+    }
   }
 }

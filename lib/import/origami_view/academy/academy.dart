@@ -591,7 +591,7 @@ class _AcademyPageState extends State<AcademyPage> {
   }
 
   Future<List<AcademyRespond>> fetchAcademies() async {
-    final uri = Uri.parse("$host/api/origami/academy/course.php");
+    final uri = Uri.parse("$hostWeb/api/origami/academy/course.php");
     try {
       final response = await http.post(
         uri,
@@ -627,7 +627,7 @@ class _AcademyPageState extends State<AcademyPage> {
   Future<void> favorite() async {
     try {
       final response = await http.post(
-        Uri.parse('$host/api/origami/academy/favorite.php'),
+        Uri.parse('$hostWeb/api/origami/academy/favorite.php'),
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

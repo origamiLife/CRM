@@ -230,7 +230,7 @@ class _MiniAssetState extends State<MiniAsset> {
   String? data_Id = "";
   Future<void> fetchAsset(Asset_number, Asset_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/asset.php?page=$Asset_number&search=$Asset_name');
+        '$hostWeb/api/origami/need/asset.php?page=$Asset_number&search=$Asset_name');
     try {
       final response = await http.post(
         uri,

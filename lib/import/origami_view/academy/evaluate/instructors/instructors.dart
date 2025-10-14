@@ -19,7 +19,7 @@ class Instructors extends StatefulWidget {
 
 class _InstructorsState extends State<Instructors> {
   Future<List<Instructor>> fetchInstructors() async {
-    final uri = Uri.parse("$host/api/origami/academy/instructors.php");
+    final uri = Uri.parse("$hostWeb/api/origami/academy/instructors.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},

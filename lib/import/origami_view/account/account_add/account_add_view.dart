@@ -209,21 +209,21 @@ class _AccountAddViewState extends State<AccountAddView> {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              radius: 22,
-                              backgroundColor: Colors.grey.shade400,
-                              child: CircleAvatar(
-                                radius: 21,
-                                backgroundColor: Colors.white,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.network(
-                                    '$host/uploads/employee/5/employee/19777.jpg?v=1730343291',
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // CircleAvatar(
+                            //   radius: 22,
+                            //   backgroundColor: Colors.grey.shade400,
+                            //   child: CircleAvatar(
+                            //     radius: 21,
+                            //     backgroundColor: Colors.white,
+                            //     child: ClipRRect(
+                            //       borderRadius: BorderRadius.circular(50),
+                            //       child: Image.network(
+                            //         '$host/uploads/employee/5/employee/19777.jpg?v=1730343291',
+                            //         fit: BoxFit.fill,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(width: 8),
                             Expanded(
                               child: Column(

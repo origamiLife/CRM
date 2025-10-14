@@ -703,7 +703,7 @@ class _IssueLogScreenState extends State<IssueLogScreen> {
                                           borderRadius:
                                               BorderRadius.circular(50),
                                           child: Image.network(
-                                            '$host/${issue.user_avatar}',
+                                            '$hostWeb/${issue.user_avatar}',
                                             fit: BoxFit.fill,
                                             errorBuilder:
                                                 (context, error, stackTrace) {

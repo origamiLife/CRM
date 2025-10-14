@@ -210,7 +210,7 @@ class _MiniAccountState extends State<MiniAccount> {
   String? data_Id = "";
   Future<void> fetchAccount(Account_number, Account_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/account.php?page=$Account_number&search=$Account_name');
+        '$hostWeb/api/origami/need/account.php?page=$Account_number&search=$Account_name');
     try {
       final response = await http.post(
         uri,

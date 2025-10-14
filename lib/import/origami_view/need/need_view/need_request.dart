@@ -750,7 +750,7 @@ class _NeedRequestState extends State<NeedRequest> {
   List<ApprovelData> ApprovelList = [];
 
   Future<void> fetchApprovel() async {
-    final uri = Uri.parse('$host/api/origami/need/approval.php');
+    final uri = Uri.parse('$hostWeb/api/origami/need/approval.php');
     try {
       final response = await http.post(
         uri,
@@ -785,7 +785,7 @@ class _NeedRequestState extends State<NeedRequest> {
   }
 
   Future<void> fetchApprovelMassage(need_id, approve_flag, comment) async {
-    final uri = Uri.parse('$host/api/origami/need/approval_manage.php');
+    final uri = Uri.parse('$hostWeb/api/origami/need/approval_manage.php');
     try {
       final response = await http.post(
         uri,

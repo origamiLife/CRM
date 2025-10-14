@@ -880,7 +880,7 @@ class _NeedsViewState extends State<NeedsView> {
   }
 
   Future<List<AnnounceData>> fetchAnnounce() async {
-    final uri = Uri.parse("$host/api/origami/announce/announce.php");
+    final uri = Uri.parse("$hostWeb/api/origami/announce/announce.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -908,7 +908,7 @@ class _NeedsViewState extends State<NeedsView> {
   List<NeedTypeRespond> NeedTypeOption = [];
   List<NeedTypeItemRespond> NeedTypeItemOption = [];
   Future<void> fetchTypeRespond() async {
-    final uri = Uri.parse('$host/api/origami/need/need_type.php');
+    final uri = Uri.parse('$hostWeb/api/origami/need/need_type.php');
     try {
       final response = await http.post(
         uri,
@@ -944,7 +944,7 @@ class _NeedsViewState extends State<NeedsView> {
   }
 
   Future<void> fetchTypeItemRespond() async {
-    final uri = Uri.parse('$host/api/origami/need/need_type_item.php');
+    final uri = Uri.parse('$hostWeb/api/origami/need/need_type_item.php');
 
     final response = await http.post(
       uri,
@@ -982,7 +982,7 @@ class _NeedsViewState extends State<NeedsView> {
   String search = "";
   Future<List<NeedRespond>> fetchNeedResponse() async {
     final uri = Uri.parse(
-        "$host/api/origami/need/need.php?need_type=$need_type&need_status=$need_status&search=Search");
+        "$hostWeb/api/origami/need/need.php?need_type=$need_type&need_status=$need_status&search=Search");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -1021,7 +1021,7 @@ class _NeedsViewState extends State<NeedsView> {
   String? priority_name = "";
   Future<void> fetchPriority(priority_number, priority_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/priority.php?page=$priority_number&search=$priority_name');
+        '$hostWeb/api/origami/need/priority.php?page=$priority_number&search=$priority_name');
     try {
       final response = await http.post(
         uri,
@@ -1066,7 +1066,7 @@ class _NeedsViewState extends State<NeedsView> {
   String? department_name = "";
   Future<void> fetchDepartment(department_number, department_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/department.php?page=$department_number&search=$department_name');
+        '$hostWeb/api/origami/need/department.php?page=$department_number&search=$department_name');
     try {
       final response = await http.post(
         uri,
@@ -1112,7 +1112,7 @@ class _NeedsViewState extends State<NeedsView> {
   String? project_name = "";
   Future<void> fetchProject(project_number, project_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/project.php?page=$project_number&search=$project_name');
+        '$hostWeb/api/origami/need/project.php?page=$project_number&search=$project_name');
     try {
       final response = await http.post(
         uri,
@@ -1159,7 +1159,7 @@ class _NeedsViewState extends State<NeedsView> {
   String? employee_name = "";
   Future<void> fetchEmployee(employee_number, employee_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/employee.php?page=$employee_number&search=$employee_name');
+        '$hostWeb/api/origami/need/employee.php?page=$employee_number&search=$employee_name');
     try {
       final response = await http.post(
         uri,
@@ -1198,7 +1198,7 @@ class _NeedsViewState extends State<NeedsView> {
   }
 
   Future<void> fetchDelete(request_id) async {
-    final uri = Uri.parse('$host/api/origami/need/delete.php');
+    final uri = Uri.parse('$hostWeb/api/origami/need/delete.php');
     try {
       final response = await http.post(
         uri,

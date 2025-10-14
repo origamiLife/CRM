@@ -65,6 +65,7 @@ class _TranslatePageState extends State<TranslatePage> {
             builder: (context) => LoginPage(
               num: 0,
               popPage: 3,
+              begin:false,
             ),
           ),
         );
@@ -104,32 +105,31 @@ class _TranslatePageState extends State<TranslatePage> {
                     child: Column(
                       children: [
                         Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Flag_of_Thailand_%28non-standard_colours%29.svg/180px-Flag_of_Thailand_%28non-standard_colours%29.svg.png',
+                          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Flag_of_the_United_Kingdom_%281-2%29.svg/1200px-Flag_of_the_United_Kingdom_%281-2%29.svg.png',
                           // width: 200,
                           height: 100,
                         ),
                         TextButton(
-                          // style:ButtonStyle(shadowColor:Color(colors.)),
                           onPressed: () {
-                            _handleRadioValueChange(1,0);
+                            _handleRadioValueChange(2,0);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              (selectedRadio == 1)
+                              (selectedRadio == 2)
                                   ? Icon(
-                                      Icons.radio_button_on,
-                                      color: Color(0xFFFF9900),
-                                    )
+                                Icons.radio_button_on,
+                                color: Color(0xFFFF9900),
+                              )
                                   : Icon(
-                                      Icons.radio_button_off,
-                                      color: Color(0xFFFF9900),
-                                    ),
+                                Icons.radio_button_off,
+                                color: Color(0xFFFF9900),
+                              ),
                               SizedBox(
                                 width: 8,
                               ),
                               Text(
-                                'ภาษาไทย',
+                                'English',
                                 style: TextStyle(
                                     fontFamily: 'Arial',
                                     fontSize: 16,
@@ -148,40 +148,45 @@ class _TranslatePageState extends State<TranslatePage> {
                     padding: const EdgeInsets.all(8),
                     child: Column(
                       children: [
-                        Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Flag_of_the_United_Kingdom_%281-2%29.svg/1200px-Flag_of_the_United_Kingdom_%281-2%29.svg.png',
-                          // width: 200,
-                          height: 100,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            _handleRadioValueChange(2,0);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              (selectedRadio == 2)
-                                  ? Icon(
-                                      Icons.radio_button_on,
-                                      color: Color(0xFFFF9900),
-                                    )
-                                  : Icon(
-                                      Icons.radio_button_off,
-                                      color: Color(0xFFFF9900),
-                                    ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Text(
-                                'English',
-                                style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16,
-                                    color: Color(0xFF555555)),
-                              ),
-                            ],
-                          ),
-                        )
+                        // Image.network(
+                        //   'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Flag_of_Thailand_%28non-standard_colours%29.svg/180px-Flag_of_Thailand_%28non-standard_colours%29.svg.png',
+                        //   // width: 200,
+                        //   height: 100,
+                        // ),
+                        // TextButton(
+                        //   // style:ButtonStyle(shadowColor:Color(colors.)),
+                        //   onPressed: () {
+                        //     // _handleRadioValueChange(1,0);
+                        //   },
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     children: [
+                        //       // (selectedRadio == 1)
+                        //       //     ? Icon(
+                        //       //         Icons.radio_button_on,
+                        //       //         color: Color(0xFFFF9900),
+                        //       //       )
+                        //       //     : Icon(
+                        //       //         Icons.radio_button_off,
+                        //       //         color: Color(0xFFFF9900),
+                        //       //       ),
+                        //       Icon(
+                        //         Icons.radio_button_off,
+                        //         color: Colors.grey,
+                        //       ),
+                        //       SizedBox(
+                        //         width: 8,
+                        //       ),
+                        //       Text(
+                        //         'ภาษาไทย',
+                        //         style: TextStyle(
+                        //             fontFamily: 'Arial',
+                        //             fontSize: 16,
+                        //             color: Color(0xFF555555)),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // )
                       ],
                     ),
                   ),
@@ -192,21 +197,21 @@ class _TranslatePageState extends State<TranslatePage> {
               padding: const EdgeInsets.all(4),
               child: Divider(),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: _textController('Hour', _hourController,
-                      false, Icons.numbers),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: _textController('Minute', _minuteController,
-                      false, Icons.numbers),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            SaveButton()
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: _textController('Hour', _hourController,
+            //           false, Icons.numbers),
+            //     ),
+            //     SizedBox(width: 16),
+            //     Expanded(
+            //       child: _textController('Minute', _minuteController,
+            //           false, Icons.numbers),
+            //     ),
+            //   ],
+            // ),
+            // SizedBox(height: 16),
+            // SaveButton()
           ],
         ),
       ),

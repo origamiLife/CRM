@@ -231,7 +231,7 @@ class _MiniDivisionState extends State<MiniDivision> {
   String? data_Id = "";
   Future<void> fetchDivision(Division_number, Division_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/division.php?page=$Division_number&search=$Division_name');
+        '$hostWeb/api/origami/need/division.php?page=$Division_number&search=$Division_name');
     try {
       final response = await http.post(
         uri,

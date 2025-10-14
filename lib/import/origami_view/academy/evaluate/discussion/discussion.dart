@@ -22,7 +22,7 @@ class _DiscussionState extends State<Discussion> {
   final TextEditingController _commentControllerB = TextEditingController();
 
   Future<List<DiscussionData>> fetchDiscussion() async {
-    final uri = Uri.parse("$host/api/origami/academy/discussion.php");
+    final uri = Uri.parse("$hostWeb/api/origami/academy/discussion.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -50,7 +50,7 @@ class _DiscussionState extends State<Discussion> {
 
   String discussionId = "";
   Future<List<ReplyData>> fetchReply() async {
-    final uri = Uri.parse("$host/api/origami/academy/discussionReply.php");
+    final uri = Uri.parse("$hostWeb/api/origami/academy/discussionReply.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -881,7 +881,7 @@ class _DiscussionState extends State<Discussion> {
   ) async {
     try {
       final response = await http.post(
-        Uri.parse('$host/api/origami/academy/discussionSave.php'),
+        Uri.parse('$hostWeb/api/origami/academy/discussionSave.php'),
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

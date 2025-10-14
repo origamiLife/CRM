@@ -240,7 +240,7 @@ class _MiniItemState extends State<MiniItem> {
   String? Item_type_id = "";
   Future<void> fetchItem(item_number, item_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=${widget.Item_type_id}');
+        '$hostWeb/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=${widget.Item_type_id}');
     try {
       final response = await http.post(
         uri,

@@ -20,7 +20,7 @@ class Description extends StatefulWidget {
 
 class _DescriptionState extends State<Description> {
   Future<List<DescriptionData>> fetchDescription() async {
-    final uri = Uri.parse("$host/api/origami/academy/description.php");
+    final uri = Uri.parse("$hostWeb/api/origami/academy/description.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},

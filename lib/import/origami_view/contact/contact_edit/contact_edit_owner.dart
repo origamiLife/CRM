@@ -182,7 +182,7 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
                                           child: Image.network(
                                             (contact.cus_cont_photo == '')
                                                 ? 'https://dev.origami.life/images/default.png'
-                                                : '$host//crm/${contact.cus_cont_photo}',
+                                                : '$hostWeb//crm/${contact.cus_cont_photo}',
                                             height: 100,
                                             width: 100,
                                             fit: BoxFit.cover,
@@ -399,7 +399,7 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
                                               child: Image.network(
                                                 (contact.cus_cont_photo == '')
                                                     ? 'https://dev.origami.life/images/default.png'
-                                                    : '$host//crm/${contact.cus_cont_photo}',
+                                                    : '$hostWeb//crm/${contact.cus_cont_photo}',
                                                 height: 100,
                                                 width: 100,
                                                 fit: BoxFit.cover,

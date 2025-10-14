@@ -32,7 +32,8 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
     _loadAppointments();
     _scheduleController = CalendarController();
     initializeDateFormatting('en', null);
-    fetchHolidays();
+    final now = DateTime.now();
+    fetchHolidays(now.month, now.year);
   }
 
   Future<void> _loadAppointments() async {
@@ -66,202 +67,390 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
     });
   }
 
-  Widget _buildShimmerCalendar() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(4),
-        child: SfCalendar(
-          cellBorderColor: Colors.transparent,
-          view: CalendarView.month,
-          dataSource: MeetingDataSource(_appointments),
-          monthViewSettings: const MonthViewSettings(
-            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment,
-          ),
-          appointmentTextStyle: const TextStyle(
-            fontFamily: 'Arial',
-            color: Colors.white,
-            fontSize: 8,
-          ),
-          onTap: (details) {},
-        ),
-      ),
-    );
+  void _onViewChanged(ViewChangedDetails details) {
+    // วันตรงกลางของเดือนที่แสดง
+    final DateTime visibleDate =
+        details.visibleDates[details.visibleDates.length ~/ 2];
+    final int month = visibleDate.month;
+    final int year = visibleDate.year;
+    print('visibleDate :: ${visibleDate}');
+    print('📅 กำลังโหลดข้อมูลเดือน $month / $year');
+
+    fetchHolidays(month, year);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: Column(
+  Widget _CalendarExpanded() {
+    return SafeArea(
+      child: Theme(
+        data: ThemeData(
+          primaryColor: Colors.teal,
+          colorScheme: ColorScheme.light(
+            primary: Colors.orange,
+            onPrimary: Colors.white,
+            onSurface: Colors.teal,
+          ),
+          dialogBackgroundColor: Colors.teal[50],
+        ),
+        child: Column(
           children: [
-            // ===== TabBar =====
-            Container(
-              color: Colors.transparent,
-              child: TabBar(
-                indicatorColor: Colors.transparent,
-                labelColor: Color(0xFFFF9900),
-                unselectedLabelColor: Colors.orange.shade300,
-                labelStyle: const TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-                tabs: const [
-                  Tab(text: 'Month'),
-                  Tab(text: 'Schedule'),
-                ],
-              ),
-            ),
-            // ===== TabBarView =====
             Expanded(
-              child: SafeArea(
-                child: Theme(
-                  data: ThemeData(
-                    primaryColor: Colors.teal,
-                    colorScheme: ColorScheme.light(
-                      primary: Colors.orange,
-                      onPrimary: Colors.white,
-                      onSurface: Colors.teal,
-                    ),
-                    dialogBackgroundColor: Colors.teal[50],
-                  ),
-                  child: TabBarView(
-                    children: [
-                      // ===== Month View =====
-                      Column(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              color: Colors.white,
-                              padding: const EdgeInsets.all(4),
-                              child: SfCalendar(
-                                showNavigationArrow : false,
-                                showDatePickerButton : true,
-                                showTodayButton : true,
-                                cellBorderColor: Colors.transparent,
-                                view: CalendarView.month,
-                                dataSource: MeetingDataSource(_appointments),
-                                monthViewSettings: const MonthViewSettings(
-                                  appointmentDisplayMode:
-                                      MonthAppointmentDisplayMode.appointment,
-                                ),
-                                appointmentTextStyle: const TextStyle(
-                                  fontFamily: 'Arial',
-                                  color: Colors.white,
-                                  fontSize: 8,
-                                ),
-                                onTap: (details) {
-                                  if (details.targetElement ==
-                                      CalendarElement.calendarCell) {
-                                    _scheduleController.displayDate =
-                                        details.date!;
-                                  }
-                                  if (details.targetElement ==
-                                          CalendarElement.appointment ||
-                                      details.targetElement ==
-                                          CalendarElement.calendarCell) {
-                                    final Appointment? appt =
-                                        details.appointments?.first;
-                                    if (appt != null) {
-                                      final CalendarApi cal =
-                                          appointmentMap[appt]!; // lookup
-                                      _showCustomDialog(cal);
-                                    }
-                                  }
-                                },
-                              ),
-                            ),
+              flex: 2,
+              child: isLoading
+                  ? const Center(
+                      child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          color: Color(0xFFFF9900),
+                        ),
+                        SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          'Loading...',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF555555),
                           ),
-                          Expanded(
-                              child: Container(
-                            child: isLoading
-                                ? const Center(
-                                    child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircularProgressIndicator(
-                                        color: Color(0xFFFF9900),
-                                      ),
-                                      SizedBox(
-                                        width: 12,
-                                      ),
-                                      Text(
-                                        'Loading...',
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          color: Color(0xFF555555),
-                                        ),
-                                      ),
-                                    ],
-                                  ))
-                                : Container(),
-                          ))
-                        ],
+                        ),
+                      ],
+                    ))
+                  : Container(
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(4),
+                      child: SfCalendar(
+                        headerHeight: 60,
+                        showNavigationArrow: false,
+                        showDatePickerButton: true,
+                        showTodayButton: true,
+                        onViewChanged: _onViewChanged,
+                        cellBorderColor: Colors.transparent,
+                        view: CalendarView.month,
+                        dataSource: MeetingDataSource(_appointments),
+                        monthViewSettings: const MonthViewSettings(
+                          appointmentDisplayMode:
+                              MonthAppointmentDisplayMode.appointment,
+                        ),
+                        appointmentTextStyle: const TextStyle(
+                          fontFamily: 'Arial',
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                        onTap: (details) {
+                          if (details.targetElement ==
+                                  CalendarElement.appointment ||
+                              details.targetElement ==
+                                  CalendarElement.calendarCell) {
+                            _scheduleController.displayDate = details.date!;
+                            final formattedDate =
+                                DateFormat('yyyy-MM-dd').format(details.date!);
+                            print('วันที่ที่เลือก: $formattedDate');
+                            final Appointment? appt =
+                                details.appointments?.first;
+                            if (appt != null) {
+                              final Map<Appointment, dynamic> rawMap =
+                                  appointmentMap;
+
+                              // แปลงและกรองเฉพาะ project_name ที่ไม่ว่าง
+                              final Map<Appointment, CalendarApi> typedMap =
+                                  rawMap.map<Appointment, CalendarApi>(
+                                      (key, value) {
+                                if (value is CalendarApi) {
+                                  return MapEntry(key, value);
+                                } else if (value is Map<String, dynamic> ||
+                                    value is Map<String, Object>) {
+                                  return MapEntry(
+                                      key,
+                                      CalendarApi.fromJson(
+                                          Map<String, dynamic>.from(value)));
+                                } else {
+                                  throw Exception(
+                                      'Unexpected value type: ${value.runtimeType}');
+                                }
+                              })
+                                    // กรองเฉพาะ project_name ที่ไม่ว่าง
+                                    ..removeWhere((key, value) =>
+                                        (value.project_name ?? '').isEmpty);
+
+                              // ดึง CalendarApi ที่ตรงกับ appt
+                              final CalendarApi? cal = typedMap[appt];
+                              if (cal != null) {
+                                _showCustomDialog(typedMap, cal, formattedDate);
+                              }
+                            }
+                          }
+                        },
                       ),
-                      // ===== Schedule View =====
-                      isLoading
-                          ? _buildShimmerCalendar()
-                          : Container(
-                              color: Colors.orange.shade50,
-                              padding: const EdgeInsets.only(top: 4, bottom: 4),
-                              child: Container(
-                                color: Colors.white,
-                                child: SfCalendar(
-                                    headerHeight: 80,
-                                    view: CalendarView.schedule,
-                                    controller: _scheduleController,
-                                    dataSource:
-                                        MeetingDataSource(_appointments),
-                                    monthViewSettings: const MonthViewSettings(
-                                      appointmentDisplayMode:
-                                          MonthAppointmentDisplayMode
-                                              .appointment,
-                                    ),
-                                    appointmentTextStyle: const TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    onTap: (details) {
-                                      if (details.targetElement ==
-                                              CalendarElement.appointment ||
-                                          details.targetElement ==
-                                              CalendarElement.calendarCell) {
-                                        final Appointment? appt =
-                                            details.appointments?.first;
-                                        if (appt != null) {
-                                          final CalendarApi cal =
-                                              appointmentMap[appt]!; // lookup
-                                          _showCustomDialog(cal);
-                                        }
-                                      }
-                                    }),
-                              ),
-                            ),
-                    ],
-                  ),
-                ),
-              ),
+                    ),
             ),
+            // Expanded(
+            //   // flex: 3,
+            //   child: isLoading
+            //       ? const Center(
+            //           child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             CircularProgressIndicator(
+            //               color: Color(0xFFFF9900),
+            //             ),
+            //             SizedBox(
+            //               width: 12,
+            //             ),
+            //             Text(
+            //               'Loading...',
+            //               style: TextStyle(
+            //                 fontFamily: 'Arial',
+            //                 fontSize: 16,
+            //                 fontWeight: FontWeight.w700,
+            //                 color: Color(0xFF555555),
+            //               ),
+            //             ),
+            //           ],
+            //         ))
+            //       : Container(
+            //           color: Colors.orange.shade50,
+            //           padding: const EdgeInsets.only(top: 4, bottom: 4),
+            //           child: Container(
+            //             color: Colors.orange.shade50,
+            //             padding: const EdgeInsets.only(top: 4, bottom: 4),
+            //             child: Container(
+            //               color: Colors.white,
+            //               child: SfCalendar(
+            //                   // headerHeight: 80,
+            //                   showNavigationArrow: false,
+            //                   showDatePickerButton: true,
+            //                   showTodayButton: true,
+            //                   view: CalendarView.schedule,
+            //                   onViewChanged: _onViewChanged,
+            //                   controller: _scheduleController,
+            //                   dataSource: MeetingDataSource(_appointments),
+            //                   monthViewSettings: const MonthViewSettings(
+            //                     appointmentDisplayMode:
+            //                         MonthAppointmentDisplayMode.appointment,
+            //                   ),
+            //                   appointmentTextStyle: const TextStyle(
+            //                     fontFamily: 'Arial',
+            //                     fontSize: 16,
+            //                     color: Color(0xFF555555),
+            //                     fontWeight: FontWeight.w500,
+            //                   ),
+            //                   onTap: (details) {
+            //                     if (details.targetElement ==
+            //                             CalendarElement.appointment ||
+            //                         details.targetElement ==
+            //                             CalendarElement.calendarCell) {
+            //                       final Appointment? appt =
+            //                           details.appointments?.first;
+            //                       if (appt != null) {
+            //                         final CalendarApi cal =
+            //                             appointmentMap[appt]!; // lookup
+            //                         _showCustomDialog(cal);
+            //                       }
+            //                     }
+            //                   }),
+            //             ),
+            //           ),
+            //         ),
+            // ),
           ],
         ),
       ),
     );
   }
 
-  // ========================= Fetch Holidays =========================
-  // Map เก็บ reference
-  // final Map<Appointment, CalendarApi> appointmentMap = {};
-  Future<List<Appointment>> fetchHolidays() async {
+  // Widget _CalendarWidget(){
+  //   return DefaultTabController(
+  //     length: 2,
+  //     child: Scaffold(
+  //       backgroundColor: Colors.grey.shade50,
+  //       body: Column(
+  //         children: [
+  //           // ===== TabBar =====
+  //           Container(
+  //             color: Colors.transparent,
+  //             child: TabBar(
+  //               indicatorColor: Colors.transparent,
+  //               labelColor: Color(0xFFFF9900),
+  //               unselectedLabelColor: Colors.orange.shade300,
+  //               labelStyle: const TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //               tabs: const [
+  //                 Tab(text: 'Month'),
+  //                 Tab(text: 'Schedule'),
+  //               ],
+  //             ),
+  //           ),
+  //           // ===== TabBarView =====
+  //           Expanded(
+  //             child: SafeArea(
+  //               child: Theme(
+  //                 data: ThemeData(
+  //                   primaryColor: Colors.teal,
+  //                   colorScheme: ColorScheme.light(
+  //                     primary: Colors.orange,
+  //                     onPrimary: Colors.white,
+  //                     onSurface: Colors.teal,
+  //                   ),
+  //                   dialogBackgroundColor: Colors.teal[50],
+  //                 ),
+  //                 child: TabBarView(
+  //                   children: [
+  //                     // ===== Month View =====
+  //                     Column(
+  //                       children: [
+  //                         Expanded(
+  //                           flex: 2,
+  //                           child: Container(
+  //                             color: Colors.white,
+  //                             padding: const EdgeInsets.all(4),
+  //                             child: SfCalendar(
+  //                               showNavigationArrow : false,
+  //                               showDatePickerButton : true,
+  //                               showTodayButton : true,
+  //                               cellBorderColor: Colors.transparent,
+  //                               view: CalendarView.month,
+  //                               onViewChanged: _onViewChanged,
+  //                               dataSource: MeetingDataSource(_appointments),
+  //                               monthViewSettings: const MonthViewSettings(
+  //                                 appointmentDisplayMode:
+  //                                 MonthAppointmentDisplayMode.appointment,
+  //                               ),
+  //                               appointmentTextStyle: const TextStyle(
+  //                                 fontFamily: 'Arial',
+  //                                 color: Colors.white,
+  //                                 fontSize: 8,
+  //                               ),
+  //                               onTap: (details) {
+  //                                 if (details.targetElement ==
+  //                                     CalendarElement.calendarCell) {
+  //                                   _scheduleController.displayDate =
+  //                                   details.date!;
+  //                                 }
+  //                                 if (details.targetElement ==
+  //                                     CalendarElement.appointment ||
+  //                                     details.targetElement ==
+  //                                         CalendarElement.calendarCell) {
+  //                                   final Appointment? appt =
+  //                                       details.appointments?.first;
+  //                                   if (appt != null) {
+  //                                     final CalendarApi cal =
+  //                                     appointmentMap[appt]!; // lookup
+  //                                     _showCustomDialog(appointmentMap,cal);
+  //                                   }
+  //                                 }
+  //                               },
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         Expanded(
+  //                             child: isLoading
+  //                                 ? const Center(
+  //                                 child: Row(
+  //                                   mainAxisAlignment: MainAxisAlignment.center,
+  //                                   children: [
+  //                                     CircularProgressIndicator(
+  //                                       color: Color(0xFFFF9900),
+  //                                     ),
+  //                                     SizedBox(
+  //                                       width: 12,
+  //                                     ),
+  //                                     Text(
+  //                                       'Loading...',
+  //                                       style: TextStyle(
+  //                                         fontFamily: 'Arial',
+  //                                         fontSize: 16,
+  //                                         fontWeight: FontWeight.w700,
+  //                                         color: Color(0xFF555555),
+  //                                       ),
+  //                                     ),
+  //                                   ],
+  //                                 ))
+  //                                 : Container())
+  //                       ],
+  //                     ),
+  //                     // ===== Schedule View =====
+  //                     isLoading
+  //                         ? const Center(
+  //                         child: Row(
+  //                           mainAxisAlignment: MainAxisAlignment.center,
+  //                           children: [
+  //                             CircularProgressIndicator(
+  //                               color: Color(0xFFFF9900),
+  //                             ),
+  //                             SizedBox(
+  //                               width: 12,
+  //                             ),
+  //                             Text(
+  //                               'Loading...',
+  //                               style: TextStyle(
+  //                                 fontFamily: 'Arial',
+  //                                 fontSize: 16,
+  //                                 fontWeight: FontWeight.w700,
+  //                                 color: Color(0xFF555555),
+  //                               ),
+  //                             ),
+  //                           ],
+  //                         ))
+  //                         : Container(
+  //                       color: Colors.orange.shade50,
+  //                       padding: const EdgeInsets.only(top: 4, bottom: 4),
+  //                       child: Container(
+  //                         color: Colors.white,
+  //                         child: SfCalendar(
+  //                             headerHeight: 80,
+  //                             view: CalendarView.schedule,
+  //                             controller: _scheduleController,
+  //                             dataSource:
+  //                             MeetingDataSource(_appointments),
+  //                             monthViewSettings: const MonthViewSettings(
+  //                               appointmentDisplayMode:
+  //                               MonthAppointmentDisplayMode
+  //                                   .appointment,
+  //                             ),
+  //                             appointmentTextStyle: const TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               fontSize: 16,
+  //                               color: Color(0xFF555555),
+  //                               fontWeight: FontWeight.w500,
+  //                             ),
+  //                             onTap: (details) {
+  //                               if (details.targetElement ==
+  //                                   CalendarElement.appointment ||
+  //                                   details.targetElement ==
+  //                                       CalendarElement.calendarCell) {
+  //                                 final Appointment? appt =
+  //                                     details.appointments?.first;
+  //                                 if (appt != null) {
+  //                                   final CalendarApi cal =
+  //                                   appointmentMap[appt]!; // lookup
+  //                                   _showCustomDialog(appointmentMap,cal);
+  //                                 }
+  //                               }
+  //                             }),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: _CalendarExpanded());
+  }
+
+  Future<List<Appointment>> fetchHolidays(int month, int year) async {
     final uri = Uri.parse("$hostDev/api/origami/crm/calendar/calendar.php");
     final response = await http.post(
       uri,
@@ -269,6 +458,8 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
+        'month': '$month',
+        'year': '$year',
       },
     );
 
@@ -299,7 +490,7 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
         startTime: start,
         endTime: end,
         subject: '${cal.activity_project_name}',
-        color: getActivityColor(cal),
+        color: _getActivityColor(cal),
         isAllDay: false,
       );
 
@@ -317,7 +508,7 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
     return loadedAppointments;
   }
 
-  Color getActivityColor(cal) {
+  Color _getActivityColor(cal) {
     if (cal.activity_status == 'close') {
       return Colors.orange;
     } else if (cal.activity_status == '') {
@@ -351,7 +542,8 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
         date1.day == date2.day;
   }
 
-  void _showCustomDialog(CalendarApi cal) {
+  void _showCustomDialog(Map<Appointment, CalendarApi> appointmentMap,
+      CalendarApi cal, String formattedDate) {
     showDialog(
       context: context,
       barrierColor: Colors.black54,
@@ -359,7 +551,113 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            cal.activity_project_name,
+            'Date : ${cal.activity_start_date}',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: SizedBox(
+            height: 300,
+            width: 300,
+            child: ListView.builder(
+              itemCount: appointmentMap.length,
+              itemBuilder: (context, index) {
+                final appoint = appointmentMap.keys.elementAt(index);
+                final calData = appointmentMap[appoint];
+                return InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showDetailDialog(appointmentMap, appoint);
+                  },
+                  child: (calData?.activity_start_date == formattedDate)
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8.0,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  calData?.activity_project_name ?? '',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  'Contact : ${calData?.cus_cont_name ?? ''} ${calData?.cus_cont_surname ?? ''}',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ),
+                              Divider(),
+                            ],
+                          ),
+                        )
+                      : Container(),
+                );
+              },
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDetailDialog(
+      Map<Appointment, CalendarApi> appointmentMap, Appointment appoint) {
+    final cal = appointmentMap[appoint];
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            cal?.activity_project_name ?? '',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 22,
@@ -371,61 +669,108 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                cal.activity_description,
+              const Text(
+                'Reason : ',
                 style: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 14,
-                  color: Colors.black54,
+                  color: Colors.black87,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               SizedBox(height: 4),
-              TextSub('Account : ${cal.cus_name}'),
-              TextSub('Contact : ${cal.cus_cont_name} ${cal.cus_cont_surname}'),
-              TextSub('Project : ${cal.project_name}'),
+              Container(
+                padding: const EdgeInsets.only(left: 6,right: 6,top: 6,bottom: 10),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black54,
+                      blurRadius: 1,
+                      // offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  cal?.activity_description ?? '',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              _rowText('Account', cal?.cus_name ?? ''),
+              _rowText('Contact', '${cal?.cus_cont_name ?? ''} ${cal?.cus_cont_surname ?? ''}'),
+              _rowText('Project', '${cal?.project_name ?? ''}'),
             ],
           ),
           actions: [
-            // Flexible(
-            //   child: TextButton(
-            //     onPressed: () async {
-            //       Navigator.pop(context);
-            //     },
-            //     child: Text(
-            //       'Cancel',
-            //       style: TextStyle(
-            //         fontSize: 16,
-            //         color: Colors.grey,
-            //         fontWeight: FontWeight.w500,
-            //       ),
-            //     ),
-            //   ),
-            // ),
             Container(
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.orange.shade400,
                 borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
               ),
               child: TextButton(
-                onPressed: () async {
+                onPressed: () {
                   Navigator.pop(context);
                 },
                 child: Text(
                   'Cancel',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ),
-            // Confirm Button
           ],
         );
       },
+    );
+  }
+
+  Widget _rowText(String title, String data) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$title : ',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              data,
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Colors.black54,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -510,7 +855,7 @@ class CalendarApi {
       off_type_name: json['off_type_name'] ?? '',
       cus_id: json['cus_id'] ?? '',
       cont_id: json['cont_id'] ?? '',
-      activity_id: json['activity_id'] ?? '',
+      activity_id: json['activity_id'].toString(),
       activity_project_name: json['activity_project_name'] ?? '',
       activity_description: json['activity_description'] ?? '',
       activity_start_time: json['activity_start_time_'] ?? '00:00:00',

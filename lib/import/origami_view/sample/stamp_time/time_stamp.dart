@@ -525,7 +525,7 @@ class _TimeSampleState extends State<TimeSample> {
     final uri = Uri.parse("$hostDev/api/origami/time/branch.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,

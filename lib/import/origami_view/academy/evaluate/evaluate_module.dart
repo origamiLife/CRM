@@ -42,7 +42,7 @@ class _EvaluateModuleState extends State<EvaluateModule>
 
   Future<Map<String, dynamic>> getAllAcademyData() async {
     try {
-      final uri = Uri.parse("$host/api/origami/academy/academy.php");
+      final uri = Uri.parse("$hostWeb/api/origami/academy/academy.php");
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer $token'},

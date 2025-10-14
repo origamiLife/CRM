@@ -384,18 +384,18 @@ class _CertificationState extends State<Certification> {
   String _getCertificateImage(String certificationName) {
     switch (certificationName) {
       case 'Certificate Bronze':
-        return '$host/images/certification/1.png?v=2';
+        return '$hostWeb/images/certification/1.png?v=2';
       case 'Certificate Platinum':
-        return '$host/images/certification/3.png?v=2';
+        return '$hostWeb/images/certification/3.png?v=2';
       case 'Certificate Gold':
-        return '$host/images/certification/2.png?v=2';
+        return '$hostWeb/images/certification/2.png?v=2';
       default:
-        return '$host/images/certification/4.png?v=2';
+        return '$hostWeb/images/certification/4.png?v=2';
     }
   }
 
   Future<List<CertificationData>> fetchCertification() async {
-    final uri = Uri.parse("$host/api/origami/academy/certification.php");
+    final uri = Uri.parse("$hostWeb/api/origami/academy/certification.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -424,7 +424,7 @@ class _CertificationState extends State<Certification> {
   Future<void> Download() async {
     try {
       final response = await http.post(
-        Uri.parse('$host/api/origami/academy/certificationDownload.php'),
+        Uri.parse('$hostWeb/api/origami/academy/certificationDownload.php'),
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

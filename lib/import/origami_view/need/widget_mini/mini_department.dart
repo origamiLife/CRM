@@ -234,7 +234,7 @@ class _MiniDepartmentState extends State<MiniDepartment> {
   String? data_Id = "";
   Future<void> fetchDepartment(Department_number, Department_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/department.php?page=$Department_number&search=$Department_name');
+        '$hostWeb/api/origami/need/department.php?page=$Department_number&search=$Department_name');
     try {
       final response = await http.post(
         uri,

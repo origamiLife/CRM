@@ -764,7 +764,7 @@
 //   //-------------- 2.2 result-challenge---------------------------------------------------------------
 //
 //   Future<ChallengeRespond> fetchResultChallenge() async {
-//     final uri = Uri.parse("$host/api/origami/challenge/result-challenge.php");
+//     final uri = Uri.parse("$hostWeb/api/origami/challenge/result-challenge.php");
 //     try {
 //       final response = await http.post(
 //         uri,
@@ -790,7 +790,7 @@
 //   }
 //
 //   Future<List<HistoryChallenge>> fetchHistoryChallenge() async {
-//     final uri = Uri.parse("$host/api/origami/challenge/history-challenge.php");
+//     final uri = Uri.parse("$hostWeb/api/origami/challenge/history-challenge.php");
 //     try {
 //       final response = await http.post(
 //         uri,

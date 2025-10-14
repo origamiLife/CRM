@@ -233,7 +233,7 @@ class _MiniEmployeeState extends State<MiniEmployee> {
   String? data_Id = "";
   Future<void> fetchEmployee(Employee_number, Employee_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/employee.php?page=$Employee_number&search=$Employee_name');
+        '$hostWeb/api/origami/need/employee.php?page=$Employee_number&search=$Employee_name');
     try {
       final response = await http.post(
         uri,

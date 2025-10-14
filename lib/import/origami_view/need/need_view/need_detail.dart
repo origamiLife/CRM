@@ -1310,12 +1310,32 @@ class _NeedDetailState extends State<NeedDetail> {
             overflow: TextOverflow.ellipsis,
           ),
           actions: [
-            TextButton(
-              child: Text(
-                'Close',
-                style: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
               ),
-              onPressed: () => Navigator.pop(dialogContext),
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -1690,7 +1710,7 @@ class _NeedDetailState extends State<NeedDetail> {
                                                     width: 120,
                                                     fit: BoxFit.cover)
                                                 : Image.network(
-                                                    '$host//images/ogm_logo.png?v=1723543870265',
+                                                    '$hostWeb//images/ogm_logo.png?v=1723543870265',
                                                     height: 120,
                                                     width: 120,
                                                     fit: BoxFit.cover),
@@ -2106,7 +2126,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? project_name = "";
   Future<void> fetchProject(project_number, project_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/project.php?page=$project_number&search=$project_name');
+        '$hostWeb/api/origami/need/project.php?page=$project_number&search=$project_name');
     try {
       final response = await http.post(
         uri,
@@ -2152,7 +2172,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? account_name = "";
   Future<void> fetchAccount(account_number, account_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/account.php?page=$account_number&search=$account_name');
+        '$hostWeb/api/origami/need/account.php?page=$account_number&search=$account_name');
     try {
       final response = await http.post(
         uri,
@@ -2196,7 +2216,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? contact_name = "";
   Future<void> fetchContact(contact_number, contact_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/contact.php?page=$contact_number&search=$contact_name');
+        '$hostWeb/api/origami/need/contact.php?page=$contact_number&search=$contact_name');
     try {
       final response = await http.post(
         uri,
@@ -2240,7 +2260,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? department_name = "";
   Future<void> fetchDepartment(department_number, department_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/department.php?page=$department_number&search=$department_name');
+        '$hostWeb/api/origami/need/department.php?page=$department_number&search=$department_name');
     try {
       final response = await http.post(
         uri,
@@ -2285,7 +2305,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? asset_name = "";
   Future<void> fetchAsset(asset_number, asset_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/asset.php?page=$asset_number&search=$asset_name');
+        '$hostWeb/api/origami/need/asset.php?page=$asset_number&search=$asset_name');
     try {
       final response = await http.post(
         uri,
@@ -2330,7 +2350,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? division_name = "";
   Future<void> fetchDivision(division_number, division_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/division.php?page=$division_number&search=$division_name');
+        '$hostWeb/api/origami/need/division.php?page=$division_number&search=$division_name');
     try {
       final response = await http.post(
         uri,
@@ -2375,7 +2395,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? employee_name = "";
   Future<void> fetchEmployee(employee_number, employee_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/employee.php?page=$employee_number&search=$employee_name');
+        '$hostWeb/api/origami/need/employee.php?page=$employee_number&search=$employee_name');
     try {
       final response = await http.post(
         uri,
@@ -2421,7 +2441,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? Item_type_id = "";
   Future<void> fetchItem(item_number, item_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=$Item_type_id');
+        '$hostWeb/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=$Item_type_id');
     try {
       final response = await http.post(
         uri,
@@ -2466,7 +2486,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? unit_name = "";
   Future<void> fetchUnit(unit_number, unit_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/unit.php?page=$unit_number&search=$unit_name');
+        '$hostWeb/api/origami/need/unit.php?page=$unit_number&search=$unit_name');
     try {
       final response = await http.post(
         uri,
@@ -2510,7 +2530,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? priority_name = "";
   Future<void> fetchPriority(priority_number, priority_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/priority.php?page=$priority_number&search=$priority_name');
+        '$hostWeb/api/origami/need/priority.php?page=$priority_number&search=$priority_name');
     try {
       final response = await http.post(
         uri,
@@ -2569,7 +2589,7 @@ class _NeedDetailState extends State<NeedDetail> {
   bool isLoading = false;
   bool isSave = false;
   Future<void> fetchSave() async {
-    final uri = Uri.parse('$host/api/origami/need/save.php');
+    final uri = Uri.parse('$hostWeb/api/origami/need/save.php');
     String jsonNeedItem =
         jsonEncode(saveItemList.map((item) => item.toJson()).toList());
     print(jsonNeedItem);
@@ -2639,7 +2659,7 @@ class _NeedDetailState extends State<NeedDetail> {
   NeedData? detailItem;
   int i = 0;
   Future<void> fetchDetail(action_type, need_id, type_id) async {
-    final uri = Uri.parse('$host/api/origami/need/detail.php');
+    final uri = Uri.parse('$hostWeb/api/origami/need/detail.php');
     try {
       final response = await http.post(
         uri,
@@ -2688,7 +2708,7 @@ class _NeedDetailState extends State<NeedDetail> {
   }
 
   Future<void> fetchDeleteItem(item_sort) async {
-    final uri = Uri.parse('$host/api/origami/need/delete-item.php');
+    final uri = Uri.parse('$hostWeb/api/origami/need/delete-item.php');
     try {
       final response = await http.post(
         uri,

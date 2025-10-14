@@ -524,7 +524,7 @@ class _CurriculumState extends State<Curriculum> {
   Future<void> Content(Topic topic, String courseId, int index) async {
     try {
       final response = await http.post(
-        Uri.parse('$host/api/origami/academy/content.php'),
+        Uri.parse('$hostWeb/api/origami/academy/content.php'),
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -585,7 +585,7 @@ class _CurriculumState extends State<Curriculum> {
   }
 
   Future<CurriculumData> fetchCurriculum() async {
-    final uri = Uri.parse("$host/api/origami/academy/curriculum.php");
+    final uri = Uri.parse("$hostWeb/api/origami/academy/curriculum.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},

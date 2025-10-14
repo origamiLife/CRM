@@ -239,7 +239,7 @@ class _MiniPriorityState extends State<MiniPriority> {
   String? data_Id = "";
   Future<void> fetchPriority(Priority_number, Priority_name) async {
     final uri = Uri.parse(
-        '$host/api/origami/need/priority.php?page=$Priority_number&search=$Priority_name');
+        '$hostWeb/api/origami/need/priority.php?page=$Priority_number&search=$Priority_name');
     try {
       final response = await http.post(
         uri,

@@ -967,7 +967,7 @@ class _NeedDetailNoneEditState extends State<NeedDetailNoneEdit> {
   NeedData? detailItem;
   int i = 0;
   Future<void> fetchDetail(action_type, need_id, type_id) async {
-    final uri = Uri.parse('$host/api/origami/need/detail.php');
+    final uri = Uri.parse('$hostWeb/api/origami/need/detail.php');
     try {
       final response = await http.post(
         uri,

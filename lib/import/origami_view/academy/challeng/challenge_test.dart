@@ -1180,7 +1180,7 @@
 //   String question_first = '';
 //
 //   Future<void> fetchStartChallenge() async {
-//     final uri = Uri.parse("$host/api/origami/challenge/start-challenge.php");
+//     final uri = Uri.parse("$hostWeb/api/origami/challenge/start-challenge.php");
 //     try {
 //       final response = await http.post(
 //         uri,
@@ -1238,7 +1238,7 @@
 //
 //   List<CheckAllChallenge> checkAllChallenge = [];
 //   Future<List<CheckAllChallenge>> fetchCheckAllChallenge() async {
-//     final uri = Uri.parse("$host/api/origami/challenge/get-question-no.php");
+//     final uri = Uri.parse("$hostWeb/api/origami/challenge/get-question-no.php");
 //     try {
 //       final response = await http.post(
 //         uri,
@@ -1282,7 +1282,7 @@
 //         return null; // ถ้ายังไม่มี question_first ก็จบเลย
 //     }
 //
-//     final uri = Uri.parse("$host/api/origami/challenge/get-question.php");
+//     final uri = Uri.parse("$hostWeb/api/origami/challenge/get-question.php");
 //     try {
 //       final response = await http.post(
 //         uri,
@@ -1319,7 +1319,7 @@
 //
 //   String next_question = '';
 //   Future<void> fetchSend(String choices, String question_no) async {
-//     final uri = Uri.parse("$host/api/origami/challenge/send-answer.php");
+//     final uri = Uri.parse("$hostWeb/api/origami/challenge/send-answer.php");
 //     try {
 //       final response = await http.post(
 //         uri,
@@ -1353,7 +1353,7 @@
 //   //----------------- 3.3 finish-challenge------------------------------------------------------------
 //
 //   Future<void> fetchFinishChallenge() async {
-//     final uri = Uri.parse("$host/api/origami/challenge/finish-challenge.php");
+//     final uri = Uri.parse("$hostWeb/api/origami/challenge/finish-challenge.php");
 //     try {
 //       final response = await http.post(
 //         uri,

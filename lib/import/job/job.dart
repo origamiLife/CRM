@@ -308,7 +308,7 @@ class _JobPageState extends State<JobPage> {
   }
 
   Future<List<PersonalData>> _fetchPersonalJob() async {
-    final uri = Uri.parse('$host/api/origami/jobs/personal');
+    final uri = Uri.parse('$hostWeb/api/origami/jobs/personal');
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},

@@ -341,7 +341,7 @@ class _StampMenuState extends State<StampMenu> {
     try {
       final response = await http.post(
         Uri.parse('$hostDev/api/origami/time/stamp.php'),
-        headers: {'Authorization': 'Bearer $tokenMD5'},
+        headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,

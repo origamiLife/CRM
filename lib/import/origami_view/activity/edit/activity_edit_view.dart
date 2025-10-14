@@ -74,14 +74,14 @@ class _ActivityEditViewState extends State<ActivityEditView> {
     switch (_selectedIndex) {
       case 0:
         return _activity(activity);
+      // case 1:
+      //   return JoinUserScreenActivity(
+      //     employee: widget.employee,
+      //     activity: activity,
+      //   ); //_activityImage();
       case 1:
-        return JoinUserScreenActivity(
-          employee: widget.employee,
-          activity: activity,
-        ); //_activityImage();
-      case 2:
         return StampActivity(employee: widget.employee, activity: activity);
-      case 3:
+      case 2:
         return _activityLyzen();
       default:
         return Container(
@@ -106,10 +106,10 @@ class _ActivityEditViewState extends State<ActivityEditView> {
       icon: Icons.accessibility_new,
       title: 'Activity',
     ),
-    TabItem(
-      icon: Icons.person,
-      title: 'Join User',
-    ),
+    // TabItem(
+    //   icon: Icons.person,
+    //   title: 'Join User',
+    // ),
     TabItem(
       icon: FontAwesomeIcons.clock,
       title: 'Time',

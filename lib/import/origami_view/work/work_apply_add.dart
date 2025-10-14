@@ -7,10 +7,8 @@ import 'package:origamilift/import/origami_view/work/work_page.dart';
 import 'package:path/path.dart' as p;
 
 class WorkApplyAdd extends StatefulWidget {
-  const WorkApplyAdd({Key? key, required this.employee, required this.workList})
-      : super(key: key);
+  const WorkApplyAdd({Key? key, required this.employee}) : super(key: key);
   final Employee employee;
-  final List<HistoryWorkModel> workList;
 
   @override
   _WorkApplyAddState createState() => _WorkApplyAddState();
@@ -29,8 +27,12 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
   void initState() {
     super.initState();
     showDate();
+    if (widget.employee.pass_pro == 'Y') {
+      isSelected = false;
+    } else {
+      isSelected = true;
+    }
     fetchModelWork();
-    isSelected == true ? request_no_money = 'Y' : request_no_money = 'N';
   }
 
   @override
@@ -39,6 +41,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     _noteController.dispose();
     _fileController.dispose();
     dropdownSearchController.dispose();
+    imageName = '';
     super.dispose();
   }
 
@@ -331,7 +334,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               children: [
                                 Row(
                                   children: [
-                                    Checkbox(
+                                    (widget.employee.pass_pro == 'Y')
+                                        ? Checkbox(
                                       value: isSelected,
                                       checkColor: Colors.white,
                                       activeColor: Colors.orange,
@@ -342,6 +346,15 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                               : isSelected = false;
                                         });
                                       },
+                                    )
+                                        : AbsorbPointer(
+                                      absorbing: true,
+                                      child: Checkbox(
+                                        value: true,
+                                        checkColor: Colors.white,
+                                        activeColor: Colors.orange,
+                                        onChanged: (val) {},
+                                      ),
                                     ),
                                     Expanded(
                                       child: Text(
@@ -359,7 +372,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                 if (isSelected == true)
                                   const Padding(
                                     padding:
-                                        EdgeInsets.only(left: 8, bottom: 2),
+                                        EdgeInsets.only(left: 4, bottom: 2),
                                     child: Card(
                                       elevation: 0,
                                       color: Colors.black26,
@@ -705,6 +718,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                 setState(() {
                                   _image = null;
                                   _base64Image = '';
+                                  imageName = '';
                                 });
                               },
                               child: Stack(
@@ -1082,7 +1096,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     return DateFormat("HH:mm:ss").format(dt); // ต้อง import intl
   }
 
-  void _checkaddwork(){
+  void _checkaddwork() {
     print('${leave_type_id}\n'
         '${_reasonController.text}\n'
         '${_noteController.text}\n'
@@ -1101,7 +1115,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     start_time = '${selectedStartTime!.format(context)}:00';
     isSelected == true ? request_no_money = 'Y' : request_no_money = 'N';
     try {
-      final uri = Uri.parse("$hostDev/api/origami/crm/work/add_work.php");
+      final uri = Uri.parse("$hostDev/api/origami/work/add_work.php");
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer $token'},
@@ -1178,5 +1192,4 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
       ),
     );
   }
-
 }
