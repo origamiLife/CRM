@@ -346,7 +346,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'version: 1.0.2+10',
+                          'version: 1.0.2+11',
                           style: TextStyle(
                             fontFamily: 'Arial',
                             color: Colors.white,

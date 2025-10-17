@@ -3,16 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 import 'package:origamilift/import/origami_view/project/project.dart';
 import 'package:origamilift/import/origami_view/sample/stamp_activity/activity_list.dart';
-import 'package:origamilift/import/origami_view/sample/stamp_time/attendance_history.dart';
 import 'package:origamilift/import/origami_view/sample/stamp_time/time_stamp.dart';
 import 'package:origamilift/import/origami_view/work/approve_work.dart';
-
-import '../Call/call_phone.dart';
-import '../EmailSender/email_sender.dart';
-import '../OCRScreen/OCRScreen.dart';
-import '../OCRScreen/OcrTessdata.dart';
-import '../OCRScreen/OCRScreen2.dart';
-import '../call/ticket_page.dart';
 import '../job/job.dart';
 import '../noti.dart';
 import 'IDOC/idoc_view.dart';
@@ -20,17 +12,14 @@ import 'about-profile/profile.dart';
 import 'academy/academy.dart';
 import 'account/account_screen.dart';
 import 'activity/activity.dart';
-import 'calendar/calendar.dart';
 import 'calendar/calendar_api.dart';
-import 'chat/chat.dart';
 import 'contact/contact_screen.dart';
-import 'helpdesk/chat_ui/chat_ui.dart';
 import 'helpdesk/deflep/deflep.dart';
 import 'helpdesk/helpdesk.dart';
 import 'issue_log/issue_log.dart';
 import 'language/translate_page.dart';
+import 'need/approve/approve_need.dart';
 import 'need/need_view/need.dart';
-import 'need/need_view/need_request.dart';
 import 'need/petty_cash/petty_cash.dart';
 
 class OrigamiPage extends StatefulWidget {
@@ -349,6 +338,11 @@ class _OrigamiPageState extends State<OrigamiPage> {
 
   List<Map<String, dynamic>> _getMenuItems() {
     return [
+      // {
+      //   'index': 1,
+      //   'title': 'Need Approve',
+      //   'icon': FontAwesomeIcons.briefcase,
+      // },
       {
         'index': 13,
         'title': 'Account',

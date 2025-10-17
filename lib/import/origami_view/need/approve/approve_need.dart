@@ -1,10 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-import '../widget_other/dropdown_need.dart';
-import 'need.dart';
-import 'need_request_detail.dart';
-import 'need_detail.dart';
+import 'approve_need_detail.dart';
 
 class NeedRequest extends StatefulWidget {
   const NeedRequest({
@@ -169,7 +166,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                       ),
                                       SizedBox(height: 8),
                                       Text(
-                                        "$Date : ${ApprovelList[indexA].create_date_display ?? ''} ",
+                                        "Date : ${ApprovelList[indexA].create_date_display ?? ''} ",
                                         style: TextStyle(
                                           fontFamily: 'Arial',
                                           fontSize: 14.0,
@@ -179,7 +176,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                       ),
                                       SizedBox(height: 8),
                                       Text(
-                                        "$Amount : ${ApprovelList[indexA].need_amount ?? ''} $Baht",
+                                        "Amount : ${ApprovelList[indexA].need_amount ?? ''} Baht",
                                         style: TextStyle(
                                           fontFamily: 'Arial',
                                           fontSize: 14.0,
@@ -192,7 +189,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              "$Status1 : ${ApprovelList?[indexA].need_status ?? ''}",
+                                              "Status : ${ApprovelList[indexA].need_status ?? ''}",
                                               style: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 14.0,
@@ -206,13 +203,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                     ],
                                   ),
                                 ),
-                                Column(
-                                  children: [
-                                    Container(
-                                        child:
-                                            buttomCard(ApprovelList[indexA])),
-                                  ],
-                                ),
+                                buttomCard(ApprovelList[indexA]),
                               ],
                             ),
                             // Add more details as needed
@@ -224,19 +215,17 @@ class _NeedRequestState extends State<NeedRequest> {
                 );
               },
             )
-          : Center(
-              child: Container(
-                child: Text(
-                  'No Data Available in table.',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+          : const Center(
+              child: Text(
+                'No Data Available in table.',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
                 ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
     );
@@ -264,7 +253,7 @@ class _NeedRequestState extends State<NeedRequest> {
                           builder: (context) => AlertDialog(
                             elevation: 0,
                             title: Text(
-                              '$Exit Approve',
+                              'Exit Approve',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 color: Color(0xFF555555),
@@ -281,7 +270,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                   onPressed: () =>
                                       Navigator.of(context).pop(false),
                                   child: Text(
-                                    '$NotNow',
+                                    'Not now',
                                     style: TextStyle(
                                       fontFamily: 'Arial',
                                       color: Color(0xFF555555),
@@ -311,7 +300,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                     Navigator.pop(context);
                                   },
                                   child: Text(
-                                    '$Ok',
+                                    'Send',
                                     style: TextStyle(
                                       fontFamily: 'Arial',
                                       color: Color(0xFF555555),
@@ -359,7 +348,7 @@ class _NeedRequestState extends State<NeedRequest> {
                           isDense: true,
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: '$Type_something...',
+                          hintText: 'Explain...',
                           hintStyle: TextStyle(
                               fontFamily: 'Arial',
                               fontSize: 14,
@@ -395,7 +384,7 @@ class _NeedRequestState extends State<NeedRequest> {
                       ),
                       TextButton(
                         child: Text(
-                          'Ok',
+                          'Send',
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontWeight: FontWeight.bold,
@@ -440,7 +429,7 @@ class _NeedRequestState extends State<NeedRequest> {
                           builder: (context) => AlertDialog(
                             elevation: 0,
                             title: Text(
-                              '$Exit Information',
+                              'Exit Information',
                               style: TextStyle(
                                 fontFamily: 'Arial',
                                 color: Color(0xFF555555),
@@ -451,7 +440,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                 onPressed: () =>
                                     Navigator.of(context).pop(false),
                                 child: Text(
-                                  '$NotNow',
+                                  'Not now',
                                   style: TextStyle(
                                     fontFamily: 'Arial',
                                     color: Color(0xFF555555),
@@ -467,7 +456,7 @@ class _NeedRequestState extends State<NeedRequest> {
                                   Navigator.pop(context);
                                 },
                                 child: Text(
-                                  'Ok',
+                                  'Send',
                                   style: TextStyle(
                                     fontFamily: 'Arial',
                                     color: Color(0xFF555555),
@@ -669,7 +658,7 @@ class _NeedRequestState extends State<NeedRequest> {
                           isDense: true,
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: '$Type_something...',
+                          hintText: 'Explain...',
                           hintStyle: TextStyle(
                               fontFamily: 'Arial',
                               fontSize: 14,
@@ -705,7 +694,7 @@ class _NeedRequestState extends State<NeedRequest> {
                       ),
                       TextButton(
                         child: Text(
-                          '$Ok',
+                          'Send',
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontWeight: FontWeight.bold,
@@ -756,8 +745,8 @@ class _NeedRequestState extends State<NeedRequest> {
         uri,
         headers: {'Authorization': 'Bearer $token'},
         body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
+          'comp_id': '2',
+          'emp_id': '2',
           'Authorization': token,
         },
       );

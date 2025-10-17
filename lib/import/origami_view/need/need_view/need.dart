@@ -1,13 +1,14 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-import 'package:origamilift/import/origami_view/need/need_view/need_request_detail.dart';
 import 'package:origamilift/import/origami_view/need/need_view/need_detail.dart';
 import 'package:origamilift/import/origami_view/need/widget_mini/mini_department.dart';
 import 'package:origamilift/import/origami_view/need/widget_mini/mini_employee.dart';
 import 'package:origamilift/import/origami_view/need/widget_mini/mini_project.dart';
 import 'package:origamilift/import/origami_view/need/widget_other/date_other.dart';
 import 'package:origamilift/import/origami_view/need/widget_other/priority_other.dart';
+
+import '../approve/approve_need_detail.dart';
 
 class NeedsView extends StatefulWidget {
   const NeedsView({

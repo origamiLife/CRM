@@ -26,13 +26,15 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
   @override
   void initState() {
     super.initState();
+    fetchModelWork();
+    fetchUserRequest();
+    request_id = widget.employee.emp_id;
     showDate();
     if (widget.employee.pass_pro == 'Y') {
       isSelected = false;
     } else {
       isSelected = true;
     }
-    fetchModelWork();
   }
 
   @override
@@ -199,26 +201,67 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 8, right: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            child: _buildDropdown<StatusWork>(
-                              label: 'Work Type',
-                              items: typeList,
-                              selectedValue: selectedType,
-                              getLabel: (item) => item.leave_type_name_en,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedType = value;
-                                  leave_type_id = value?.leave_type_id ?? '';
-                                  before_day = value?.before_day ?? '';
-                                });
-                              },
-                              hint: type_name,
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey.shade300,
+                            border: Border.all(
+                              color: Colors.transparent,
+                              width: 1.0,
                             ),
                           ),
-                        ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'User request',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14,
+                                  color: Color(0xFF555555),
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Divider(),
+                              Container(
+                                child: _buildDropdown<StatusWork>(
+                                  label: 'Work Type',
+                                  items: typeList,
+                                  selectedValue: selectedType,
+                                  getLabel: (item) => item.leave_type_name_en,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedType = value;
+                                      leave_type_id = value?.leave_type_id ?? '';
+                                      before_day = value?.before_day ?? '';
+                                    });
+                                  },
+                                  hint: type_name,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                child: _buildDropdown<UserRequestWork>(
+                                  label: 'User request',
+                                  items: requestWork,
+                                  selectedValue: selectedRequest,
+                                  getLabel: (item) => "${item.firstname} ${item.lastname}",
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedRequest = value;
+                                      request_id = value?.emp_id ?? '';
+                                      request_name = "${value?.firstname?? ''} ${value?.lastname?? ''}";
+                                    });
+                                  },
+                                  hint: request_name,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                     // Select the day and time of leave.
@@ -788,156 +831,132 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     required String Function(T) getLabel,
     required void Function(T?) onChanged,
   }) {
-    return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-      child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.grey.shade300,
-          border: Border.all(
-            color: Colors.transparent,
-            width: 1.0,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Color(0xFF555555),
-                fontWeight: FontWeight.w700,
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InputDecorator(
+          decoration: InputDecoration(
+            isDense: true,
+            filled: true, // ✅ ต้องใส่ด้วยถึงจะเห็นสี
+            fillColor: Colors.white, // ✅ สีพื้นหลัง
+            contentPadding: EdgeInsets.only(top: 12, bottom: 12),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.white),
             ),
-            Divider(),
-            InputDecorator(
-              decoration: InputDecoration(
-                isDense: true,
-                filled: true, // ✅ ต้องใส่ด้วยถึงจะเห็นสี
-                fillColor: Colors.white, // ✅ สีพื้นหลัง
-                contentPadding: EdgeInsets.only(top: 12, bottom: 12),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.white),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton2<T>(
+              isExpanded: true,
+              hint: Text(
+                hint,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                  color: Color(0xFF555555),
                 ),
               ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton2<T>(
-                  isExpanded: true,
-                  hint: Text(
-                    hint,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                    ),
-                  ),
-                  value: selectedValue,
-                  items: items.map((item) {
-                    final imageUrl = image?.call(item);
-                    return DropdownMenuItem<T>(
-                      value: item,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          (imageUrl != null && imageUrl.isNotEmpty)
-                              ? Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Image.network(
-                                    imageUrl,
-                                    width: 24,
-                                    height: 24,
-                                    errorBuilder:
-                                        (context, error, stackTrace) => Icon(
-                                            Icons.image_not_supported,
-                                            size: 24),
-                                  ),
-                                )
-                              : Container(),
-                          Expanded(
-                            child: Text(
-                              getLabel(item),
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14,
-                                color: Color(0xFF555555),
+              value: selectedValue,
+              items: items.map((item) {
+                final imageUrl = image?.call(item);
+                return DropdownMenuItem<T>(
+                  value: item,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      (imageUrl != null && imageUrl.isNotEmpty)
+                          ? Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Image.network(
+                                imageUrl,
+                                width: 24,
+                                height: 24,
+                                errorBuilder:
+                                    (context, error, stackTrace) => Icon(
+                                        Icons.image_not_supported,
+                                        size: 24),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: onChanged,
-                  style: const TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555),
-                  ),
-                  iconStyleData: const IconStyleData(
-                    icon: Icon(Icons.arrow_drop_down,
-                        color: Color(0xFF555555), size: 24),
-                    iconSize: 24,
-                  ),
-                  buttonStyleData: const ButtonStyleData(
-                    height: 24,
-                    padding: EdgeInsets.only(right: 12),
-                  ),
-                  dropdownStyleData: const DropdownStyleData(
-                    maxHeight: 400,
-                    // decoration: BoxDecoration(
-                    //   borderRadius: BorderRadius.circular(8),
-                    // ),
-                  ),
-                  menuItemStyleData: const MenuItemStyleData(
-                    height: 40,
-                  ),
-
-                  /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
-                  dropdownSearchData: DropdownSearchData(
-                    searchController: dropdownSearchController,
-                    searchInnerWidget: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 8,
-                        bottom: 4,
-                        right: 8,
-                        left: 8,
-                      ),
-                      child: TextField(
-                        controller:
-                            dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                          hintText: 'search...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            )
+                          : Container(),
+                      Expanded(
+                        child: Text(
+                          getLabel(item),
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Color(0xFF555555),
                           ),
                         ),
                       ),
-                    ),
-                    searchInnerWidgetHeight: 50,
-                    searchMatchFn: (item, searchValue) {
-                      return getLabel(item.value!)
-                          .toLowerCase()
-                          .contains(searchValue.toLowerCase());
-                    },
+                    ],
                   ),
-                  onMenuStateChange: (isOpen) {
-                    if (!isOpen) {
-                      dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
-                    }
-                  },
-                ),
+                );
+              }).toList(),
+              onChanged: onChanged,
+              style: const TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                color: Color(0xFF555555),
               ),
+              iconStyleData: const IconStyleData(
+                icon: Icon(Icons.arrow_drop_down,
+                    color: Color(0xFF555555), size: 24),
+                iconSize: 24,
+              ),
+              buttonStyleData: const ButtonStyleData(
+                height: 24,
+                padding: EdgeInsets.only(right: 12),
+              ),
+              dropdownStyleData: const DropdownStyleData(
+                maxHeight: 400,
+                // decoration: BoxDecoration(
+                //   borderRadius: BorderRadius.circular(8),
+                // ),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                height: 40,
+              ),
+
+              /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
+              dropdownSearchData: DropdownSearchData(
+                searchController: dropdownSearchController,
+                searchInnerWidget: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 8,
+                    bottom: 4,
+                    right: 8,
+                    left: 8,
+                  ),
+                  child: TextField(
+                    controller:
+                        dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      hintText: 'search...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+                searchInnerWidgetHeight: 50,
+                searchMatchFn: (item, searchValue) {
+                  return getLabel(item.value!)
+                      .toLowerCase()
+                      .contains(searchValue.toLowerCase());
+                },
+              ),
+              onMenuStateChange: (isOpen) {
+                if (!isOpen) {
+                  dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
+                }
+              },
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -1078,6 +1097,42 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     }
   }
 
+  UserRequestWork? selectedRequest;
+  List<UserRequestWork> requestWork = [];
+  String request_id = '';
+  String request_name = '';
+  Future<void> fetchUserRequest() async {
+    final uri = Uri.parse("$hostDev/api/origami/work/user_request.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $token'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'Authorization': token,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      setState(() {
+        requestWork = dataJson.map((json) => UserRequestWork.fromJson(json)).toList();
+        if (requestWork.isNotEmpty && selectedType == null) {
+          request_id = widget.employee.emp_id;
+          request_name = widget.employee.emp_name;
+        }
+        for (int i = 0; i < requestWork.length; i++) {
+          if (widget.employee.emp_id == requestWork[i].approve_emp_id) {
+            is_approve = 'Y';
+          }
+        }
+      });
+      print('is_approve:: $is_approve');
+    } else {
+      throw Exception('Failed to load instructors');
+    }
+  }
+
   bool isAfter(TimeOfDay start, TimeOfDay end) {
     final int startMinutes = start.hour * 60 + start.minute;
     final int endMinutes = end.hour * 60 + end.minute;
@@ -1111,6 +1166,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
   }
 
   String holiday = '';
+  String is_approve = 'N';
   Future<void> _fetchAddWork() async {
     start_time = '${selectedStartTime!.format(context)}:00';
     isSelected == true ? request_no_money = 'Y' : request_no_money = 'N';
@@ -1121,7 +1177,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
         headers: {'Authorization': 'Bearer $token'},
         body: {
           'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
+          'emp_id': request_id,
           'leave_type_id': leave_type_id,
           'request_subject': _reasonController.text,
           'request_note': _noteController.text,
@@ -1136,6 +1192,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           'approve_status': 'N',
           // 'this_is_holiday': holiday,
           'before_day': before_day,
+          'is_approve': is_approve,
           // 'usedMinutes': '',
         },
       );
@@ -1190,6 +1247,36 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
         builder: (context) =>
             OrigamiPage(employee: widget.employee, popPage: page),
       ),
+    );
+  }
+}
+
+class UserRequestWork {
+  String title;
+  String firstname;
+  String lastname;
+  String emp_id;
+  String emp_code;
+  String approve_emp_id;
+
+  UserRequestWork({
+    required this.title,
+    required this.firstname,
+    required this.lastname,
+    required this.emp_id,
+    required this.emp_code,
+    required this.approve_emp_id,
+  });
+
+  // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
+  factory UserRequestWork.fromJson(Map<String, dynamic> json) {
+    return UserRequestWork(
+      title: json['title'] ?? '',
+      firstname: json['firstname'] ?? '',
+      lastname: json['lastname'] ?? '',
+      emp_id: json['emp_id'] ?? '',
+      emp_code: json['emp_code'] ?? '',
+      approve_emp_id: json['approve_emp_id'] ?? '',
     );
   }
 }
