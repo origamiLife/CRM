@@ -255,45 +255,49 @@ class _ActivityEditViewState extends State<ActivityEditView> {
 
   Widget _subDetail(
       String title, String _dataObject, IconData icon, Color CIcon) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: CIcon,
-          size: 28,
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  color: Colors.orange,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                _dataObject,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                  color: Colors.black54,
-                ),
-              ),
-              SizedBox(height: 12),
-            ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: CIcon,
+            size: 28,
           ),
-        ),
-      ],
+          SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.orange,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  _dataObject,
+                  // maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 12),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -317,7 +321,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontFamily: 'Arial',
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500,
                 ),
@@ -351,9 +355,9 @@ class _ActivityEditViewState extends State<ActivityEditView> {
               maxLines: 1,
               style: TextStyle(
                 fontFamily: 'Arial',
-                fontSize: 16,
+                fontSize: 14,
                 color: Color(0xFF555555),
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
             SizedBox(height: 8),
@@ -416,7 +420,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                                 fontFamily: 'Arial',
                                 fontSize: 16,
                                 color: Colors.orange,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             SizedBox(height: 4),
@@ -428,7 +432,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                               maxLines: 1,
                               style: TextStyle(
                                 fontFamily: 'Arial',
-                                fontSize: 16,
+                                fontSize: 14,
                                 color: Colors.blue.shade600,
                                 fontWeight: FontWeight.w500,
                               ),

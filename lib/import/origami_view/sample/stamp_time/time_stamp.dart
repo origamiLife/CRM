@@ -234,15 +234,17 @@ class _TimeSampleState extends State<TimeSample> {
             flex: 2,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildTimeWidget(),
-                  const SizedBox(height: 10),
-                  _buildLocationInfo(branch),
-                  const SizedBox(height: 16),
-                  _buildInOutTime(branch),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildTimeWidget(),
+                    const SizedBox(height: 10),
+                    _buildLocationInfo(branch),
+                    const SizedBox(height: 16),
+                    _buildInOutTime(branch),
+                  ],
+                ),
               ),
             ),
           ),

@@ -210,15 +210,15 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   DateTime? lastPressed;
   bool isPass = true;
-  bool _begin = false;
+  bool _loadbegin = true;
   int countPage = 0;
+  String _passload = '';
 
   @override
   void initState() {
     super.initState();
     countPage = widget.num;
-    _begin = widget.begin ?? false;
-    print('_begin ::: $_begin');
+    print('_begin ::: $_loadbegin');
     print(widget.popPage);
     print(widget.company_id);
     // _fetchComponent();
@@ -277,25 +277,22 @@ class _LoginPageState extends State<LoginPage> {
       _login();
     } else {
       countPage = 1;
-    }
 
+    }
+    _passload = password??'';
     print('Username: $username');
     // print('Password: $password');
   }
 
   void _loadBegin() {
     Future.delayed(Duration(seconds: 2));
-    _begin = true;
+    _loadbegin = true;
+    print('loadingBegin ::: $_loadbegin');
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_begin) {
-      _loadBegin();
-    }
-    return !_begin
-        ? _loading()
-        : PopScope(
+    return PopScope(
             onPopInvoked: (didPop) {
               if (!didPop) {
                 final now = DateTime.now();
@@ -320,12 +317,15 @@ class _LoginPageState extends State<LoginPage> {
                 }
               }
             },
-            child: Scaffold(
+            child: _loadbegin == false
+                ? _loading()
+                : Scaffold(
               backgroundColor: Colors.transparent,
               body: SafeArea(
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
+
                     Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -340,6 +340,21 @@ class _LoginPageState extends State<LoginPage> {
                                   fit: BoxFit.cover,
                                 ) // หรือใช้ภาพจาก assets แทน
                           ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'version: 1.0.2+10',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     ),
                     LayoutBuilder(builder: (context, constraints) {
                       return SingleChildScrollView(
@@ -697,62 +712,97 @@ class _LoginPageState extends State<LoginPage> {
   void _showFullScreenImage(List<Employee> employeeList) {
     showDialog(
       context: context,
-      barrierDismissible: false,
-      barrierColor: Colors.black.withOpacity(0.85),
+      barrierDismissible: true, // ✅ อนุญาตให้แตะนอก dialog เพื่อปิด
+      barrierColor: Colors.black.withOpacity(0.8),
       builder: (context) {
         return Dialog(
           backgroundColor: Colors.white,
           insetPadding: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12),
                 child: Text(
                   'Select the location you want to access.',
-                  style: const TextStyle(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 16,
                   ),
                 ),
               ),
+
+              // // ✅ ปุ่มปิด dialog
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child: IconButton(
+              //     icon: const Icon(Icons.close, color: Colors.grey),
+              //     onPressed: () => Navigator.pop(context),
+              //   ),
+              // ),
+
               Expanded(
                 child: GridView.builder(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(16),
                   itemCount: employeeList.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
                     childAspectRatio: 1,
                   ),
                   itemBuilder: (context, index) {
                     final employee = employeeList[index];
-                    return GestureDetector(
-                      onTap: () async {
-                        Navigator.pop(context); // ปิด Dialog ก่อนเปลี่ยนหน้า
-                        await Future.delayed(const Duration(milliseconds: 500));
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OrigamiPage(
-                              employee: employee,
-                              popPage: widget.popPage,
-                              company_id: index,
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () {
+                        setState(() async {
+                          Navigator.pop(context);
+                          await Future.delayed(const Duration(milliseconds: 400));
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OrigamiPage(
+                                employee: employee,
+                                company_id: widget.company_id ?? 0,
+                                popPage: widget.popPage,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        });
                       },
                       child: Card(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        elevation: 4,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 1,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.network(
-                            employee.comp_logo,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.broken_image),
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Image.network(
+                                  employee.comp_logo,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(Icons.info_outline_rounded, size: 40),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                employee.comp_name ?? 'Unknown',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -766,6 +816,7 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
+
 
   Future<void> _login() async {
     String username = _usernameController.text.trim();
@@ -814,12 +865,13 @@ class _LoginPageState extends State<LoginPage> {
         final jsonResponse = jsonDecode(response.body);
         final List<dynamic> employeeJson = jsonResponse['employee_data'] ?? [];
         if (jsonResponse['status'] == 200) {
+          setState(() {
+            _loadbegin = false;
+            _isLoading = true;
+          });
           final employeeList = employeeJson
               .map<Employee>((json) => Employee.fromJson(json))
               .toList();
-          setState(() {
-            _isLoading = true;
-          });
           if (countPage == 1 && employeeList.length >= 2) {
             _showFullScreenImage(employeeList);
           } else {
@@ -837,10 +889,10 @@ class _LoginPageState extends State<LoginPage> {
           }
         } else {
           final String errorMessage = jsonResponse['message'] ?? 'Login failed';
-          _showErrorSnackbar(errorMessage);
+          _showErrorSnackbar('Invalid user or password');
         }
       } else {
-        _showErrorSnackbar('Server error (${response.statusCode})');
+        _showErrorSnackbar('Invalid user or password');
       }
     } catch (e, stacktrace) {
       print('Login Exception: $e');
@@ -864,10 +916,9 @@ class _LoginPageState extends State<LoginPage> {
         final jsonResponse = jsonDecode(response.body);
 
         if (jsonResponse['status'] == false) {
-          _showErrorSnackbar(jsonResponse['message'] ?? 'An error occurred');
+          _showErrorSnackbar('An error occurred');
         } else {
-          _showSuccessSnackbar(
-              jsonResponse['message'] ?? 'Please check your email.');
+          _showSuccessSnackbar('Please check your email.');
         }
       } else {
         throw Exception('Server returned status ${response.statusCode}');

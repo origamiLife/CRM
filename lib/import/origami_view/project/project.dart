@@ -22,21 +22,28 @@ class _ProjectScreenState extends State<ProjectScreen> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _searchDownController = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  List<ModelProject> filteredProjectList = [];
-  String _search = "";
+  List<ModelProject> filteredItems = [];
   bool filter = false;
 
   @override
   void initState() {
     super.initState();
     fetchModelProject();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_onScroll);
-    fetchModelProject(); // โหลดครั้งแรก
-    _searchController.addListener(_filterActivityList);
-    filteredProjectList = List.from(modelProjectList);
+    // ฟัง event เวลาเลื่อน list
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 50) {
+        // ถึงท้าย list แล้ว เรียก fetchModelProject()
+        fetchModelProject();
+      }
+    });
     _searchController.addListener(() {
-      _search = _searchController.text;
+      final query = _searchController.text.toLowerCase();
+      setState(() {
+        filteredItems = modelProjectList.where((project) {
+          return project.project_name.toLowerCase().contains(query) ?? false;
+        }).toList();
+      });
       fetchModelProject();
     });
   }
@@ -44,28 +51,28 @@ class _ProjectScreenState extends State<ProjectScreen> {
   // void _filterActivityList() {
   //   setState(() {
   //     String query = _searchController.text.toLowerCase();
-  //     filteredProjectList = modelProjectList.where((project) {
+  //     filteredItems = modelProjectList.where((project) {
   //       return project.project_name.toLowerCase().contains(query) ?? false;
   //     }).toList();
   //   });
   //   fetchModelProject();
   // }
 
-  void _filterActivityList() {
-    if (!mounted) return;
-    setState(() {
-      String query = _searchController.text.toLowerCase();
-      filteredProjectList = modelProjectList.where((project) {
-        return project.project_name.toLowerCase().contains(query);
-      }).toList();
-    });
-  }
+  // void _filterActivityList() {
+  //   if (!mounted) return;
+  //   setState(() {
+  //     String query = _searchController.text.toLowerCase();
+  //     filteredItems = modelProjectList.where((project) {
+  //       return project.project_name.toLowerCase().contains(query);
+  //     }).toList();
+  //   });
+  // }
 
   @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
-    _searchController.removeListener(_filterActivityList); // เพิ่มบรรทัดนี้
+    // _searchController.removeListener(_filterActivityList); // เพิ่มบรรทัดนี้
     _searchController.dispose();
     super.dispose();
   }
@@ -121,7 +128,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
               onPressed: () {
                 showDialog(
                   context: context,
-                  barrierColor:Colors.black54,
+                  barrierColor: Colors.black54,
                   builder: (BuildContext dialogContext) {
                     return AlertDialog(
                       elevation: 0,
@@ -349,13 +356,14 @@ class _ProjectScreenState extends State<ProjectScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: ListView.builder(
           controller: _scrollController,
-          itemCount: filteredProjectList.length,
+          itemCount: filteredItems.length,
           itemBuilder: (context, index) {
-            modelProjectAll = modelProjectList;
             modelProjectList
-                .sort((a, b) => b.project_id.compareTo(a.project_id));
-            final project = filteredProjectList[index];
-            print('activityList.length : ${filteredProjectList.length}');
+                .sort((a, b) => b.project_name.compareTo(a.project_name));
+            filteredItems
+                .sort((a, b) => b.project_name.compareTo(a.project_name));
+            final project = filteredItems[index];
+            // print('activityList.length : ${filteredProjectList.length}');
             return Column(
               children: [
                 Container(
@@ -416,7 +424,10 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                     Padding(
                                       padding: EdgeInsets.only(left: 8.0),
                                       child: Text(
-                                        project.project_priority_name,
+                                        (project.project_priority_name == '')
+                                            ? project.project_priority_name
+                                            : project.project_priority_name
+                                                .substring(2),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -430,24 +441,25 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                   ],
                                 ),
                               ),
-                              Container(
-                                width: 1, // ความกว้างของเส้น
-                                height: 16, // ความสูงของเส้น
-                                color: Colors.grey, // สีของเส้น
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 8), // ระยะห่างจาก IconButton
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  _showCustomDeleteDialog(
-                                      project.project_id, project.project_name);
-                                },
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                  size: 18,
-                                ),
-                              ),
+                              SizedBox(width: 8),
+                              // Container(
+                              //   width: 1, // ความกว้างของเส้น
+                              //   height: 16, // ความสูงของเส้น
+                              //   color: Colors.grey, // สีของเส้น
+                              //   margin: EdgeInsets.symmetric(
+                              //       horizontal: 8), // ระยะห่างจาก IconButton
+                              // ),
+                              // InkWell(
+                              //   onTap: () {
+                              //     _showCustomDeleteDialog(
+                              //         project.project_id, project.project_name);
+                              //   },
+                              //   child: Icon(
+                              //     Icons.delete,
+                              //     color: Colors.red,
+                              //     size: 18,
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -464,9 +476,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  'https://dev.origami.life/images/project_default.jpg',
-                                  height: 80,
-                                  width: 80,
+                                  'https://origami-dev.obs.ap-southeast-2.myhuaweicloud.com/${project.project_cover}',
+                                  height: 60,
+                                  width: 60,
                                   fit: BoxFit.cover,
                                   cacheWidth: 100,
                                   loadingBuilder:
@@ -488,11 +500,13 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                     );
                                   },
                                   errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                        height: 60,
-                                        width: 60,
-                                        child: Icon(Icons
-                                            .error)); // แสดงไอคอนเมื่อโหลดภาพไม่สำเร็จ
+                                    return Image.network(
+                                      'https://www.origami.life/images/project_default.jpg',
+                                      height: 60,
+                                      width: 60,
+                                      fit: BoxFit.cover,
+                                      cacheWidth: 100,
+                                    );
                                   },
                                 ),
                               ),
@@ -614,7 +628,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                   hintText: 'Search...',
                   hintStyle: TextStyle(
                       fontFamily: 'Arial',
@@ -758,27 +772,26 @@ class _ProjectScreenState extends State<ProjectScreen> {
     }
   }
 
+  ModelProject? selectedProject;
+  String project_name = '';
   bool _isFirstTime = true;
-  bool _isLoading = false;
+  // bool _isLoading = false;
   bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
   int indexItems = 0;
-  int sum = 0;
+  bool stop = false;
   List<ModelProject> modelProjectList = [];
-  List<ModelProject> modelProjectAll = [];
   Future<void> fetchModelProject() async {
-    if (_isLoading || isAtEnd) return;
-    _isLoading = true;
+    print('isAtEnd :;: $isAtEnd');
+    if (isAtEnd) return;
     try {
-      await fetchModelProjectGetSum();
-      final uri = Uri.parse(
-          "$hostDev/api/origami/crm/project/get.php?search=${_search}");
+      final uri = Uri.parse("$hostDev/api/origami/crm/project/get.php");
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer $token'},
         body: {
-          'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'index': (_search != '') ? '0' : indexItems.toString(),
+          'comp_id': widget.employee.comp_id,
+          'index': indexItems.toString(),
         },
       );
 
@@ -803,26 +816,30 @@ class _ProjectScreenState extends State<ProjectScreen> {
           // เรียงลำดับ project_id แบบลดหลั่น (ใหญ่ไปเล็ก)
           modelProjectList.sort((a, b) => b.project_id.compareTo(a.project_id));
 
-          // กำหนด filteredProjectList ครั้งแรกเท่านั้น
-          if (_isFirstTime) {
-            filteredProjectList = List.from(modelProjectList);
-            _isFirstTime = false;
-          }
-
           // คำนวณ indexItems สำหรับ pagination
-          int check = indexItems + max;
+          int check = activityJson.length;
           print("indexItems : $indexItems ,max : $max");
-          if ((check - sum) >= max) {
-            indexItems = sum - 1;
-            isAtEnd = true; // ถึงจุดสิ้นสุดข้อมูล
-          } else {
-            indexItems += 1;
-            filteredProjectList = List.from(modelProjectList);
-            isAtEnd = false;
-          }
+
+          // กำหนด filteredProjectList ครั้งแรกเท่านั้น
+          setState(() {
+            if (_isFirstTime) {
+              filteredItems = List.from(modelProjectList);
+              _isFirstTime = false;
+            }
+
+            if (max == 0 || max != 20) {
+              filteredItems = List.from(modelProjectList);
+              isAtEnd = true;
+            } else {
+              indexItems += 1;
+              fetchModelProject();
+              filteredItems = List.from(modelProjectList);
+              isAtEnd = false;
+            }
+          });
         });
 
-        print("Total activities: ${modelProjectList.length}");
+        print("Total activities: ${filteredItems.length}");
       } else {
         throw Exception(
             'Failed to load data, status code: ${response.statusCode}');
@@ -830,33 +847,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
     } catch (e) {
       print('Error fetching data: $e');
     } finally {
-      _isLoading = false;
-    }
-  }
-
-  Future<void> fetchModelProjectGetSum() async {
-    final uri = Uri.parse("$hostDev/crm/project.php");
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer $token'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'idemp': widget.employee.emp_id,
-          'index': (_search != '') ? '0' : indexItems.toString(),
-          'txt_search': _search,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        sum = jsonResponse['sum'];
-      } else {
-        throw Exception(
-            'Failed to load data, status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching data: $e');
+      // _isLoading = false;
     }
   }
 
@@ -891,7 +882,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   void _showCustomDeleteDialog(String project_id, String project_name) {
     showDialog(
       context: context,
-      barrierColor:Colors.black54,
+      barrierColor: Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
@@ -1014,6 +1005,7 @@ class ModelProject {
   String sub_status_name;
   String project_start;
   String project_end;
+  String project_cover;
   List<joinContactProject> join_contact;
 
   ModelProject({
@@ -1060,6 +1052,7 @@ class ModelProject {
     required this.sub_status_name,
     required this.project_start,
     required this.project_end,
+    required this.project_cover,
     required this.join_contact,
   });
 
@@ -1112,6 +1105,7 @@ class ModelProject {
       sub_status_name: json['sub_status_name'] ?? '',
       project_start: json['project_start'] ?? '',
       project_end: json['project_end'] ?? '',
+      project_cover: json['project_cover'] ?? '',
       join_contact: (json['join_contact'] as List?)
               ?.map((statusJson) => joinContactProject.fromJson(statusJson))
               .toList() ??

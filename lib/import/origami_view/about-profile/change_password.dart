@@ -445,6 +445,35 @@ class _ChangePasswordState extends State<ChangePassword> {
       final jsonResponse = jsonDecode(response.body);
       if (jsonResponse['status'] == false) {
         final message = jsonResponse['message'];
+        // setState(() {
+        //   Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) =>
+        //           OrigamiPage(employee: widget.employee, popPage: 10),
+        //     ),
+        //   );
+        // });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              message,
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      } else {
+        _oldPasswordController.clear();
+        _newPasswordController.clear();
+        _confirmPasswordController.clear();
+        _hasMin = false;
+        _hasUpper = false;
+        _hasLower = false;
+        _hasSpecial = false;
+        final message = jsonResponse['message'];
         setState(() {
           Navigator.pushReplacement(
             context,
@@ -465,14 +494,6 @@ class _ChangePasswordState extends State<ChangePassword> {
             ),
           ),
         );
-      } else {
-        _oldPasswordController.clear();
-        _newPasswordController.clear();
-        _confirmPasswordController.clear();
-        _hasMin = false;
-        _hasUpper = false;
-        _hasLower = false;
-        _hasSpecial = false;
       }
     } else {
       throw Exception('Failed to load projects');

@@ -1,9 +1,9 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-import 'package:origamilift/import/origami_view/work/work_quote.dart';
-import 'package:origamilift/import/origami_view/work/work_apply_add.dart';
-import 'package:origamilift/import/origami_view/work/work_request.dart';
+import 'package:origamilift/import/origami_view/work/quote_work.dart';
+import 'package:origamilift/import/origami_view/work/add_work.dart';
+import 'package:origamilift/import/origami_view/work/request_work.dart';
 
 import '../about-profile/profile.dart';
 

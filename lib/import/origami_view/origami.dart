@@ -5,7 +5,7 @@ import 'package:origamilift/import/origami_view/project/project.dart';
 import 'package:origamilift/import/origami_view/sample/stamp_activity/activity_list.dart';
 import 'package:origamilift/import/origami_view/sample/stamp_time/attendance_history.dart';
 import 'package:origamilift/import/origami_view/sample/stamp_time/time_stamp.dart';
-import 'package:origamilift/import/origami_view/work/work_page.dart';
+import 'package:origamilift/import/origami_view/work/approve_work.dart';
 
 import '../Call/call_phone.dart';
 import '../EmailSender/email_sender.dart';
@@ -252,8 +252,11 @@ class _OrigamiPageState extends State<OrigamiPage> {
         ),
       ),
       currentAccountPicture: CircleAvatar(
-        backgroundImage: NetworkImage(widget.employee.emp_avatar),
-        onBackgroundImageError: (_, __) {},
+        backgroundImage: (widget.employee.emp_avatar != '' &&
+            widget.employee.emp_avatar.isNotEmpty)
+            ? NetworkImage(widget.employee.emp_avatar)
+            : const NetworkImage('https://www.origami.life/uploads/employee/20140715173028man20key.png') as ImageProvider,
+        // onBackgroundImageError: (_, __) {},
       ),
       accountName: Text(
         widget.employee.emp_name,

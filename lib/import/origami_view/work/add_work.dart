@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-import 'package:origamilift/import/origami_view/work/work_page.dart';
+import 'package:origamilift/import/origami_view/work/approve_work.dart';
 import 'package:path/path.dart' as p;
 
 class WorkApplyAdd extends StatefulWidget {

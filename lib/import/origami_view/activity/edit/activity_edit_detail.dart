@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
+import '../../project/project.dart';
 import '../activity.dart';
 import '../add/activity_add.dart';
 import '../skoop/skoop.dart';
@@ -34,14 +35,14 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     super.initState();
     // newId = int.parse(widget.employee.emp_id);
     _fetchModelActivity();
-    _fetchProject();
+    fetchModelProject();
     _fetchContact();
     _fetchAccount();
     fetchActivityType();
     fetchActivityStatus();
     _fetchPriority();
     _getdataUpdate(widget.activity);
-    contact_name = "${widget.activity.contact_name ?? ''}";
+    contact_name = "${widget.activity.contact_name} ${widget.activity.contact_surname}";
     account_name =
         "${widget.activity.account_name_th} [${widget.activity.account_name_en}]";
   }
@@ -213,53 +214,98 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         ),
       ),
       body: SafeArea(
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildDropdown<ActivityType>(
-                                label: 'Type',
-                                hint: widget.activity.activity_type_name == ''
-                                    ? type_name
-                                    : widget.activity.activity_type_name,
-                                items: _modelType,
-                                selectedValue: selectedType,
+        child: SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 16),
+                Text(
+                  widget.activity.account_name_en,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 24,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Column(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildDropdown<ActivityType>(
+                              label: 'Type',
+                              hint: widget.activity.activity_type_name == ''
+                                  ? type_name
+                                  : widget.activity.activity_type_name,
+                              items: _modelType,
+                              selectedValue: selectedType,
+                              getLabel: (item) =>
+                                  item.activity_type_name ?? '',
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedType = value;
+                                  type_id = value?.activity_type_id ?? '';
+                                });
+                              },
+                              icon: Icons.account_tree_rounded,
+                            ),
+                            _buildDropdown<ModelProject>(
+                              label: 'Project',
+                              hint: widget.activity.project_name ?? '',
+                              items: projectList,
+                              selectedValue: selectedProject,
+                              getLabel: (item) => item.project_name,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedProject = value;
+                                  project_id = value?.project_id ?? '';
+                                  contact_id = value?.contact_id ?? '';
+                                  account_id = value?.account_id ?? '';
+                                  project_name = value?.project_name ?? '';
+                                  String name = value?.contact_name ?? '';
+                                  // String last = value?.cus_cont_surname ?? '';
+                                  if (contact_id != '') {
+                                    contact_name = "$name";
+                                  } else {
+                                    contact_name = '';
+                                  }
+                                  String nameTH = value?.account_name ?? '';
+                                  // String nameEN = value?.cus_name_en ?? '';
+                                  if (account_id != '') {
+                                    account_name = '$nameTH';
+                                  } else {
+                                    account_name = '';
+                                  }
+                                });
+                                _fetchContact();
+                                _fetchAccount();
+                                selectedContact = null;
+                                selectedContact = null;
+                              },
+                              icon: Icons.label_important_outline,
+                            ),
+                            Container(
+                              child: _buildDropdown<ActivityContact>(
+                                label: 'Contact',
+                                hint: contact_name,
+                                items: _modelContact,
+                                selectedValue: selectedContact,
                                 getLabel: (item) =>
-                                    item.activity_type_name ?? '',
+                                    "${item.contact_first} ${item.contact_last}",
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedType = value;
-                                    type_id = value?.activity_type_id ?? '';
-                                  });
-                                },
-                                icon: Icons.accessibility_new,
-                              ),
-                              _buildDropdown<ActivityProject>(
-                                label: 'Project',
-                                hint: widget.activity.project_name ?? '',
-                                items: projectList,
-                                selectedValue: selectedProject,
-                                getLabel: (item) => item.project_name,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedProject = value;
-                                    project_id = value?.project_id ?? '';
-                                    contact_id = value?.cont_id ?? '';
+                                    selectedContact = value;
+                                    contact_id = value?.contact_id ?? '';
                                     account_id = value?.cus_id ?? '';
-                                    project_name = value?.project_name ?? '';
-                                    String name = value?.cus_cont_name ?? '';
-                                    String last = value?.cus_cont_surname ?? '';
+                                    final name = value?.contact_first ?? '';
+                                    final last = value?.contact_last ?? '';
                                     if (contact_id != '') {
                                       contact_name = "$name $last";
                                     } else {
@@ -273,218 +319,182 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                       account_name = '';
                                     }
                                   });
-                                  _fetchContact();
                                   _fetchAccount();
-                                  selectedContact = null;
-                                  selectedContact = null;
+                                  selectedAccount = null;
                                 },
-                                icon: Icons.insert_drive_file_outlined,
+                                filled: (contact_id == '') ? true : false,
+                                icon: Icons.perm_identity,
                               ),
-                              Container(
-                                child: _buildDropdown<ActivityContact>(
-                                  label: 'Contact',
-                                  hint:
-                                      "${widget.activity.contact_name} ${widget.activity.contact_surname}",
-                                  items: _modelContact,
-                                  selectedValue: selectedContact,
-                                  getLabel: (item) =>
-                                      "${item.contact_first} ${item.contact_last}",
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedContact = value;
-                                      contact_id = value?.contact_id ?? '';
-                                      account_id = value?.cus_id ?? '';
-                                      final name = value?.contact_first ?? '';
-                                      final last = value?.contact_last ?? '';
-                                      if (contact_id != '') {
-                                        contact_name = "$name $last";
-                                      } else {
-                                        contact_name = '';
-                                      }
-                                      String nameTH = value?.cus_name_th ?? '';
-                                      String nameEN = value?.cus_name_en ?? '';
-                                      if (account_id != '') {
-                                        account_name = '$nameTH [$nameEN]';
-                                      } else {
-                                        account_name = '';
-                                      }
-                                    });
-                                    _fetchAccount();
-                                    selectedAccount = null;
-                                  },
-                                  filled: (contact_id == '') ? true : false,
-                                  icon: Icons.account_circle,
-                                ),
-                              ),
-                              Container(
-                                child: _buildDropdown<ActivityAccount>(
-                                  label: 'Account',
-                                  hint: account_name,
-                                  items: accountList,
-                                  selectedValue: selectedAccount,
-                                  getLabel: (item) => item.account_name,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedAccount = value;
-                                      account_id = value?.account_id ?? '';
-                                    });
-                                  },
-                                  filled: true,
-                                  icon: FontAwesomeIcons.building,
-                                ),
-                              ),
-                              // _lineWidget(),
-                              _buildDropdown<ActivityStatus>(
-                                label: 'Status',
-                                hint: widget.activity.activity_status_name,
-                                items: _modelStatus,
-                                selectedValue: selectedStatus,
-                                getLabel: (item) => item.status_name,
+                            ),
+                            Container(
+                              child: _buildDropdown<ActivityAccount>(
+                                label: 'Account',
+                                hint: account_name,
+                                items: accountList,
+                                selectedValue: selectedAccount,
+                                getLabel: (item) => item.account_name,
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedStatus = value;
-                                    status_id = value?.status_id ?? '';
+                                    selectedAccount = value;
+                                    account_id = value?.account_id ?? '';
                                   });
                                 },
-                                icon: Icons.account_tree_outlined,
+                                filled: true,
+                                icon: FontAwesomeIcons.building,
                               ),
-                              _buildDropdown<ActivityPriority>(
-                                label: 'Priority',
-                                hint: widget.activity.activity_priority_name,
-                                items: _modelPriority,
-                                selectedValue: selectedPriority,
-                                getLabel: (item) => item.priority_name ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedPriority = value;
-                                    priority_id = value?.priority_id ?? '';
-                                  });
-                                },
-                                icon: Icons.format_list_numbered_sharp,
-                              ),
-                              _textController('Subject', _subjectController,
-                                  false, Icons.numbers),
-                              _textController('Owner Activity Description',
-                                  _descriptionController, false, Icons.numbers),
-                              Row(
-                                children: [
-                                  _DateBody('Start Date', true, 'bodyOn'),
-                                  SizedBox(width: 16),
-                                  _TimeBody('Start Time', 'start', 'bodyOn'),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  _DateBody('End Date', false, 'bodyOff'),
-                                  SizedBox(width: 16),
-                                  _TimeBody('End Time', 'end', 'bodyOff'),
-                                ],
-                              ),
-                              SizedBox(height: 8),
-                              _buildDropdown<ActivityPlace>(
-                                label: 'Place',
-                                hint:
-                                    widget.activity.activity_place_type == 'out'
-                                        ? 'Outdoor'
-                                        : 'Indoor',
-                                items: _modelPlace,
-                                selectedValue: selectedPlace,
-                                getLabel: (item) => item.place_name ?? '',
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedPlace = value;
-                                    place_id = value?.place_id ?? '';
-                                  });
-                                },
-                                icon: Icons.input,
-                              ),
-                              _textController('Location', _locationController,
-                                  true, Icons.location_history),
-                              _textController('Cost', _costController, false,
-                                  Icons.numbers),
-                            ],
-                          ),
+                            ),
+                            // _lineWidget(),
+                            _buildDropdown<ActivityStatus>(
+                              label: 'Status',
+                              hint: widget.activity.activity_status_name,
+                              items: _modelStatus,
+                              selectedValue: selectedStatus,
+                              getLabel: (item) => item.status_name,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedStatus = value;
+                                  status_id = value?.status_id ?? '';
+                                });
+                              },
+                              icon: Icons.account_tree_outlined,
+                            ),
+                            _buildDropdown<ActivityPriority>(
+                              label: 'Priority',
+                              hint: widget.activity.activity_priority_name,
+                              items: _modelPriority,
+                              selectedValue: selectedPriority,
+                              getLabel: (item) => item.priority_name ?? '',
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPriority = value;
+                                  priority_id = value?.priority_id ?? '';
+                                });
+                              },
+                              icon: Icons.format_list_numbered_sharp,
+                            ),
+                            _textController('Subject', _subjectController,
+                                false, Icons.numbers),
+                            _textController('Owner Activity Description',
+                                _descriptionController, false, Icons.numbers),
+                            Row(
+                              children: [
+                                _DateBody('Start Date', true, 'bodyOn'),
+                                SizedBox(width: 16),
+                                _TimeBody('Start Time', 'start', 'bodyOn'),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                _DateBody('End Date', false, 'bodyOff'),
+                                SizedBox(width: 16),
+                                _TimeBody('End Time', 'end', 'bodyOff'),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            _buildDropdown<ActivityPlace>(
+                              label: 'Place',
+                              hint:
+                                  widget.activity.activity_place_type == 'out'
+                                      ? 'Outdoor'
+                                      : 'Indoor',
+                              items: _modelPlace,
+                              selectedValue: selectedPlace,
+                              getLabel: (item) => item.place_name ?? '',
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPlace = value;
+                                  place_id = value?.place_id ?? '';
+                                });
+                              },
+                              icon: Icons.input,
+                            ),
+                            Divider(thickness: 5 ,color: Colors.black26),
+                            _textController('Location', _locationController,
+                                true, Icons.location_history),
+                            _textController('Cost', _costController, false,
+                                Icons.numbers),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Color(0xFFFF9900),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Color(0xFFFF9900),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
-                          onPressed: fetchUpdateActivity,
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                Save,
-                                style: TextStyle(
-                                    fontFamily: 'Arial', fontSize: 16.0),
-                              ),
+                        ),
+                        onPressed: fetchUpdateActivity,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Center(
+                            child: Text(
+                              Save,
+                              style: TextStyle(
+                                  fontFamily: 'Arial', fontSize: 16.0),
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 8),
-              Container(
-                color: Colors.grey,
-                height: 1,
-                width: double.infinity,
-              ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SkoopScreen(
-                              employee: widget.employee,
-                              activity: widget.activity,
-                              place_id: place_id,
+                SizedBox(height: 8),
+                Container(
+                  color: Colors.grey,
+                  height: 1,
+                  width: double.infinity,
+                ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SkoopScreen(
+                                employee: widget.employee,
+                                activity: widget.activity,
+                                place_id: place_id,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      child: _gestureDetector(
-                          'Skoop', Icons.wifi_tethering, Color(0xFF00C789)),
-                    ),
-                  ),
-                  // if (_skoopDetail?.skooped == '1')
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                        onTap: showCustomDialog,
+                          );
+                        },
                         child: _gestureDetector(
-                            'Close', Icons.check, Color(0xFF53C507))),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: () {
-                        _showCustomDeleteDialog(context);
-                      },
-                      child: _gestureDetector(
-                          'Delete', Icons.delete_outline_outlined, Colors.red),
+                            'Skoop', Icons.wifi_tethering, Color(0xFF00C789)),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-            ],
+                    // if (_skoopDetail?.skooped == '1')
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          onTap: showCustomDialog,
+                          child: _gestureDetector(
+                              'Close', Icons.check, Color(0xFF53C507))),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          _showCustomDeleteDialog(context);
+                        },
+                        child: _gestureDetector(
+                            'Delete', Icons.delete_outline_outlined, Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+              ],
+            ),
           ),
         ),
       ),
@@ -839,129 +849,131 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   }) {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 14,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.w500,
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Icon(
+                  icon,
+                  size: 24,
+                  color: Colors.black87,
+                ),
+
+              ],
             ),
           ),
-          SizedBox(height: 4),
-          InputDecorator(
-            decoration: InputDecoration(
-              isDense: true,
-              filled:
-                  filled != true ? false : true, // ✅ เติมพื้นหลังเมื่อ disabled
-              fillColor: filled != true ? Colors.white : Colors.grey.shade300,
-              contentPadding: EdgeInsets.only(top: 12, bottom: 12),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey.shade400),
+          SizedBox(width: 16),
+          Expanded(
+            flex: 5,
+            child: InputDecorator(
+              decoration: InputDecoration(
+                isDense: true,
+                filled:
+                    filled != true ? false : true, // ✅ เติมพื้นหลังเมื่อ disabled
+                fillColor: filled != true ? Colors.white : Colors.grey.shade300,
+                contentPadding: EdgeInsets.only(top: 12, bottom: 12),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
               ),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton2<T>(
-                isExpanded: true,
-                hint: Text(
-                  hint,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton2<T>(
+                  isExpanded: true,
+                  hint: Text(
+                    hint,
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                    ),
+                  ),
+                  value: selectedValue,
+                  items: items.map((item) {
+                    return DropdownMenuItem<T>(
+                      value: item,
+                      child: Text(
+                        getLabel(item),
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: filled != true ? onChanged : null,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                   ),
-                ),
-                value: selectedValue,
-                items: items.map((item) {
-                  return DropdownMenuItem<T>(
-                    value: item,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          icon,
-                          size: 24,
-                          color: Colors.black87,
-                        ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: Text(
-                            getLabel(item),
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14,
-                              color: Color(0xFF555555),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: filled != true ? onChanged : null,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                  color: Color(0xFF555555),
-                ),
-                iconStyleData: IconStyleData(
-                  icon: Icon(Icons.arrow_drop_down,
-                      color: Color(0xFF555555), size: 24),
-                  iconSize: 24,
-                ),
-                buttonStyleData: ButtonStyleData(
-                  height: 24,
-                  padding: EdgeInsets.only(right: 12),
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  maxHeight: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                  iconStyleData: IconStyleData(
+                    icon: Icon(Icons.arrow_drop_down,
+                        color: Color(0xFF555555), size: 24),
+                    iconSize: 24,
                   ),
-                ),
-                menuItemStyleData: MenuItemStyleData(
-                  height: 40,
-                ),
-
-                /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
-                dropdownSearchData: DropdownSearchData(
-                  searchController: dropdownSearchController,
-                  searchInnerWidget: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8,
-                      bottom: 4,
-                      right: 8,
-                      left: 8,
+                  buttonStyleData: ButtonStyleData(
+                    height: 24,
+                    padding: EdgeInsets.only(right: 12),
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    maxHeight: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    child: TextField(
-                      controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        hintText: 'Search...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                  ),
+                  menuItemStyleData: MenuItemStyleData(
+                    height: 40,
+                  ),
+
+                  /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
+                  dropdownSearchData: DropdownSearchData(
+                    searchController: dropdownSearchController,
+                    searchInnerWidget: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 8,
+                        bottom: 4,
+                        right: 8,
+                        left: 8,
+                      ),
+                      child: TextField(
+                        controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          hintText: 'Search...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     ),
+                    searchInnerWidgetHeight: 50,
+                    searchMatchFn: (item, searchValue) {
+                      return getLabel(item.value!)
+                          .toLowerCase()
+                          .contains(searchValue.toLowerCase());
+                    },
                   ),
-                  searchInnerWidgetHeight: 50,
-                  searchMatchFn: (item, searchValue) {
-                    return getLabel(item.value!)
-                        .toLowerCase()
-                        .contains(searchValue.toLowerCase());
+                  onMenuStateChange: (isOpen) {
+                    if (!isOpen) {
+                      dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
+                    }
                   },
                 ),
-                onMenuStateChange: (isOpen) {
-                  if (!isOpen) {
-                    dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
-                  }
-                },
               ),
             ),
           ),
@@ -1230,29 +1242,75 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   String end_time = '';
   String cost = '';
 
-  ActivityProject? selectedProject;
-  List<ActivityProject> projectList = [];
-  Future<void> _fetchProject() async {
-    final uri =
-        Uri.parse("$hostDev/api/origami/crm/activity/component/project.php");
-    final response = await http.post(
-      uri,
-      headers: {'Authorization': 'Bearer $token'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-        'cont_id': contact_id,
-      },
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-      setState(() {
-        projectList =
-            dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-      });
-    } else {
-      throw Exception('Failed to load instructors');
+  ModelProject? selectedProject;
+  bool _isFirstTimeP = true;
+  bool isAtEndP = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
+  int indexItemsP = 0;
+  List<ModelProject> modelProjectList = [];
+  List<ModelProject> projectList = [];
+  Future<void> fetchModelProject() async {
+    if (isAtEndP) return;
+    try {
+      final uri = Uri.parse(
+          "$hostDev/api/origami/crm/project/get.php?search=");
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'index': indexItems.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final List<dynamic> activityJson = jsonResponse['project_data'] ?? [];
+        int max = jsonResponse['limit'];
+        List<ModelProject> newActivities =
+        activityJson.map((json) => ModelProject.fromJson(json)).toList();
+        setState(() {
+          // สร้าง set id เดิม
+          Set<String> seenIds =
+          modelProjectList.map((e) => e.project_id).toSet();
+
+          // กรอง newActivities ที่ซ้ำออก
+          newActivities =
+              newActivities.where((a) => seenIds.add(a.project_id)).toList();
+
+          // เพิ่มข้อมูลใหม่เข้า list หลัก
+          modelProjectList.addAll(newActivities);
+
+          // เรียงลำดับ project_id แบบลดหลั่น (ใหญ่ไปเล็ก)
+          modelProjectList.sort((a, b) => b.project_id.compareTo(a.project_id));
+
+          // กำหนด filteredProjectList ครั้งแรกเท่านั้น
+          setState(() {
+            if (_isFirstTimeP) {
+              projectList = List.from(modelProjectList);
+              _isFirstTimeP = false;
+            }
+
+            if (max == 0 || max != 20) {
+              projectList = List.from(modelProjectList);
+              isAtEndP = true;
+            } else {
+              indexItems += 1;
+              projectList = List.from(modelProjectList);
+              fetchModelProject();
+              isAtEndP = false;
+            }
+          });
+        });
+
+        print("Total activities: ${modelProjectList.length}");
+      } else {
+        throw Exception(
+            'Failed to load data, status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    } finally {
     }
   }
 
@@ -1286,6 +1344,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   List<ActivityContact> addNewContactList = [];
   String cus_cont_id = '';
   Future<void> _fetchContact() async {
+    print('contact_id :: ${contact_id}');
     final uri =
         Uri.parse('$hostDev/api/origami/crm/activity/component/contact.php');
     try {

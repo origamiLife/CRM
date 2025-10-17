@@ -4,6 +4,7 @@ import 'package:origamilift/import/import.dart';
 
 import '../../location_googlemap/locationGoogleMap.dart';
 import '../../need/need_view/need_detail.dart';
+import '../../project/project.dart';
 
 class activityAdd extends StatefulWidget {
   const activityAdd({
@@ -39,7 +40,7 @@ class _activityAddState extends State<activityAdd> {
     selectedType = widget.dataType;
     _modelType = widget.listType;
     showDate();
-    _fetchProject();
+    fetchModelProject();
     _fetchAccount();
     _fetchContact();
     fetchActivityStatus();
@@ -179,7 +180,9 @@ class _activityAddState extends State<activityAdd> {
       body: Container(
         color: Colors.white,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -187,7 +190,7 @@ class _activityAddState extends State<activityAdd> {
                     Container(
                       color: Colors.white,
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -203,9 +206,9 @@ class _activityAddState extends State<activityAdd> {
                                 });
                               },
                               hint: selectedType?.activity_type_name ?? '',
-                              icon: Icons.accessibility_new,
+                              icon: Icons.account_tree_rounded,
                             ),
-                            _buildDropdown<ActivityProject>(
+                            _buildDropdown<ModelProject>(
                               label: 'Project',
                               items: projectList,
                               selectedValue: selectedProject,
@@ -214,20 +217,20 @@ class _activityAddState extends State<activityAdd> {
                                 setState(() {
                                   selectedProject = value;
                                   project_id = value?.project_id ?? '';
-                                  contact_id = value?.cont_id ?? '';
-                                  account_id = value?.cus_id ?? '';
+                                  contact_id = value?.contact_id ?? '';
+                                  account_id = value?.account_id ?? '';
                                   project_name = value?.project_name ?? '';
-                                  String name = value?.cus_cont_name ?? '';
-                                  String last = value?.cus_cont_surname ?? '';
+                                  String name = value?.contact_name ?? '';
+                                  // String last = value?.cus_cont_surname ?? '';
                                   if (contact_id != '') {
-                                    contact_name = "$name $last";
+                                    contact_name = "$name";
                                   } else {
                                     contact_name = '';
                                   }
-                                  String nameTH = value?.cus_name_th ?? '';
-                                  String nameEN = value?.cus_name_en ?? '';
+                                  String nameTH = value?.account_name ?? '';
+                                  // String nameEN = value?.cus_name_en ?? '';
                                   if (account_id != '') {
-                                    account_name = '$nameTH [$nameEN]';
+                                    account_name = '$nameTH';
                                   } else {
                                     account_name = '';
                                   }
@@ -238,7 +241,7 @@ class _activityAddState extends State<activityAdd> {
                                 selectedContact = null;
                               },
                               hint: project_name,
-                              icon: Icons.insert_drive_file_outlined,
+                              icon: Icons.label_important_outline,
                             ),
                             _buildDropdown<ActivityContact>(
                               label: 'Contact',
@@ -271,7 +274,7 @@ class _activityAddState extends State<activityAdd> {
                               },
                               hint: contact_name,
                               filled: (contact_id == '') ? true : false,
-                              icon: Icons.account_circle,
+                              icon: Icons.perm_identity,
                             ),
                             _buildDropdown<ActivityAccount>(
                               label: 'Account',
@@ -354,162 +357,19 @@ class _activityAddState extends State<activityAdd> {
                               },
                               hint: '',
                             ),
+                            Divider(thickness: 5, color: Colors.black26),
                             _textController('Location', _locationController,
                                 true, Icons.location_history),
                             _textController(
                                 'Cost', _costController, false, Icons.numbers),
-                            // _lineWidget(),
-                            // Text(
-                            //   'Other Contact',
-                            //   maxLines: 1,
-                            //   overflow: TextOverflow.ellipsis,
-                            //   style: TextStyle(
-                            //     fontFamily: 'Arial',
-                            //     fontSize: 14,
-                            //     color: Color(0xFF555555),
-                            //     fontWeight: FontWeight.bold,
-                            //   ),
-                            // ),
-                            // SizedBox(height: 8),
-                            // Padding(
-                            //   padding:
-                            //       const EdgeInsets.symmetric(horizontal: 15),
-                            //   child: Column(
-                            //     children: List.generate(
-                            //         addNewContactList.length, (index) {
-                            //       final contact = addNewContactList[index];
-                            //       return Padding(
-                            //         padding: const EdgeInsets.only(bottom: 5),
-                            //         child: Column(
-                            //           mainAxisAlignment:
-                            //               MainAxisAlignment.center,
-                            //           crossAxisAlignment:
-                            //               CrossAxisAlignment.start,
-                            //           children: [
-                            //             Row(
-                            //               mainAxisAlignment:
-                            //                   MainAxisAlignment.start,
-                            //               crossAxisAlignment:
-                            //                   CrossAxisAlignment.center,
-                            //               children: [
-                            //                 Padding(
-                            //                   padding: const EdgeInsets.only(
-                            //                       bottom: 4, right: 8),
-                            //                   child: CircleAvatar(
-                            //                     radius: 20,
-                            //                     backgroundColor: Colors.grey,
-                            //                     child: CircleAvatar(
-                            //                       radius: 19,
-                            //                       backgroundColor:
-                            //                           Colors.white,
-                            //                       child: ClipRRect(
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(
-                            //                                 100),
-                            //                         child: Image.network(
-                            //                           (contact.cus_cont_photo ==
-                            //                                   '')
-                            //                               ? 'https://dev.origami.life/images/default.png'
-                            //                               : '$host//crm/${contact.cus_cont_photo}',
-                            //                           height: 100,
-                            //                           width: 100,
-                            //                           fit: BoxFit.cover,
-                            //                         ),
-                            //                       ),
-                            //                     ),
-                            //                   ),
-                            //                 ),
-                            //                 const SizedBox(width: 10),
-                            //                 Expanded(
-                            //                   child: Column(
-                            //                     mainAxisAlignment:
-                            //                         MainAxisAlignment.start,
-                            //                     crossAxisAlignment:
-                            //                         CrossAxisAlignment.start,
-                            //                     children: [
-                            //                       Text(
-                            //                         '${contact.contact_first} ${contact.contact_last}',
-                            //                         maxLines: 1,
-                            //                         overflow:
-                            //                             TextOverflow.ellipsis,
-                            //                         style: TextStyle(
-                            //                           fontFamily: 'Arial',
-                            //                           fontSize: 16,
-                            //                           color:
-                            //                               Color(0xFFFF9900),
-                            //                           fontWeight:
-                            //                               FontWeight.w700,
-                            //                         ),
-                            //                       ),
-                            //                       Text(
-                            //                         '${contact.cus_name_en} (${contact.cus_name_th})',
-                            //                         maxLines: 1,
-                            //                         overflow:
-                            //                             TextOverflow.ellipsis,
-                            //                         style: TextStyle(
-                            //                           fontFamily: 'Arial',
-                            //                           fontSize: 14,
-                            //                           color:
-                            //                               Color(0xFF555555),
-                            //                           fontWeight:
-                            //                               FontWeight.w500,
-                            //                         ),
-                            //                       ),
-                            //                       Divider(
-                            //                           color: Colors
-                            //                               .grey.shade300),
-                            //                     ],
-                            //                   ),
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       );
-                            //     }),
-                            //   ),
-                            // ),
-                            // TextButton(
-                            //   onPressed: _addOtherContact,
-                            //   child: Text(
-                            //     'Add Other Contact',
-                            //     maxLines: 1,
-                            //     overflow: TextOverflow.ellipsis,
-                            //     style: TextStyle(
-                            //       fontFamily: 'Arial',
-                            //       fontSize: 14,
-                            //       color: Color(0xFFFF9900),
-                            //       fontWeight: FontWeight.w700,
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
                     ),
                     Padding(
                       padding:
-                          const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Color(0xFFFF9900),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                        onPressed: _saveAddActivity,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Center(
-                            child: Text(
-                              Save,
-                              style: TextStyle(
-                                  fontFamily: 'Arial', fontSize: 16.0),
-                            ),
-                          ),
-                        ),
-                      ),
+                          const EdgeInsets.only(left: 8, right: 8, bottom: 16),
+                      child: _buildButton(),
                     ),
                   ],
                 ),
@@ -519,6 +379,113 @@ class _activityAddState extends State<activityAdd> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(8),
+          backgroundColor: Colors.orange,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        ),
+        onPressed: () {
+          _showCustomDialog();
+        },
+        child: Text(
+          'Send',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Warning!',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Please confirm your create activity?.',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.pop(dialogContext);
+                  _saveAddActivity();
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
     );
   }
 
@@ -850,125 +817,132 @@ class _activityAddState extends State<activityAdd> {
   }) {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 14,
-              color: Color(0xFF555555),
-              fontWeight: FontWeight.w500,
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    color: Color(0xFF555555),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Icon(
+                  icon,
+                  size: 24,
+                  color: Colors.black87,
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 4),
-          InputDecorator(
-            decoration: InputDecoration(
-              isDense: true,
-              filled:
-                  filled != true ? false : true, // ✅ เติมพื้นหลังเมื่อ disabled
-              fillColor: filled != true ? Colors.white : Colors.grey.shade300,
-              contentPadding: EdgeInsets.only(top: 12, bottom: 12),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey.shade400),
+          SizedBox(width: 16),
+          Expanded(
+            flex: 5,
+            child: InputDecorator(
+              decoration: InputDecoration(
+                isDense: true,
+                filled: filled != true
+                    ? false
+                    : true, // ✅ เติมพื้นหลังเมื่อ disabled
+                fillColor: filled != true ? Colors.white : Colors.grey.shade300,
+                contentPadding: EdgeInsets.only(top: 12, bottom: 12),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
               ),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton2<T>(
-                isExpanded: true,
-                hint: Text(
-                  hint,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton2<T>(
+                  isExpanded: true,
+                  hint: Text(
+                    hint,
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                    ),
+                  ),
+                  value: selectedValue,
+                  items: items.map((item) {
+                    return DropdownMenuItem<T>(
+                      value: item,
+                      child: Text(
+                        getLabel(item),
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          color: Color(0xFF555555),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: filled != true ? onChanged : null,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14,
                     color: Color(0xFF555555),
                   ),
-                ),
-                value: selectedValue,
-                items: items.map((item) {
-                  return DropdownMenuItem<T>(
-                    value: item,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(icon, size: 24, color: Colors.black87),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: Text(
-                            getLabel(item),
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14,
-                              color: Color(0xFF555555),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: filled != true ? onChanged : null,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                  color: Color(0xFF555555),
-                ),
-                iconStyleData: IconStyleData(
-                  icon: Icon(Icons.arrow_drop_down,
-                      color: Color(0xFF555555), size: 24),
-                  iconSize: 24,
-                ),
-                buttonStyleData: ButtonStyleData(
-                  height: 24,
-                  padding: EdgeInsets.only(right: 12),
-                ),
-                dropdownStyleData: DropdownStyleData(
-                  maxHeight: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
+                  iconStyleData: IconStyleData(
+                    icon: Icon(Icons.arrow_drop_down,
+                        color: Color(0xFF555555), size: 24),
+                    iconSize: 24,
                   ),
-                ),
-                menuItemStyleData: MenuItemStyleData(
-                  height: 40,
-                ),
-
-                /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
-                dropdownSearchData: DropdownSearchData(
-                  searchController: dropdownSearchController,
-                  searchInnerWidget: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8,
-                      bottom: 4,
-                      right: 8,
-                      left: 8,
+                  buttonStyleData: ButtonStyleData(
+                    height: 24,
+                    padding: EdgeInsets.only(right: 12),
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    maxHeight: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    child: TextField(
-                      controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        hintText: 'search...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                  ),
+                  menuItemStyleData: MenuItemStyleData(
+                    height: 40,
+                  ),
+
+                  /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
+                  dropdownSearchData: DropdownSearchData(
+                    searchController: dropdownSearchController,
+                    searchInnerWidget: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 8,
+                        bottom: 4,
+                        right: 8,
+                        left: 8,
+                      ),
+                      child: TextField(
+                        controller:
+                            dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          hintText: 'Search...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     ),
+                    searchInnerWidgetHeight: 50,
+                    searchMatchFn: (item, searchValue) {
+                      return getLabel(item.value!)
+                          .toLowerCase()
+                          .contains(searchValue.toLowerCase());
+                    },
                   ),
-                  searchInnerWidgetHeight: 50,
-                  searchMatchFn: (item, searchValue) {
-                    return getLabel(item.value!)
-                        .toLowerCase()
-                        .contains(searchValue.toLowerCase());
+                  onMenuStateChange: (isOpen) {
+                    if (!isOpen) {
+                      dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
+                    }
                   },
                 ),
-                onMenuStateChange: (isOpen) {
-                  if (!isOpen) {
-                    dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
-                  }
-                },
               ),
             ),
           ),
@@ -976,6 +950,145 @@ class _activityAddState extends State<activityAdd> {
       ),
     );
   }
+
+  // Widget _buildDropdown<T>({
+  //   required String label,
+  //   required IconData icon,
+  //   bool? filled,
+  //   required String hint,
+  //   required List<T> items,
+  //   required T? selectedValue,
+  //   required String Function(T) getLabel,
+  //   required void Function(T?) onChanged,
+  // }) {
+  //   return Padding(
+  //     padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           label,
+  //           style: TextStyle(
+  //             fontFamily: 'Arial',
+  //             fontSize: 14,
+  //             color: Color(0xFF555555),
+  //             fontWeight: FontWeight.w500,
+  //           ),
+  //         ),
+  //         SizedBox(height: 4),
+  //         InputDecorator(
+  //           decoration: InputDecoration(
+  //             isDense: true,
+  //             filled:
+  //                 filled != true ? false : true, // ✅ เติมพื้นหลังเมื่อ disabled
+  //             fillColor: filled != true ? Colors.white : Colors.grey.shade300,
+  //             contentPadding: EdgeInsets.only(top: 12, bottom: 12),
+  //             enabledBorder: OutlineInputBorder(
+  //               borderRadius: BorderRadius.circular(8),
+  //               borderSide: BorderSide(color: Colors.grey.shade400),
+  //             ),
+  //           ),
+  //           child: DropdownButtonHideUnderline(
+  //             child: DropdownButton2<T>(
+  //               isExpanded: true,
+  //               hint: Text(
+  //                 hint,
+  //                 style: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 14,
+  //                   color: Color(0xFF555555),
+  //                 ),
+  //               ),
+  //               value: selectedValue,
+  //               items: items.map((item) {
+  //                 return DropdownMenuItem<T>(
+  //                   value: item,
+  //                   child: Row(
+  //                     mainAxisAlignment: MainAxisAlignment.start,
+  //                     children: [
+  //                       Icon(icon, size: 24, color: Colors.black87),
+  //                       SizedBox(width: 16),
+  //                       Expanded(
+  //                         child: Text(
+  //                           getLabel(item),
+  //                           style: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 14,
+  //                             color: Color(0xFF555555),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 );
+  //               }).toList(),
+  //               onChanged: filled != true ? onChanged : null,
+  //               style: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 14,
+  //                 color: Color(0xFF555555),
+  //               ),
+  //               iconStyleData: IconStyleData(
+  //                 icon: Icon(Icons.arrow_drop_down,
+  //                     color: Color(0xFF555555), size: 24),
+  //                 iconSize: 24,
+  //               ),
+  //               buttonStyleData: ButtonStyleData(
+  //                 height: 24,
+  //                 padding: EdgeInsets.only(right: 12),
+  //               ),
+  //               dropdownStyleData: DropdownStyleData(
+  //                 maxHeight: 200,
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(8),
+  //                 ),
+  //               ),
+  //               menuItemStyleData: MenuItemStyleData(
+  //                 height: 40,
+  //               ),
+  //
+  //               /// ✅ เพิ่มส่วนนี้เพื่อให้ Dropdown สามารถค้นหาได้
+  //               dropdownSearchData: DropdownSearchData(
+  //                 searchController: dropdownSearchController,
+  //                 searchInnerWidget: Padding(
+  //                   padding: const EdgeInsets.only(
+  //                     top: 8,
+  //                     bottom: 4,
+  //                     right: 8,
+  //                     left: 8,
+  //                   ),
+  //                   child: TextField(
+  //                     controller: dropdownSearchController, // ✅ ใช้ตัวเดียวกัน
+  //                     decoration: InputDecoration(
+  //                       isDense: true,
+  //                       contentPadding:
+  //                           EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+  //                       hintText: 'search...',
+  //                       border: OutlineInputBorder(
+  //                         borderRadius: BorderRadius.circular(8),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 searchInnerWidgetHeight: 50,
+  //                 searchMatchFn: (item, searchValue) {
+  //                   return getLabel(item.value!)
+  //                       .toLowerCase()
+  //                       .contains(searchValue.toLowerCase());
+  //                 },
+  //               ),
+  //               onMenuStateChange: (isOpen) {
+  //                 if (!isOpen) {
+  //                   dropdownSearchController.clear(); // ✅ ใช้งานได้จริง
+  //                 }
+  //               },
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _DateBody(String _nemedate, bool ontap) {
     return Expanded(
@@ -1224,37 +1337,6 @@ class _activityAddState extends State<activityAdd> {
     }
   }
 
-  ActivityProject? selectedProject;
-  List<ActivityProject> projectList = [];
-  String project_name = '';
-  Future<void> _fetchProject() async {
-    final uri =
-        Uri.parse("$hostDev/api/origami/crm/activity/component/project.php");
-    final response = await http.post(
-      uri,
-      headers: {'Authorization': 'Bearer $token'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-        'cont_id': contact_id,
-      },
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-      setState(() {
-        projectList =
-            dataJson.map((json) => ActivityProject.fromJson(json)).toList();
-        // if (projectList.isNotEmpty && selectedProject == null) {
-        //   selectedProject = projectList[0];
-        //   project_id = selectedProject?.project_id ?? '';
-        // }
-      });
-    } else {
-      throw Exception('Failed to load instructors');
-    }
-  }
-
   ActivityAccount? selectedAccount;
   List<ActivityAccount> accountList = [];
   String account_name = '';
@@ -1412,7 +1494,8 @@ class _activityAddState extends State<activityAdd> {
           pushActivity(9);
           showSnackBar(message);
         } else {
-          _showCustomDialog(message);
+          showSnackBar(message);
+          // _showCustomDialog(message);
         }
       } else {
         throw Exception('Failed to load status data');
@@ -1422,60 +1505,132 @@ class _activityAddState extends State<activityAdd> {
     }
   }
 
-  void _showCustomDialog(String message) {
-    showDialog(
-      context: context,
-      barrierColor:Colors.black54,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(
-            'Warning!',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 22,
-              color: Colors.black87,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          content: Text(
-            message,
-            style: TextStyle(
-                fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
-          ),
-          actions: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.35,
-              decoration: BoxDecoration(
-                color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.orange.shade200,
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+  ModelProject? selectedProject;
+  String project_name = '';
+  bool _isFirstTime = true;
+  bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
+  int indexItems = 0;
+  List<ModelProject> modelProjectList = [];
+  List<ModelProject> projectList = [];
+  Future<void> fetchModelProject() async {
+    if (isAtEnd) return;
+    try {
+      // await fetchModelProjectGetSum();
+      final uri = Uri.parse("$hostDev/api/origami/crm/project/get.php?search=");
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'index': indexItems.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final List<dynamic> activityJson = jsonResponse['project_data'] ?? [];
+        int max = jsonResponse['limit'];
+        List<ModelProject> newActivities =
+            activityJson.map((json) => ModelProject.fromJson(json)).toList();
+        setState(() {
+          // สร้าง set id เดิม
+          Set<String> seenIds =
+              modelProjectList.map((e) => e.project_id).toSet();
+
+          // กรอง newActivities ที่ซ้ำออก
+          newActivities =
+              newActivities.where((a) => seenIds.add(a.project_id)).toList();
+
+          // เพิ่มข้อมูลใหม่เข้า list หลัก
+          modelProjectList.addAll(newActivities);
+
+          // เรียงลำดับ project_id แบบลดหลั่น (ใหญ่ไปเล็ก)
+          modelProjectList.sort((a, b) => b.project_id.compareTo(a.project_id));
+
+          // กำหนด filteredProjectList ครั้งแรกเท่านั้น
+          setState(() {
+            if (_isFirstTime) {
+              projectList = List.from(modelProjectList);
+              _isFirstTime = false;
+            }
+
+            if (max == 0 || max != 20) {
+              projectList = List.from(modelProjectList);
+              isAtEnd = true;
+            } else {
+              indexItems += 1;
+              projectList = List.from(modelProjectList);
+              fetchModelProject();
+              isAtEnd = false;
+            }
+          });
+        });
+
+        print("Total activities: ${modelProjectList.length}");
+      } else {
+        throw Exception(
+            'Failed to load data, status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    } finally {}
   }
+
+  // void _showCustomDialog(String message) {
+  //   showDialog(
+  //     context: context,
+  //     barrierColor:Colors.black54,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext dialogContext) {
+  //       return AlertDialog(
+  //         title: Text(
+  //           'Warning!',
+  //           style: TextStyle(
+  //             fontFamily: 'Arial',
+  //             fontSize: 22,
+  //             color: Colors.black87,
+  //             fontWeight: FontWeight.w700,
+  //           ),
+  //         ),
+  //         content: Text(
+  //           message,
+  //           style: TextStyle(
+  //               fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
+  //         ),
+  //         actions: [
+  //           Container(
+  //             width: MediaQuery.of(context).size.width * 0.35,
+  //             decoration: BoxDecoration(
+  //               color: Colors.orange.shade400,
+  //               borderRadius: BorderRadius.circular(10),
+  //               boxShadow: [
+  //                 BoxShadow(
+  //                   color: Colors.orange.shade200,
+  //                   blurRadius: 8,
+  //                   offset: Offset(0, 2),
+  //                 ),
+  //               ],
+  //             ),
+  //             child: TextButton(
+  //               onPressed: () async {
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text(
+  //                 'Cancel',
+  //                 style: TextStyle(
+  //                   fontSize: 16,
+  //                   color: Colors.white,
+  //                   fontWeight: FontWeight.w500,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void pushActivity(int page) {
     Navigator.pushReplacement(

@@ -599,7 +599,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                   ),
                                 ));
                               } else {
-                                return typeWidget(snapshot.data!);
+                                final sortedList =
+                                    List<ActivityType>.from(snapshot.data ?? [])
+                                      ..sort((a, b) => a.activity_type_name
+                                          .compareTo(b.activity_type_name));
+
+                                return typeWidget(sortedList);
                               }
                             }),
                       ),
@@ -614,10 +619,83 @@ class _ActivityScreenState extends State<ActivityScreen> {
     );
   }
 
-  Widget typeWidget(List<ActivityType> list) {
+  IconData getFontAwesomeIcon(String iconClass) {
+    switch (iconClass) {
+      // 🔸 Solid icons (fas)
+      case 'fas fa-briefcase':
+        return FontAwesomeIcons.briefcase;
+      case 'fas fa-mail-bulk':
+        return FontAwesomeIcons.mailBulk;
+      case 'fas fa-highlighter':
+        return FontAwesomeIcons.highlighter;
+      case 'fas fa-adjust':
+        return FontAwesomeIcons.adjust;
+      case 'fas fa-grin':
+        return FontAwesomeIcons.grin;
+      case 'fas fa-desktop':
+        return FontAwesomeIcons.desktop;
+      case 'fas fa-child':
+        return FontAwesomeIcons.child;
+      case 'fas fa-bug':
+        return FontAwesomeIcons.bug;
+      case 'fas fa-headset':
+        return FontAwesomeIcons.headset;
+      case 'fas fa-file-download':
+        return FontAwesomeIcons.fileDownload;
+      case 'fas fa-file-signature':
+        return FontAwesomeIcons.fileSignature;
+      case 'fas fa-file-powerpoint':
+        return FontAwesomeIcons.filePowerpoint;
+      case 'fas fa-comment-dots':
+        return FontAwesomeIcons.commentDots;
+      case 'fas fa-users':
+        return FontAwesomeIcons.users;
+      case 'fas fa-chalkboard-teacher':
+        return FontAwesomeIcons.chalkboardTeacher;
+
+      // 🔸 Regular icons (far)
+      case 'far fa-newspaper':
+        return FontAwesomeIcons.newspaper;
+      case 'far fa-building':
+        return FontAwesomeIcons.building;
+
+      // 🔸 Brand icons (fab)
+      case 'fab fa-codepen':
+        return FontAwesomeIcons.codepen;
+      case 'fab fa-slideshare':
+        return FontAwesomeIcons.slideshare;
+      case 'fab fa-researchgate':
+        return FontAwesomeIcons.researchgate;
+      case 'fab fa-cloudsmith':
+        return FontAwesomeIcons.cloudsmith;
+
+      // 🔸 Custom (fao) — ไม่อยู่ใน Font Awesome, ใช้ Material Icons แทน
+      case 'fao fa-phone-in':
+        return Icons.phone_callback;
+      case 'fao fa-phone-out':
+        return Icons.phone_forwarded;
+      case 'fao fa-training':
+        return Icons.school;
+      case 'fao fa-event':
+        return Icons.event;
+      case 'fao fa-soundtest':
+        return Icons.volume_up;
+      case 'fao fa-debt-collection':
+        return Icons.request_quote;
+      case 'fao fa-cheque':
+        return Icons.receipt_long;
+      case 'fao fa-generate':
+        return Icons.autorenew;
+
+      default:
+        return Icons.help_outline; // ถ้าไม่เจอ
+    }
+  }
+
+  Widget typeWidget(List<ActivityType> activityList) {
     return GridView.builder(
       padding: const EdgeInsets.all(12),
-      itemCount: list.length,
+      itemCount: activityList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12,
@@ -625,7 +703,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
         childAspectRatio: 1,
       ),
       itemBuilder: (context, index) {
-        final type = list[index];
+        final activityType = activityList[index];
         return InkWell(
           onTap: () async {
             Navigator.pushReplacement(
@@ -633,8 +711,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
               MaterialPageRoute(
                 builder: (context) => activityAdd(
                   employee: widget.employee,
-                  dataType: type,
-                  listType: list,
+                  dataType: activityType,
+                  listType: activityList,
                 ),
               ),
             ).then((value) {
@@ -657,14 +735,14 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.accessibility_new_outlined,
+                    getFontAwesomeIcon(activityType.activity_type_icon),
                     size: 28,
                     color: Color(0xFF555555),
                   ),
                   SizedBox(height: 16),
                   Center(
                     child: Text(
-                      type.activity_type_name,
+                      activityType.activity_type_name,
                       style: TextStyle(
                           fontFamily: 'Arial',
                           color: Color(0xFF555555),
@@ -749,6 +827,9 @@ class _ActivityScreenState extends State<ActivityScreen> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
+      for (var item in dataJson) {
+        print(item['activity_type_icon']);
+      }
       return dataJson.map((json) => ActivityType.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load instructors');
