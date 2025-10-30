@@ -6,20 +6,26 @@ import 'package:origamilift/import/import.dart';
 import 'package:origamilift/import/origami_view/work/work.dart';
 import 'package:path/path.dart' as p;
 
-class WorkApplyAdd extends StatefulWidget {
-  const WorkApplyAdd({Key? key, required this.employee}) : super(key: key);
+import 'add_work.dart';
+
+class WorkApplyUpdate extends StatefulWidget {
+  const WorkApplyUpdate(
+      {Key? key, required this.employee, required this.approveHistory})
+      : super(key: key);
   final Employee employee;
+  final HistoryWorkModel approveHistory;
 
   @override
-  _WorkApplyAddState createState() => _WorkApplyAddState();
+  _WorkApplyUpdateState createState() => _WorkApplyUpdateState();
 }
 
-class _WorkApplyAddState extends State<WorkApplyAdd> {
+class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
   TextEditingController _reasonController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
   TextEditingController _fileController = TextEditingController();
   TextEditingController dropdownSearchController = TextEditingController();
-  bool isSelected = true;
+  late HistoryWorkModel getapprove;
+  bool isSelected = false;
   TimeOfDay? selectedStartTime = TimeOfDay(hour: 09, minute: 00);
   TimeOfDay? selectedEndTime = TimeOfDay(hour: 18, minute: 00);
   String emp_pic = '';
@@ -27,16 +33,54 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
   @override
   void initState() {
     super.initState();
+    getapprove = widget.approveHistory;
+    requestNoMoney = getapprove.request_id;
+    _getUpdateDate();
+    _getdateTime();
+    showDate();
     fetchModelWork();
     fetchUserRequest();
-    request_id = widget.employee.emp_id;
+  }
+
+  void _getdateTime() {
+    request_from_date = getapprove.request_from_date;
+    request_to_date = getapprove.request_to_date;
+    selectedStartTime = TimeOfDay(
+      hour: int.parse(getapprove.request_from_time_.split(':')[0]),
+      minute: int.parse(getapprove.request_from_time_.split(':')[1]),
+    );
+    selectedEndTime = TimeOfDay(
+      hour: int.parse(getapprove.request_to_time_.split(':')[0]),
+      minute: int.parse(getapprove.request_to_time_.split(':')[1]),
+    );
+    startTime = _formatTimeOfDay(selectedStartTime!);
+    endTime = _formatTimeOfDay(selectedEndTime!);
+  }
+
+  void _getUpdateDate() {
+    _reasonController.text = getapprove.request_subject;
+    _noteController.text = getapprove.request_note;
+    request_id =
+        widget.employee.emp_id; // emp_request Employee ที่เลือกใน Dropdown
     request_name = widget.employee.emp_name;
-    showDate();
-    if (widget.employee.pass_pro == 'Y') {
-      isSelected = false;
-    } else {
-      isSelected = true;
-    }
+    leave_request_id = getapprove.request_id; // ID ของ Leave
+    leave_type_id = getapprove.leave_type_id;
+    isSelected = getapprove.request_no_money == 'Y';
+
+    // print("comp_id :: ${widget.employee.comp_id}");
+    // print("emp_id :: ${widget.employee.emp_id}");
+    // print("emp_request :: ${request_id}");
+    // print("leave_request_id :: ${leave_request_id}");
+    // print("leave_type_id :: ${leave_type_id}");
+    // print("_reasonController :: ${_reasonController.text}");
+    // print("_noteController :: ${_noteController.text}");
+    // print("request_from_date :: ${request_from_date}");
+    // print("request_to_date :: ${request_to_date}");
+    // print("selectedStartTime :: $startTime");
+    // print("selectedEndTime :: $endTime");
+    // print("_base64Image :: ${_base64Image}");
+    // print("base64File :: ${base64File}");
+    // print("requestNoMoney :: ${isSelected}");
   }
 
   @override
@@ -98,7 +142,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          color: Colors.grey.shade100,
+          color: Colors.white,
           child: Column(
             children: [
               Stack(
@@ -232,19 +276,19 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                               SizedBox(height: 10),
                               Container(
                                 child: _buildDropdown<UserRequestWork>(
+                                  filled: true,
                                   label: 'User request',
                                   items: requestWork,
-                                  selectedValue: selectedRequest,
+                                  selectedValue: null,
                                   getLabel: (item) =>
                                       "${item.firstname} ${item.lastname}",
                                   onChanged: (value) {
-                                    setState(() {
-                                      selectedRequest = value;
-                                      request_id = value?.emp_id ?? '';
-                                      request_name =
-                                          "${value?.firstname ?? ''} ${value?.lastname ?? ''}";
-                                      emp_pic = value?.emp_pic ?? '';
-                                    });
+                                    // setState(() {
+                                    //   selectedRequest = value;
+                                    //   request_name =
+                                    //   "${value?.firstname ?? ''} ${value?.lastname ?? ''}";
+                                    //   emp_pic = value?.emp_pic ?? '';
+                                    // });
                                   },
                                   hint: request_name,
                                 ),
@@ -698,7 +742,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
         print('File Name: $fileName');
         print('File Size: $fileSize');
         print('File Extension: $fileExtension');
-        print('Base64 (ย่อ): ${base64File.substring(0, 50)}...'); // แสดงแค่ 50 ตัวอักษร
+        print(
+            'Base64 (ย่อ): ${base64File.substring(0, 50)}...'); // แสดงแค่ 50 ตัวอักษร
       }
     } else {
       print('ยกเลิกการเลือกไฟล์');
@@ -839,6 +884,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     required T? selectedValue,
     required String Function(T) getLabel,
     required void Function(T?) onChanged,
+    bool? filled,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -847,11 +893,12 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           decoration: InputDecoration(
             isDense: true,
             filled: true, // ✅ ต้องใส่ด้วยถึงจะเห็นสี
-            fillColor: Colors.white, // ✅ สีพื้นหลัง
+            fillColor: filled != true ? Colors.white : Colors.grey.shade200,
             contentPadding: EdgeInsets.only(top: 12, bottom: 12),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.white),
+              borderSide: BorderSide(
+                  color: filled != true ? Colors.white : Colors.grey.shade200),
             ),
           ),
           child: DropdownButtonHideUnderline(
@@ -899,15 +946,18 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                   ),
                 );
               }).toList(),
-              onChanged: onChanged,
+              onChanged: filled != true ? onChanged : null,
               style: const TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 14,
                 color: Color(0xFF555555),
               ),
-              iconStyleData: const IconStyleData(
-                icon: Icon(Icons.arrow_drop_down,
-                    color: Color(0xFF555555), size: 24),
+              iconStyleData: IconStyleData(
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: filled != true ? Colors.black87 : Colors.grey.shade200,
+                  size: 24,
+                ),
                 iconSize: 24,
               ),
               buttonStyleData: const ButtonStyleData(
@@ -1181,8 +1231,11 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
 
   String startTime = '';
   String endTime = '';
+  String requestNoMoney = '';
   void _checkaddwork() {
-    final requestNoMoney = isSelected ? 'Y' : 'N';
+    requestNoMoney = isSelected ? 'Y' : 'N';
+    final startTime = _formatTimeOfDay(selectedStartTime!);
+    final endTime = _formatTimeOfDay(selectedEndTime!);
     print('-------------------------------------------------------------');
     print('Employee ที่เลือกใน Dropdown :: ${request_id}'
         '\n ประเภทการลา :: ${leave_type_id}'
@@ -1193,18 +1246,13 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
         '\n reason :: ${_reasonController.text}'
         '\n note :: ${_noteController.text}'
         '\n ไฟล์ :: ${imageName}'
-        '\n ลารับเงิน :: ${requestNoMoney}'
+        '\n ลาไม่รับเงิน :: ${requestNoMoney}'
         '\n ใบรับรองแพทย์:: ${_base64Image}');
 
-    print('_fetchAddWork:::AddWork');
+    print('_fetchUpdateWork:::Update');
     print('------------------------------------------------------------');
     if (_reasonController.text != '') {
-      statusDialog(
-        'Success',
-        'message',
-        'https://cdn-icons-png.freepik.com/512/5610/5610944.png',
-      );
-      _fetchAddWork(requestNoMoney, startTime, endTime);
+      _fetchUpdateWork(requestNoMoney, startTime, endTime);
     }
   }
 
@@ -1245,6 +1293,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
   List<StatusWork> typeList = [];
   String leave_type_id = '';
   String type_name = '';
+  int index = 0;
   Future<void> fetchModelWork() async {
     final uri = Uri.parse("$hostDev/api/get_work.php");
     final response = await http.post(
@@ -1261,10 +1310,18 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       setState(() {
         typeList = dataJson.map((json) => StatusWork.fromJson(json)).toList();
+
+        for (int i = 0; i < typeList.length; i++) {
+          if (typeList[i].leave_type_id == leave_type_id) {
+            index = i;
+            break; // ✅ หยุด loop แต่ยังทำงานต่อหลัง loop
+          }
+        }
+
+        type_name = typeList[index].leave_type_name_en;
+        print(type_name);
         if (typeList.isNotEmpty && selectedType == null) {
-          selectedType = typeList.first;
-          leave_type_id = selectedType?.leave_type_id ?? '';
-          type_name = selectedType?.leave_type_name_en ?? '';
+          // selectedType = typeList.first;
           before_day = selectedType?.before_day ?? '';
         }
       });
@@ -1313,8 +1370,22 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
   String holiday = '';
   String is_approve = 'N';
   String leave_request_id = '';
-  Future<void> _fetchAddWork(
+  Future<void> _fetchUpdateWork(
       String requestNoMoney, String startTime, String endTime) async {
+    print("comp_id :: ${widget.employee.comp_id}");
+    print("emp_id :: ${widget.employee.emp_id}");
+    print("request_id :: $request_id");
+    print("leave_request_id :: $leave_request_id");
+    print("leave_type_id :: $leave_type_id");
+    print("_reasonController :: ${_reasonController.text}");
+    print("_noteController :: ${_noteController.text}");
+    print("request_from_date :: $request_from_date");
+    print("request_to_date :: $request_to_date");
+    print("selectedStartTime :: $startTime");
+    print("selectedEndTime :: $endTime");
+    print("_base64Image :: $_base64Image");
+    print("base64File :: $base64File");
+    print("requestNoMoney :: $requestNoMoney");
     final uri = Uri.parse("$hostDev/api/origami/work/add_work.php");
     try {
       final response = await http.post(
@@ -1332,8 +1403,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
           'request_note': _noteController.text,
           'request_from_date': request_from_date,
           'request_to_date': request_to_date,
-          'request_from_time_': _formatTimeOfDay(selectedStartTime!),
-          'request_to_time_': _formatTimeOfDay(selectedEndTime!),
+          'request_from_time_': startTime,
+          'request_to_time_': endTime,
           'medical_certificate': _base64Image, // ใบรับรองแพทย์ Image base64
           'request_attach': base64File, // File ต้องเป็น base64 เหมือน image
           'request_no_money': requestNoMoney,
@@ -1351,18 +1422,12 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
       final message = jsonResponse['message'] ?? 'Unknown error';
 
       if (status) {
-        statusDialog(
-          'Success',
-          message,
-          'https://cdn-icons-png.freepik.com/512/5610/5610944.png',
-        );
+        statusDialog('Success', "${message}",
+            'https://cdn-icons-png.freepik.com/512/5610/5610944.png',status);
         _pushReplacement(11);
       } else {
-        statusDialog(
-          'Error',
-          message,
-          'https://cdn-icons-png.freepik.com/512/5610/5610967.png',
-        );
+        statusDialog('Error', "${message}",
+            'https://cdn-icons-png.freepik.com/512/5610/5610967.png',status);
       }
     } catch (e) {
       print("🔥 Error: $e");
@@ -1372,12 +1437,12 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     }
   }
 
-  void statusDialog(title, message, String img) {
+  void statusDialog(title, message, String img, bool status) {
     showDialog(
       context: context,
       barrierDismissible: false, // ป้องกันการกดนอกกรอบเพื่อปิด
       builder: (BuildContext context) {
-        // ตั้งเวลาให้ปิดอัตโนมัติภายใน 2 วินาที
+        if(status == true)
         Future.delayed(const Duration(seconds: 2), () {
           if (Navigator.of(context).canPop()) {
             Navigator.of(context).pop();
@@ -1417,11 +1482,51 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
             message,
             style: TextStyle(
               fontFamily: 'Arial',
-              fontSize: 18,
+              fontSize: 16,
               color: Colors.black87,
               fontWeight: FontWeight.w500,
             ),
           ),
+          actions: [
+            if(status == false)
+              Center( // ✅ บังคับให้อยู่ตรงกลาง
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, // ✅ แยกเท่า ๆ กัน
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(100),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.white,
+                              blurRadius: 8,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
         );
       },
     );
@@ -1434,39 +1539,6 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
         builder: (context) =>
             OrigamiPage(employee: widget.employee, popPage: page),
       ),
-    );
-  }
-}
-
-class UserRequestWork {
-  String title;
-  String firstname;
-  String lastname;
-  String emp_pic;
-  String emp_id;
-  String emp_code;
-  String approve_emp_id;
-
-  UserRequestWork({
-    required this.title,
-    required this.firstname,
-    required this.lastname,
-    required this.emp_pic,
-    required this.emp_id,
-    required this.emp_code,
-    required this.approve_emp_id,
-  });
-
-  // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
-  factory UserRequestWork.fromJson(Map<String, dynamic> json) {
-    return UserRequestWork(
-      title: json['title'] ?? '',
-      firstname: json['firstname'] ?? '',
-      lastname: json['lastname'] ?? '',
-      emp_pic: json['emp_pic'] ?? '',
-      emp_id: json['emp_id'] ?? '',
-      emp_code: json['emp_code'] ?? '',
-      approve_emp_id: json['approve_emp_id'] ?? '',
     );
   }
 }

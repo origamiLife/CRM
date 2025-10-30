@@ -1511,6 +1511,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
   String real_end_time = '';
   String? activity_status;
   String? activity_alert48_status;
+
   Future<void> fetchUpdateActivity() async {
     end_date = start_date;
     final uri =
@@ -1592,7 +1593,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.orange.shade200,
@@ -1757,7 +1758,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
               ),
               child: TextButton(
                 onPressed: () {
@@ -1777,7 +1778,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.orange.shade200,
@@ -1965,7 +1966,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
               ),
               child: TextButton(
                 onPressed: () {
@@ -1985,7 +1986,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.red.shade400,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.red,

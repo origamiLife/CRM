@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-
+import 'package:geolocator/geolocator.dart';
 import '../../location_googlemap/locationGoogleMap.dart';
 import '../../need/need_view/need_detail.dart';
 import '../../project/project.dart';
@@ -438,7 +438,7 @@ class _activityAddState extends State<activityAdd> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
               ),
               child: TextButton(
                 onPressed: () {
@@ -458,7 +458,7 @@ class _activityAddState extends State<activityAdd> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.orange,
@@ -1603,7 +1603,7 @@ class _activityAddState extends State<activityAdd> {
   //             width: MediaQuery.of(context).size.width * 0.35,
   //             decoration: BoxDecoration(
   //               color: Colors.orange.shade400,
-  //               borderRadius: BorderRadius.circular(10),
+  //               borderRadius: BorderRadius.circular(100),
   //               boxShadow: [
   //                 BoxShadow(
   //                   color: Colors.orange.shade200,

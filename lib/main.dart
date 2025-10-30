@@ -15,6 +15,8 @@ String hostDev = 'https://www.origami.life';
 String token = 'ori20#17gami';
 String tokenMD5 = 'aeb674f8c49dd404dabc759f81f15918';
 int selectedRadio = 2;
+Position? userPosition;
+// "❌" // ✅
 // bool isAndroid = false;
 // bool isTablet = false;
 // bool isIPad = false;
@@ -30,14 +32,14 @@ void main() async {
   await Hive.initFlutter(appDocumentDirectory.path);
   await Hive.openBox('userBox');
   await initializeNotification();
-  await platformAndroid();
+  // await platformAndroid();
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
     home: MyApp(),
   ));
 }
 
-Future<void> platformAndroid() async {
+Future<void> _platformAndroid() async {
   // ในฟังก์ชัน initializeNotification() หรือหลังจากนั้น
   if (Platform.isAndroid) {
     // ขอสิทธิ์แสดง Notification
@@ -110,43 +112,6 @@ Future<void> initializeNotification() async {
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
   // จัดการการตอบสนองเมื่อแอปไม่ได้ทำงานอยู่ (Background/Terminated)
-}
-
-Position? userPosition;
-
-Future<void> getLocation() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-
-  // ตรวจสอบว่าเปิดบริการ location หรือยัง
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    // ถ้ายังไม่เปิด
-    print('Location services are disabled.');
-    return;
-  }
-
-  // ขอสิทธิ์ location
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      print('Location permissions are denied');
-      return;
-    }
-  }
-
-  if (permission == LocationPermission.deniedForever) {
-    print('Location permissions are permanently denied');
-    return;
-  }
-
-  // ได้สิทธิ์แล้ว อ่านตำแหน่ง
-  userPosition = await Geolocator.getCurrentPosition(
-    desiredAccuracy: LocationAccuracy.high,
-  );
-
-  print(userPosition?.latitude);
 }
 
 class MyApp extends StatelessWidget {
@@ -277,17 +242,10 @@ class _LoginPageState extends State<LoginPage> {
       _login();
     } else {
       countPage = 1;
-
     }
     _passload = password??'';
     print('Username: $username');
     // print('Password: $password');
-  }
-
-  void _loadBegin() {
-    Future.delayed(Duration(seconds: 2));
-    _loadbegin = true;
-    print('loadingBegin ::: $_loadbegin');
   }
 
   @override
@@ -341,12 +299,12 @@ class _LoginPageState extends State<LoginPage> {
                                 ) // หรือใช้ภาพจาก assets แทน
                           ),
                     ),
-                    Align(
+                    const Align(
                       alignment: Alignment.topRight,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
-                          'version: 1.0.2+11',
+                          'version: 1.0.3+3',
                           style: TextStyle(
                             fontFamily: 'Arial',
                             color: Colors.white,
@@ -759,22 +717,25 @@ class _LoginPageState extends State<LoginPage> {
                     final employee = employeeList[index];
                     return InkWell(
                       borderRadius: BorderRadius.circular(12),
-                      onTap: () {
-                        setState(() async {
-                          Navigator.pop(context);
-                          await Future.delayed(const Duration(milliseconds: 400));
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OrigamiPage(
-                                employee: employee,
-                                company_id: widget.company_id ?? 0,
-                                popPage: widget.popPage,
-                              ),
+                      onTap: () async {
+                        Navigator.pop(context);
+
+                        // ✅ ทำ delay ก่อน (async ได้ตรงนี้)
+                        // await Future.delayed(const Duration(milliseconds: 400));
+
+                        // ✅ แล้วค่อยเปลี่ยนหน้า (ไม่ต้องอยู่ใน setState)
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrigamiPage(
+                              employee: employee,
+                              company_id: widget.company_id ?? 0,
+                              popPage: widget.popPage,
                             ),
-                          );
-                        });
+                          ),
+                        );
                       },
+
                       child: Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

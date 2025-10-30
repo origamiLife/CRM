@@ -570,7 +570,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
               ),
               child: TextButton(
                 onPressed: () {
@@ -590,7 +590,7 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.red.shade400,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.red,

@@ -50,17 +50,121 @@ class _TimeSampleState extends State<TimeSample> {
   void initState() {
     super.initState();
     _platform();
-    getLocation();
-    Timer.periodic(Duration(seconds: 1), (timer) {
+
+    // ✅ ให้รอ build เสร็จแล้วค่อยเช็ก location
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkLocationStatus();
+    });
+
+    // ✅ อัปเดตเวลาปัจจุบันทุกวินาที
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() {
           _currentTime = DateTime.now();
         });
       }
     });
-    // _location = Location();
-    // getLocation();
-    requestLocationPermission();
+  }
+
+  bool isGps = false;
+  bool isLocationPermissionGranted = false;
+
+  Future<void> checkLocationStatus() async {
+    // ✅ ตรวจสอบว่า GPS เปิดหรือไม่
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    isGps = serviceEnabled;
+
+    if (!isGps) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please turn on GPS before use.')),
+        );
+      }
+      return;
+    }
+
+    // ✅ ตรวจสอบ permission
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    // 🔴 ถ้ายัง denied หรือ deniedForever → ถือว่ายังไม่อนุญาต
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      isLocationPermissionGranted = false;
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Please enable location permissions in the app settings.')),
+        );
+      }
+      // ❗ไม่ควรเปิด app settings ทันทีตอน init
+      return;
+    }
+
+    // ✅ ถ้ามาถึงตรงนี้ แสดงว่าเปิด GPS และให้สิทธิ์แล้ว
+    isLocationPermissionGranted = true;
+
+    // ทดสอบอ่านตำแหน่ง
+    userPosition = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    print('Lat: ${userPosition?.latitude}, Lng: ${userPosition?.longitude}');
+
+    setState(() {}); // เพื่ออัปเดต UI
+  }
+
+  Future<void> checkLocationStatusPopup() async {
+    // ✅ ตรวจสอบ GPS
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please turn on GPS before use.')),
+        );
+      }
+      await Geolocator.openLocationSettings(); // เปิดหน้าการตั้งค่า GPS
+      return;
+    }
+
+    // ✅ ตรวจสอบ permission
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      // 🔹 ขอสิทธิ์ใหม่ (จะแสดง popup)
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // 🔹 เปิดหน้า App Settings เพื่อให้ผู้ใช้เปิดสิทธิ์เอง
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enable location permissions in the app settings.')),
+        );
+      }
+      await Geolocator.openAppSettings();
+      return;
+    }
+
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      // ✅ ได้รับสิทธิ์แล้ว
+      isLocationPermissionGranted = true;
+      userPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      print('Lat: ${userPosition?.latitude}, Lng: ${userPosition?.longitude}');
+    } else {
+      isLocationPermissionGranted = false;
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('โปรดอนุญาตสิทธิ์ตำแหน่งก่อนใช้งาน')),
+        );
+      }
+    }
   }
 
   @override
@@ -161,6 +265,8 @@ class _TimeSampleState extends State<TimeSample> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    final TN =
+        "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}:${_currentTime.second.toString().padLeft(2, '0')}";
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -218,7 +324,7 @@ class _TimeSampleState extends State<TimeSample> {
                 ],
               ));
             } else {
-              return _getContentWidget(snapshot.data!);
+              return _getContentWidget(snapshot.data!, TN);
             }
           },
         ),
@@ -226,7 +332,7 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
-  Widget _getContentWidget(GetTimeStampSim branch) {
+  Widget _getContentWidget(GetTimeStampSim branch, String tn) {
     return SafeArea(
       child: Column(
         children: [
@@ -238,7 +344,7 @@ class _TimeSampleState extends State<TimeSample> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _buildTimeWidget(),
+                    _buildTimeWidget(tn),
                     const SizedBox(height: 10),
                     _buildLocationInfo(branch),
                     const SizedBox(height: 16),
@@ -248,13 +354,33 @@ class _TimeSampleState extends State<TimeSample> {
               ),
             ),
           ),
-          Expanded(flex: 3, child: _buildGoogleMap(branch)),
+          Expanded(
+              flex: 3,
+              child: (isLocationPermissionGranted == false ||
+                      (branchLat == null || branchLng == null))
+                  ? _buildGoogleMapNone()
+                  : _buildGoogleMap(branch)),
           Expanded(
             flex: 2,
             child: _buildStampButtons(branch),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildGoogleMapNone() {
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(13.736717, 100.523186), // กรุงเทพฯ
+        zoom: 18.0, // ซูมเข้า
+      ),
+      myLocationEnabled: true,
+      myLocationButtonEnabled: true,
+      rotateGesturesEnabled: false,
+      tiltGesturesEnabled: false,
+      scrollGesturesEnabled: true,
+      zoomGesturesEnabled: true,
     );
   }
 
@@ -307,9 +433,9 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
-  Widget _buildTimeWidget() {
+  Widget _buildTimeWidget(String timeNow) {
     return Text(
-      "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}:${_currentTime.second.toString().padLeft(2, '0')}",
+      timeNow,
       style: const TextStyle(
         fontFamily: 'Arial',
         fontSize: 70,
@@ -461,18 +587,25 @@ class _TimeSampleState extends State<TimeSample> {
     _isStamping = true;
 
     try {
+      // ✅ 1. ตรวจสอบสิทธิ์ตำแหน่งและ GPS
+      await checkLocationStatusPopup();
+      // await checkLocationStatus();
+      if (!isLocationPermissionGranted) {
+        _isStamping = false;
+        return;
+      }
+
+      // ✅ 2. ตรวจสอบเงื่อนไข CheckIn/Out
       if (_checkInOut == true || b.branch_fixed == 'N') {
+        // ✅ 3. เปิดกล้องหลังจากผ่านทุกการตรวจสอบแล้ว
         final XFile? image = await _picker.pickImage(source: source);
         if (image == null) return;
-        // final directory = await getApplicationDocumentsDirectory();
-        // final filePath = path.join(
-        //   directory.path,
-        //   'my_image_${DateTime.now().millisecondsSinceEpoch}.jpg',
-        // );
+
         final file = File(image.path);
         final imageBytes = await file.readAsBytes();
         final base64String = base64Encode(imageBytes);
 
+        // ✅ 4. อัปเดตข้อมูลใน state
         setState(() {
           _base64Image = base64String;
           latitude = '${userPosition?.latitude}';
@@ -482,39 +615,29 @@ class _TimeSampleState extends State<TimeSample> {
 
         await widget.fetchBranchCallback();
 
-        // พิมพ์ข้อมูลเพิ่มเติมใน console
+        // ✅ 5. Log ข้อมูลดีบัก
         print('Stamp Type: $stamp_type');
         print('Branch ID: ${widget.timestamp?.branch_id}');
         print('Latitude: $latitude');
         print('Longitude: $longitude');
         print('Platform: $_checkPlatform');
         print('Base64 Image: $_base64Image');
+
+        // ✅ 6. ทำงานหลัก (เข้า ABC)
         _fetchStamp();
       } else {
-        _showOutOfAreaMessage();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text(
+                  'You are outside the specified radius area and cannot stamp.')),
+        );
+        // _showOutOfAreaMessage("You are outside the specified radius area and cannot stamp.");
       }
     } catch (e) {
       print('Error picking image: $e');
     } finally {
       _isStamping = false;
     }
-  }
-
-  void _showOutOfAreaMessage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        duration: Duration(seconds: 2),
-        content: Text(
-          'You are outside the specified radius area and cannot stamp.',
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
   }
 
   final ImagePicker _picker = ImagePicker();
@@ -543,10 +666,8 @@ class _TimeSampleState extends State<TimeSample> {
 
       compDescription = jsonResponse['comp_description'] ?? '';
 
-      branchLat ??= double.tryParse(branchData['branch_lat'].toString()) ??
-          13.73409854731179;
-      branchLng ??= double.tryParse(branchData['branch_lng'].toString()) ??
-          100.62710791826248;
+      branchLat ??= double.tryParse(branchData['branch_lat'].toString());
+      branchLng ??= double.tryParse(branchData['branch_lng'].toString());
       // _mapController.animateCamera(
       //   CameraUpdate.newLatLng(LatLng(double.parse(branchData['branch_lat'].toString() ?? ''),
       //       double.parse(branchData['branch_lng'].toString() ?? ''))),
@@ -599,7 +720,7 @@ class _TimeSampleState extends State<TimeSample> {
   void showStampSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        duration: Duration(seconds: 3),
+        duration: Duration(seconds: 2),
         content: Row(
           children: [
             Container(
@@ -608,6 +729,39 @@ class _TimeSampleState extends State<TimeSample> {
                 color: Colors.white,
               ),
               child: Icon(Icons.check_circle, color: Colors.green, size: 20),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(left: 14),
+                child: Text(
+                  message,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showOutOfAreaMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 2),
+        content: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Icon(Icons.clear, color: Colors.red, size: 20),
             ),
             Expanded(
               child: Padding(

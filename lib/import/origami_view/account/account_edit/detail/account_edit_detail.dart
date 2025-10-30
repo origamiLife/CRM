@@ -2,7 +2,6 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 import 'package:path/path.dart' as path;
-import '../../../Contact/contact_edit/contact_edit_detail.dart';
 import '../../account_add/account_add_detail.dart';
 import '../../account_screen.dart';
 import '../location/account_edit_location.dart';

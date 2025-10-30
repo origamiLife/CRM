@@ -38,13 +38,13 @@ class _IssueLogScreenState extends State<IssueLogScreen> {
 
   //job
   Future<void> fetchPerson() async {
-    final uri = Uri.parse('https://www.origami.life/api/origami/jobs/personal');
+    final uri = Uri.parse('$hostWeb/api/origami/jobs/personal');
     try {
       final response = await http.post(
         uri,
         body: {
-          'comp_id': '2',
-          'emp_id': '2',
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
         },
       );
       if (response.statusCode == 200) {

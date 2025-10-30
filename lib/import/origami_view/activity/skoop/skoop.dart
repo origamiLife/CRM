@@ -484,7 +484,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
               ),
               child: TextButton(
                 onPressed: () {
@@ -504,7 +504,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.orange.shade200,

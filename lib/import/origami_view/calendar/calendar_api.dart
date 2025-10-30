@@ -618,7 +618,7 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.orange.shade200,
@@ -714,7 +714,7 @@ class _CalendarScreenAPIState extends State<CalendarScreenAPI> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.orange.shade200,

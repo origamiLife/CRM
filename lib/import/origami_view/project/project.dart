@@ -832,7 +832,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
               isAtEnd = true;
             } else {
               indexItems += 1;
-              fetchModelProject();
+              // fetchModelProject();
               filteredItems = List.from(modelProjectList);
               isAtEnd = false;
             }
@@ -909,7 +909,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
               ),
               child: TextButton(
                 onPressed: () {
@@ -929,7 +929,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
               width: MediaQuery.of(context).size.width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.red.shade400,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.red,

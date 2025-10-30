@@ -209,10 +209,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                     radius: 50,
                                     backgroundColor: Colors.white,
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
+                                      borderRadius: BorderRadius.circular(100),
                                       child: Image.network(
                                         profileData.emp_avatar ?? '',
-                                        fit: BoxFit.fill,
+                                        fit: BoxFit.cover,
                                         errorBuilder: (context, error, stackTrace) {
                                           return Icon(Icons.person_pin_outlined,size: 60,);
                                         },

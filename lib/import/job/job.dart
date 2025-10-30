@@ -93,24 +93,24 @@ class _JobPageState extends State<JobPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(
-          (widget.compid == '2') ? 'Trandar' : 'Allable',
-          style: GoogleFonts.openSans(
-            fontSize: 22,
-            color: Colors.orange,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.orange,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white,
+      //   title: Text(
+      //     (widget.compid == '2') ? 'Trandar' : 'Allable',
+      //     style: GoogleFonts.openSans(
+      //       fontSize: 22,
+      //       color: Colors.orange,
+      //       fontWeight: FontWeight.w700,
+      //     ),
+      //   ),
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.arrow_back_ios,
+      //       color: Colors.orange,
+      //     ),
+      //     onPressed: () => Navigator.pop(context),
+      //   ),
+      // ),
       body: _getContentWidget(),
       bottomNavigationBar: BottomBarDefault(
         items: items,

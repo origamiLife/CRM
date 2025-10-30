@@ -4,7 +4,7 @@ import 'package:origamilift/import/import.dart';
 import 'package:origamilift/import/origami_view/project/project.dart';
 import 'package:origamilift/import/origami_view/sample/stamp_activity/activity_list.dart';
 import 'package:origamilift/import/origami_view/sample/stamp_time/time_stamp.dart';
-import 'package:origamilift/import/origami_view/work/approve_work.dart';
+import 'package:origamilift/import/origami_view/work/work.dart';
 import '../job/job.dart';
 import '../noti.dart';
 import 'IDOC/idoc_view.dart';
@@ -241,11 +241,26 @@ class _OrigamiPageState extends State<OrigamiPage> {
         ),
       ),
       currentAccountPicture: CircleAvatar(
-        backgroundImage: (widget.employee.emp_avatar != '' &&
-            widget.employee.emp_avatar.isNotEmpty)
-            ? NetworkImage(widget.employee.emp_avatar)
-            : const NetworkImage('https://www.origami.life/uploads/employee/20140715173028man20key.png') as ImageProvider,
-        // onBackgroundImageError: (_, __) {},
+        backgroundColor: Colors.transparent, // ✅ ตัดขอบพื้นหลังออก
+        child: ClipOval(
+          child: Image.network(
+            (widget.employee.emp_avatar != '' &&
+                widget.employee.emp_avatar.isNotEmpty)
+                ? widget.employee.emp_avatar
+                : 'https://www.origami.life/uploads/employee/20140715173028man20key.png',
+            fit: BoxFit.cover, // ✅ ให้ภาพเต็มวงกลมพอดี
+            width: double.infinity,
+            height: double.infinity,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.network(
+                '$hostDev/${widget.employee.emp_avatar}',
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              );
+            },
+          ),
+        ),
       ),
       accountName: Text(
         widget.employee.emp_name,
@@ -339,7 +354,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
   List<Map<String, dynamic>> _getMenuItems() {
     return [
       // {
-      //   'index': 1,
+      //   'index': 2,
       //   'title': 'Need Approve',
       //   'icon': FontAwesomeIcons.briefcase,
       // },
@@ -799,7 +814,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Login',
+            'LOGOUT',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 22,
@@ -812,66 +827,74 @@ class _OrigamiPageState extends State<OrigamiPage> {
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 16,
-              color: Colors.black87,
+              color: Colors.black54,
               fontWeight: FontWeight.w500,
             ),
           ),
           actions: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.35,
-              decoration: BoxDecoration(
-                color: Colors.black12,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.white,
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    decoration: BoxDecoration(
+                      color: Colors.black12,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.white,
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade400,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.orange.shade200,
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        fetchLogout();
+                      },
+                      child: Text(
+                        'Log Out',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
             ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.35,
-              decoration: BoxDecoration(
-                color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.orange.shade200,
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  fetchLogout();
-                },
-                child: Text(
-                  'Log Out',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
+
           ],
         );
       },

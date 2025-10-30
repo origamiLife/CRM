@@ -909,6 +909,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         for (int i = 0; i < emotionList.length; i++) {
           if(cont_emo == emotionList[i].emo_icon_path){
             emo_icon_title = emotionList[i].emo_icon_title;
+            break ;
           }
         }
       });

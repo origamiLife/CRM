@@ -1,7 +1,9 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-
+import 'dart:math' show cos, sqrt, asin;
+import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:geolocator/geolocator.dart';
 import '../../activity/activity.dart';
 import '../../activity/edit/stamp_activity.dart';
 
@@ -21,22 +23,133 @@ class StampMenu extends StatefulWidget {
 class _StampMenuState extends State<StampMenu> {
   DateTime _currentTime = DateTime.now();
   String currentTime = '';
+  int length = 0;
+  String status = '';
+  String status_in = '';
+  String status_out = '';
+  String lat = '';
+  String lng = '';
+  bool isfrist = false;
   @override
   void initState() {
     super.initState();
-    if (widget.activity.activity_place_type == 'out') {
-      _fetchGetTimeActivity();
-    }
-    Timer.periodic(Duration(microseconds: 50), (timer) {
-      if (mounted) {
-        setState(() {
-          _currentTime = DateTime.now();
-          currentTime = "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}:${_currentTime.second.toString().padLeft(2, '0')}";
-        });
-      }
-    });
-    _CheckPlatform();
+    checkPlatform();
+    // ✅ ให้รอ build เสร็จแล้วค่อยเช็ก location
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   checkLocationStatus();
+    // });
+
   }
+
+  String _checkPlatform = '';
+  void checkPlatform() {
+    if (Platform.isAndroid) {
+      _checkPlatform = 'Android';
+      print("Running on Android");
+    } else if (Platform.isIOS) {
+      _checkPlatform = 'IOS';
+      print("Running on iOS");
+    }
+  }
+
+  bool isGps = false;
+  bool isLocationPermissionGranted = false;
+
+  // Future<void> checkLocationStatus() async {
+  //   // ✅ ตรวจสอบว่า GPS เปิดหรือไม่
+  //   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   isGps = serviceEnabled;
+  //
+  //   if (!isGps) {
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Please turn on GPS before use.')),
+  //       );
+  //     }
+  //     return;
+  //   }
+  //
+  //   // ✅ ตรวจสอบ permission
+  //   LocationPermission permission = await Geolocator.checkPermission();
+  //
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //   }
+  //
+  //   // 🔴 ถ้ายัง denied หรือ deniedForever → ถือว่ายังไม่อนุญาต
+  //   if (permission == LocationPermission.denied ||
+  //       permission == LocationPermission.deniedForever) {
+  //     isLocationPermissionGranted = false;
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Please enable location permissions in the app settings.')),
+  //       );
+  //     }
+  //     // ❗ไม่ควรเปิด app settings ทันทีตอน init
+  //     return;
+  //   }
+  //
+  //   // ✅ ถ้ามาถึงตรงนี้ แสดงว่าเปิด GPS และให้สิทธิ์แล้ว
+  //   isLocationPermissionGranted = true;
+  //
+  //   // ทดสอบอ่านตำแหน่ง
+  //   userPosition = await Geolocator.getCurrentPosition(
+  //     desiredAccuracy: LocationAccuracy.high,
+  //   );
+  //   print('Lat: ${userPosition?.latitude}, Lng: ${userPosition?.longitude}');
+  // }
+
+  Future<void> checkLocationStatusPopup() async {
+    // ✅ ตรวจสอบ GPS
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please turn on GPS before use.')),
+        );
+      }
+      await Geolocator.openLocationSettings(); // เปิดหน้าการตั้งค่า GPS
+      return;
+    }
+
+    // ✅ ตรวจสอบ permission
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      // 🔹 ขอสิทธิ์ใหม่ (จะแสดง popup)
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // 🔹 เปิดหน้า App Settings เพื่อให้ผู้ใช้เปิดสิทธิ์เอง
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enable location permissions in the app settings.')),
+        );
+      }
+      await Geolocator.openAppSettings();
+      return;
+    }
+
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      // ✅ ได้รับสิทธิ์แล้ว
+      isLocationPermissionGranted = true;
+      userPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      print('Lat: ${userPosition?.latitude}, Lng: ${userPosition?.longitude}');
+    } else {
+      isLocationPermissionGranted = false;
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('โปรดอนุญาตสิทธิ์ตำแหน่งก่อนใช้งาน')),
+        );
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,57 +178,126 @@ class _StampMenuState extends State<StampMenu> {
         // actions: (_index == 5) ? _buildAppBarTimeStamp() : null,
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+        child: FutureBuilder<List<TimeActivity>>(
+            future: _fetchGetTimeActivity(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildTimeWidget(),
-                    const SizedBox(height: 10),
-                    _buildLocationInfo(widget.activity),
-                    const SizedBox(height: 16),
-                    _buildInOutTime(widget.activity),
+                    CircularProgressIndicator(
+                      color: Color(0xFFFF9900),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Text(
+                      'Loading...',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF555555),
+                      ),
+                    ),
                   ],
-                ),
+                ));
+              } else if (snapshot.hasError) {
+                return Center(
+                    child: Text(
+                  'Error: ${snapshot.error}',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: const Color(0xFF555555),
+                  ),
+                ));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(
+                    child: Text(
+                  'No Data Available in table.',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                  ),
+                ));
+              } else {
+                return _timeBodyWidget(snapshot.data ?? []);
+              }
+            }),
+      ),
+    );
+  }
+
+  Widget _timeBodyWidget(List<TimeActivity> list) {
+    status = list[0].status;
+    if (list.length == 1 && status == 'in') {
+      status_in = list.first.date_time;
+      status_out = '';
+    } else if (list.length == 2) {
+      status_in = list.first.date_time;
+      status_out = list.last.date_time;
+    }
+    lat = list.first.time_lat;
+    lng = list.last.time_lng;
+    print("lllllllll:::: $status_in ");
+    return Column(
+      children: [
+        Expanded(
+          flex: 2,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildTimeWidget(),
+                  const SizedBox(height: 10),
+                  _buildLocationInfo(widget.activity, list),
+                  const SizedBox(height: 16),
+                  _buildInOutTime(widget.activity, list),
+                ],
               ),
             ),
-            Expanded(flex: 3, child: _buildGoogleMap()),
-            Expanded(
-              flex: 2,
-              child: _buildStampButtons(widget.activity),
-            ),
-          ],
+          ),
         ),
-      ),
+        Expanded(flex: 3, child: (isLocationPermissionGranted == false)?_buildGoogleMapNone():_buildGoogleMap()),
+        Expanded(
+          flex: 2,
+          child: _buildStampButtons(widget.activity, list),
+        ),
+      ],
     );
   }
 
   Widget _buildTimeWidget() {
     return Text(
-      currentTime,
+      "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}:${_currentTime.second.toString().padLeft(2, '0')}",
       style: const TextStyle(
         fontFamily: 'Arial',
-        fontSize: 70,
+        fontSize: 60,
         color: Colors.white,
         fontWeight: FontWeight.w500,
       ),
     );
   }
 
-  Widget _buildLocationInfo(GetActivity activity) {
+  Widget _buildLocationInfo(GetActivity activity, List<TimeActivity> list) {
+    if (lat.length > 10) {
+      lat = lat.substring(0, 10); // ตัดเกิน 6 ตัว
+      lng = lng.substring(0, 10); // ตัดเกิน 6 ตัว
+    }
     return Column(
       children: [
         Row(
           children: [
-            const Icon(Icons.work, color: Colors.white, size: 16),
+            const Icon(Icons.workspace_premium, color: Colors.white, size: 18),
             SizedBox(width: 8),
             Expanded(
               child: Text(
-                "stamp : ${activity.activity_project_name}",
+                "${activity.activity_project_name}",
                 style: const TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 16,
@@ -129,14 +311,23 @@ class _StampMenuState extends State<StampMenu> {
         SizedBox(height: 16),
         Row(
           children: [
-            const Icon(Icons.location_on, color: Colors.white, size: 16),
-            SizedBox(width: 8),
             Expanded(
               child: Text(
-                "latitude : ${double.parse(userPosition!.latitude.toStringAsFixed(6)).toString()} , longitude : ${double.parse(userPosition!.longitude.toStringAsFixed(6)).toString()}",
+                "latitude : $lat",
                 style: const TextStyle(
                   fontFamily: 'Arial',
-                  fontSize: 16,
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                "longitude : $lng",
+                style: const TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
@@ -148,57 +339,47 @@ class _StampMenuState extends State<StampMenu> {
     );
   }
 
-  Widget _buildInOutTime(GetActivity activity) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8),
-      child: Row(
-        children: [
-          const Expanded(
-            child: Text(
-              'Input : ',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
+  Widget _buildInOutTime(GetActivity activity, List<TimeActivity> list) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            'Input :  $status_in',
+            style: const TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          Expanded(
-            child: Text(
-              get_time_in == '' ? '-' : get_time_in,
-              style: const TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
+        ),
+        Expanded(
+          child: Text(
+            'Output :  $status_out',
+            style: const TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          const Expanded(
-            child: Text(
-              'Output : ',
-              style: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              get_time_out == '' ? '-' : get_time_out,
-              style: const TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14,
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGoogleMapNone() {
+    return GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: LatLng(13.736717, 100.523186), // กรุงเทพฯ
+        zoom: 18.0, // ซูมเข้า
       ),
+      myLocationEnabled: true,
+      myLocationButtonEnabled: true,
+      rotateGesturesEnabled: false,
+      tiltGesturesEnabled: false,
+      scrollGesturesEnabled: true,
+      zoomGesturesEnabled: true,
     );
   }
 
@@ -220,11 +401,11 @@ class _StampMenuState extends State<StampMenu> {
     );
   }
 
-  Widget _buildStampButtons(GetActivity activity) {
+  Widget _buildStampButtons(GetActivity activity, List<TimeActivity> list) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        if (stamp_type_in == 'in')
+        if (list.length == 1 )
           Stack(
             alignment: Alignment.center,
             children: [
@@ -233,8 +414,7 @@ class _StampMenuState extends State<StampMenu> {
                 color: Colors.white12,
               ),
               GestureDetector(
-                onTap: () =>
-                    _pickImage(ImageSource.camera, widget.activity, 'out'),
+                onTap: () => _pickImage(ImageSource.camera, 'out'),
                 child: CircleAvatar(
                   radius: 50,
                   child:
@@ -249,7 +429,7 @@ class _StampMenuState extends State<StampMenu> {
             backgroundImage:
                 AssetImage('assets/images/stamp/stamp_button_disable.png'),
           ),
-        if (timeList.last.status != 'in')
+        if (list.length == 1 && list[0].status != 'in')
           Stack(
             alignment: Alignment.center,
             children: [
@@ -258,8 +438,7 @@ class _StampMenuState extends State<StampMenu> {
                 color: Colors.white12,
               ),
               GestureDetector(
-                onTap: () =>
-                    _pickImage(ImageSource.camera, widget.activity, 'in'),
+                onTap: () => _pickImage(ImageSource.camera, 'in'),
                 child: CircleAvatar(
                   radius: 50,
                   child: Image.asset('assets/images/stamp/stamp_button_in.png'),
@@ -271,100 +450,111 @@ class _StampMenuState extends State<StampMenu> {
     );
   }
 
-  String _checkPlatform = '';
-  void _CheckPlatform() {
-    if (Platform.isAndroid) {
-      _checkPlatform = 'Android';
-      print("Running on Android");
-    } else if (Platform.isIOS) {
-      _checkPlatform = 'IOS';
-      print("Running on iOS");
-    }
-  }
-
   bool _isStamping = false;
   final ImagePicker _picker = ImagePicker();
   String _base64Image = '';
-  Future<void> _pickImage(
-      ImageSource source, GetActivity activity, String type) async {
+  String latitude = '';
+  String longitude = '';
+  Future<void> _pickImage(ImageSource source, String type) async {
     if (_isStamping) return;
     _isStamping = true;
 
     try {
-      // if (stamp_type == 'in') {
+      // ✅ 1. ตรวจสอบสิทธิ์ตำแหน่งและ GPS
+      await checkLocationStatusPopup();
+      if (!isLocationPermissionGranted) {
+        // _showOutOfAreaMessage("Your location can't be found");
+        _isStamping = false;
+        return;
+      }
+
+      // ✅ 3. เปิดกล้องหลังจากผ่านทุกการตรวจสอบแล้ว
       final XFile? image = await _picker.pickImage(source: source);
       if (image == null) return;
       final file = File(image.path);
       final imageBytes = await file.readAsBytes();
       final base64String = base64Encode(imageBytes);
 
+      // ✅ 4. อัปเดตข้อมูลใน state
       setState(() {
         _base64Image = base64String;
+        latitude = '${userPosition?.latitude}';
+        longitude = '${userPosition?.longitude}';
       });
-      // พิมพ์ข้อมูลเพิ่มเติมใน console
+      // ✅ 5. Log ข้อมูลดีบัก
+      print('Stamp Type: $type');
+      print('Latitude: $latitude');
+      print('Longitude: $longitude');
+      print('Platform: $_checkPlatform');
       print('Base64 Image: $_base64Image');
-      stamp_type = type;
-      _fetchStampActivity();
+
+      // ✅ 6. ทำงานหลัก (เข้า ABC)
+      _fetchStampActivity(type,latitude,longitude);
     } catch (e) {
       print('Error picking image: $e');
     } finally {
       _isStamping = false;
     }
   }
+  // Future<void> _pickImage(
+  //     ImageSource source, String type) async {
+  //   if (_isStamping) return;
+  //   _isStamping = true;
+  //
+  //   try {
+  //     // if (stamp_type == 'in') {
+  //     final XFile? image = await _picker.pickImage(source: source);
+  //     if (image == null) return;
+  //     final file = File(image.path);
+  //     final imageBytes = await file.readAsBytes();
+  //     final base64String = base64Encode(imageBytes);
+  //
+  //     setState(() {
+  //       _base64Image = base64String;
+  //     });
+  //     // พิมพ์ข้อมูลเพิ่มเติมใน console
+  //     print('Base64 Image: $_base64Image');
+  //     stamp_type = type;
+  //     _fetchStampActivity();
+  //   } catch (e) {
+  //     print('Error picking image: $e');
+  //   } finally {
+  //     _isStamping = false;
+  //   }
+  // }
 
-  void _showOutOfAreaMessage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        duration: Duration(seconds: 2),
-        content: Text(
-          'You are outside the specified radius area and cannot stamp.',
-          style: TextStyle(
-            fontFamily: 'Arial',
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
 
-  String stamp_type = '';
-  Future<void> _fetchStampActivity() async {
+  Future<void> _fetchStampActivity(String type, String latitude, String longitude) async {
     print('comp_id : ${widget.employee.comp_id}');
     print('emp_id : ${widget.employee.emp_id}');
-    print('stamp_type : ${stamp_type}');
+    print('stamp_type : $type');
     print('activity_id : ${widget.activity.activity_id.toString()}');
-    print('userPosition?.latitude : ${userPosition?.latitude}');
-    print('userPosition?.longitude : ${userPosition?.longitude}');
-    print('device : ${_checkPlatform}');
+    print('latitude : $latitude');
+    print('longitude : $longitude');
+    print('device : $_checkPlatform');
     try {
       final response = await http.post(
         Uri.parse('$hostDev/api/origami/time/stamp.php'),
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'stamp_type': stamp_type, //in,out
+          'stamp_type': type, //in,out
           //________________________activity_id_______________________//
           'activity_id': widget.activity.activity_id.toString(),
           //________________________branch_id_______________________//
           'branch_id': '',
-          'latitude': userPosition?.latitude.toString(),
-          'longitude': userPosition?.longitude.toString(),
+          'latitude': latitude,
+          'longitude': longitude,
           'device': _checkPlatform,
           'photo': _base64Image,
         },
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        Navigator.pop(context);
         print('$jsonResponse');
-        if(stamp_type == 'in'){
-          get_time_in = jsonResponse['stamp_in'];
-        }else{
-          get_time_out = jsonResponse['stamp_out'];
-        }
-        await _fetchGetTimeActivity();
+        isIntime = true;
         showStampSnackBar(jsonResponse['message']);
       } else {
         throw Exception('Failed to load status data');
@@ -374,13 +564,10 @@ class _StampMenuState extends State<StampMenu> {
     }
   }
 
-  List<TimeActivity> timeList = [];
-  String stamp_type_in = '';
-  String stamp_type_out = '';
-  String get_time_in = '';
-  String get_time_out = '';
+  bool isIntime = false;
+  bool frist = false;
   var activityid;
-  Future<void> _fetchGetTimeActivity() async {
+  Future<List<TimeActivity>> _fetchGetTimeActivity() async {
     final uri =
         Uri.parse("$hostDev/api/origami/crm/activity/get_time_activity.php");
     final response = await http.post(
@@ -393,34 +580,9 @@ class _StampMenuState extends State<StampMenu> {
       },
     );
     if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-      print('$dataJson');
-      setState(() {
-        timeList = dataJson.map((json) => TimeActivity.fromJson(json)).toList();
-        // activityid = dataJson.
-        final fristTimeList = timeList.first;
-        final lastTimeList = timeList.last;
-        if (fristTimeList.status == 'in' && lastTimeList.status == 'in') {
-          stamp_type_in = 'in';
-          get_time_in = fristTimeList.date_time;
-        } else if (fristTimeList.status == 'in' &&
-            lastTimeList.status == 'out') {
-          stamp_type_in = 'in';
-          stamp_type_out = 'out';
-          get_time_in = fristTimeList.date_create;
-          get_time_out = lastTimeList.date_time;
-        } else if (fristTimeList.status == 'out' &&
-            lastTimeList.status == 'out') {
-          stamp_type_in = 'in';
-          stamp_type_out = 'out';
-          get_time_out = lastTimeList.date_time;
-        } else {
-          stamp_type_in = 'in';
-        }
-        print('object]]]]]]]]]]]]]] $stamp_type_in');
-        print('object]]]]]]]]]]]]]] $get_time_in');
-      });
+      return dataJson.map((json) => TimeActivity.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load personal data: ${response.reasonPhrase}');
     }
@@ -438,6 +600,39 @@ class _StampMenuState extends State<StampMenu> {
                 color: Colors.white,
               ),
               child: Icon(Icons.check_circle, color: Colors.green, size: 20),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(left: 14),
+                child: Text(
+                  message,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showOutOfAreaMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 2),
+        content: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Icon(Icons.clear, color: Colors.red, size: 20),
             ),
             Expanded(
               child: Padding(

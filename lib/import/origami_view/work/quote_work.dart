@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-import 'package:origamilift/import/origami_view/work/approve_work.dart';
+import 'package:origamilift/import/origami_view/work/work.dart';
 
 import '../Contact/contact_add/contact_add_detail.dart';
 import '../Contact/contact_edit/contact_edit_detail.dart';
@@ -19,6 +19,10 @@ class _WorkQuoteState extends State<WorkQuote> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _reasonController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
+
+  Color hexToColor(String code) {
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
 
   String showlastDay = '';
   bool _isChecked = false;
@@ -87,40 +91,48 @@ class _WorkQuoteState extends State<WorkQuote> {
                     ),
                   ));
             } else {
-              return _qouteWork(snapshot.data ?? []);
+              return _quoteWork(snapshot.data ?? []);
             }
           }),
     );
   }
 
-  void _workcalendar(StatusWork work){
-    availableStr = work.available;
-    List<String> parts = work.used.split(":");
-    int usedHours = int.parse(parts[0]);
-    int minutes = usedHours * 60;
-    int total = double.parse(work.total).toInt() * 60;
-    int usedMinutes = total - minutes;
-    Duration duration = Duration(minutes: usedMinutes);
+  String availableStr = '';
+  void _workcalendar(StatusWork work) {
+    // total และ used เป็นชั่วโมง (อาจเป็นทศนิยม)
+    double totalHours = double.tryParse(work.total) ?? 0;
+    double usedHours = double.tryParse(work.used) ?? 0;
 
-    print('$total - $minutes : $usedMinutes');
+    // หาชั่วโมงที่เหลือ
+    double availableHours = totalHours - usedHours;
 
-// ฟังก์ชันช่วยเติมเลขศูนย์
+    // แปลงเป็นชั่วโมงและนาที
+    int hours = availableHours.floor();
+    int minutes = ((availableHours - hours) * 60).round();
+
+    // ป้องกันกรณีเกิน 60 นาที
+    if (minutes == 60) {
+      hours += 1;
+      minutes = 0;
+    }
+
+    // ฟังก์ชันช่วยเติมเลขศูนย์
     String twoDigits(int n) => n.toString().padLeft(2, "0");
 
-// format HH:mm:ss
-    availableStr =
-        "${duration.inHours}:${twoDigits(duration.inMinutes.remainder(60))}:${twoDigits(duration.inSeconds.remainder(60))}";
-    print('object');
+    // สร้างสตริงรูปแบบ HH:mm
+    availableStr = "${twoDigits(hours)}:${twoDigits(minutes)}";
 
+    print('รวมชั่วโมงทั้งหมด: $totalHours');
+    print('ใช้ไป: $usedHours');
+    print('เหลือ: $availableStr');
   }
-  String availableStr = '';
 
-  Widget _qouteWork(List<StatusWork> dataWork) {
+  Widget _quoteWork(List<StatusWork> dataWork) {
     return ListView.builder(
       itemCount: dataWork.length,
       itemBuilder: (context, index) {
         final work = dataWork[index];
-        _workcalendar(work);
+        _workcalendar(dataWork[index]);
         return Padding(
           padding: const EdgeInsets.all(8),
           child: Container(
@@ -141,57 +153,55 @@ class _WorkQuoteState extends State<WorkQuote> {
                     '[ ${work.leave_type_name_en} ]',
                     style: TextStyle(
                       fontFamily: 'Arial',
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Color(0xFF555555),
                       fontWeight: FontWeight.w700,
                     ),
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    maxLines: 2,
                   ),
                   Divider(
-                    color: Color(
-                      int.parse(
-                          '0xFF${work.leave_type_color.substring(1)}'),
-                    ),
+                    color: (work.leave_type_color == '')
+                        ? Colors.orange
+                        : hexToColor(work.leave_type_color),
                     thickness: 4,
                   ),
                   Text(
                     'Total : ${work.total} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    maxLines: 2,
                   ),
                   SizedBox(height: 8),
                   Text(
                     'Used : ${(work.used == '') ? ' - ' : work.used ?? ''} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    maxLines: 2,
                   ),
                   SizedBox(height: 8),
                   Text(
                     'Balance : ${availableStr} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    maxLines: 2,
                   ),
                   SizedBox(height: 8),
-
                 ],
               ),
             ),
@@ -214,7 +224,6 @@ class _WorkQuoteState extends State<WorkQuote> {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      print(jsonResponse);
       // เข้าถึงข้อมูลในคีย์ 'instructors'
       final List<dynamic> dataJson = jsonResponse['data'] ?? [];
       // แปลงข้อมูลจาก JSON เป็น List<Instructor>
@@ -222,6 +231,61 @@ class _WorkQuoteState extends State<WorkQuote> {
     } else {
       throw Exception('Failed to load instructors');
     }
+  }
+
+  void _messageDialog(title, message, String img) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // ป้องกันการกดนอกกรอบเพื่อปิด
+      builder: (BuildContext context) {
+        // ตั้งเวลาให้ปิดอัตโนมัติภายใน 2 วินาที
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+        });
+
+        return AlertDialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Column(
+            children: [
+              Image.network(
+                img,
+                height: 200,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.network(
+                    'https://cdn-icons-png.freepik.com/512/5610/5610944.png',
+                    height: 200,
+                    fit: BoxFit.contain,
+                  );
+                },
+              ),
+              SizedBox(height: 16),
+              Text(
+                title,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 28,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 18,
+              color: Colors.black87,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        );
+      },
+    );
   }
   
 }
