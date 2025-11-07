@@ -119,16 +119,17 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
+        elevation: 0,
+        backgroundColor: Colors.orange,
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '',
+            'Update',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -155,7 +156,7 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
                     width: double.infinity,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.network(
-                        'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                        '$hostDev/uploads/employee/20140715173028man20key.png',
                         height: 160,
                         fit: BoxFit.contain,
                         color: Colors.grey.shade100,
@@ -177,7 +178,7 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
                           child: Image.network(
                             emp_pic == ''
                                 ? widget.employee.emp_avatar
-                                : emp_pic,
+                                : '$emp_pic',
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: double.infinity,
@@ -189,6 +190,16 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 height: double.infinity,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                    emp_pic == ''
+                                        ? '$hostWeb/${widget.employee.emp_avatar}'
+                                        : '$hostWeb/${emp_pic}',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  );
+                                },
                               );
                             },
                           ),
@@ -261,7 +272,8 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
                                   label: 'Work Type',
                                   items: typeList,
                                   selectedValue: selectedType,
-                                  getLabel: (item) => item.leave_type_name_en,
+                                  getLabel: (item) =>
+                                      item.leave_type_name_en ?? '',
                                   onChanged: (value) {
                                     setState(() {
                                       selectedType = value;
@@ -348,17 +360,20 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
                                         padding: const EdgeInsets.all(8.0),
                                         child: Row(
                                           children: [
-                                            Text(
-                                              '$request_from_date $startTime',
-                                              style: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14,
-                                                  color: Color(0xFF555555)),
-                                            ),
-                                            Spacer(),
                                             Icon(
                                               Icons.calendar_month,
                                               color: Color(0xFF555555),
+                                              size: 16,
+                                            ),
+                                            SizedBox(width: 2),
+                                            Expanded(
+                                              child: Text(
+                                                '$request_from_date $startTime',
+                                                style: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 12,
+                                                    color: Color(0xFF555555)),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -387,17 +402,20 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
                                         padding: const EdgeInsets.all(8.0),
                                         child: Row(
                                           children: [
-                                            Text(
-                                              '$request_to_date $endTime',
-                                              style: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14,
-                                                  color: Color(0xFF555555)),
-                                            ),
-                                            Spacer(),
                                             Icon(
                                               Icons.calendar_month,
                                               color: Color(0xFF555555),
+                                              size: 16,
+                                            ),
+                                            SizedBox(width: 2),
+                                            Expanded(
+                                              child: Text(
+                                                '$request_to_date $endTime',
+                                                style: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 12,
+                                                    color: Color(0xFF555555)),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -1318,7 +1336,7 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
           }
         }
 
-        type_name = typeList[index].leave_type_name_en;
+        type_name = typeList[index].leave_type_name_en ?? '';
         print(type_name);
         if (typeList.isNotEmpty && selectedType == null) {
           // selectedType = typeList.first;
@@ -1357,7 +1375,7 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
         for (int i = 0; i < requestWork.length; i++) {
           if (widget.employee.emp_id == requestWork[i].approve_emp_id) {
             is_approve = 'Y';
-            break ;
+            break;
           }
         }
       });
@@ -1423,11 +1441,11 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
 
       if (status) {
         statusDialog('Success', "${message}",
-            'https://cdn-icons-png.freepik.com/512/5610/5610944.png',status);
+            'https://cdn-icons-png.freepik.com/512/5610/5610944.png', status);
         _pushReplacement(11);
       } else {
         statusDialog('Error', "${message}",
-            'https://cdn-icons-png.freepik.com/512/5610/5610967.png',status);
+            'https://cdn-icons-png.freepik.com/512/5610/5610967.png', status);
       }
     } catch (e) {
       print("🔥 Error: $e");
@@ -1442,12 +1460,12 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
       context: context,
       barrierDismissible: false, // ป้องกันการกดนอกกรอบเพื่อปิด
       builder: (BuildContext context) {
-        if(status == true)
-        Future.delayed(const Duration(seconds: 2), () {
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
-          }
-        });
+        if (status == true)
+          Future.delayed(const Duration(seconds: 2), () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+          });
 
         return AlertDialog(
           shape:
@@ -1488,10 +1506,12 @@ class _WorkApplyUpdateState extends State<WorkApplyUpdate> {
             ),
           ),
           actions: [
-            if(status == false)
-              Center( // ✅ บังคับให้อยู่ตรงกลาง
+            if (status == false)
+              Center(
+                // ✅ บังคับให้อยู่ตรงกลาง
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, // ✅ แยกเท่า ๆ กัน
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceEvenly, // ✅ แยกเท่า ๆ กัน
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),

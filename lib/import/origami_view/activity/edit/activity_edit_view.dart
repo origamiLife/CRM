@@ -213,7 +213,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
                   width: double.infinity,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.network(
-                      'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                      '$hostDev/uploads/employee/20140715173028man20key.png',
                       height: 160,
                       fit: BoxFit.contain,
                       color: Colors.grey.shade100,

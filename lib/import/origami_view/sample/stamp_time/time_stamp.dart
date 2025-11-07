@@ -12,13 +12,13 @@ class TimeSample extends StatefulWidget {
   const TimeSample({
     super.key,
     required this.employee,
-    this.timestamp,
+    this.timeStampSim,
     required this.fetchBranchCallback,
     required this.branch_name,
     required this.branch_id,
   });
   final Employee employee;
-  final GetTimeStampSim? timestamp;
+  final GetTimeStampSim? timeStampSim;
   final Future<void> Function() fetchBranchCallback;
   final String branch_name;
   final String branch_id;
@@ -38,7 +38,7 @@ class _TimeSampleState extends State<TimeSample> {
   // LocationData? _userLocation;
   DateTime _currentTime = DateTime.now();
   Set<Marker> _markers = {};
-  String _checkPlatform = '';
+  String platform = '';
   bool _mounted = true;
   String latitude = '';
   String longitude = '';
@@ -50,7 +50,6 @@ class _TimeSampleState extends State<TimeSample> {
   void initState() {
     super.initState();
     _platform();
-
     // ✅ ให้รอ build เสร็จแล้วค่อยเช็ก location
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkLocationStatus();
@@ -179,8 +178,8 @@ class _TimeSampleState extends State<TimeSample> {
       _markers.add(
         Marker(
           markerId: MarkerId('target_marker'),
-          position: LatLng(double.parse(widget.timestamp?.branch_lat ?? ''),
-              double.parse(widget.timestamp?.branch_lng ?? '')),
+          position: LatLng(double.parse(widget.timeStampSim?.branch_lat ?? ''),
+              double.parse(widget.timeStampSim?.branch_lng ?? '')),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
         ),
       );
@@ -210,14 +209,14 @@ class _TimeSampleState extends State<TimeSample> {
   }
 
   Future<void> _checkUserInRadius() async {
-    if (userPosition == null || widget.timestamp == null) return;
+    if (userPosition == null || widget.timeStampSim  == null) return;
 
     final double branchLat =
-        double.tryParse(widget.timestamp!.branch_lat) ?? 0.0;
+        double.tryParse(widget.timeStampSim!.branch_lat) ?? 0.0;
     final double branchLng =
-        double.tryParse(widget.timestamp!.branch_lng) ?? 0.0;
+        double.tryParse(widget.timeStampSim!.branch_lng) ?? 0.0;
     final double radius =
-        double.tryParse(widget.timestamp!.branch_radius) ?? 0.0;
+        double.tryParse(widget.timeStampSim!.branch_radius) ?? 0.0;
 
     final double userLat = userPosition!.latitude;
     final double userLng = userPosition!.longitude;
@@ -254,10 +253,10 @@ class _TimeSampleState extends State<TimeSample> {
 
   void _platform() {
     if (Platform.isAndroid) {
-      _checkPlatform = 'Android';
+      platform = 'Android';
       print("Running on Android");
     } else if (Platform.isIOS) {
-      _checkPlatform = 'IOS';
+      platform = 'IOS';
       print("Running on iOS");
     }
   }
@@ -301,28 +300,6 @@ class _TimeSampleState extends State<TimeSample> {
                 ],
               ));
               // Text('Error: ${snapshot.error}');
-            } else if (!snapshot.hasData) {
-              return Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Text(
-                    'Loading...',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ));
             } else {
               return _getContentWidget(snapshot.data!, TN);
             }
@@ -340,17 +317,15 @@ class _TimeSampleState extends State<TimeSample> {
             flex: 2,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _buildTimeWidget(tn),
-                    const SizedBox(height: 10),
-                    _buildLocationInfo(branch),
-                    const SizedBox(height: 16),
-                    _buildInOutTime(branch),
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildTimeWidget(tn),
+                  const SizedBox(height: 10),
+                  _buildLocationInfo(branch),
+                  const SizedBox(height: 16),
+                  _buildInOutTime(branch),
+                ],
               ),
             ),
           ),
@@ -370,7 +345,7 @@ class _TimeSampleState extends State<TimeSample> {
   }
 
   Widget _buildGoogleMapNone() {
-    return GoogleMap(
+    return const GoogleMap(
       initialCameraPosition: CameraPosition(
         target: LatLng(13.736717, 100.523186), // กรุงเทพฯ
         zoom: 18.0, // ซูมเข้า
@@ -438,7 +413,7 @@ class _TimeSampleState extends State<TimeSample> {
       timeNow,
       style: const TextStyle(
         fontFamily: 'Arial',
-        fontSize: 70,
+        fontSize: 60,
         color: Colors.white,
         fontWeight: FontWeight.w500,
       ),
@@ -525,6 +500,22 @@ class _TimeSampleState extends State<TimeSample> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            LoadingAnimationWidget.beat(
+              size: 100,
+              color: Colors.white24,
+            ),
+            GestureDetector(
+              onTap: () => _pickImage(ImageSource.camera, b),
+              child: CircleAvatar(
+                radius: 50,
+                child: Image.asset('assets/images/stamp/stamp_button_in.png'),
+              ),
+            ),
+          ],
+        ),
         if (!isStampedOut)
           Stack(
             alignment: Alignment.center,
@@ -550,23 +541,8 @@ class _TimeSampleState extends State<TimeSample> {
             backgroundImage:
                 AssetImage('assets/images/stamp/stamp_button_disable.png'),
           ),
-        if (!isStampedIn)
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              LoadingAnimationWidget.beat(
-                size: 100,
-                color: Colors.white24,
-              ),
-              GestureDetector(
-                onTap: () => _pickImage(ImageSource.camera, b),
-                child: CircleAvatar(
-                  radius: 50,
-                  child: Image.asset('assets/images/stamp/stamp_button_in.png'),
-                ),
-              ),
-            ],
-          ),
+
+
       ],
     );
   }
@@ -617,10 +593,10 @@ class _TimeSampleState extends State<TimeSample> {
 
         // ✅ 5. Log ข้อมูลดีบัก
         print('Stamp Type: $stamp_type');
-        print('Branch ID: ${widget.timestamp?.branch_id}');
+        print('Branch ID: ${widget.timeStampSim?.branch_id}');
         print('Latitude: $latitude');
         print('Longitude: $longitude');
-        print('Platform: $_checkPlatform');
+        print('Platform: $platform');
         print('Base64 Image: $_base64Image');
 
         // ✅ 6. ทำงานหลัก (เข้า ABC)
@@ -656,7 +632,7 @@ class _TimeSampleState extends State<TimeSample> {
         'emp_id': widget.employee.emp_id,
         'branch_id': (isFirst == false)
             ? widget.branch_id
-            : widget.timestamp?.branch_id ?? '2',
+            : widget.timeStampSim?.branch_id ?? '2',
       },
     );
 
@@ -694,10 +670,10 @@ class _TimeSampleState extends State<TimeSample> {
           //________________________activity_id_______________________//
           'activity_id': '0',
           //________________________branch_id_______________________//
-          'branch_id': widget.timestamp?.branch_id ?? '2',
+          'branch_id': widget.timeStampSim?.branch_id ?? '2',
           'latitude': latitude,
           'longitude': longitude,
-          'device': _checkPlatform,
+          'device': platform,
           'photo': _base64Image,
         },
       );

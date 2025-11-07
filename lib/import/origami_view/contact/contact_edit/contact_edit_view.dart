@@ -193,7 +193,7 @@ class _ContactViewState extends State<ContactView> {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.network(
-                        'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                        '$hostDev/uploads/employee/20140715173028man20key.png',
                         width: 90,
                         height: 90,
                         fit: BoxFit.cover,

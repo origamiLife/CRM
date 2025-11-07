@@ -387,16 +387,14 @@ class _activityAddState extends State<activityAdd> {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(8),
-          backgroundColor: Colors.orange,
+          padding: const EdgeInsets.all(12),
+          backgroundColor: Colors.red,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         ),
-        onPressed: () {
-          _showCustomDialog();
-        },
+        onPressed: _showCustomDialog,
         child: Text(
-          'Send',
+          'Save',
           style: TextStyle(
             fontFamily: 'Arial',
             color: Colors.white,

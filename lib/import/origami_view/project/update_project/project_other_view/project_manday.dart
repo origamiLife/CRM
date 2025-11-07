@@ -213,7 +213,7 @@ class _ProjectMandayState extends State<ProjectManday> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
                                       child: Image.network(
-                                        '$hostDev/uploads/employee/5/employee/19777.jpg?v=1729754401',
+                                        'https://dev.origami.life/uploads/employee/2/employee/16.jpg',
                                         fit: BoxFit.fill,
                                       ),
                                     ),

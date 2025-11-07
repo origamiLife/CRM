@@ -352,25 +352,20 @@ class _ProjectScreenState extends State<ProjectScreen> {
   }
 
   Widget _getContentWidget(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: ListView.builder(
-          controller: _scrollController,
-          itemCount: filteredItems.length,
-          itemBuilder: (context, index) {
-            modelProjectList
-                .sort((a, b) => b.project_name.compareTo(a.project_name));
-            filteredItems
-                .sort((a, b) => b.project_name.compareTo(a.project_name));
-            final project = filteredItems[index];
-            // print('activityList.length : ${filteredProjectList.length}');
-            return Column(
-              children: [
-                Container(
-                    color: Colors.grey.shade100,
-                    height: 4,
-                    width: double.infinity),
-                InkWell(
+    return ListView.builder(
+        controller: _scrollController,
+        itemCount: filteredItems.length,
+        itemBuilder: (context, index) {
+          modelProjectList
+              .sort((a, b) => b.project_name.compareTo(a.project_name));
+          filteredItems
+              .sort((a, b) => b.project_name.compareTo(a.project_name));
+          final project = filteredItems[index];
+          // print('activityList.length : ${filteredProjectList.length}');
+          return Padding(
+              padding:
+                  const EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 4),
+              child: InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
@@ -392,209 +387,159 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     });
                     _searchController.clear();
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4, top: 8),
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
-                                        child: Text(
-                                          project.project_code,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 12,
-                                            color: Color(0xFF555555),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: Text(
-                                        (project.project_priority_name == '')
-                                            ? project.project_priority_name
-                                            : project.project_priority_name
-                                                .substring(2),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 12,
-                                          color: Color(0xFF555555),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              // Container(
-                              //   width: 1, // ความกว้างของเส้น
-                              //   height: 16, // ความสูงของเส้น
-                              //   color: Colors.grey, // สีของเส้น
-                              //   margin: EdgeInsets.symmetric(
-                              //       horizontal: 8), // ระยะห่างจาก IconButton
-                              // ),
-                              // InkWell(
-                              //   onTap: () {
-                              //     _showCustomDeleteDialog(
-                              //         project.project_id, project.project_name);
-                              //   },
-                              //   child: Icon(
-                              //     Icons.delete,
-                              //     color: Colors.red,
-                              //     size: 18,
-                              //   ),
-                              // ),
-                            ],
-                          ),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.white54,
+                          width: 1,
                         ),
-                        Divider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  'https://origami-dev.obs.ap-southeast-2.myhuaweicloud.com/${project.project_cover}',
-                                  height: 60,
-                                  width: 60,
-                                  fit: BoxFit.cover,
-                                  cacheWidth: 100,
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.orange.shade100,
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                (loadingProgress
-                                                        .expectedTotalBytes ??
-                                                    1)
-                                            : 0,
-                                      ),
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.network(
-                                      'https://www.origami.life/images/project_default.jpg',
-                                      height: 60,
-                                      width: 60,
-                                      fit: BoxFit.cover,
-                                      cacheWidth: 100,
-                                    );
-                                  },
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 8),
+                                  height: 24,
+                                  width: 5,
+                                  color: Colors.black45,
                                 ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    project.project_name,
-                                    maxLines: 1,
+                                Expanded(
+                                  child: Text(
+                                    'No.${project.project_code}',
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                     overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    '[ ${(project.project_priority_name == '') ? project.project_priority_name : project.project_priority_name.substring(2)} ]',
                                     style: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 14,
-                                      color: Colors.orange,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    project.account_name,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 12,
-                                      color: Colors.grey,
+                                      color: Colors.black54,
                                       fontWeight: FontWeight.w500,
                                     ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    project.project_sale_nonsale_name,
+                                    overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
                                   ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    project.project_process_name,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 12,
-                                      color: Color(0xFF555555),
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              color: Colors.black54,
+                              thickness: 2,
+                            ),
+                            Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(2),
+                                  child: Image.network(
+                                    'https://origami-dev.obs.ap-southeast-2.myhuaweicloud.com/${project.project_cover}',
+                                    width: 75,
+                                    height: 75,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.network(
+                                        'https://www.origami.life/images/project_default.jpg',
+                                        width: 75,
+                                        height: 75,
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 10),
+                                        child: Text(
+                                          'Reason : ${project.project_name}',
+                                          style: const TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 12,
+                                            color: Color(0xFF555555),
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        'account : ${project.account_name}',
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 12,
+                                          color: Colors.black54,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                      Text(
+                                        'sale : ${project.project_sale_nonsale_name}',
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 12,
+                                          color: Colors.black54,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                      if (project.project_process_name !=
+                                          '')
+                                        Text(
+                                          'process : ${project.project_process_name}',
+                                          style: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 12,
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        'view detail',
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 12,
+                                          color: Colors.orange.shade400,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              'view detail',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14,
-                                color: Colors.orange.shade400,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                    color: Colors.grey.shade100,
-                    height: 4,
-                    width: double.infinity),
-              ],
-            );
-          }),
-    );
+                      ))));
+        });
   }
 
   Widget _Header() {

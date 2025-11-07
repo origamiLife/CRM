@@ -332,7 +332,7 @@ class _JoinUserScreenActivityState extends State<JoinUserScreenActivity> {
                                               fit: BoxFit.cover,
                                               errorBuilder: (context, error, stackTrace) {
                                                 return Image.network(
-                                                  'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                                                  '$hostDev/uploads/employee/20140715173028man20key.png',
                                                   width: 100,
                                                   height: 100,
                                                   fit: BoxFit.cover,

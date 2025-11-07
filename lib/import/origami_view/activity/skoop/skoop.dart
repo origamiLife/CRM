@@ -522,7 +522,7 @@ class _SkoopScreenState extends State<SkoopScreen> {
                   'Skoop',
                   style: TextStyle(
                     fontSize: 18,
-                    color: Colors.orange,
+                    color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

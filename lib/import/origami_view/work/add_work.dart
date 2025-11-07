@@ -75,16 +75,17 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Color(0xFFFF9900),
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '',
+            'Add Work',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 24,
               color: Colors.white,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -111,7 +112,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                     width: double.infinity,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.network(
-                        'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                        '$hostDev/uploads/employee/20140715173028man20key.png',
                         height: 160,
                         fit: BoxFit.contain,
                         color: Colors.grey.shade100,
@@ -133,7 +134,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                           child: Image.network(
                             emp_pic == ''
                                 ? widget.employee.emp_avatar
-                                : emp_pic,
+                                : '$emp_pic',
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: double.infinity,
@@ -145,6 +146,16 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 height: double.infinity,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                    emp_pic == ''
+                                        ? '$hostWeb/${widget.employee.emp_avatar}'
+                                        : '$hostWeb/${emp_pic}',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  );
+                                },
                               );
                             },
                           ),
@@ -217,7 +228,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                   label: 'Work Type',
                                   items: typeList,
                                   selectedValue: selectedType,
-                                  getLabel: (item) => item.leave_type_name_en,
+                                  getLabel: (item) => item.leave_type_name_en??'',
                                   onChanged: (value) {
                                     setState(() {
                                       selectedType = value;
@@ -301,20 +312,23 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                         _calendarStartDate(context);
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.only(top: 8,bottom: 8,left: 4,right: 4),
                                         child: Row(
                                           children: [
-                                            Text(
-                                              '$request_from_date $startTime',
-                                              style: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14,
-                                                  color: Color(0xFF555555)),
-                                            ),
-                                            Spacer(),
                                             Icon(
                                               Icons.calendar_month,
                                               color: Color(0xFF555555),
+                                              size: 16,
+                                            ),
+                                            SizedBox(width: 2),
+                                            Expanded(
+                                              child: Text(
+                                                '$request_from_date $startTime',
+                                                style: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 12,
+                                                    color: Color(0xFF555555)),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -322,7 +336,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 16),
+                                SizedBox(width: 12),
                                 Expanded(
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -340,20 +354,23 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                         _calendarEndDate(context);
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.only(top: 8,bottom: 8,left: 4,right: 4),
                                         child: Row(
                                           children: [
-                                            Text(
-                                              '$request_to_date $endTime',
-                                              style: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14,
-                                                  color: Color(0xFF555555)),
-                                            ),
-                                            Spacer(),
                                             Icon(
                                               Icons.calendar_month,
                                               color: Color(0xFF555555),
+                                              size: 16,
+                                            ),
+                                            SizedBox(width: 2),
+                                            Expanded(
+                                              child: Text(
+                                                '$request_to_date $endTime',
+                                                style: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 12,
+                                                    color: Color(0xFF555555)),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -1214,7 +1231,7 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(12),
-          backgroundColor: Colors.orange,
+          backgroundColor: Colors.red,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         ),

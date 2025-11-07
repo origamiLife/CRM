@@ -336,13 +336,6 @@ class _ChangePasswordState extends State<ChangePassword> {
         hintText: title,
         hintStyle: TextStyle(fontFamily: 'Arial', color: Color(0xFF555555)),
         prefixIcon: Icon(icon, color: Color(0xFF555555)),
-        suffixIcon: IconButton(
-          onPressed: () => setState(() => isPass = !isPass),
-          icon: Icon(
-              isPass ? Icons.remove_red_eye : Icons.remove_red_eye_outlined),
-          color: Color(0xFF555555),
-          iconSize: 18,
-        ),
         border: OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.grey.shade300,

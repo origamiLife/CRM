@@ -11,12 +11,12 @@ import 'import/origami_view/language/translate.dart';
 import 'import/origami_view/language/translate_page.dart';
 
 String hostWeb = 'https://www.origami.life';
-String hostDev = 'https://www.origami.life';
+String hostDev = 'https://dev.origami.life';
 String token = 'ori20#17gami';
 String tokenMD5 = 'aeb674f8c49dd404dabc759f81f15918';
 int selectedRadio = 2;
 Position? userPosition;
-// "❌" // ✅
+// "❌"  "✅" 👈
 // bool isAndroid = false;
 // bool isTablet = false;
 // bool isIPad = false;
@@ -37,6 +37,22 @@ void main() async {
     debugShowCheckedModeBanner: false,
     home: MyApp(),
   ));
+}
+
+Color hexToColor(String? hex) {
+  if (hex == null || hex.isEmpty) {
+    return Colors.grey; // หรือค่า default อื่น ๆ
+  }
+
+  // ลบเครื่องหมาย # ถ้ามี
+  hex = hex.replaceAll('#', '');
+
+  // ถ้าไม่ครบ 6 หลักให้เติมศูนย์ด้านหน้า
+  if (hex.length < 6) {
+    hex = hex.padLeft(6, '0');
+  }
+
+  return Color(int.parse('FF$hex', radix: 16));
 }
 
 Future<void> _platformAndroid() async {
@@ -304,7 +320,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          'version: 1.0.3+3',
+                          'version: 1.0.3+7',
                           style: TextStyle(
                             fontFamily: 'Arial',
                             color: Colors.white,

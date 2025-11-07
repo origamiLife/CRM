@@ -708,7 +708,7 @@ class _IssueLogScreenState extends State<IssueLogScreen> {
                                             errorBuilder:
                                                 (context, error, stackTrace) {
                                               return Image.network(
-                                                'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                                '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
                                                 width: double
                                                     .infinity, // ความกว้างเต็มจอ
                                                 fit: BoxFit.contain,

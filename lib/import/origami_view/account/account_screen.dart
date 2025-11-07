@@ -311,7 +311,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.network(
-                                'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                                '$hostDev/uploads/employee/20140715173028man20key.png',
                                 width: 80,
                                 height: 80,
                                 fit: BoxFit.cover,

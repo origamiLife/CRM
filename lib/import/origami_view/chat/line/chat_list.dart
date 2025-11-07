@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import '../../../../main.dart';
 import '../../language/translate.dart';
 import 'chat_whats.dart';
 
@@ -113,7 +114,7 @@ class _ChatListState extends State<ChatList> {
                                         CircleAvatar(
                                           radius: 30,
                                           backgroundImage: NetworkImage(
-                                              'https://dev.origami.life/uploads/employee/185_20170727151718.png'),
+                                              '$hostDev/uploads/employee/185_20170727151718.png'),
                                         ),
                                         SizedBox(
                                           height: 4,
@@ -250,7 +251,7 @@ class _ChatListState extends State<ChatList> {
                                                         radius: 28,
                                                         backgroundImage:
                                                             NetworkImage(
-                                                                'https://dev.origami.life/uploads/employee/185_20170727151718.png'),
+                                                                '$hostDev/uploads/employee/185_20170727151718.png'),
                                                       ),
                                                       SizedBox(
                                                         height: 4,
@@ -310,7 +311,7 @@ class _ChatListState extends State<ChatList> {
                                               CircleAvatar(
                                                 radius: 24,
                                                 backgroundImage: NetworkImage(
-                                                    'https://dev.origami.life/uploads/employee/185_20170727151718.png'),
+                                                    '$hostDev/uploads/employee/185_20170727151718.png'),
                                               ),
                                               SizedBox(width: 8),
                                               Flexible(

@@ -218,7 +218,7 @@ class _AccountAddViewState extends State<AccountAddView> {
                             //     child: ClipRRect(
                             //       borderRadius: BorderRadius.circular(50),
                             //       child: Image.network(
-                            //         '$host/uploads/employee/5/employee/19777.jpg?v=1730343291',
+                            //         'https://dev.origami.life/uploads/employee/2/employee/16.jpg',
                             //         fit: BoxFit.fill,
                             //       ),
                             //     ),

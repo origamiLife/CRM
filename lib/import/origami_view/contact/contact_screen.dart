@@ -364,7 +364,7 @@ class _ContactScreenState extends State<ContactScreen> {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Image.network(
-                              'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                              '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
                               width: 80,
                               height: 80,
                               fit: BoxFit.cover,
@@ -524,7 +524,7 @@ class _ContactScreenState extends State<ContactScreen> {
                           fit: BoxFit.contain,
                           errorBuilder: (context, error, stackTrace) {
                             return Image.network(
-                              'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                              '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
                               width: double.infinity, // ความกว้างเต็มจอ
                               fit: BoxFit.contain,
                             );
@@ -681,7 +681,7 @@ class _ContactScreenState extends State<ContactScreen> {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> contactJson = jsonResponse['contact_data'] ?? [];
         bool nextPage = jsonResponse['next_page'];
-
+        print('lll;l');
         newContacts = contactJson
             .map((json) => ModelContact.fromJson(json))
             .where((contact) {
@@ -695,7 +695,7 @@ class _ContactScreenState extends State<ContactScreen> {
           // อัปเดต index & สถานะ
           if (nextPage) {
             indexItems += 1;
-            fetchModelContact();
+            // fetchModelContact();
           } else {
             // contactList.sort(
             //         (a, b) => b.cus_cont_id.compareTo(a.cus_cont_id));

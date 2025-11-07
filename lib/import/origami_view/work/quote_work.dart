@@ -7,9 +7,7 @@ import '../Contact/contact_add/contact_add_detail.dart';
 import '../Contact/contact_edit/contact_edit_detail.dart';
 
 class WorkQuote extends StatefulWidget {
-  const WorkQuote(
-      {Key? key, required this.employee})
-      : super(key: key);
+  const WorkQuote({Key? key, required this.employee}) : super(key: key);
   final Employee employee;
   @override
   _WorkQuoteState createState() => _WorkQuoteState();
@@ -20,16 +18,46 @@ class _WorkQuoteState extends State<WorkQuote> {
   TextEditingController _reasonController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
 
-  Color hexToColor(String code) {
-    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
-  }
-
   String showlastDay = '';
   bool _isChecked = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  String _subtractTime(String totalHoursStr, String timeStr) {
+    // แปลง total hour จาก String เป็น double
+    double totalHours = double.tryParse(totalHoursStr.trim()) ?? 0;
+
+    // แปลงให้เป็นวินาที
+    int totalSeconds = (totalHours * 3600).round();
+
+    // ตรวจสอบรูปแบบเวลา b
+    if (timeStr.isEmpty) return "00:00";
+
+    List<String> parts = timeStr.trim().split(':');
+
+    int hours = 0;
+    int minutes = 0;
+    int seconds = 0;
+
+    if (parts.length >= 1) hours = int.tryParse(parts[0]) ?? 0;
+    if (parts.length >= 2) minutes = int.tryParse(parts[1]) ?? 0;
+    if (parts.length >= 3) seconds = int.tryParse(parts[2]) ?? 0;
+
+    int usedSeconds = (hours * 3600) + (minutes * 60) + seconds;
+
+    int resultSeconds = totalSeconds - usedSeconds;
+    if (resultSeconds < 0) resultSeconds = 0;
+
+    int resultHours = resultSeconds ~/ 3600;
+    int resultMinutes = (resultSeconds % 3600) ~/ 60;
+
+    String formatted =
+        "${resultHours.toString().padLeft(2, '0')}:${resultMinutes.toString().padLeft(2, '0')}";
+
+    return formatted;
   }
 
   @override
@@ -43,53 +71,52 @@ class _WorkQuoteState extends State<WorkQuote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white24,
       body: FutureBuilder<List<StatusWork>>(
           future: fetchStatusWork(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState ==
-                ConnectionState.waiting) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        color: Color(0xFFFF9900),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        'Loading...',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF555555),
-                        ),
-                      ),
-                    ],
-                  ));
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Color(0xFFFF9900),
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  Text(
+                    'Loading...',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF555555),
+                    ),
+                  ),
+                ],
+              ));
             } else if (snapshot.hasError) {
               return Center(
                   child: Text(
-                    'Error: ${snapshot.error}',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: const Color(0xFF555555),
-                    ),
-                  ));
-            } else if (!snapshot.hasData ||
-                snapshot.data!.isEmpty) {
+                'Error: ${snapshot.error}',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  color: const Color(0xFF555555),
+                ),
+              ));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
-                    'No Data Available in table.',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
-                    ),
-                  ));
+                'No Data Available in table.',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                ),
+              ));
             } else {
               return _quoteWork(snapshot.data ?? []);
             }
@@ -97,42 +124,16 @@ class _WorkQuoteState extends State<WorkQuote> {
     );
   }
 
-  String availableStr = '';
-  void _workcalendar(StatusWork work) {
-    // total และ used เป็นชั่วโมง (อาจเป็นทศนิยม)
-    double totalHours = double.tryParse(work.total) ?? 0;
-    double usedHours = double.tryParse(work.used) ?? 0;
-
-    // หาชั่วโมงที่เหลือ
-    double availableHours = totalHours - usedHours;
-
-    // แปลงเป็นชั่วโมงและนาที
-    int hours = availableHours.floor();
-    int minutes = ((availableHours - hours) * 60).round();
-
-    // ป้องกันกรณีเกิน 60 นาที
-    if (minutes == 60) {
-      hours += 1;
-      minutes = 0;
-    }
-
-    // ฟังก์ชันช่วยเติมเลขศูนย์
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-
-    // สร้างสตริงรูปแบบ HH:mm
-    availableStr = "${twoDigits(hours)}:${twoDigits(minutes)}";
-
-    print('รวมชั่วโมงทั้งหมด: $totalHours');
-    print('ใช้ไป: $usedHours');
-    print('เหลือ: $availableStr');
-  }
-
   Widget _quoteWork(List<StatusWork> dataWork) {
     return ListView.builder(
       itemCount: dataWork.length,
       itemBuilder: (context, index) {
         final work = dataWork[index];
-        _workcalendar(dataWork[index]);
+        String? a = work.total ?? '';
+        String? b = work.used ?? '';
+        String? used = (b.length >= 5) ? b.substring(0, 5) : b;
+        String? balabe = _subtractTime(a, b);
+        print('balabe ::: $balabe');
         return Padding(
           padding: const EdgeInsets.all(8),
           child: Container(
@@ -140,8 +141,8 @@ class _WorkQuoteState extends State<WorkQuote> {
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
               border: Border.all(
-                color: Color(0xFFFF9900),
-                width: 1.0,
+                color: hexToColor(work.leave_type_color).withOpacity(0.5),
+                width: 1,
               ),
             ),
             child: Padding(
@@ -149,22 +150,33 @@ class _WorkQuoteState extends State<WorkQuote> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '[ ${work.leave_type_name_en} ]',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555),
-                      fontWeight: FontWeight.w700,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        height: 24, // 👈 กำหนดความสูงเส้น
+                        width: 5, // 👈 ความหนาเส้น
+                        color: hexToColor(work.leave_type_color).withOpacity(1),
+                      ),
+                      Expanded(
+                        child: Text(
+                          '[ ${work.leave_type_name_en} ]',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14,
+                            color: Color(0xFF555555),
+                            fontWeight: FontWeight.w700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ),
+                    ],
                   ),
                   Divider(
-                    color: (work.leave_type_color == '')
-                        ? Colors.orange
-                        : hexToColor(work.leave_type_color),
-                    thickness: 4,
+                    color: hexToColor(work.leave_type_color).withOpacity(0.5),
+                    thickness: 3,
                   ),
                   Text(
                     'Total : ${work.total} Hour',
@@ -179,7 +191,7 @@ class _WorkQuoteState extends State<WorkQuote> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Used : ${(work.used == '') ? ' - ' : work.used ?? ''} Hour',
+                    'Used : ${(used == '' || used == null) ? ' - ' : used ?? ''} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
@@ -191,7 +203,7 @@ class _WorkQuoteState extends State<WorkQuote> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Balance : ${availableStr} Hour',
+                    'Balance : $balabe Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
@@ -247,7 +259,7 @@ class _WorkQuoteState extends State<WorkQuote> {
 
         return AlertDialog(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Column(
             children: [
               Image.network(
@@ -287,5 +299,4 @@ class _WorkQuoteState extends State<WorkQuote> {
       },
     );
   }
-  
 }

@@ -450,7 +450,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
                                                   errorBuilder: (context, error,
                                                       stackTrace) {
                                                     return Image.network(
-                                                      'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                                      '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
                                                       width: double
                                                           .infinity, // ความกว้างเต็มจอ
                                                       fit: BoxFit.contain,
@@ -1140,7 +1140,7 @@ class _HelpDeskScreenState extends State<HelpDeskScreen> {
           emp_pic_own_acc: "",
           emp_id_own_acc: null,
           sms_acc: "0",
-          create_pic: "uploads/employee/5/employee/19777.jpg",
+          create_pic: "uploads/employee/2/employee/16.jpg",
           fullname: "Jirapat Jangsawang",
           customer_comp_name: "Allable Co.,Ltd.",
           h_date_create: "2024-11-21 12:22:58",

@@ -34,29 +34,103 @@ class _WorkPageState extends State<WorkPage> {
     return DefaultTabController(
       length: _isApproved == true ? 3 : 2,
       child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
+        // backgroundColor: Colors.orange.shade50,
         body: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Container(
-                  color: Colors.transparent,
-                  child: TabBar(
-                    indicatorColor: Color(0xFFFF9900),
-                    labelColor: Color(0xFFFF9900),
-                    unselectedLabelColor: Colors.orange.shade200,
-                    labelStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+              Container(
+                color: Colors.white,
+                child: TabBar(
+                  indicatorColor: Color(0xFFFF9900),
+                  labelColor: Color(0xFFFF9900),
+                  unselectedLabelColor: Colors.blue.shade200,
+                  tabs: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8,bottom: 8),
+                      child: Tab(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.network(
+                              'https://cdn-icons-png.flaticon.com/512/2956/2956966.png',
+                              height: 30,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.image_not_supported, size: 24),
+                            ),
+                            const SizedBox(height: 2),
+                            const Expanded(
+                              child: Text(
+                                'Work',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    tabs: [
-                      Tab(text: 'Work'),
-                      if (_isApproved == true) Tab(text: 'Request Approve'),
-                      Tab(text: 'Work Quote'),
-                    ],
-                  ),
+                    if (_isApproved == true)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8,bottom: 8),
+                        child: Tab(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.network(
+                                'https://cdn-icons-png.flaticon.com/512/9737/9737677.png',
+                                height: 30,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Icon(Icons.image_not_supported, size: 24),
+                              ),
+                              const SizedBox(height: 2),
+                              const Expanded(
+                                child: Text(
+                                  'Request Approve',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8,bottom: 8),
+                      child: Tab(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.network(
+                              'https://cdn-icons-png.flaticon.com/512/5807/5807936.png',
+                              height: 30,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.image_not_supported, size: 30),
+                            ),
+                            const SizedBox(height: 2),
+                            const Expanded(
+                              child: Text(
+                                'Work Quote',
+                                style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
@@ -103,7 +177,7 @@ class _WorkPageState extends State<WorkPage> {
           if (_ApprovedWork[i].info_emp_id == widget.employee.emp_id) {
             _isApproved = true;
             is_status = 'Y';
-            break ;
+            break;
           }
         }
       });
@@ -139,6 +213,7 @@ class HistoryWorkModel {
   String del_status;
   String leave_type_id;
   String request_no_money;
+  String request_attach;
 
   HistoryWorkModel({
     required this.request_id,
@@ -165,6 +240,7 @@ class HistoryWorkModel {
     required this.del_status,
     required this.leave_type_id,
     required this.request_no_money,
+    required this.request_attach,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
@@ -194,52 +270,53 @@ class HistoryWorkModel {
       del_status: json['del_status'] ?? '',
       leave_type_id: json['leave_type_id'] ?? '',
       request_no_money: json['request_no_money'] ?? '',
+      request_attach: json['request_attach'] ?? '',
     );
   }
 }
 
 class StatusWork {
-  String leave_type_id;
-  String leave_type_color;
-  String leave_type_name_en;
-  String leave_type_name_th;
-  String before_day;
-  String hours_day;
-  String total;
-  String used;
-  String available;
+  String? leave_type_id;
+  String? leave_type_color;
+  String? leave_type_name_en;
+  String? leave_type_name_th;
+  String? before_day;
+  String? hours_day;
+  String? total;
+  String? used;
+  String? available;
 
   StatusWork({
-    required this.leave_type_id,
-    required this.leave_type_color,
-    required this.leave_type_name_en,
-    required this.leave_type_name_th,
-    required this.before_day,
-    required this.hours_day,
-    required this.total,
-    required this.used,
-    required this.available,
+    this.leave_type_id,
+    this.leave_type_color,
+    this.leave_type_name_en,
+    this.leave_type_name_th,
+    this.before_day,
+    this.hours_day,
+    this.total,
+    this.used,
+    this.available,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory StatusWork.fromJson(Map<String, dynamic> json) {
     return StatusWork(
-      leave_type_id: json['leave_type_id'] ?? '',
-      leave_type_color: json['leave_type_color'] ?? '',
-      leave_type_name_en: json['leave_type_name_en'] ?? '',
-      leave_type_name_th: json['leave_type_name_th'] ?? '',
-      before_day: json['before_day'] ?? '',
-      hours_day: json['hours_day'] ?? '',
-      total: json['total'] ?? '',
-      used: json['used'] ?? '',
-      available: json['Available'] ?? '',
+      leave_type_id: json['leave_type_id'],
+      leave_type_color: json['leave_type_color'],
+      leave_type_name_en: json['leave_type_name_en'],
+      leave_type_name_th: json['leave_type_name_th'],
+      before_day: json['before_day'],
+      hours_day: json['hours_day'],
+      total: json['total'],
+      used: json['used'],
+      available: json['Available'],
     );
   }
 }
 
 class ApprovedWorkModel {
   String emp_id;
-  String request_id;
+  String approve_emp_id;
   String type;
   String request_from_date;
   String request_from_time_;
@@ -251,6 +328,7 @@ class ApprovedWorkModel {
   String request_subject;
   String create_datetime;
   String request_note;
+  String leave_type_id;
   String leave_type_name_en;
   String leave_type_name_th;
   String approve_status;
@@ -262,10 +340,12 @@ class ApprovedWorkModel {
   String approve_del;
   String del_status;
   String info_emp_id;
+  String request_attach;
+  String emp_pic;
 
   ApprovedWorkModel({
     required this.emp_id,
-    required this.request_id,
+    required this.approve_emp_id,
     required this.type,
     required this.request_from_date,
     required this.request_from_time_,
@@ -277,6 +357,7 @@ class ApprovedWorkModel {
     required this.request_subject,
     required this.create_datetime,
     required this.request_note,
+    required this.leave_type_id,
     required this.leave_type_name_en,
     required this.leave_type_name_th,
     required this.approve_status,
@@ -288,13 +369,15 @@ class ApprovedWorkModel {
     required this.approve_del,
     required this.del_status,
     required this.info_emp_id,
+    required this.request_attach,
+    required this.emp_pic,
   });
 
   // สร้างฟังก์ชันเพื่อแปลง JSON ไปเป็น Object ของ Academy
   factory ApprovedWorkModel.fromJson(Map<String, dynamic> json) {
     return ApprovedWorkModel(
       emp_id: json['emp'] ?? '',
-      request_id: json['see_id'] ?? '',
+      approve_emp_id: json['see_id'] ?? '',
       type: json['TYPE'] ?? '',
       request_from_date: json['from_date'] ?? '',
       request_from_time_: json['from_time'] ?? '',
@@ -306,6 +389,7 @@ class ApprovedWorkModel {
       request_subject: json['reason'] ?? '',
       create_datetime: json['dt'] ?? '',
       request_note: json['note'] ?? '',
+      leave_type_id: json['leave_type_id'] ?? '',
       leave_type_name_en: json['leave_name'] ?? '',
       leave_type_name_th: json['leave_name_th'] ?? '',
       approve_status: json['state_approve'] ?? '',
@@ -317,6 +401,8 @@ class ApprovedWorkModel {
       approve_del: json['approve_del'] ?? '',
       del_status: json['del_status'] ?? '',
       info_emp_id: json['info_emp_id'] ?? '',
+      request_attach: json['request_attach'] ?? '',
+      emp_pic: json['emp_pic'] ?? '',
     );
   }
 }

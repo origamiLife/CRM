@@ -421,22 +421,23 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                     Padding(
                       padding:
                           const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Color(0xFFFF9900),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(12),
+                            backgroundColor: Colors.red,
+                            shape:
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
                           ),
-                        ),
-                        onPressed: fetchUpdateActivity,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Center(
-                            child: Text(
-                              Save,
-                              style: TextStyle(
-                                  fontFamily: 'Arial', fontSize: 16.0),
+                          onPressed: fetchUpdateActivity,
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
@@ -1567,61 +1568,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     }
   }
 
-  void _showCustomDialog(String message) {
-    showDialog(
-      context: context,
-      barrierColor:Colors.black54,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(
-            'Warning!',
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 22,
-              color: Colors.black87,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          content: Text(
-            message,
-            style: TextStyle(
-                fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
-          ),
-          actions: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.35,
-              decoration: BoxDecoration(
-                color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(100),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.orange.shade200,
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> _fetchCloseActivity() async {
     final uri =
         Uri.parse('$hostDev/api/origami/crm/activity/update_activity.php');
@@ -1693,150 +1639,6 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
               ],
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void showCustomDialog() {
-    showDialog(
-      context: context,
-      barrierColor:Colors.black54,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Actual Activity',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 22,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 4),
-                child: Text(
-                  'Close Date/Time',
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Color(0xFF555555)),
-                ),
-              ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _realDate('Start Date', true, 'bodyOn'),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: _realTime('Start Time', 'bodyOn'),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: _realDate('End Date', false, 'bodyOff'),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: _realTime('End Time', 'bodyOff'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          actions: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.35,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.35,
-              decoration: BoxDecoration(
-                color: Colors.orange.shade400,
-                borderRadius: BorderRadius.circular(100),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.orange.shade200,
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextButton(
-                onPressed: () {
-                  if(widget.activity.activity_note == ''){
-                    _showCustomDialog('Please Skoop before close activity.');
-                  }else{
-                    String mainStart = widget.activity.activity_start_time_;
-                    String mainEnd   = widget.activity.activity_end_time_;
-
-                    bool hasOverlap = false;
-
-                    // ✅ เอา main ไปเช็คกับ activityList
-                    for (var act in activityList) {
-                      if (isOverlap(act.activity_start_time_, act.activity_end_time_, mainStart, mainEnd)) {
-                        hasOverlap = true;
-                        print("❌ Main ชนกับ ${act.activity_id} (${act.activity_start_time_} - ${act.activity_end_time_})");
-                      }
-                    }
-
-                    if (hasOverlap) {
-                      // ❌ ถ้ามีชน => ไม่ให้ close
-                      Navigator.pop(context);
-                      _showCustomDialog('Sorry, the activity is already active at this time!');
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: Text("ไม่สามารถปิดกิจกรรมได้ เพราะช่วงเวลาชนกับกิจกรรมอื่น"),
-                      //     backgroundColor: Colors.red,
-                      //   ),
-                      // );
-                    } else {
-                      // ✅ ถ้าไม่ชน => ดำเนินการปิดได้
-                      activity_alert48_status = 'Y';
-                      activity_status = 'close';
-                      Navigator.pop(context);
-                      print('_fetchCloseActivity ======= TRUE');
-                      _fetchCloseActivity();
-                    }
-                  }
-                },
-                child: Text(
-                  'Ok',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            )
-            // Confirm Button
-          ],
         );
       },
     );
@@ -1938,6 +1740,210 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
     } catch (e) {
       print('Error fetching data: $e');
     }
+  }
+
+  void showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierColor:Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Actual Activity',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 22,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  'Close Date/Time',
+                  style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      color: Color(0xFF555555)),
+                ),
+              ),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _realDate('Start Date', true, 'bodyOn'),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: _realTime('Start Time', 'bodyOn'),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: _realDate('End Date', false, 'bodyOff'),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: _realTime('End Time', 'bodyOff'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(dialogContext).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () {
+                  if(widget.activity.activity_note != ''){
+                    String mainStart = widget.activity.activity_start_time_;
+                    String mainEnd   = widget.activity.activity_end_time_;
+
+                    bool hasOverlap = false;
+
+                    // ✅ เอา main ไปเช็คกับ activityList
+                    // for (var act in activityList) {
+                    //   if (isOverlap(act.activity_start_time_, act.activity_end_time_, mainStart, mainEnd)) {
+                    //     hasOverlap = true;
+                    //     print("❌ Main ชนกับ ${act.activity_id} (${act.activity_start_time_} - ${act.activity_end_time_})");
+                    //   }
+                    // }
+
+                    print('mainStart :: $mainStart');
+                    print('mainEnd :: $mainEnd');
+                    print('hasOverlap :: $hasOverlap');
+
+                    activity_alert48_status = 'Y';
+                    activity_status = 'close';
+                    Navigator.pop(dialogContext);
+                    print('_fetchCloseActivity ======= TRUE');
+                    _fetchCloseActivity();
+
+                    // if (hasOverlap) {
+                    //   // ❌ ถ้ามีชน => ไม่ให้ close
+                    //   // ไม่สามารถปิดกิจกรรมได้ เพราะช่วงเวลาชนกับกิจกรรมอื่น
+                    //   Navigator.pop(dialogContext);
+                    //   _showCustomDialog('Sorry, the activity is already active at this time!');
+                    // } else {
+                    //   // ✅ ถ้าไม่ชน => ดำเนินการปิดได้
+                    //   activity_alert48_status = 'Y';
+                    //   activity_status = 'close';
+                    //   Navigator.pop(dialogContext);
+                    //   print('_fetchCloseActivity ======= TRUE');
+                    //   _fetchCloseActivity();
+                    // }
+                  }else{
+                    _showCustomDialog('Please Skoop before close activity.');
+                  }
+                },
+                child: Text(
+                  'Ok',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            )
+            // Confirm Button
+          ],
+        );
+      },
+    );
+  }
+
+  void _showCustomDialog(String message) {
+    showDialog(
+      context: context,
+      barrierColor:Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Warning!',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+                fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.shade200,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showCustomDeleteDialog(BuildContext context) {

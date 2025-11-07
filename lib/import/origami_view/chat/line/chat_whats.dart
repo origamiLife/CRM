@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import '../../../../main.dart';
 import '../../language/translate.dart';
 
 class ChatWhats extends StatefulWidget {
@@ -40,7 +41,7 @@ class _ChatWhatsState extends State<ChatWhats> {
           text: '$text',
           isMe: false,
           imageUrl:
-              'https://dev.origami.life/uploads/employee/185_20170727151718.png', // URL โปรไฟล์
+              '$hostDev/uploads/employee/185_20170727151718.png', // URL โปรไฟล์
         ));
       });
       _controller.clear();

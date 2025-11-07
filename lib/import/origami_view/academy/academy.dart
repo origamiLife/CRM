@@ -481,7 +481,7 @@ class _AcademyPageState extends State<AcademyPage> {
                                           fit: BoxFit.contain,
                                           errorBuilder: (context, error, stackTrace) {
                                             return Image.network(
-                                              'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                              '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
                                               height: 50,
                                               width: 50,
                                               fit: BoxFit.contain,
@@ -559,7 +559,7 @@ class _AcademyPageState extends State<AcademyPage> {
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Image.network(
-                    'https://dev.origami.life/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                    '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
                     height: 32,
                     width: 32,
                     fit: BoxFit.contain,

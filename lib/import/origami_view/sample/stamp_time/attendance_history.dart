@@ -223,7 +223,7 @@ class _TimeAttendanceHistoryState extends State<TimeAttendanceHistory> {
                         errorBuilder:
                             (context, error, stackTrace) {
                           return Image.network(
-                            'https://dev.origami.life/uploads/employee/20140715173028man20key.png',
+                            '$hostDev/uploads/employee/20140715173028man20key.png',
                             fit: BoxFit.contain,
                           );
                         },
