@@ -235,13 +235,13 @@ class _ProjectEditState extends State<ProjectEdit> {
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade50,
+            color: Colors.grey.shade50,
             height: 3,
             width: double.infinity,
           ),
           SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade100,
+            color: Colors.grey.shade100,
             height: 3,
             width: double.infinity,
           ),

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
+import 'package:origamilift/import/origami_view/need/widget_mini/mini_contact.dart';
 import 'package:origamilift/import/origami_view/project/project.dart';
 import 'package:origamilift/import/origami_view/sample/stamp_activity/activity_list.dart';
 import 'package:origamilift/import/origami_view/sample/stamp_time/time_stamp.dart';
@@ -68,19 +69,31 @@ class _OrigamiPageState extends State<OrigamiPage> {
   );
 
   String emp_id = '';
+  String comp_id = '';
   @override
   void initState() {
     super.initState();
-    // fetchgetContact();
-    _initController();
-    fetchModelContact();
     emp_id = widget.employee.emp_id;
-    print(widget.employee.emp_id);
+    comp_id = widget.employee.comp_id;
+    _MenuPermission();
+    fetchBranch();
     _index = widget.popPage;
     if (_index == 0) {
       _index = 5;
     }
-    fetchBranch();
+    // _index = 0;
+    // fetchModelContact();
+    _initController();
+    print('emp_id :: $emp_id');
+    print('comp_id :: $comp_id');
+  }
+
+  Future<void> _fetchBranch() async {
+    await fetchBranch();
+    _index = widget.popPage;
+    if (_index == 0) {
+      _index = 5;
+    }
   }
 
   Future<void> _initController() async {
@@ -96,12 +109,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
             minute: notiMinute,
           );
         });
-        /*NotiService().scheduleNotification(
-          title: 'TIME STAMP',
-          body: "You haven't stamped your work time yet.",
-          hour: notiHour,
-          minute: notiMinute,
-        );*/
         print("✅ FINAL: _controllerOwner.value = $_isChecked");
       } else {
         _isChecked = false;
@@ -216,7 +223,6 @@ class _OrigamiPageState extends State<OrigamiPage> {
                     //     ],
                     //   ),
                     // ),
-
                   ],
                 ),
               ),
@@ -224,9 +230,12 @@ class _OrigamiPageState extends State<OrigamiPage> {
             ],
           ),
         ),
-        body: SafeArea(
-          child: Center(
-            child: _buildScreen(),
+        body: InkWell(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: SafeArea(
+            child: Center(
+              child: _buildScreen(),
+            ),
           ),
         ),
       ),
@@ -359,17 +368,17 @@ class _OrigamiPageState extends State<OrigamiPage> {
 
   List<Map<String, dynamic>> _getMenuItems() {
     return [
-      // {
-      //   'index': 19,
-      //   'title': 'Need Approve',
-      //   'icon': FontAwesomeIcons.personShelter,
-      // },
+      {
+        'index': 0,
+        'title': 'Need',
+        'icon': FontAwesomeIcons.file,
+      },
       {
         'index': 13,
         'title': 'Account',
         'icon': FontAwesomeIcons.user,
       },
-      if (isEmpId)
+      // if (isEmpId)
         {
           'index': 12,
           'title': 'Contact',
@@ -440,10 +449,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
       4: Text('Index 6: LogOut', style: optionStyle),
       5: TimeSample(
         employee: widget.employee,
-        timeStampSim: _brancheObject,
+        TStamp: _brancheObject,
         fetchBranchCallback: () => fetchBranch(),
         branch_name: branch_name,
-        branch_id: branch_id,
+        isbranch_id: isbranch_id,
       ),
       6: ProfilePage(
         employee: widget.employee,
@@ -500,16 +509,16 @@ class _OrigamiPageState extends State<OrigamiPage> {
     return pages[_index] ??
         TimeSample(
           employee: widget.employee,
-          timeStampSim: _brancheObject,
+          TStamp: _brancheObject,
           fetchBranchCallback: () => fetchBranch(),
           branch_name: branch_name,
-          branch_id: branch_id,
+          isbranch_id: isbranch_id,
         );
   }
 
   final List<String> _TitleHeader = [
-    "need", // 0
-    "request", // 1
+    "Need", // 0
+    "Request", // 1
     "Academy", // 2
     "Language", // 3
     "Log out", // 4
@@ -666,39 +675,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     );
   }
 
-  String branch_id = '';
-  int indexBranch = 0;
-  bool isBranch_id = false;
-  Future<List<GetTimeStampSim>> fetchBranch() async {
-    final uri = Uri.parse("$hostDev/api/origami/time/default.php");
-    final response = await http.post(
-      uri,
-      headers: {'Authorization': 'Bearer $tokenMD5'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-      },
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> dataJson = jsonResponse['branch_data'];
-      setState(() {
-        _branches =
-            dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
-        _brancheObject = _branches.first;
-        dataJson.map((json) => GetTimeStampSim.fromJson(json)).forEach((item) {
-          if (item.branch_default == '1') {
-            branch_id = item.branch_id;
-          }
-        });
-      });
-      // print('branch_id : $branch_id');
-      return dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load contacts');
-    }
-  }
-
+  // icon time
   List<Widget> _buildAppBarTimeStamp() {
     return [
       // IconButton(
@@ -739,7 +716,7 @@ class _OrigamiPageState extends State<OrigamiPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Container(
-        padding: const EdgeInsets.only(left: 4,right: 4,top: 8,bottom: 8),
+        padding: const EdgeInsets.only(left: 4, right: 4, top: 8, bottom: 8),
         decoration: BoxDecoration(
           color: Colors.orange.shade50,
         ),
@@ -782,9 +759,10 @@ class _OrigamiPageState extends State<OrigamiPage> {
     try {
       final response = await http.post(
         Uri.parse('$hostDev/api/origami/signout.php'),
+        headers: {'Authorization': 'Bearer $token'},
         body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
+          'comp_id': comp_id,
+          'emp_id': emp_id,
           'auth_password': token,
         },
       );
@@ -795,8 +773,12 @@ class _OrigamiPageState extends State<OrigamiPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  LoginPage(num: 1, popPage: 0, company_id: 0,begin: true,),
+              builder: (context) => LoginPage(
+                num: 1,
+                popPage: 0,
+                company_id: 0,
+                begin: true,
+              ),
             ),
           );
         } else {
@@ -898,23 +880,22 @@ class _OrigamiPageState extends State<OrigamiPage> {
                 ],
               ),
             ),
-
           ],
         );
       },
     );
   }
 
-
   Future<List<ModelContact>> fetchgetContact() async {
-    final uri = Uri.parse("$hostDev/api/origami/crm/contact/list_approve_id.php");
+    final uri =
+        Uri.parse("$hostDev/api/origami/crm/contact/list_approve_id.php");
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
+          'comp_id': comp_id,
+          'emp_id': emp_id,
         },
       );
 
@@ -950,51 +931,153 @@ class _OrigamiPageState extends State<OrigamiPage> {
     }
   }
 
-  List<ModelContact> contactList = [];
+  // List<ModelContact> contactList = [];
   int indexItems = 0;
   bool isEmpId = false;
-  Future<List<ModelContact>> fetchModelContact() async {
+  Future<void> fetchModelContact() async {
     final uri = Uri.parse("$hostDev/api/origami/crm/contact/list-contact.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $tokenMD5'},
+      body: {
+        'comp_id': comp_id,
+        'emp_id': emp_id,
+        'index': indexItems.toString(),
+        'search': emp_id,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> contactJson = jsonResponse['contact_data'] ?? [];
+      final contactList =
+          contactJson.map((json) => ModelContact.fromJson(json)).toList();
+      for (int i = 0; i < contactList.length; i++) {
+        isEmpId = contactList[i].list_emp_id.contains(widget.employee.emp_id);
+      }
+      // final newContacts = contactJson
+      //     .map((json) => ModelContact.fromJson(json))
+      //     .where((contact) {
+      //   // กรอง id ที่ซ้ำ
+      //   return !contactList
+      //       .any((existing) => existing.cus_cont_id == contact.cus_cont_id);
+      // }).toList();
+      //
+      // setState(() {
+      //   contactList.addAll(newContacts);
+      //   indexItems += 1;
+      //   isEmpId = contactList[indexItems]
+      //       .list_emp_id
+      //       .contains(widget.employee.emp_id);
+      //   print('isEmpId ::: $isEmpId');
+      // });
+      //
+      // return contactJson.map((json) => ModelContact.fromJson(json)).toList();
+    } else {
+      throw Exception(
+          'Failed to load data, status code: ${response.statusCode}');
+    }
+  }
+
+  String branch_id = '';
+  bool isbranch_id = false;
+  bool isBranch_id = false;
+  String business = '';
+  Future<List<GetTimeStampSim>> fetchBranch() async {
+    final uri = Uri.parse("$hostDev/api/origami/time/default.php");
+    final response = await http.post(
+      uri,
+      headers: {'Authorization': 'Bearer $tokenMD5'},
+      body: {
+        'comp_id': comp_id,
+        'emp_id': emp_id,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['branch_data'] ?? [];
+
+      // ✅ สร้าง List ของ object ก่อนใช้งาน
+      _branches =
+          dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
+      // ✅ ใช้ key แทน dot
+      for (int i = 0; i < _branches.length; i++) {
+        if (_branches[i].branch_default == '1') {
+          branch_id = _branches[i].branch_id;
+          // ✅ ตรวจสอบก่อนใช้ .first
+          if (_branches.isNotEmpty) {
+            _brancheObject = _branches[i];
+          } else {
+            _brancheObject = _branches[0];
+          }
+          break;
+        }
+      }
+
+      isbranch_id = false;
+      print('branch_id : $branch_id');
+
+      return _branches;
+    } else {
+      throw Exception('Failed to load contacts');
+    }
+  }
+
+  MenuPermission? menuPermission;
+  Future<void> _MenuPermission() async {
+    final uri = Uri.parse("$hostDev/api/origami/role.php");
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'index': indexItems.toString(),
+          'comp_id': comp_id,
+          'emp_id': emp_id,
         },
       );
-
       if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> contactJson = jsonResponse['contact_data'] ?? [];
-        bool nextPage = jsonResponse['next_page'];
-        final newContacts = contactJson
-            .map((json) => ModelContact.fromJson(json))
-            .where((contact) {
-          // กรอง id ที่ซ้ำ
-          return !contactList
-              .any((existing) => existing.cus_cont_id == contact.cus_cont_id);
-        }).toList();
-
-        setState(() {
-          contactList.addAll(newContacts);
-          indexItems += 1;
-          isEmpId = contactList[indexItems]
-              .list_emp_id
-              .contains(widget.employee.emp_id);
-          print('isEmpId ::: $isEmpId');
-        });
-
-        return contactJson.map((json) => ModelContact.fromJson(json)).toList();
+        final jsonResponse = jsonDecode(response.body);
+        final menujson = jsonResponse['menu_permission'];
+        if (jsonResponse['status'] == true) {
+          menuPermission = MenuPermission.fromJson(menujson);
+        }
       } else {
-        throw Exception(
-            'Failed to load data, status code: ${response.statusCode}');
+        throw Exception('Server returned status ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching data: $e');
-      return []; // หรือ throw ก็ได้ ขึ้นอยู่กับว่าอยาก handle ยังไง
+      print('Error in _fetchForgetMail: $e');
     }
   }
+
+// Future<List<GetTimeStampSim>> fetchBranch() async {
+//     final uri = Uri.parse("$hostDev/api/origami/time/default.php");
+//     final response = await http.post(
+//       uri,
+//       headers: {'Authorization': 'Bearer $tokenMD5'},
+//       body: {
+//         'comp_id': comp_id,
+//         'emp_id': emp_id,
+//       },
+//     );
+//     if (response.statusCode == 200) {
+//       final Map<String, dynamic> jsonResponse = json.decode(response.body);
+//       final List<dynamic> dataJson = jsonResponse['branch_data']??[];
+//       // ✅ สร้าง List ของ object ก่อนใช้งาน
+//       _branches = dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
+//       // _brancheObject = _branches.first;
+//       for (int i = 0; i < dataJson.length; i++) {
+//         if (dataJson[i]['branch_default'] == '1') {
+//           branch_id = _branches[i].branch_id;
+//           _brancheObject = _branches[i];
+//           break;
+//         }
+//       }
+//       isbranch_id = false;
+//       print('branch_id : $branch_id');
+//       return _branches;
+//     } else {
+//       throw Exception('Failed to load contacts');
+//     }
+//   }
 }

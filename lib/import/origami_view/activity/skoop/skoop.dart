@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
 import '../activity.dart';
+import '../edit/activity_edit_detail.dart';
 
 class SkoopScreen extends StatefulWidget {
   const SkoopScreen({
@@ -449,7 +450,14 @@ class _SkoopScreenState extends State<SkoopScreen> {
         print('true: ${response.statusCode}');
         final jsonResponse = jsonDecode(response.body);
         final message = jsonResponse['message'];
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                ActivityEditNow(employee: widget.employee, activity: widget.activity),
+          ),
+        );
+
       } else {
         throw Exception('Failed to load status data');
       }

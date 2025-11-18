@@ -161,7 +161,7 @@ class _activityAddState extends State<activityAdd> {
         backgroundColor: Colors.orange,
         elevation: 1,
         title: Text(
-          '',
+          'Add Activity',
           style: TextStyle(
             fontFamily: 'Arial',
             fontSize: 24,

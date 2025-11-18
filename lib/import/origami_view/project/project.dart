@@ -43,30 +43,12 @@ class _ProjectScreenState extends State<ProjectScreen> {
         filteredItems = modelProjectList.where((project) {
           return project.project_name.toLowerCase().contains(query) ?? false;
         }).toList();
+        _isFirstTime = true;
+        modelProjectList.clear();
+        fetchModelProject();
       });
-      fetchModelProject();
     });
   }
-
-  // void _filterActivityList() {
-  //   setState(() {
-  //     String query = _searchController.text.toLowerCase();
-  //     filteredItems = modelProjectList.where((project) {
-  //       return project.project_name.toLowerCase().contains(query) ?? false;
-  //     }).toList();
-  //   });
-  //   fetchModelProject();
-  // }
-
-  // void _filterActivityList() {
-  //   if (!mounted) return;
-  //   setState(() {
-  //     String query = _searchController.text.toLowerCase();
-  //     filteredItems = modelProjectList.where((project) {
-  //       return project.project_name.toLowerCase().contains(query);
-  //     }).toList();
-  //   });
-  // }
 
   @override
   void dispose() {
@@ -342,204 +324,284 @@ class _ProjectScreenState extends State<ProjectScreen> {
         //   ),
         // Divider(),
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: _getContentWidget(context),
+          child: (filteredItems.isNotEmpty)
+              ? _getContentWidget(context)
+              : const Center(
+            child: Text(
+              'No Data Available in table.',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
           ),
         ),
       ],
     );
   }
 
+  bool isLoading = false;
   Widget _getContentWidget(BuildContext context) {
-    return ListView.builder(
-        controller: _scrollController,
-        itemCount: filteredItems.length,
-        itemBuilder: (context, index) {
-          modelProjectList
-              .sort((a, b) => b.project_name.compareTo(a.project_name));
-          filteredItems
-              .sort((a, b) => b.project_name.compareTo(a.project_name));
-          final project = filteredItems[index];
-          // print('activityList.length : ${filteredProjectList.length}');
-          return Padding(
-              padding:
-                  const EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 4),
-              child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProjectListUpdate(
-                          employee: widget.employee,
-                          project: project,
-                          pageInput: widget.pageInput,
-                        ),
+    if (isLoading == false) {
+      // แสดง shimmer loading แทน
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: ListView.builder(
+          itemCount: 20, // จำนวน shimmer item ที่แสดงระหว่างโหลด
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              height: 12,
+                              width: double.infinity,
+                              color: Colors.white),
+                          SizedBox(height: 5),
+                          Container(
+                              height: 12, width: 100, color: Colors.white),
+                          SizedBox(height: 5),
+                          Container(
+                              height: 12, width: 150, color: Colors.white),
+                          SizedBox(height: 5),
+                          Container(
+                              height: 12, width: 120, color: Colors.white),
+                        ],
                       ),
-                    ).then((value) {
-                      // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-                      setState(() {
-                        indexItems = 0;
-                        isAtEnd = false; // ครั้งแรก
-                        modelProjectList.clear();
-                        fetchModelProject();
-                      });
-                    });
-                    _searchController.clear();
-                  },
-                  child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Colors.white54,
-                          width: 1,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 8),
-                                  height: 24,
-                                  width: 5,
-                                  color: Colors.black45,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'No.${project.project_code}',
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 12,
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    '[ ${(project.project_priority_name == '') ? project.project_priority_name : project.project_priority_name.substring(2)} ]',
-                                    style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14,
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+    return Column(
+      children: [
+        Flexible(
+          child: ListView.builder(
+              controller: _scrollController,
+              itemCount: filteredItems.length,
+              itemBuilder: (context, index) {
+                // modelProjectList
+                //     .sort((a, b) => b.project_name.compareTo(a.project_name));
+                // filteredItems
+                //     .sort((a, b) => b.project_name.compareTo(a.project_name));
+                final project = filteredItems[index];
+                // print('activityList.length : ${filteredProjectList.length}');
+                return Padding(
+                    padding:
+                        const EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 4),
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProjectListUpdate(
+                                employee: widget.employee,
+                                project: project,
+                                pageInput: widget.pageInput,
+                              ),
                             ),
-                            Divider(
-                              color: Colors.black54,
-                              thickness: 2,
+                          ).then((value) {
+                            // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
+                            setState(() {
+                              indexItems = 0;
+                              isAtEnd = false; // ครั้งแรก
+                              modelProjectList.clear();
+                              fetchModelProject();
+                            });
+                          });
+                          _searchController.clear();
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Colors.white54,
+                                width: 1,
+                              ),
                             ),
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(2),
-                                  child: Image.network(
-                                    'https://origami-dev.obs.ap-southeast-2.myhuaweicloud.com/${project.project_cover}',
-                                    width: 75,
-                                    height: 75,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Image.network(
-                                        'https://www.origami.life/images/project_default.jpg',
-                                        width: 75,
-                                        height: 75,
-                                        fit: BoxFit.cover,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 10),
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        height: 24,
+                                        width: 5,
+                                        color: Colors.black45,
+                                      ),
+                                      Expanded(
                                         child: Text(
-                                          'Reason : ${project.project_name}',
-                                          style: const TextStyle(
+                                          'No.${project.project_code}',
+                                          style: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 12,
-                                            color: Color(0xFF555555),
+                                            color: Colors.black87,
                                             fontWeight: FontWeight.w700,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
                                       ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        'account : ${project.account_name}',
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 12,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                      ),
-                                      Text(
-                                        'sale : ${project.project_sale_nonsale_name}',
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 12,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                      ),
-                                      if (project.project_process_name !=
-                                          '')
-                                        Text(
-                                          'process : ${project.project_process_name}',
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          '[ ${(project.project_priority_name == '') ? project.project_priority_name : project.project_priority_name.substring(2)} ]',
                                           style: TextStyle(
                                             fontFamily: 'Arial',
-                                            fontSize: 12,
+                                            fontSize: 14,
                                             color: Colors.black54,
                                             fontWeight: FontWeight.w500,
                                           ),
                                           overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        'view detail',
-                                        style: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 12,
-                                          color: Colors.orange.shade400,
-                                          fontWeight: FontWeight.w500,
+                                          maxLines: 1,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ))));
-        });
+                                  Divider(
+                                    color: Colors.black54,
+                                    thickness: 2,
+                                  ),
+                                  Row(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(2),
+                                        child: Image.asset(
+                                          'assets/images/project_default.jpg',
+                                          width: 75,
+                                          height: 75,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10),
+                                              child: Text(
+                                                'Reason : ${project.project_name}',
+                                                style: const TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 12,
+                                                  color: Color(0xFF555555),
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              'account : ${project.account_name}',
+                                              style: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 12,
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                            ),
+                                            Text(
+                                              'sale : ${project.project_sale_nonsale_name}',
+                                              style: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 12,
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                            ),
+                                            if (project.project_process_name !=
+                                                '')
+                                              Text(
+                                                'process : ${project.project_process_name}',
+                                                style: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 12,
+                                                  color: Colors.black54,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                              ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              'view detail',
+                                              style: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 12,
+                                                color: Colors.orange.shade400,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ))));
+              }),
+        ),
+        if(filteredItems.isNotEmpty)
+        Row(
+          mainAxisAlignment:MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 2, right: 2),
+              child: Text(
+                '1 - ${filteredItems.length}',
+                style: const TextStyle(
+                  fontFamily: 'Arial',
+                  color: Colors.black54,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            IconButton(onPressed: (){
+              indexItems = indexItems + 1;
+              _isFirstTime = true;
+              fetchModelProject();
+            }, icon: Icon(Icons.chevron_right)),
+          ],
+        )
+      ],
+    );
   }
 
   Widget _Header() {
@@ -722,7 +784,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   bool _isFirstTime = true;
   // bool _isLoading = false;
   bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
-  int indexItems = 0;
+  int indexItems = 1;
   bool stop = false;
   List<ModelProject> modelProjectList = [];
   Future<void> fetchModelProject() async {
@@ -732,54 +794,49 @@ class _ProjectScreenState extends State<ProjectScreen> {
       final uri = Uri.parse("$hostDev/api/origami/crm/project/get.php");
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
           'emp_id': widget.employee.emp_id,
           'comp_id': widget.employee.comp_id,
-          'index': indexItems.toString(),
+          'index': (_searchController.text != '')?'1':indexItems.toString(),
+          'search': _searchController.text,
         },
       );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        final List<dynamic> activityJson = jsonResponse['project_data'] ?? [];
+        final List<dynamic> projectJson = jsonResponse['project_data'] ?? [];
+        final status = jsonResponse['status'];
         int max = jsonResponse['limit'];
-        List<ModelProject> newActivities =
-            activityJson.map((json) => ModelProject.fromJson(json)).toList();
+        List<ModelProject> newProject =
+            projectJson.map((json) => ModelProject.fromJson(json)).toList();
         setState(() {
           // สร้าง set id เดิม
           Set<String> seenIds =
               modelProjectList.map((e) => e.project_id).toSet();
 
           // กรอง newActivities ที่ซ้ำออก
-          newActivities =
-              newActivities.where((a) => seenIds.add(a.project_id)).toList();
+          newProject =
+              newProject.where((a) => seenIds.add(a.project_id)).toList();
 
           // เพิ่มข้อมูลใหม่เข้า list หลัก
-          modelProjectList.addAll(newActivities);
+          modelProjectList.addAll(newProject);
 
           // เรียงลำดับ project_id แบบลดหลั่น (ใหญ่ไปเล็ก)
-          modelProjectList.sort((a, b) => b.project_id.compareTo(a.project_id));
+          // modelProjectList.sort((a, b) => b.project_id.compareTo(a.project_id));
 
           // คำนวณ indexItems สำหรับ pagination
-          int check = activityJson.length;
+          int check = newProject.length;
           print("indexItems : $indexItems ,max : $max");
 
           // กำหนด filteredProjectList ครั้งแรกเท่านั้น
+          if(status == true){
+            isLoading = true;
+          }
           setState(() {
             if (_isFirstTime) {
               filteredItems = List.from(modelProjectList);
               _isFirstTime = false;
-            }
-
-            if (max == 0 || max != 20) {
-              filteredItems = List.from(modelProjectList);
-              isAtEnd = true;
-            } else {
-              indexItems += 1;
-              // fetchModelProject();
-              filteredItems = List.from(modelProjectList);
-              isAtEnd = false;
             }
           });
         });

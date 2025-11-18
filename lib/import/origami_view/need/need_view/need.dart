@@ -8,13 +8,13 @@ import 'package:origamilift/import/origami_view/need/widget_mini/mini_project.da
 import 'package:origamilift/import/origami_view/need/widget_other/date_other.dart';
 import 'package:origamilift/import/origami_view/need/widget_other/priority_other.dart';
 
+import '../approve/approve_need.dart';
 import '../approve/approve_need_detail.dart';
 
 class NeedsView extends StatefulWidget {
   const NeedsView({
     super.key,
     required this.employee,
-
   });
   final Employee employee;
 
@@ -25,6 +25,7 @@ class NeedsView extends StatefulWidget {
 class _NeedsViewState extends State<NeedsView> {
   TextEditingController _searchController = TextEditingController();
   // final FocusNode _focusNode = FocusNode();
+  bool isLoading = false;
   DateTime now = DateTime.now();
 
   int currentStep = 1;
@@ -35,169 +36,28 @@ class _NeedsViewState extends State<NeedsView> {
   String filter_Department = '';
   String filter_Project = '';
   String filter_Owner = '';
-  String need_Type = 'All';
-  String need_Status = 'All';
+  String type_id = 'All';
+  String status_id = 'All';
 
   String firstDay = '';
   String lastDay = '';
 
   String request_id = '';
-  Widget _filter() {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Card(color: Color(0xFFFF9900),child: Padding(padding: EdgeInsets.only(left: 40,right: 40,top: 8,)),),
-              SizedBox(
-                height: 8,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DateOther(
-                    firstDay: (String value) => firstDay = value,
-                    lastDay: (String value) => lastDay = value,
-                    getfirstDay: firstDay,
-                    getlastDay: lastDay,
-                  ),
-                  SizedBox(height: 8),
-                  Divider(),
-                  Container(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text(
-                      'Priority : ',
-                      style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  PriorityOther(
-                    priority: priority,
-                    callbackId: (String value) => priorityId = value,
-                  ),
-                  SizedBox(height: 16),
-                  Container(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text(
-                      '$Department : ',
-                      style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  _department(departmentOption),
-                  SizedBox(height: 16),
-                  Container(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text(
-                      '$Project : ',
-                      style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  _project(projectOption),
-                  SizedBox(height: 16),
-                  Container(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text(
-                      '$Owner : ',
-                      style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  _owner(employeeOption),
-                  SizedBox(
-                    height: 24,
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFFFF9900),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                ),
-                onPressed: () {
-                  fetchNeedResponse();
-                  // fetchNeedRespond(
-                  //   typeName,
-                  //   status_id,
-                  //   searchText,
-                  //   firstDay,
-                  //   lastDay,
-                  //   priorityId,
-                  //   departmentId,
-                  //   projectId,
-                  //   ownerId,
-                  // );
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: double.infinity,
-                  child: Center(
-                    child: Text(
-                      'Save',
-                      style: TextStyle(fontFamily: 'Arial', fontSize: 16.0),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   int _selectcolor = 0;
   int _indexcolor = 0;
 
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   _showMyDialog();
-    // });
     Day();
     futureLoadData = loadData();
-    fetchProject(project_number, project_name);
-    fetchDepartment(department_number, department_name);
-    fetchPriority(priority_number, priority_name);
-    fetchEmployee(employee_number, employee_name);
     fetchTypeRespond();
     fetchTypeItemRespond();
-    _searchController.addListener(() {
-      // ฟังก์ชันนี้จะถูกเรียกทุกครั้งเมื่อข้อความใน _searchController เปลี่ยนแปลง
-      searchText = _searchController.text;
-      fetchNeedResponse();
-      print("Current text: ${_searchController.text}");
-    });
-    // _focusNode.addListener(() {
-    //   if (!_focusNode.hasFocus) {
-    //     // เมื่อ TextField สูญเสียโฟกัส
-    //     _searchController.clear();
-    //   }
-    // });
   }
 
   @override
   void dispose() {
     _searchController.dispose();
-    // _focusNode.dispose();
     super.dispose();
   }
 
@@ -209,81 +69,124 @@ class _NeedsViewState extends State<NeedsView> {
   }
 
   String typeName = '';
-  String status_id = '';
   int indexI = 0;
 
   Widget _buildSearchField() {
     return Padding(
-        padding: const EdgeInsets.all(8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(100),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2), // สีเงา
-                blurRadius: 1, // ความฟุ้งของเงา
-                offset: Offset(0, 4), // การเยื้องของเงา (แนวแกน X, Y)
-              ),
-            ],
-          ),
-          child: TextFormField(
-            controller: _searchController,
-            keyboardType: TextInputType.text,
-            style: const TextStyle(
-              fontFamily: 'Arial',
-              color: Color(0xFF555555),
-              fontSize: 14,
+      padding: const EdgeInsets.all(8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2), // สีเงา
+              blurRadius: 1, // ความฟุ้งของเงา
+              offset: Offset(0, 4), // การเยื้องของเงา (แนวแกน X, Y)
             ),
-            decoration: InputDecoration(
-              isDense: true,
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              hintText: 'Search...',
-              hintStyle: const TextStyle(
-                  fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
-              border: InputBorder.none, // เอาขอบปกติออก
-              suffixIcon: const Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: Icon(
-                  Icons.search,
-                  size: 24,
-                  color: Colors.orange,
-                ),
+          ],
+        ),
+        child: TextFormField(
+          controller: _searchController,
+          keyboardType: TextInputType.text,
+          style: TextStyle(
+              fontFamily: 'Arial', color: Color(0xFF555555), fontSize: 14),
+          decoration: InputDecoration(
+            isDense: true,
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            hintText: 'Search',
+            hintStyle: TextStyle(
+                fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            prefixIcon: Icon(
+              Icons.search,
+              color: Color(0xFFFF9900),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFFFF9900),
+                width: 1.0,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Colors.orange,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(50),
+              borderRadius: BorderRadius.circular(100),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Color(0xFFFF9900),
+                width: 1.0,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Colors.orange,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(50),
-              ),
+              borderRadius: BorderRadius.circular(100),
             ),
           ),
-        ));
+          onChanged: (value) {
+            setState(() {
+              fetchNeedResponse();
+            });
+          },
+        ),
+      ),
+    );
   }
+
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Widget _getSwitchWidget(BuildContext context) {
+    switch (_selectedIndex) {
+      case 0:
+        return needMain(context);
+      case 1:
+        return NeedRequest(employee: widget.employee);
+      default:
+        return Center(child: Text('ERROR'));
+    }
+  }
+
+  List<TabItem> tabItems = [
+    TabItem(
+      icon: FontAwesomeIcons.file,
+      title: 'Need',
+    ),
+    TabItem(
+      icon: Icons.account_circle,
+      title: 'Need Approve',
+    ),
+  ];
 
   NeedTypeItemRespond? NeedTypeItemRes;
   int abstract = 0;
   @override
   Widget build(BuildContext context) {
     // เรียงลำดับล่วงหน้าเพื่อลดการทำงานซ้ำ
-    NeedTypeItemOption.sort((a, b) => b.type_id.compareTo(a.type_id));
-    NeedTypeItemOption.sort((a, b) => b.type_color.compareTo(a.type_color));
-    NeedTypeItemOption.sort((a, b) => b.type_name.compareTo(a.type_name));
-    NeedTypeItemOption.sort((a, b) => b.type_image.compareTo(a.type_image));
+    TypeItemList.sort((a, b) => b.type_id.compareTo(a.type_id));
+    TypeItemList.sort((a, b) => b.type_color.compareTo(a.type_color));
+    TypeItemList.sort((a, b) => b.type_name.compareTo(a.type_name));
+    TypeItemList.sort((a, b) => b.type_image.compareTo(a.type_image));
 
     return Scaffold(
-      backgroundColor: checkNeed == null ? Colors.grey.shade50 : Colors.white,
+      backgroundColor: Colors.grey.shade50,
+      bottomNavigationBar: BottomBarDefault(
+        items: tabItems,
+        iconSize: 18,
+        animated: true,
+        titleStyle: TextStyle(
+          fontFamily: 'Arial',
+        ),
+        backgroundColor: Colors.white,
+        color: Colors.grey.shade400,
+        colorSelected: Color(0xFFFF9900),
+        indexSelected: _selectedIndex,
+        // paddingVertical: 25,
+        onTap: _onItemTapped,
+      ),
       floatingActionButton: SpeedDial(
         elevation: 0,
         icon: Icons.add,
@@ -295,18 +198,19 @@ class _NeedsViewState extends State<NeedsView> {
         foregroundColor: Colors.white,
         curve: Curves.bounceIn,
         overlayColor: Colors.black,
-        children: List.generate(NeedTypeItemOption.length, (indexItem) {
+        children: List.generate(TypeItemList.length, (i) {
+          final need = TypeItemList[i];
           return SpeedDialChild(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                NeedTypeItemOption[indexItem].type_image,
+                need.type_image,
                 width: 40,
                 height: 40,
                 fit: BoxFit.cover,
               ),
             ),
-            label: NeedTypeItemOption[indexItem].type_name,
+            label: need.type_name,
             labelStyle: TextStyle(
               fontFamily: 'Arial',
               fontSize: 14.0,
@@ -314,7 +218,7 @@ class _NeedsViewState extends State<NeedsView> {
               fontWeight: FontWeight.bold,
             ),
             labelBackgroundColor: Color(
-              int.parse('0xFF${NeedTypeItemOption[indexItem].type_color}'),
+              int.parse('0xFF${need.type_color}'),
             ),
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -323,7 +227,7 @@ class _NeedsViewState extends State<NeedsView> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => NeedDetail(
-                    needTypeItem: NeedTypeItemOption[indexItem],
+                    needTypeItem: need,
                     employee: widget.employee,
                     request_id: '',
                   ),
@@ -333,32 +237,99 @@ class _NeedsViewState extends State<NeedsView> {
           );
         }),
       ),
-      body: Column(
-        children: [
-          Container(
-            color: Colors.white,
-            child: Column(
-              children: [
-                _buildSearchField(),
-                _buildTypeSelector(),
-                _buildStatusSelector(),
-                const Divider(),
-              ],
-            ),
-          ),
-          Expanded(child: _loading()),
-        ],
-      ),
-    );
+      body: _getSwitchWidget(context));
   }
 
-  Widget _buildTypeSelector() {
+  Widget needMain(BuildContext context){
+    return Column(
+      children: [
+        Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              _buildSearchField(),
+              const SizedBox(height: 8),
+              _buildTypeSelector(NeedTypeList),
+              const SizedBox(height: 8),
+              _buildStatusSelector(NeedTypeList),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+        const SizedBox(height: 2),
+        Expanded(
+            child: FutureBuilder<List<NeedRespond>>(
+              future: fetchNeedResponse(),
+              builder: (context, snapshot) {
+                if (isLoading == false) {
+                  // แสดง shimmer loading แทน
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: ListView.builder(
+                      itemCount: 20, // จำนวน shimmer item ที่แสดงระหว่างโหลด
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                          height: 12,
+                                          width: double.infinity,
+                                          color: Colors.white),
+                                      SizedBox(height: 5),
+                                      Container(
+                                          height: 12,
+                                          width: 100,
+                                          color: Colors.white),
+                                      SizedBox(height: 5),
+                                      Container(
+                                          height: 12,
+                                          width: 150,
+                                          color: Colors.white),
+                                      SizedBox(height: 5),
+                                      Container(
+                                          height: 12,
+                                          width: 120,
+                                          color: Colors.white),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+                return _getContentWidget(snapshot.data ?? []);
+              },
+            )),
+      ],
+    );
+  }
+  int indexTS = 0;
+  Widget _buildTypeSelector(List<NeedTypeRespond> needTypeList) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Row(
-          children: List.generate(NeedTypeOption.length, (index) {
+          children: List.generate(needTypeList.length, (index) {
+            final type = needTypeList[index];
             final isSelected = index == _selectcolor;
             return Padding(
               padding: const EdgeInsets.only(right: 4),
@@ -366,10 +337,11 @@ class _NeedsViewState extends State<NeedsView> {
                 onTap: () {
                   setState(() {
                     _selectcolor = index;
-                    _indexcolor = 0; // reset status index
-                    typeName = NeedTypeOption[index].typeId;
-                    status_id =
-                        NeedTypeOption[index].typeStatus?.first.statusId ?? '';
+                    _indexcolor = 0;
+                    indexTS = index;
+                    typeName = type.typeName;
+                    type_id = type.typeId;
+                    status_id = type.typeStatus.first.statusId;
                   });
                   fetchNeedResponse();
                 },
@@ -385,7 +357,7 @@ class _NeedsViewState extends State<NeedsView> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
                   child: Text(
-                    NeedTypeOption[index].typeName,
+                    type.typeName,
                     style: TextStyle(
                       fontFamily: 'Arial',
                       color:
@@ -401,23 +373,20 @@ class _NeedsViewState extends State<NeedsView> {
     );
   }
 
-  Widget _buildStatusSelector() {
+  Widget _buildStatusSelector(List<NeedTypeRespond> needTypeList) {
     // เช็คว่าข้อมูลมีจริง และไม่ว่างเปล่า
-    if (NeedTypeOption.isEmpty ||
-        _selectcolor >= NeedTypeOption.length ||
-        NeedTypeOption[_selectcolor].typeStatus == null ||
-        NeedTypeOption[_selectcolor].typeStatus!.isEmpty) {
+    if (NeedTypeList.isEmpty ||
+        _selectcolor >= NeedTypeList.length ||
+        NeedTypeList[indexTS].typeStatus.isEmpty) {
       return const SizedBox(); // หรือ Text('ไม่มีข้อมูลสถานะ')
     }
-    final statusList = NeedTypeOption[_selectcolor].typeStatus!;
-
+    // final statusList = NeedTypeList[_selectcolor].typeStatus;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: List.generate(statusList.length, (index) {
+        children: List.generate(needTypeList[indexTS].typeStatus.length??0, (index) {
           final isSelected = index == _indexcolor;
-          final status = statusList[index];
-
+          final status = needTypeList[indexTS].typeStatus[index];
           return Padding(
             padding: const EdgeInsets.only(left: 8, top: 4),
             child: InkWell(
@@ -458,458 +427,465 @@ class _NeedsViewState extends State<NeedsView> {
     );
   }
 
-  Widget _loading() {
-    return FutureBuilder<List<NeedRespond>>(
-      future: fetchNeedResponse(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: Color(0xFFFF9900),
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Text(
-                'Loading...',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF555555),
+  Widget _getContentWidget(List<NeedRespond> needList) {
+    return ListView.builder(
+      itemCount: needList.length,
+      itemBuilder: (context, index) {
+        final need = needList[index];
+        // DateTime dt = DateTime.parse(need.sta);
+        // final create_date = DateFormat('yyyy-MM-dd').format(dt);
+        return Container(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 4),
+            child: InkWell(
+              onTap: () => _showRequestDialog(need),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.white54,
+                    width: 1,
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            height: 24,
+                            width: 5,
+                            color:
+                                hexToColor(need.mny_type_color).withOpacity(1),
+                          ),
+                          Expanded(
+                            child: Text(
+                              need.mny_request_generate_code,
+                              style: const TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 12,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          Text(
+                            need.mny_type_name,
+                            style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14,
+                              color: hexToColor(need.mny_type_color),
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        color: hexToColor(need.mny_type_color).withOpacity(0.5),
+                        thickness: 2,
+                      ),
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(2),
+                            child: Image.asset(
+                              'assets/images/file_image.png',
+                              width: 75,
+                              height: 75,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'assets/images/file_image.png',
+                                  width: 75,
+                                  height: 75,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Text(
+                                    'Reason : ${need.need_subject}',
+                                    style: const TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Color(0xFF555555),
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'create : ${need.create_date}',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 12,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                                Text(
+                                  'effective : ${need.effective_date}',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 12,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'status : ${need.need_status}',
+                                  style: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 12,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                                // if (approve.approve_status == 'N' &&
+                                //     approve.del_status != 'Y')
+                                //   Text(
+                                //     (approve.approve_comment != '')
+                                //         ? approve.approve_comment
+                                //         : '[Waiting Approve]',
+                                //     style: TextStyle(
+                                //       fontFamily: 'Arial',
+                                //       fontSize: 12,
+                                //       color: (approve.approve_comment != '')
+                                //           ? Colors.red.shade400
+                                //           : Colors.orange.shade400,
+                                //       fontWeight: FontWeight.w500,
+                                //     ),
+                                //   )
+                                // else
+                                //   Text(
+                                //     (approve.approve_comment != '')
+                                //         ? approve.approve_comment
+                                //         : '[Approve]',
+                                //     style: TextStyle(
+                                //       fontFamily: 'Arial',
+                                //       fontSize: 12,
+                                //       color: (approve.approve_status == 'I')?Colors.red.shade400:Colors.green,
+                                //       fontWeight: FontWeight.w500,
+                                //     ),
+                                //   ),
+                              ],
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  _showCustomDeleteDialog(need);
+                                },
+                                icon: FaIcon(
+                                  FontAwesomeIcons.trashAlt,
+                                  color: Colors.redAccent,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ));
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          return _getContentWidget(snapshot.data ?? []);
-        }
+            ),
+          ),
+        );
       },
     );
   }
 
-  Widget _getContentWidget(List<NeedRespond> needList) {
-    return (checkNeed == null || needList.isNotEmpty)
-        ? ListView.builder(
-            controller: ScrollController(),
-            itemCount: needList.length,
-            itemBuilder: (context, indexNl) {
-              return Column(
+  void _showRequestDialog(NeedRespond need) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        Widget buildRow(String label, String? value, {TextStyle? style}) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black54,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    value?.isNotEmpty == true ? value! : '-',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black54,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return AlertDialog(
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '',
+                style: const TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  need.need_subject,
+                  style: const TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  "❌",
+                  style: const TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // buildRow('From Date :',
+                //     '${approve.request_from_date} ${approve.request_from_time_}'),
+                buildRow('Start :', '${need.create_date}'),
+                buildRow('Comment :', need.mny_request_note),
+                // buildRow('Hour Total :', approve.request_total_time),
+                // Row(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Expanded(
+                //       flex: 1,
+                //       child: Text(
+                //         'Approve :',
+                //         style: TextStyle(
+                //           fontFamily: 'Arial',
+                //           fontSize: 14,
+                //           fontWeight: FontWeight.w600,
+                //           color: Colors.black54,
+                //         ),
+                //       ),
+                //     ),
+                //     const SizedBox(width: 8),
+                //     Expanded(
+                //       flex: 2,
+                //       child: Column(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           Text(
+                //             '${approve.firstname} ${approve.lastname}',
+                //             style: TextStyle(
+                //               fontFamily: 'Arial',
+                //               fontSize: 14,
+                //               fontWeight: FontWeight.w500,
+                //               color: Colors.black54,
+                //             ),
+                //           ),
+                //           SizedBox(height: 4),
+                //           if (approve.approve_status == 'N' &&
+                //               approve.del_status != 'Y')
+                //             Text(
+                //               (approve.approve_comment != '')
+                //                   ? approve.approve_comment
+                //                   : '[Waiting Approve]',
+                //               style: TextStyle(
+                //                 fontFamily: 'Arial',
+                //                 fontSize: 12,
+                //                 color: (approve.approve_comment != '')
+                //                     ? Colors.red.shade400
+                //                     : Colors.orange.shade400,
+                //                 fontWeight: FontWeight.w600,
+                //               ),
+                //             )
+                //           else
+                //             Text(
+                //               (approve.approve_comment != '')
+                //                   ? approve.approve_comment
+                //                   : '[Approve]',
+                //               style: TextStyle(
+                //                 fontFamily: 'Arial',
+                //                 fontSize: 12,
+                //                 color: Colors.green,
+                //                 fontWeight: FontWeight.w600,
+                //               ),
+                //             ),
+                //         ],
+                //       ),
+                //     ),
+                //   ],
+                // ),
+              ],
+            ),
+          ),
+          actions: [
+            Center(
+              // ✅ บังคับให้อยู่ตรงกลาง
+              child: Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceEvenly, // ✅ แยกเท่า ๆ กัน
                 children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 16),
-                    child: Card(
-                      elevation: 0,
-                      color: Colors.white,
-                      // shape: RoundedRectangleBorder(
-                      //   borderRadius: BorderRadius.circular(15),
-                      //   side: BorderSide(width: 1, color: Color(0xFF555555)),
-                      // ),
-                      child: InkWell(
-                        onTap: () {
-                          showModalBottomSheet<void>(
-                            barrierColor: Color(0xFF555555),
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            isScrollControlled: true,
-                            isDismissible: false,
-                            enableDrag: false,
-                            builder: (BuildContext context) {
-                              // fetchDetail('edit', needList[index].mny_request_id??'' , '');
-                              return Container(
-                                color: Colors.white,
-                                child: FractionallySizedBox(
-                                  heightFactor: 0.96,
-                                  child: Scaffold(
-                                    backgroundColor: Colors.transparent,
-                                    body: (needList[indexNl].need_status !=
-                                                "N" ||
-                                            needList[indexNl].need_status !=
-                                                "All")
-                                        ? NeedDetailApprove(
-                                            employee: widget.employee,
-                                            request_id: needList[indexNl]
-                                                .mny_request_id,
-                                            // approvelList:needList[indexNl],
-                                          )
-                                        : NeedDetail(
-                                            needTypeItem:
-                                                NeedTypeItemOption[indexI],
-                                            employee: widget.employee,
-                                            request_id: needList[indexNl]
-                                                .mny_request_id),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: ListTile(
-                          title: Text(
-                            needList[indexNl].need_subject,
-                            style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 18,
-                              color: Color(0xFFFF9900),
-                              fontWeight: FontWeight.bold,
+                  Container(
+                    width:
+                        MediaQuery.of(context).size.width * 0.20, // ปรับให้พอดี
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade400,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.orange.shade200,
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NeedDetail(
+                                needTypeItem: TypeItemList[0],
+                                employee: widget.employee,
+                                request_id: need.mny_request_id),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Edit',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width *
+                        0.20, // ปรับขนาดให้เท่ากัน
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade400,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.red.shade200,
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        // Navigator.pop(dialogContext);
+                        setState(() {
+                          fetchDelete(need.mny_request_id);
+                        });
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrigamiPage(
+                              employee: widget.employee,
+                              popPage: 0,
                             ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
                           ),
-                          subtitle: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${needList[indexNl].mny_type_name} - ${needList[indexNl].mny_request_generate_code}',
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14.0,
-                                        color: Color(0xFF555555),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "$Date : ${needList[indexNl].create_date} ",
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14.0,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "$Amount : ${needList[indexNl].need_amount} $Baht",
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14.0,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            "$Status1 : ${needList[indexNl].need_status}",
-                                            style: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 14.0,
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                children: [
-                                  Container(
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Icon(
-                                        null,
-                                        color: Colors.grey,
-                                        size: 30,
-                                      )),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Container(
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Icon(
-                                        null,
-                                        color: Colors.grey,
-                                        size: 30,
-                                      )),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) =>
-                                      //     GoogleMap2(),
-                                      //   ),
-                                      // );
-                                      setState(() {
-                                        fetchDelete(
-                                            needList[indexNl].mny_request_id);
-                                      });
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => OrigamiPage(
-                                            employee: widget.employee,
-                                            popPage: 0,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    icon: FaIcon(
-                                      FontAwesomeIcons.trashAlt,
-                                      color: Colors.redAccent,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                          // Add more details as needed
+                        );
+                      },
+                      child: const Text(
+                        'Delete',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                   ),
                 ],
-              );
-            },
-          )
-        : Center(
-            child: Container(
-              child: Text(
-                'No Data Available in table.',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
               ),
             ),
-          );
-  }
-
-  String editEmployeeText = '';
-  String ownerId = '';
-  Widget _owner(List<EmployeeData> _owner) {
-    return Center(
-        child: Container(
-      height: 48,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: Color(0xFFFF9900),
-          width: 1.0,
-        ),
-      ),
-      child: InkWell(
-        onTap: () {
-          // setState(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MiniEmployee(
-                callback: (String value) => editEmployeeText = value,
-                employee: widget.employee,
-                callbackId: (String value) => ownerId = value,
-              ),
-            ),
-          );
-          filter_Owner = editEmployeeText;
-          // });
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  (editEmployeeText == '')
-                      ? '$Owner'
-                      : (editEmployeeText != '')
-                          ? editEmployeeText
-                          : 'null',
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: (editEmployeeText == '')
-                          ? Colors.black38
-                          : Color(0xFF555555)),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-              Icon(Icons.arrow_drop_down_outlined),
-            ],
-          ),
-        ),
-      ),
-    ));
-  }
-
-  String editprojectText = '';
-  String projectId = '';
-  Widget _project(List<ProjectData> _project) {
-    return Center(
-        child: Container(
-      height: 48,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: Color(0xFFFF9900),
-          width: 1.0,
-        ),
-      ),
-      child: InkWell(
-        onTap: () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MiniProject(
-                callback: (String value) => editprojectText = value,
-                employee: widget.employee,
-                
-                callbackId: (String value) => projectId = value,
-              ),
-            ),
-          );
-          filter_Project = editprojectText;
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  (editprojectText == '')
-                      ? '$all_project'
-                      : (editprojectText != '')
-                          ? editprojectText
-                          : 'null',
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: (editprojectText == '')
-                          ? Colors.black38
-                          : Color(0xFF555555)),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-              Icon(Icons.arrow_drop_down_outlined),
-            ],
-          ),
-        ),
-      ),
-    ));
-  }
-
-  String editDepartmentText = '';
-  String departmentId = '';
-  Widget _department(List<DepartmentData> departmentOption) {
-    return Center(
-        child: Container(
-      height: 48,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: Color(0xFFFF9900),
-          width: 1.0,
-        ),
-      ),
-      child: InkWell(
-        onTap: () {
-          // setState(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MiniDepartment(
-                callback: (String value) => editDepartmentText = value,
-                employee: widget.employee,
-                
-                callbackId: (String value) => departmentId = value,
-              ),
-            ),
-          );
-          filter_Department = editDepartmentText;
-          // });
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  (editDepartmentText == '')
-                      ? '$Department'
-                      : (editDepartmentText != '')
-                          ? editDepartmentText
-                          : 'null',
-                  style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: (editDepartmentText == '')
-                          ? Colors.black38
-                          : Color(0xFF555555)),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-              Icon(Icons.arrow_drop_down_outlined),
-            ],
-          ),
-        ),
-      ),
-    ));
-  }
-
-  Future<List<AnnounceData>> fetchAnnounce() async {
-    final uri = Uri.parse("$hostWeb/api/origami/announce/announce.php");
-    final response = await http.post(
-      uri,
-      headers: {'Authorization': 'Bearer $token'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-        'Authorization': token,
+          ],
+        );
       },
     );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      // เข้าถึงข้อมูลในคีย์ 'instructors'
-      final List<dynamic> instructorsJson = jsonResponse['announce_data'];
-      // แปลงข้อมูลจาก JSON เป็น List<Instructor>
-      return instructorsJson
-          .map((json) => AnnounceData.fromJson(json))
-          .toList();
-    } else {
-      throw Exception('Failed to load instructors');
-    }
   }
 
   String priorityId = '';
-  List<NeedTypeRespond> NeedTypeOption = [];
-  List<NeedTypeItemRespond> NeedTypeItemOption = [];
+  List<NeedTypeRespond> NeedTypeList = [];
   Future<void> fetchTypeRespond() async {
-    final uri = Uri.parse('$hostWeb/api/origami/need/need_type.php');
+    final uri = Uri.parse('$hostDev/api/origami/need/need_type.php');
     try {
       final response = await http.post(
         uri,
@@ -924,28 +900,26 @@ class _NeedsViewState extends State<NeedsView> {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
           final List<dynamic> needTypeJson = jsonResponse['need_type'] ?? [];
-
           setState(() {
-            NeedTypeOption = needTypeJson
+            NeedTypeList = needTypeJson
                 .map((json) => NeedTypeRespond.fromJson(json))
                 .toList();
-            // print('print : $NeedTypeOption');
           });
         } else {
-          throw Exception(
-              'Failed to load personal data: ${jsonResponse['message']}');
+          throw Exception('Failed to load personal data: ${jsonResponse['message']}');
         }
       } else {
-        throw Exception(
-            'Failed to load personal data: ${response.reasonPhrase}');
+        throw Exception('Failed to load personal data: ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('Failed to load personal data: $e');
     }
   }
 
+
+  List<NeedTypeItemRespond> TypeItemList = [];
   Future<void> fetchTypeItemRespond() async {
-    final uri = Uri.parse('$hostWeb/api/origami/need/need_type_item.php');
+    final uri = Uri.parse('$hostDev/api/origami/need/need_type_item.php');
 
     final response = await http.post(
       uri,
@@ -963,7 +937,7 @@ class _NeedsViewState extends State<NeedsView> {
             jsonResponse['need_type_item'] ?? [];
 
         setState(() {
-          NeedTypeItemOption = needTypeItemJson
+          TypeItemList = needTypeItemJson
               .map((json) => NeedTypeItemRespond.fromJson(json))
               .toList();
         });
@@ -977,13 +951,21 @@ class _NeedsViewState extends State<NeedsView> {
   }
 
   // List<NeedRespond> needList = [];
-  List<NeedRespond>? checkNeed;
-  String need_type = "";
-  String need_status = "";
+  // List<NeedRespond>? checkNeed;
+
   String search = "";
   Future<List<NeedRespond>> fetchNeedResponse() async {
+    print('search :: ${_searchController.text}');
+    print('start_date :: $firstDay');
+    print('end_date :: $lastDay');
+    print('filter_priority :: $filter_Priority');
+    print('filter_Department :: $filter_Department');
+    print('filter_Project :: $filter_Project');
+    print('filter_Owner :: $filter_Owner');
+    print('need_type :: $type_id');
+    print('need_status :: $status_id');
     final uri = Uri.parse(
-        "$hostWeb/api/origami/need/need.php?need_type=$need_type&need_status=$need_status&search=Search");
+        "$hostDev/api/origami/need/need.php?need_type=$type_id&need_status=$status_id&search=${_searchController.text}");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $token'},
@@ -997,209 +979,25 @@ class _NeedsViewState extends State<NeedsView> {
         'filter_department': filter_Department,
         'filter_project': filter_Project,
         'filter_owner': filter_Owner,
-        'need_type': need_type,
-        'need_status': need_status,
+        'need_type': type_id,
+        'need_status': status_id,
       },
     );
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      // เข้าถึงข้อมูลในคีย์ 'instructors'
       final List<dynamic> needJson = jsonResponse['need_data'] ?? [];
-      checkNeed = needJson.map((json) => NeedRespond.fromJson(json)).toList();
-      // แปลงข้อมูลจาก JSON เป็น List<Instructor>
+      if (isLoading == false) {
+        isLoading = true;
+      }
       return needJson.map((json) => NeedRespond.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load instructors');
     }
   }
 
-  // PriorityRespond
-  List<PriorityData> priority = [];
-  int int_priority = 0;
-  bool is_priority = false;
-  String? priority_number = "";
-  String? priority_name = "";
-  Future<void> fetchPriority(priority_number, priority_name) async {
-    final uri = Uri.parse(
-        '$hostWeb/api/origami/need/priority.php?page=$priority_number&search=$priority_name');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer $token'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': token,
-        },
-      );
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status'] == true) {
-          final List<dynamic> priorityJson =
-              jsonResponse['priority_data'] ?? [];
-          final priorityRespond = PriorityRespond.fromJson(jsonResponse);
-          int_priority = priorityRespond.next_page_number ?? 0;
-          setState(() {
-            priority = priorityJson
-                .map(
-                  (json) => PriorityData.fromJson(json),
-                )
-                .toList();
-          });
-        } else {
-          throw Exception(
-              'Failed to load personal data: ${jsonResponse['message']}');
-        }
-      } else {
-        throw Exception(
-            'Failed to load personal data: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
-  }
-
-  List<DepartmentData> departmentOption = [];
-  int int_department = 0;
-  bool is_department = false;
-  String? department_number = "";
-  String? department_name = "";
-  Future<void> fetchDepartment(department_number, department_name) async {
-    final uri = Uri.parse(
-        '$hostWeb/api/origami/need/department.php?page=$department_number&search=$department_name');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer $token'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': token,
-        },
-      );
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status'] == true) {
-          final List<dynamic> departmentJson =
-              jsonResponse['department_data'] ?? [];
-          final departmentRespond = DepartmentRespond.fromJson(jsonResponse);
-          int_department = departmentRespond.next_page_number ?? 0;
-          setState(() {
-            departmentOption = departmentJson
-                .map(
-                  (json) => DepartmentData.fromJson(json),
-                )
-                .toList();
-          });
-        } else {
-          throw Exception(
-              'Failed to load personal data: ${jsonResponse['message']}');
-        }
-      } else {
-        throw Exception(
-            'Failed to load personal data: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
-  }
-
-  List<ProjectData> projectOption = [];
-  List<ProjectData> projectList = [];
-  int int_project = 0;
-  bool is_project = false;
-  String? project_number = "";
-  String? project_name = "";
-  Future<void> fetchProject(project_number, project_name) async {
-    final uri = Uri.parse(
-        '$hostWeb/api/origami/need/project.php?page=$project_number&search=$project_name');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer $token'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': token,
-        },
-      );
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status'] == true) {
-          final List<dynamic> projectJson = jsonResponse['project_data'] ?? [];
-          setState(() {
-            final projectRespond = ProjectRespond.fromJson(jsonResponse);
-            int_project = projectRespond.next_page_number ?? 0;
-            is_project = projectRespond.next_page ?? false;
-            projectOption = projectJson
-                .map(
-                  (json) => ProjectData.fromJson(json),
-                )
-                .toList();
-            projectList = projectOption;
-          });
-        } else {
-          throw Exception(
-              'Failed to load personal data: ${jsonResponse['message']}');
-        }
-      } else {
-        throw Exception(
-            'Failed to load personal data: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
-  }
-
-  List<EmployeeData> employeeOption = [];
-  int int_employee = 0;
-  String page_employee = '';
-  bool is_employee = false;
-  String? employee_number = "";
-  String? employee_name = "";
-  Future<void> fetchEmployee(employee_number, employee_name) async {
-    final uri = Uri.parse(
-        '$hostWeb/api/origami/need/employee.php?page=$employee_number&search=$employee_name');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {'Authorization': 'Bearer $token'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'Authorization': token,
-        },
-      );
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status'] == true) {
-          final List<dynamic> employeeJson =
-              jsonResponse['employee_data'] ?? [];
-          final employeeRespond = EmployeeRespond.fromJson(jsonResponse);
-          int_employee = employeeRespond.next_page_number ?? 0;
-          setState(() {
-            employeeOption = employeeJson
-                .map(
-                  (json) => EmployeeData.fromJson(json),
-                )
-                .toList();
-          });
-        } else {
-          throw Exception(
-              'Failed to load personal data: ${jsonResponse['message']}');
-        }
-      } else {
-        throw Exception(
-            'Failed to load personal data: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
-    }
-  }
-
   Future<void> fetchDelete(request_id) async {
-    final uri = Uri.parse('$hostWeb/api/origami/need/delete.php');
+    final uri = Uri.parse('$hostDev/api/origami/need/delete.php');
     try {
       final response = await http.post(
         uri,
@@ -1214,7 +1012,11 @@ class _NeedsViewState extends State<NeedsView> {
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == true) {
-          setState(() {});
+          statusDialog(
+            'Success',
+            '',
+            'https://cdn-icons-png.freepik.com/512/5610/5610944.png',
+          );
         } else {
           throw Exception(
               'Failed to load personal data: ${jsonResponse['message']}');
@@ -1227,6 +1029,348 @@ class _NeedsViewState extends State<NeedsView> {
       throw Exception('Failed to load personal data: $e');
     }
   }
+
+  void _showCustomDeleteDialog(NeedRespond need) {
+    showDialog(
+      context: context,
+      barrierColor:Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Delete ${need.need_subject}',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Do you want to delete this ${need.need_subject}?',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.red.shade400,
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.red,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  Navigator.pop(dialogContext);
+                  setState(() {
+                    fetchDelete(need.mny_request_id);
+                  });
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OrigamiPage(
+                        employee: widget.employee,
+                        popPage: 0,
+                      ),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Delete',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
+  }
+
+  void statusDialog(title, message, String img) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // ป้องกันการกดนอกกรอบเพื่อปิด
+      builder: (BuildContext context) {
+        // ตั้งเวลาให้ปิดอัตโนมัติภายใน 2 วินาที
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+        });
+
+        return AlertDialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Column(
+            children: [
+              Image.network(
+                img,
+                height: 150,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.network(
+                    'https://cdn-icons-png.freepik.com/512/5610/5610944.png',
+                    height: 150,
+                    fit: BoxFit.contain,
+                  );
+                },
+              ),
+              SizedBox(height: 16),
+              Text(
+                title,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 28,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 18,
+              color: Colors.black87,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Widget _getContentWidget2(List<NeedRespond> needList) {
+  //   return (needList.isNotEmpty)
+  //       ? ListView.builder(
+  //           controller: ScrollController(),
+  //           itemCount: needList.length,
+  //           itemBuilder: (context, i) {
+  //             final need = needList[i];
+  //             return Column(
+  //               children: [
+  //                 Padding(
+  //                   padding:
+  //                       const EdgeInsets.only(left: 16, right: 16, top: 16),
+  //                   child: Card(
+  //                     elevation: 0,
+  //                     color: Colors.white,
+  //                     // shape: RoundedRectangleBorder(
+  //                     //   borderRadius: BorderRadius.circular(15),
+  //                     //   side: BorderSide(width: 1, color: Color(0xFF555555)),
+  //                     // ),
+  //                     child: InkWell(
+  //                       onTap: () {
+  //                         showModalBottomSheet<void>(
+  //                           barrierColor: Color(0xFF555555),
+  //                           backgroundColor: Colors.transparent,
+  //                           context: context,
+  //                           isScrollControlled: true,
+  //                           isDismissible: false,
+  //                           enableDrag: false,
+  //                           builder: (BuildContext context) {
+  //                             return Container(
+  //                               color: Colors.white,
+  //                               child: FractionallySizedBox(
+  //                                 heightFactor: 0.96,
+  //                                 child: Scaffold(
+  //                                   backgroundColor: Colors.transparent,
+  //                                   body: (need.need_status != "N" ||
+  //                                           need.need_status != "All")
+  //                                       ? NeedDetailApprove(
+  //                                           employee: widget.employee,
+  //                                           request_id: need.mny_request_id,
+  //                                           // approvelList:needList[indexNl],
+  //                                         )
+  //                                       : NeedDetail(
+  //                                           needTypeItem: TypeItemList[0],
+  //                                           employee: widget.employee,
+  //                                           request_id: need.mny_request_id),
+  //                                 ),
+  //                               ),
+  //                             );
+  //                           },
+  //                         );
+  //                       },
+  //                       child: ListTile(
+  //                         title: Text(
+  //                           need.need_subject,
+  //                           style: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 18,
+  //                             color: Color(0xFFFF9900),
+  //                             fontWeight: FontWeight.bold,
+  //                           ),
+  //                           overflow: TextOverflow.ellipsis,
+  //                           maxLines: 3,
+  //                         ),
+  //                         subtitle: Row(
+  //                           children: [
+  //                             Expanded(
+  //                               child: Column(
+  //                                 mainAxisAlignment: MainAxisAlignment.start,
+  //                                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                                 children: [
+  //                                   Text(
+  //                                     '${need.mny_type_name} - ${need.mny_request_generate_code}',
+  //                                     style: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 14.0,
+  //                                       color: Color(0xFF555555),
+  //                                       fontWeight: FontWeight.bold,
+  //                                     ),
+  //                                   ),
+  //                                   SizedBox(height: 8),
+  //                                   Text(
+  //                                     "$Date : ${need.create_date} ",
+  //                                     style: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 14.0,
+  //                                       color: Colors.grey,
+  //                                       fontWeight: FontWeight.bold,
+  //                                     ),
+  //                                   ),
+  //                                   SizedBox(height: 8),
+  //                                   Text(
+  //                                     "$Amount : ${need.need_amount} $Baht",
+  //                                     style: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 14.0,
+  //                                       color: Colors.grey,
+  //                                       fontWeight: FontWeight.bold,
+  //                                     ),
+  //                                   ),
+  //                                   SizedBox(height: 8),
+  //                                   Row(
+  //                                     children: [
+  //                                       Expanded(
+  //                                         child: Text(
+  //                                           "status : ${need.need_status}",
+  //                                           style: TextStyle(
+  //                                             fontFamily: 'Arial',
+  //                                             fontSize: 14.0,
+  //                                             color: Colors.grey,
+  //                                             fontWeight: FontWeight.bold,
+  //                                           ),
+  //                                         ),
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                             ),
+  //                             Column(
+  //                               children: [
+  //                                 Container(
+  //                                     height: 25,
+  //                                     decoration: BoxDecoration(
+  //                                       borderRadius: BorderRadius.circular(20),
+  //                                     ),
+  //                                     child: Icon(
+  //                                       null,
+  //                                       color: Colors.grey,
+  //                                       size: 30,
+  //                                     )),
+  //                                 SizedBox(
+  //                                   height: 8,
+  //                                 ),
+  //                                 Container(
+  //                                     height: 25,
+  //                                     decoration: BoxDecoration(
+  //                                       borderRadius: BorderRadius.circular(20),
+  //                                     ),
+  //                                     child: Icon(
+  //                                       null,
+  //                                       color: Colors.grey,
+  //                                       size: 30,
+  //                                     )),
+  //                                 SizedBox(
+  //                                   height: 8,
+  //                                 ),
+  //                                 IconButton(
+  //                                   onPressed: () {
+  //                                     setState(() {
+  //                                       fetchDelete(need.mny_request_id);
+  //                                     });
+  //                                     Navigator.pushReplacement(
+  //                                       context,
+  //                                       MaterialPageRoute(
+  //                                         builder: (context) => OrigamiPage(
+  //                                           employee: widget.employee,
+  //                                           popPage: 0,
+  //                                         ),
+  //                                       ),
+  //                                     );
+  //                                   },
+  //                                   icon: FaIcon(
+  //                                     FontAwesomeIcons.trashAlt,
+  //                                     color: Colors.redAccent,
+  //                                   ),
+  //                                 )
+  //                               ],
+  //                             ),
+  //                           ],
+  //                         ),
+  //                         // Add more details as needed
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         )
+  //       : const Center(
+  //           child: Text(
+  //             'No Data Available in table.',
+  //             style: TextStyle(
+  //               fontFamily: 'Arial',
+  //               fontSize: 14,
+  //               fontWeight: FontWeight.w500,
+  //               color: Colors.grey,
+  //             ),
+  //             overflow: TextOverflow.ellipsis,
+  //             maxLines: 1,
+  //           ),
+  //         );
+  // }
 }
 
 // models.dart
@@ -1568,7 +1712,7 @@ class NeedTypeRespond {
   String typeName;
   String typeColor;
   String typeImage;
-  List<TypeStatus>? typeStatus;
+  List<TypeStatus> typeStatus;
   List<String>? statusListString;
 
   NeedTypeRespond({
@@ -1576,7 +1720,7 @@ class NeedTypeRespond {
     required this.typeName,
     required this.typeColor,
     required this.typeImage,
-    this.typeStatus,
+    required this.typeStatus,
     this.statusListString,
   });
 
@@ -1609,8 +1753,8 @@ class TypeStatus {
 
   factory TypeStatus.fromJson(Map<String, dynamic> json) {
     return TypeStatus(
-      statusId: json['status_id'].toString(),
-      statusName: json['status_name'],
+      statusId: json['status_id']??'',
+      statusName: json['status_name']??'',
       status_flag: int.parse(json['status_flag'].toString()),
     );
   }

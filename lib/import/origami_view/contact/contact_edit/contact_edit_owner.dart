@@ -567,11 +567,11 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'Authorization': token,
+          'Authorization': tokenMD5,
           'index': '0',
         },
       );
@@ -597,11 +597,11 @@ class _ContactEditOwnerState extends State<ContactEditOwner> {
     final uri = Uri.parse("$hostDev/crm/ios_activity_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'Authorization': token,
+        'Authorization': tokenMD5,
         'index': '0',
       },
     );

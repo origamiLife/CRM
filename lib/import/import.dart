@@ -16,7 +16,6 @@ export 'package:file_picker/file_picker.dart';
 export 'package:path_provider/path_provider.dart';
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:flutter_svg/flutter_svg.dart';
-export 'package:device_info_plus/device_info_plus.dart';
 export 'package:loading_animation_widget/loading_animation_widget.dart';
 export 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 export 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';

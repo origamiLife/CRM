@@ -10,8 +10,8 @@ class MiniAccount extends StatefulWidget {
       required this.callbackId,
       })
       : super(key: key);
-  final String Function(String) callback;
-  final String Function(String) callbackId;
+  final Function(String) callback;
+  final Function(String) callbackId;
   final Employee employee;
 
   @override
@@ -42,160 +42,143 @@ class _MiniAccountState extends State<MiniAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 1,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.orange,
+          title: const Text(
+            'Account',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontWeight: FontWeight.w500,
+              color: Colors.orange,),
+          ),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.orange,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Card(
-                  color: Color(0xFFFF9900),
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 40, top: 8)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: TextFormField(
-                    controller: _searchAccount,
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14,
-                    ),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 14),
-                      hintText: 'Search...',
-                      hintStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          color: Color(0xFF555555)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Color(0xFFFF9900),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        Account_name = value;
-                        fetchAccount(int_Account, Account_name);
-                        _searchText = value;
-                        // filterData_Account();
-                      });
-                    },
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  controller: _searchAccount,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Color(0xFF555555),
+                    fontSize: 14,
                   ),
-                ),
-                (_searchText == '')
-                    ? Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'กรอกข้อมูลที่ต้องการค้าหา.......?',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Color(0xFF555555),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                          ],
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: AccountList.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      Account_name =
-                                          AccountList[index].account_name ?? '';
-                                      widget.callback(Account_name ?? '');
-                                      data_Id =
-                                          AccountList[index].account_id ?? '';
-                                      widget.callbackId(data_Id ?? '');
-                                      Navigator.pop(context, Account_name);
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Text(
-                                      "${AccountList[index].account_name ?? ''}",
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 16,
-                                        color: Color(0xFF555555),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
-                                  child: Divider(),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 14),
+                    hintText: 'Search...',
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Color(0xFFFF9900),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                        width: 1.0,
                       ),
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          // int_project = int_project - 2;
-                          // fetchProject(int_project.toString(), "");
-                          Navigator.pop(context);
-                        });
-                      },
-                      child: Row(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      Account_name = value;
+                      fetchAccount(int_Account, Account_name);
+                      _searchText = value;
+                      // filterData_Account();
+                    });
+                  },
+                ),
+              ),
+              (_searchText == '')
+                  ? const Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.navigate_before,
-                            color: Color(0xFFFF9900),
-                          ),
                           Text(
-                            "$Back",
+                            'No Data Available in table.',
                             style: TextStyle(
                               fontFamily: 'Arial',
+                              fontSize: 16,
                               color: Color(0xFF555555),
                             ),
                           ),
+                          SizedBox(
+                            height: 8,
+                          ),
                         ],
                       ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: AccountList.length,
+                        itemBuilder: (context, index) {
+                          final account = AccountList[index];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    Account_name =
+                                        account.account_name ?? '';
+                                    widget.callback(Account_name ?? '');
+                                    data_Id =
+                                        account.account_id ?? '';
+                                    widget.callbackId(data_Id ?? '');
+                                    Navigator.pop(context, Account_name);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    account.account_name ?? '',
+                                    style: const TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16,
+                                      color: Color(0xFF555555),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 16, right: 16),
+                                child: Divider(),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+            ],
           ),
         ));
   }
@@ -210,7 +193,7 @@ class _MiniAccountState extends State<MiniAccount> {
   String? data_Id = "";
   Future<void> fetchAccount(Account_number, Account_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/account.php?page=$Account_number&search=$Account_name');
+        '$hostDev/api/origami/need/account.php?page=$Account_number&search=$Account_name');
     try {
       final response = await http.post(
         uri,

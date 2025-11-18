@@ -203,30 +203,12 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(2),
-                    child: Image.network(
-                      'https://dev.origami.life/images/project_default.jpg',
+                    child: Image.asset(
+                      'assets/images/project_default.jpg',
                       height: 90,
                       width: 90,
                       fit: BoxFit.cover,
                       cacheWidth: 100,
-                      loadingBuilder:
-                          (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.orange.shade100,
-                            value: loadingProgress
-                                .expectedTotalBytes !=
-                                null
-                                ? loadingProgress
-                                .cumulativeBytesLoaded /
-                                (loadingProgress
-                                    .expectedTotalBytes ??
-                                    1)
-                                : 0,
-                          ),
-                        );
-                      },
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                             height: 60,
@@ -497,13 +479,13 @@ class _ProjectListUpdateState extends State<ProjectListUpdate> {
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade50,
+            color: Colors.grey.shade50,
             height: 3,
             width: double.infinity,
           ),
           SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade100,
+            color: Colors.grey.shade100,
             height: 3,
             width: double.infinity,
           ),

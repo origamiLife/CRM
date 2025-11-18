@@ -196,7 +196,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '',
+            'Update Activity',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 24,
@@ -343,7 +343,7 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
                                 icon: FontAwesomeIcons.building,
                               ),
                             ),
-                            // _lineWidget(),
+                            _lineWidget(),
                             _buildDropdown<ActivityStatus>(
                               label: 'Status',
                               hint: widget.activity.activity_status_name,
@@ -531,13 +531,13 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade50,
+            color: Colors.grey.shade50,
             height: 3,
             width: double.infinity,
           ),
           SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade100,
+            color: Colors.grey.shade100,
             height: 3,
             width: double.infinity,
           ),
@@ -852,29 +852,29 @@ class _ActivityEditNowState extends State<ActivityEditNow> {
       padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
       child: Row(
         children: [
-          Expanded(
-            child: Column(
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Color(0xFF555555),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Icon(
-                  icon,
-                  size: 24,
-                  color: Colors.black87,
-                ),
-
-              ],
-            ),
-          ),
-          SizedBox(width: 16),
+          // Expanded(
+          //   child: Column(
+          //     children: [
+          //       Text(
+          //         label,
+          //         style: TextStyle(
+          //           fontFamily: 'Arial',
+          //           fontSize: 14,
+          //           color: Colors.black54,
+          //           fontWeight: FontWeight.w500,
+          //         ),
+          //       ),
+          //       SizedBox(height: 4),
+          //       Icon(
+          //         icon,
+          //         size: 16,
+          //         color: Colors.black54,
+          //       ),
+          //
+          //     ],
+          //   ),
+          // ),
+          SizedBox(width: 8),
           Expanded(
             flex: 5,
             child: InputDecorator(

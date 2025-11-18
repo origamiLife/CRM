@@ -253,7 +253,7 @@ class _StampMenuState extends State<StampMenu> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildTimeWidget(),
+                  // _buildTimeWidget(),
                   const SizedBox(height: 10),
                   _buildLocationInfo(widget.activity, list),
                   const SizedBox(height: 16),
@@ -572,7 +572,7 @@ class _StampMenuState extends State<StampMenu> {
         Uri.parse("$hostDev/api/origami/crm/activity/get_time_activity.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,

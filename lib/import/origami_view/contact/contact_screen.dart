@@ -22,102 +22,97 @@ class _ContactScreenState extends State<ContactScreen> {
   ScrollController _scrollController = ScrollController();
   String _search = "";
   bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
-  bool isLoading = true; // ให้เป็น false เมื่อ API โหลดเสร็จ
-  List<ModelContact> contactList = [];
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _loadContacts();
-    // fetchModelContactCall();
-    _scrollController.addListener(_scrollListener);
-    // _searchController.addListener(() {
-    //   _search = _searchController.text;
-    //   indexItems = 0;
-    //   print('$indexItems');
-    //   contactList = [];
-    //   fetchModelContact();
-    // });
-    print('Begin Contact');
-    _searchController.addListener(_onSearchChanged);
-    // _loadContacts(); // โหลดข้อมูลครั้งแรก
-  }
 
-  void _loadContacts() async {
-    if (_isFirstTime) _isFirstTime = false;
-    newContacts = await fetchModelContact();
-    // กรอง ID ที่ยังไม่มีใน contactList
-    final existingIds = contactList
-        .map((c) => c.cus_cont_id)
-        .toSet(); // สมมุติว่า c.id คือ cus_cont_id
-    final uniqueNewContacts =
-        newContacts.where((c) => !existingIds.contains(c.cus_cont_id)).toList();
+    fetchModelContact();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 50) {
+        // ถึงท้าย list แล้ว เรียก fetchModelProject()
+        fetchModelContact();
+      }
+    });
 
-    contactList.addAll(uniqueNewContacts);
-    // contactList.sort((a, b) => b.cus_cont_id.compareTo(a.cus_cont_id)); // ถ้าใช้ DateTime
-    setState(() {
-      // contactList = newContacts;
-      filteredContactList = contactList; // อัปเดตอันที่กรองด้วย
-      isLoading = false;
+    _searchController.addListener(() {
+      final query = _searchController.text.toLowerCase();
+      setState(() {
+        filteredItems = modelContactList.where((items) {
+          final name =
+              items.cont_name.toLowerCase(); // หรือ contact.cus_cont_name
+          final nick =
+              items.cus_cont_nick.toLowerCase(); // หรือ contact.cus_cont_name
+          final tel =
+              items.cont_mobile.toLowerCase(); // หรือ contact.cus_cont_name
+          final mail =
+              items.cont_email.toLowerCase(); // หรือ contact.cus_cont_name
+          return name.contains(query) ||
+              nick.contains(query) ||
+              tel.contains(query) ||
+              mail.contains(query);
+        }).toList();
+        _isFirstTime = true;
+        modelContactList.clear();
+        fetchModelContact();
+      });
+      // fetchModelProject();
     });
   }
 
-  List<ModelContact> filteredContactList = [];
-  void _onSearchChanged() {
-    final query = _searchController.text.toLowerCase();
-    setState(() {
-      filteredContactList = contactList.where((contact) {
-        final name =
-            contact.cont_name.toLowerCase(); // หรือ contact.cus_cont_name
-        final nick =
-            contact.cus_cont_nick.toLowerCase(); // หรือ contact.cus_cont_name
-        final tel =
-            contact.cont_mobile.toLowerCase(); // หรือ contact.cus_cont_name
-        final mail =
-            contact.cont_email.toLowerCase(); // หรือ contact.cus_cont_name
-        return name.contains(query) ||
-            nick.contains(query) ||
-            tel.contains(query) ||
-            mail.contains(query);
-      }).toList();
-    });
-  }
+  // List<ModelContact> filteredContactList = [];
+  // void _onSearchChanged() {
+  //   final query = _searchController.text.toLowerCase();
+  //   setState(() {
+  //     contactList = contactList.where((contact) {
+  //       final name =
+  //           contact.cont_name.toLowerCase(); // หรือ contact.cus_cont_name
+  //       final nick =
+  //           contact.cus_cont_nick.toLowerCase(); // หรือ contact.cus_cont_name
+  //       final tel =
+  //           contact.cont_mobile.toLowerCase(); // หรือ contact.cus_cont_name
+  //       final mail =
+  //           contact.cont_email.toLowerCase(); // หรือ contact.cus_cont_name
+  //       return name.contains(query) ||
+  //           nick.contains(query) ||
+  //           tel.contains(query) ||
+  //           mail.contains(query);
+  //     }).toList();
+  //   });
+  // }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _searchController.removeListener(_onSearchChanged);
+    // _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
   }
 
-  String telView = '';
-  String _telView(ModelContact contact) {
-    if (contact.cont_tel != '') {
-      telView = contact.cont_tel;
-      return telView;
-    } else if (contact.cont_mobile != '') {
-      telView = contact.cont_mobile;
-      return telView;
-    } else {
-      telView = contact.cont_tel_ext;
-      return telView;
-    }
-  }
+  // String telView = '';
+  // String _telView(ModelContact contact) {
+  //   if (contact.cont_tel != '') {
+  //     telView = contact.cont_tel;
+  //     return telView;
+  //   } else if (contact.cont_mobile != '') {
+  //     telView = contact.cont_mobile;
+  //     return telView;
+  //   } else {
+  //     telView = contact.cont_tel_ext;
+  //     return telView;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return (widget.pageInput != 'origami')
-        ? SafeArea(
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              body: _getContentWidget(),
-            ),
-          )
-        : SafeArea(
-            child: Scaffold(
-              backgroundColor: Colors.white,
-              floatingActionButton: FloatingActionButton(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        floatingActionButton: (widget.pageInput != 'origami')
+            ? null
+            : FloatingActionButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -149,9 +144,9 @@ class _ContactScreenState extends State<ContactScreen> {
                   color: Colors.white,
                 ),
               ),
-              body: _getContentWidget(),
-            ),
-          );
+        body: _getContentWidget(),
+      ),
+    );
   }
 
   Widget _getContentWidget() {
@@ -164,7 +159,23 @@ class _ContactScreenState extends State<ContactScreen> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: _buildSearchField(),
             ),
-            Expanded(child: _getContentListWidget())
+            Expanded(
+              child: (filteredItems.isNotEmpty)
+                  ? _getContentListWidget()
+                  : const Center(
+                      child: Text(
+                        'No Data Available in table.',
+                        style: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+            ),
           ],
         ),
       ),
@@ -232,7 +243,7 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   Widget _getContentListWidget() {
-    if (isLoading) {
+    if (isLoading == false) {
       // แสดง shimmer loading แทน
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 15),
@@ -282,189 +293,220 @@ class _ContactScreenState extends State<ContactScreen> {
     }
 
     // ถ้าโหลดเสร็จแล้ว แสดงรายการจริง
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      child: ListView.builder(
-        controller: _scrollController,
-        itemCount: filteredContactList.length,
-        itemBuilder: (context, index) {
-          ModelContact contact = filteredContactList[index];
-          if(isEmpId == false){
-            isEmpId = contact.list_emp_id.contains(widget.employee.emp_id);
-            print('isEmpId ::: $isEmpId');
-          }
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ContactView(
-                    employee: widget.employee,
-                    contact: contact,
-                  ),
+    return Column(
+      children: [
+        Flexible(
+          child: ListView.builder(
+            controller: _scrollController,
+            itemCount: filteredItems.length,
+            itemBuilder: (context, index) {
+              ModelContact contact = filteredItems[index];
+              if (isEmpId == false) {
+                isEmpId = contact.list_emp_id.contains(widget.employee.emp_id);
+                print('isEmpId ::: $isEmpId');
+              }
+              return Padding(
+                padding:
+                    const EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 4),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ContactView(
+                          employee: widget.employee,
+                          contact: contact,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      contact.cus_name,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFF555555),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 8.0),
+                                    child: Center(
+                                      child: Text(
+                                        contact.cont_type,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 80,
+                              height: 80,
+                              child: Image.network(
+                                contact.cus_cont_photo,
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                    '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (contact.cont_name != '' &&
+                                      contact.cus_cont_nick == '')
+                                    Text(
+                                      contact.cont_name,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFFFF9900),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    )
+                                  else if (contact.cont_name == '' &&
+                                      contact.cus_cont_nick != '')
+                                    Text(
+                                      contact.cus_cont_nick,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFFFF9900),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    )
+                                  else if (contact.cont_name != '' &&
+                                      contact.cus_cont_nick != '')
+                                    Text(
+                                      '${contact.cont_name} (${contact.cus_cont_nick})',
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFFFF9900),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    'Gender : ${(contact.gender_name == '') ? 'Not specified' : contact.gender_name}',
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                                  // Text(
+                                  //   'Birthday : ${(contact.cont_birthday == '') ? 'Not specified' : contact.cont_birthday}',
+                                  //   style: TextStyle(
+                                  //     fontFamily: 'Arial',
+                                  //     fontSize: 12,
+                                  //     color: Colors.grey,
+                                  //     fontWeight: FontWeight.w500,
+                                  //   ),
+                                  // ),
+                                  // SizedBox(height: 5),
+                                  // Text(
+                                  //   'Mobile : ${_telView(contact)}',
+                                  //   style: TextStyle(
+                                  //     fontFamily: 'Arial',
+                                  //     fontSize: 12,
+                                  //     color: Colors.grey,
+                                  //     fontWeight: FontWeight.w500,
+                                  //   ),
+                                  // ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    'Email : ${contact.cont_email}',
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(color: Colors.grey),
+                    ],
+                  ), // <-- โค้ดเดิมของคุณที่แสดงข้อมูลจริง
                 ),
               );
             },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                contact.cus_name,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Center(
-                                child: Text(
-                                  contact.cont_type,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+          ),
+        ),
+        if(filteredItems.isNotEmpty)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 2, right: 2),
+              child: Text(
+                '1 - ${filteredItems.length}',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Colors.black54,
+                  fontSize: 14,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 80,
-                        height: 80,
-                        child: Image.network(
-                          contact.cus_cont_photo,
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.network(
-                              '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (contact.cont_name != '' &&
-                                contact.cus_cont_nick == '')
-                              Text(
-                                contact.cont_name,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  color: Color(0xFFFF9900),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            else if (contact.cont_name == '' &&
-                                contact.cus_cont_nick != '')
-                              Text(
-                                contact.cus_cont_nick,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  color: Color(0xFFFF9900),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            else if (contact.cont_name != '' &&
-                                contact.cus_cont_nick != '')
-                              Text(
-                                '${contact.cont_name} (${contact.cus_cont_nick})',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  color: Color(0xFFFF9900),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            SizedBox(height: 5),
-                            Text(
-                              'Gender : ${(contact.gender_name == '') ? 'Not specified' : contact.gender_name}',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 12,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            // Text(
-                            //   'Birthday : ${(contact.cont_birthday == '') ? 'Not specified' : contact.cont_birthday}',
-                            //   style: TextStyle(
-                            //     fontFamily: 'Arial',
-                            //     fontSize: 12,
-                            //     color: Colors.grey,
-                            //     fontWeight: FontWeight.w500,
-                            //   ),
-                            // ),
-                            // SizedBox(height: 5),
-                            Text(
-                              'Mobile : ${_telView(contact)}',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 12,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              'Email : ${contact.cont_email}',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 12,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(color: Colors.grey),
-              ],
-            ), // <-- โค้ดเดิมของคุณที่แสดงข้อมูลจริง
-          );
-        },
-      ),
+              ),
+            ),
+            IconButton(
+                onPressed: () {
+                  indexItems = indexItems + 1;
+                  _isFirstTime = true;
+                  fetchModelContact();
+                },
+                icon: Icon(Icons.chevron_right)),
+          ],
+        ),
+      ],
     );
   }
 
@@ -473,9 +515,9 @@ class _ContactScreenState extends State<ContactScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: ListView.builder(
           controller: _scrollController,
-          itemCount: contactList.length,
+          itemCount: filteredItems.length,
           itemBuilder: (context, index) {
-            final contact = contactList[index];
+            final contact = filteredItems[index];
 
             // print('ContactScreen.length : ${ContactCallScreen.length}');
             return Column(
@@ -663,57 +705,73 @@ class _ContactScreenState extends State<ContactScreen> {
   bool _isFirstTime = true;
   int indexItems = 0;
   bool isEmpId = false;
-  List<ModelContact> newContacts = [];
-  Future<List<ModelContact>> fetchModelContact() async {
-    final uri = Uri.parse("$hostDev/api/origami/crm/contact/list-contact.php");
+
+  List<ModelContact> modelContactList = [];
+  List<ModelContact> filteredItems = [];
+  Future<void> fetchModelContact() async {
+    print('isAtEnd :;: $isAtEnd');
+    if (isAtEnd) return;
     try {
+      final uri =
+          Uri.parse("$hostDev/api/origami/crm/contact/list-contact.php");
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
-          'index': indexItems.toString(),
+          'index': (_searchController.text != '') ? '0' : indexItems.toString(),
+          'search': _searchController.text,
         },
       );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> contactJson = jsonResponse['contact_data'] ?? [];
-        bool nextPage = jsonResponse['next_page'];
-        print('lll;l');
-        newContacts = contactJson
-            .map((json) => ModelContact.fromJson(json))
-            .where((contact) {
-          // กรอง id ที่ซ้ำ
-          return !contactList
-              .any((existing) => existing.cus_cont_id == contact.cus_cont_id);
-        }).toList();
+        bool status = jsonResponse['status'];
 
+        List<ModelContact> newContact =
+            contactJson.map((json) => ModelContact.fromJson(json)).toList();
+        // if(_searchController.text != ''){
+        //   filteredItems = activityJson.map((json) => ModelProject.fromJson(json)).toList();
+        // }
         setState(() {
-          contactList.addAll(newContacts);
-          // อัปเดต index & สถานะ
-          if (nextPage) {
-            indexItems += 1;
-            // fetchModelContact();
-          } else {
-            // contactList.sort(
-            //         (a, b) => b.cus_cont_id.compareTo(a.cus_cont_id));
-            isAtEnd = true;
-          }
-        });
+          // สร้าง set id เดิม
+          Set<String> seenIds =
+              modelContactList.map((e) => e.cus_cont_id).toSet();
 
-        return newContacts;
+          // กรอง newActivities ที่ซ้ำออก
+          newContact =
+              newContact.where((a) => seenIds.add(a.cus_cont_id)).toList();
+
+          // เพิ่มข้อมูลใหม่เข้า list หลัก
+          modelContactList.addAll(newContact);
+
+          // เรียงลำดับ project_id แบบลดหลั่น (ใหญ่ไปเล็ก)
+          // modelContactList
+          //     .sort((a, b) => b.cus_cont_id.compareTo(a.cus_cont_id));
+
+          // กำหนด filteredProjectList ครั้งแรกเท่านั้น
+          if (status == true) {
+            isLoading = true;
+          }
+          setState(() {
+            if (_isFirstTime) {
+              filteredItems = List.from(modelContactList);
+              _isFirstTime = false;
+            }
+          });
+        });
       } else {
         throw Exception(
             'Failed to load data, status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching data: $e');
-      return []; // หรือ throw ก็ได้ ขึ้นอยู่กับว่าอยาก handle ยังไง
+    } finally {
+      // _isLoading = false;
     }
   }
-
 }
 
 class ModelContact {
@@ -752,6 +810,8 @@ class ModelContact {
   final String nfc_card_license;
   final String gender_name;
   final String list_emp_id;
+  final String cont_firstname;
+  final String cont_lastname;
 
   ModelContact({
     required this.cus_cont_id,
@@ -789,6 +849,8 @@ class ModelContact {
     required this.nfc_card_license,
     required this.gender_name,
     required this.list_emp_id,
+    required this.cont_firstname,
+    required this.cont_lastname,
   });
 
   factory ModelContact.fromJson(Map<String, dynamic> json) {
@@ -828,6 +890,8 @@ class ModelContact {
       nfc_card_license: json['nfc_card_license'] ?? '',
       gender_name: json['gender_name'] ?? '',
       list_emp_id: json['list_emp_id'] ?? '',
+      cont_firstname: json['cont_firstname'] ?? '',
+      cont_lastname: json['cont_lastname'] ?? '',
     );
   }
 }

@@ -23,10 +23,10 @@ class DropdownNeedState extends State<DropdownNeed> {
       height: 48,
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(8),
         color: Colors.white,
         border: Border.all(
-          color: Colors.grey,
+          color: Colors.grey.shade400,
           width: 1.0,
         ),
       ),

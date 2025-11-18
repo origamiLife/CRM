@@ -9,8 +9,8 @@ class MiniContact extends StatefulWidget {
     required this.employee,
     required this.callbackId,
   }) : super(key: key);
-  final String Function(String) callback;
-  final String Function(String) callbackId;
+  final Function(String) callback;
+  final Function(String) callbackId;
   final Employee employee;
 
   @override
@@ -41,182 +41,164 @@ class _MiniContactState extends State<MiniContact> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 1,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.orange,
+          title: const Text(
+            'Contact',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontWeight: FontWeight.w500,
+              color: Colors.orange,),
+          ),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.orange,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Card(
-                  color: Color(0xFFFF9900),
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 40, top: 8)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: TextFormField(
-                    controller: _searchContact,
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14,
-                    ),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 14),
-                      hintText: 'Search...',
-                      hintStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          color: Color(0xFF555555)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Color(0xFFFF9900),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        Contact_name = value;
-                        fetchContact(int_Contact, Contact_name);
-                        _searchText = value;
-                        // filterData_Account();
-                      });
-                    },
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  controller: _searchContact,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Color(0xFF555555),
+                    fontSize: 14,
                   ),
-                ),
-                (_searchText == '')
-                    ? Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Search',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Color(0xFF555555),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            // InkWell(
-                            //   onTap: (){
-                            //     setState(() {
-                            //       _showDown = true;
-                            //     });
-                            //   },
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       Text(
-                            //         'รายชื่อการติดต่อ',
-                            //         style: TextStyle(
-                            // fontFamily: 'Arial',
-                            //           fontSize: 18,
-                            //           decoration: TextDecoration.underline,
-                            //           // color: Color(0xFFFF9900),
-                            //         ),),
-                            //       SizedBox(width: 8,),
-                            //       Icon(Icons.arrow_drop_down,color:Color(0xFF555555),)
-                            //     ],
-                            //   ),
-                            // )
-                          ],
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: ContactList.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      Contact_name =
-                                          ContactList[index].contact_name ?? '';
-                                      widget.callback(Contact_name ?? '');
-                                      data_Id =
-                                          ContactList[index].contact_id ?? '';
-                                      widget.callbackId(data_Id ?? '');
-                                      Navigator.pop(context, Contact_name);
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Text(
-                                      "${ContactList[index].contact_name ?? ''}",
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 16,
-                                        color: Color(0xFF555555),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
-                                  child: Divider(),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 14),
+                    hintText: 'Search...',
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Color(0xFFFF9900),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                        width: 1.0,
                       ),
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          // int_project = int_project - 2;
-                          // fetchProject(int_project.toString(), "");
-                          Navigator.pop(context);
-                        });
-                      },
-                      child: Row(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      Contact_name = value;
+                      fetchContact(int_Contact, Contact_name);
+                      _searchText = value;
+                      // filterData_Account();
+                    });
+                  },
+                ),
+              ),
+              (_searchText == '')
+                  ? const Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.navigate_before,
-                            color: Color(0xFFFF9900),
-                          ),
                           Text(
-                            "$Back",
+                            'No Data Available in table.',
                             style: TextStyle(
                               fontFamily: 'Arial',
+                              fontSize: 16,
                               color: Color(0xFF555555),
                             ),
                           ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          // InkWell(
+                          //   onTap: (){
+                          //     setState(() {
+                          //       _showDown = true;
+                          //     });
+                          //   },
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       Text(
+                          //         'รายชื่อการติดต่อ',
+                          //         style: TextStyle(
+                          // fontFamily: 'Arial',
+                          //           fontSize: 18,
+                          //           decoration: TextDecoration.underline,
+                          //           // color: Color(0xFFFF9900),
+                          //         ),),
+                          //       SizedBox(width: 8,),
+                          //       Icon(Icons.arrow_drop_down,color:Color(0xFF555555),)
+                          //     ],
+                          //   ),
+                          // )
                         ],
                       ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: ContactList.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    Contact_name =
+                                        ContactList[index].contact_name ?? '';
+                                    widget.callback(Contact_name ?? '');
+                                    data_Id =
+                                        ContactList[index].contact_id ?? '';
+                                    widget.callbackId(data_Id ?? '');
+                                    Navigator.pop(context, Contact_name);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    "${ContactList[index].contact_name ?? ''}",
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16,
+                                      color: Color(0xFF555555),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 16, right: 16),
+                                child: Divider(),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+            ],
           ),
         ));
   }
@@ -231,7 +213,7 @@ class _MiniContactState extends State<MiniContact> {
   String? data_Id = "";
   Future<void> fetchContact(Contact_number, Contact_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/contact.php?page=$Contact_number&search=$Contact_name');
+        '$hostDev/api/origami/need/contact.php?page=$Contact_number&search=$Contact_name');
     try {
       final response = await http.post(
         uri,

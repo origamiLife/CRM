@@ -138,29 +138,6 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  _fetchUpdateAccount();
-                },
-                child: Center(
-                  child: Text(
-                    'DONE',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 16)
-            ],
-          ),
-        ],
       ),
       body: _getContentWidget(widget.account),
       // bottomNavigationBar: BottomBarDefault(
@@ -360,13 +337,13 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade50,
+            color: Colors.grey.shade50,
             height: 3,
             width: double.infinity,
           ),
           SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade100,
+            color: Colors.grey.shade100,
             height: 3,
             width: double.infinity,
           ),
@@ -549,7 +526,9 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
         _textController('Email', _emailController, false, Icons.mail),
         _textController(
             'Tel', _telephoneController, false, Icons.phone_android_rounded),
-        SizedBox(height: 16),
+        SizedBox(height: 8),
+        _buildButton(),
+        SizedBox(height: 8),
       ],
     );
   }
@@ -750,6 +729,122 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
     );
   }
 
+  Widget _buildButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(12),
+          backgroundColor: Colors.red,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        ),
+        onPressed: _showCustomDialog,
+        child: Text(
+          'Send',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Update Account',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Please confirm your update account?.',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  if (cus_code != '' &&
+                      cus_type_id != '' &&
+                      cus_type != '' &&
+                      cus_status_id != '' &&
+                      source_id != '' &&
+                      _nameTHController.text.trim() != '' &&
+                      _nameENController.text.trim() != '' &&
+                      _telephoneController.text.trim() != '' &&
+                      _emailController.text.trim() != '') {
+                    await _fetchUpdateAccount();
+                  } else {
+                    showSnackBar('Please fill in all required information.');
+                  }
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
+  }
+
   DateTime _selectedDateEnd = DateTime.now();
   String startDate = '';
   String endDate = '';
@@ -869,7 +964,15 @@ class _AccountEditDetailState extends State<AccountEditDetail> {
       setState(() {
         sourceList =
             dataJson.map((json) => SourceAccount.fromJson(json)).toList();
+        if (sourceList.isNotEmpty && selectedSource == null) {
+          selectedSource = sourceList[0];
+          source_id = selectedSource?.project_comefrom_id??'';
+        }
       });
+      // setState(() {
+      //   sourceList =
+      //       dataJson.map((json) => SourceAccount.fromJson(json)).toList();
+      // });
     } else {
       throw Exception('Failed to load instructors');
     }

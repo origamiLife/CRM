@@ -11,11 +11,26 @@ import 'import/origami_view/language/translate.dart';
 import 'import/origami_view/language/translate_page.dart';
 
 String hostWeb = 'https://www.origami.life';
-String hostDev = 'https://dev.origami.life';
+String hostDev = 'https://www.origami.life';
 String token = 'ori20#17gami';
 String tokenMD5 = 'aeb674f8c49dd404dabc759f81f15918';
+String updateLink = 'https://testflight.apple.com/join/2PtwfAVH';
+String versionOld = '1.0.3.15';
+String versionNew = '1.0.3.15';
+
 int selectedRadio = 2;
+
 Position? userPosition;
+Color hexToColor(String? hex) {
+  if (hex == null || hex.isEmpty) {
+    return Colors.grey;
+  }
+  hex = hex.replaceAll('#', '');
+  if (hex.length < 6) {
+    hex = hex.padLeft(6, '0');
+  }
+  return Color(int.parse('FF$hex', radix: 16));
+}
 // "❌"  "✅" 👈
 // bool isAndroid = false;
 // bool isTablet = false;
@@ -32,42 +47,32 @@ void main() async {
   await Hive.initFlutter(appDocumentDirectory.path);
   await Hive.openBox('userBox');
   await initializeNotification();
-  // await platformAndroid();
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: MyApp(),
-  ));
+  _platform();
+  runApp(
+    MaterialApp(
+      builder: (context, child) {
+        final mediaQuery = MediaQuery.of(context);
+        return MediaQuery(
+          data: mediaQuery.copyWith(
+            textScaler: TextScaler.linear(1.0),
+            alwaysUse24HourFormat: true,
+          ),
+          child: child!,
+        );
+      },
+      home: const MyApp(),
+    ),
+  );
 }
 
-Color hexToColor(String? hex) {
-  if (hex == null || hex.isEmpty) {
-    return Colors.grey; // หรือค่า default อื่น ๆ
-  }
-
-  // ลบเครื่องหมาย # ถ้ามี
-  hex = hex.replaceAll('#', '');
-
-  // ถ้าไม่ครบ 6 หลักให้เติมศูนย์ด้านหน้า
-  if (hex.length < 6) {
-    hex = hex.padLeft(6, '0');
-  }
-
-  return Color(int.parse('FF$hex', radix: 16));
-}
-
-Future<void> _platformAndroid() async {
-  // ในฟังก์ชัน initializeNotification() หรือหลังจากนั้น
+String platformMobile = '';
+void _platform() {
   if (Platform.isAndroid) {
-    // ขอสิทธิ์แสดง Notification
-    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
-
-    if (androidImplementation != null) {
-      final bool? granted =
-          await androidImplementation.requestNotificationsPermission();
-      // คุณอาจต้องจัดการกรณีที่ผู้ใช้ไม่อนุญาต
-    }
+    platformMobile = 'Android';
+    print("Running on Android");
+  } else if (Platform.isIOS) {
+    platformMobile = 'IOS';
+    print("Running on iOS");
   }
 }
 
@@ -259,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       countPage = 1;
     }
-    _passload = password??'';
+    _passload = password ?? '';
     print('Username: $username');
     // print('Password: $password');
   }
@@ -267,135 +272,144 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-            onPopInvoked: (didPop) {
-              if (!didPop) {
-                final now = DateTime.now();
-                final maxDuration = Duration(seconds: 2);
-                final isWarning = lastPressed == null ||
-                    now.difference(lastPressed!) > maxDuration;
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          final now = DateTime.now();
+          final maxDuration = Duration(seconds: 2);
+          final isWarning =
+              lastPressed == null || now.difference(lastPressed!) > maxDuration;
 
-                if (isWarning) {
-                  lastPressed = now;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        exitApp2TS,
-                        style: const TextStyle(
-                            fontFamily: 'Arial', color: Colors.white),
-                      ),
-                      duration: maxDuration,
-                    ),
-                  );
-                } else {
-                  SystemNavigator.pop();
-                }
-              }
-            },
-            child: _loadbegin == false
-                ? _loading()
-                : Scaffold(
-              backgroundColor: Colors.transparent,
-              body: SafeArea(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          image: backgroudComponent.isNotEmpty
-                              ? DecorationImage(
-                                  image: NetworkImage(backgroudComponent),
-                                  fit: BoxFit.cover,
-                                )
-                              : const DecorationImage(
-                                  image: AssetImage(
-                                      'assets/images/logoOrigami/default_bg.png'),
-                                  fit: BoxFit.cover,
-                                ) // หรือใช้ภาพจาก assets แทน
-                          ),
-                    ),
-                    const Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          'version: 1.0.3+7',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                    LayoutBuilder(builder: (context, constraints) {
-                      return SingleChildScrollView(
-                        child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minHeight: constraints.maxHeight,
-                            ),
-                            child: _loginWidget(constraints)),
-                      );
-                    }),
-                  ],
+          if (isWarning) {
+            lastPressed = now;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  exitApp2TS,
+                  style:
+                  const TextStyle(fontFamily: 'Arial', color: Colors.white),
                 ),
+                duration: maxDuration,
               ),
+            );
+          } else {
+            SystemNavigator.pop();
+          }
+        }
+      },
+      child: _loadbegin == false
+          ? _loading()
+          : Scaffold(
+        backgroundColor: Colors.transparent,
+        body: InkWell(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: SafeArea(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      image: backgroudComponent.isNotEmpty
+                          ? DecorationImage(
+                        image: NetworkImage(backgroudComponent),
+                        fit: BoxFit.cover,
+                      )
+                          : const DecorationImage(
+                        image: AssetImage(
+                            'assets/images/logoOrigami/default_bg.png'),
+                        fit: BoxFit.cover,
+                      ) // หรือใช้ภาพจาก assets แทน
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'version: $versionOld', // +
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+                LayoutBuilder(builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: _loginWidget(constraints)),
+                  );
+                }),
+              ],
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _loading() {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              color: Colors.white,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.network(
-                  'https://www.origami.life/images/ogm_logo.png?v=1759716751369', // ใส่โลโก้
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container();
-                  },
-                ),
-                SizedBox(height: 16),
-                // Container(
-                //   // color: Colors.white,
-                //   child: Center(
-                //     child: Column(
-                //       crossAxisAlignment: CrossAxisAlignment.center,
-                //       children: [
-                //         const Text(
-                //           'Loading...',
-                //           style: TextStyle(
-                //             fontFamily: 'Arial',
-                //             color: Colors.white54,
-                //             fontWeight: FontWeight.w700,
-                //             fontSize: 30,
-                //           ),
-                //         ),
-                //         LoadingAnimationWidget.horizontalRotatingDots(
-                //           size: 65,
-                //           color: Colors.white54,
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(height: 16),
-              ],
-            ),
-          ],
+      body: InkWell(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: SafeArea(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                color: Colors.white,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.network(
+                    'https://www.origami.life/images/ogm_logo.png?v=1759716751369',
+                    // ใส่โลโก้
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.5,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container();
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  // Container(
+                  //   // color: Colors.white,
+                  //   child: Center(
+                  //     child: Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: [
+                  //         const Text(
+                  //           'Loading...',
+                  //           style: TextStyle(
+                  //             fontFamily: 'Arial',
+                  //             color: Colors.white54,
+                  //             fontWeight: FontWeight.w700,
+                  //             fontSize: 30,
+                  //           ),
+                  //         ),
+                  //         LoadingAnimationWidget.horizontalRotatingDots(
+                  //           size: 65,
+                  //           color: Colors.white54,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 16),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -403,7 +417,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _loginWidget(BoxConstraints constraints) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Center(
         child: Container(
           // width: constraints.maxWidth * ((!isMobile) ? 0.85 : 0.55),
@@ -421,9 +435,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.network(
-                'https://www.origami.life/images/ogm_logo.png?v=1759716751369', // ใส่โลโก้
-                width: constraints.maxWidth * 0.6,
+              Image.asset(
+                'assets/images/logoOrigami/platform.png',
+                width: constraints.maxWidth * 0.65,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -437,8 +451,7 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
               ),
-              SizedBox(height: 16),
-              SizedBox(height: constraints.maxWidth * 0.04),
+              SizedBox(height: constraints.maxWidth * 0.06),
               Form(
                 key: _formKey,
                 child: Column(
@@ -552,7 +565,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
           actions: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.35,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -572,7 +588,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.35,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.35,
               decoration: BoxDecoration(
                 color: Colors.orange.shade400,
                 borderRadius: BorderRadius.circular(10),
@@ -614,8 +633,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildTextField(
-      TextEditingController controller, String hintText, IconData icon) {
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      IconData icon) {
     return TextFormField(
       controller: controller,
       inputFormatters: [
@@ -667,7 +686,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(12),
           backgroundColor: Colors.red,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         ),
         onPressed: _login,
         child: Text(
@@ -683,117 +702,228 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showFullScreenImage(List<Employee> employeeList) {
-    showDialog(
+  // void _showFullScreenImage(List<Employee> employeeList) {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false, // ✅ อนุญาตให้แตะนอก dialog เพื่อปิด
+  //     barrierColor: Colors.black.withOpacity(0.8),
+  //     builder: (context) {
+  //       return Dialog(
+  //         backgroundColor: Colors.white,
+  //         insetPadding: const EdgeInsets.all(16),
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(16),
+  //         ),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             const Padding(
+  //               padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12),
+  //               child: Text(
+  //                 'Select Company',
+  //                 textAlign: TextAlign.center,
+  //                 style: TextStyle(
+  //                   fontWeight: FontWeight.bold,
+  //                   fontSize: 16,
+  //                 ),
+  //               ),
+  //             ),
+  //
+  //             // // ✅ ปุ่มปิด dialog
+  //             // Align(
+  //             //   alignment: Alignment.topRight,
+  //             //   child: IconButton(
+  //             //     icon: const Icon(Icons.close, color: Colors.grey),
+  //             //     onPressed: () => Navigator.pop(context),
+  //             //   ),
+  //             // ),
+  //
+  //             Expanded(
+  //               child: GridView.builder(
+  //                 padding: const EdgeInsets.all(16),
+  //                 itemCount: employeeList.length,
+  //                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //                   crossAxisCount: 2,
+  //                   crossAxisSpacing: 16,
+  //                   mainAxisSpacing: 16,
+  //                   childAspectRatio: 1,
+  //                 ),
+  //                 itemBuilder: (context, index) {
+  //                   final employee = employeeList[index];
+  //                   return InkWell(
+  //                     borderRadius: BorderRadius.circular(12),
+  //                     onTap: () async {
+  //                       Navigator.pop(context);
+  //
+  //                       // ✅ ทำ delay ก่อน (async ได้ตรงนี้)
+  //                       // await Future.delayed(const Duration(milliseconds: 400));
+  //
+  //                       // ✅ แล้วค่อยเปลี่ยนหน้า (ไม่ต้องอยู่ใน setState)
+  //                       Navigator.pushReplacement(
+  //                         context,
+  //                         MaterialPageRoute(
+  //                           builder: (context) => OrigamiPage(
+  //                             employee: employee,
+  //                             company_id: widget.company_id ?? 0,
+  //                             popPage: widget.popPage,
+  //                           ),
+  //                         ),
+  //                       );
+  //                     },
+  //                     child: Card(
+  //                       shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(12),
+  //                       ),
+  //                       elevation: 1,
+  //                       child: Padding(
+  //                         padding: const EdgeInsets.all(12.0),
+  //                         child: Column(
+  //                           mainAxisAlignment: MainAxisAlignment.center,
+  //                           children: [
+  //                             Expanded(
+  //                               child: Image.network(
+  //                                 employee.comp_logo,
+  //                                 fit: BoxFit.contain,
+  //                                 errorBuilder: (context, error, stackTrace) =>
+  //                                     const Icon(Icons.info_outline_rounded,
+  //                                         size: 40),
+  //                               ),
+  //                             ),
+  //                             const SizedBox(height: 8),
+  //                             Text(
+  //                               employee.comp_name ?? 'Unknown',
+  //                               textAlign: TextAlign.center,
+  //                               style: const TextStyle(
+  //                                 fontSize: 14,
+  //                                 fontWeight: FontWeight.w600,
+  //                               ),
+  //                             ),
+  //                           ],
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   );
+  //                 },
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         ac
+  //       );
+  //     },
+  //   );
+  // }
+
+  Future<void> _showFullScreenImage(List<Employee> employeeList) async {
+    // แสดง dialog แล้วรอค่าที่เลือก (หรือ null หากยกเลิก)
+    final Employee? result = await showDialog<Employee?>(
       context: context,
-      barrierDismissible: true, // ✅ อนุญาตให้แตะนอก dialog เพื่อปิด
-      barrierColor: Colors.black.withOpacity(0.8),
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          insetPadding: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text(
+            'Select Company',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12),
-                child: Text(
-                  'Select the location you want to access.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+          // กำหนดขนาดชี content ให้ชัดเจน เพื่อป้องกันปัญหา layout
+          content: GridView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: employeeList.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 1,
+            ),
+            itemBuilder: (context, index) {
+              final employee = employeeList[index];
+
+              return InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {
+                  // คืน employee ที่ถูกเลือกออกไปจาก dialog ทันที
+                  Navigator.pop(dialogContext, employee);
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-              ),
-
-              // // ✅ ปุ่มปิด dialog
-              // Align(
-              //   alignment: Alignment.topRight,
-              //   child: IconButton(
-              //     icon: const Icon(Icons.close, color: Colors.grey),
-              //     onPressed: () => Navigator.pop(context),
-              //   ),
-              // ),
-
-              Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: employeeList.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    final employee = employeeList[index];
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: () async {
-                        Navigator.pop(context);
-
-                        // ✅ ทำ delay ก่อน (async ได้ตรงนี้)
-                        // await Future.delayed(const Duration(milliseconds: 400));
-
-                        // ✅ แล้วค่อยเปลี่ยนหน้า (ไม่ต้องอยู่ใน setState)
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OrigamiPage(
-                              employee: employee,
-                              company_id: widget.company_id ?? 0,
-                              popPage: widget.popPage,
-                            ),
-                          ),
-                        );
-                      },
-
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Image.network(
-                                  employee.comp_logo,
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(Icons.info_outline_rounded, size: 40),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                employee.comp_name ?? 'Unknown',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
+                  elevation: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // ห้ามใช้ Expanded ที่อาจไม่มีข้อจำกัดความสูง
+                        // ระบุขนาดให้ชัดเจนแทน
+                        SizedBox(
+                          height: 80, // ปรับขนาดให้เหมาะสม
+                          child: Image.network(
+                            employee.comp_logo,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.info_outline_rounded,
+                                size: 40),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                        const SizedBox(height: 8),
+                        Text(
+                          employee.comp_name ?? 'Unknown',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              );
+            },
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, null); // ยกเลิก -> คืน null
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            // ปุ่ม Send ไว้ถ้าต้องใช้ (ไม่จำเป็นถ้าเลือก tile แล้ว dialog ปิดทันที)
+            // ถาต้องการปุ่ม send ที่เลือกแล้ว สามารถเปิดใช้งานได้โดยเก็บ selected บน UI ภายนอกแทน
+          ],
         );
       },
     );
-  }
 
+    // ทำงานต่อเมื่อ dialog ปิด (อยู่ใน outer context) — ปลอดภัยต่อ layout/semantics
+    if (result != null) {
+      // กำหนดค่าหรือรีเซ็ตตัวแปรที่ต้องการ
+      countPage = 0;
+
+      // เปลี่ยนหน้า (ใช้ context ภายนอกหน้าปัจจุบัน)
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              OrigamiPage(
+                employee: result,
+                company_id: widget.company_id ?? 0,
+                popPage: widget.popPage,
+              ),
+        ),
+      );
+    }
+  }
 
   Future<void> _login() async {
     String username = _usernameController.text.trim();
@@ -827,55 +957,217 @@ class _LoginPageState extends State<LoginPage> {
     await _fetchLogin(username, password);
   }
 
+  bool isNewVersionAvailable(String current, String latest) {
+    final currentParts = current.split('.').map(int.parse).toList();
+    final latestParts = latest.split('.').map(int.parse).toList();
+
+    for (int i = 0; i < currentParts.length; i++) {
+      if (i >= latestParts.length) break;
+      if (latestParts[i] > currentParts[i]) return true;
+      if (latestParts[i] < currentParts[i]) return false;
+    }
+    return latestParts.length > currentParts.length;
+  }
+
   Future<void> _fetchLogin(String username, String password) async {
     final uri = Uri.parse('$hostDev/api/origami/signin.php');
     try {
       final response = await http.post(
         uri,
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
           'username': username.trim(),
           'password': password.trim(),
           'auth_password': token,
         },
       );
+
+      if (!mounted) return; // 🔥 ป้องกัน State ถูก dispose ระหว่างรอ response
+
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         final List<dynamic> employeeJson = jsonResponse['employee_data'] ?? [];
+
         if (jsonResponse['status'] == 200) {
           setState(() {
             _loadbegin = false;
             _isLoading = true;
           });
+
           final employeeList = employeeJson
               .map<Employee>((json) => Employee.fromJson(json))
               .toList();
+
+          // ✅ เช็กก่อนเรียก dialog
+          if (versionNew == versionOld && platformMobile == 'IOS') {
+            if (!mounted) return;
+            showUpdateDialog(
+              onPressedUpdate: () =>
+                  launchUrl(
+                    Uri.parse(updateLink),
+                    mode: LaunchMode.externalApplication,
+                  ),
+            );
+          }
+
           if (countPage == 1 && employeeList.length >= 2) {
-            _showFullScreenImage(employeeList);
+            countPage = 1; // assign ให้ถูกต้อง
+            await _showFullScreenImage(employeeList);
           } else {
+            // ✅ รอ 1 วินาที แต่เช็ก mounted ก่อน Navigator
             await Future.delayed(const Duration(seconds: 1));
+            if (!mounted) return;
+
+            final int index = (widget.company_id != null &&
+                widget.company_id! < employeeList.length)
+                ? widget.company_id!
+                : 0;
+
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => OrigamiPage(
-                  employee: employeeList[widget.company_id ?? 0],
-                  company_id: widget.company_id ?? 0,
-                  popPage: widget.popPage,
-                ),
+                builder: (context) =>
+                    OrigamiPage(
+                      employee: employeeList[index],
+                      company_id: widget.company_id ?? 0,
+                      popPage: widget.popPage,
+                    ),
               ),
             );
           }
         } else {
-          final String errorMessage = jsonResponse['message'] ?? 'Login failed';
-          _showErrorSnackbar('Invalid user or password');
+          if (!mounted) return;
+          _showErrorSnackbar(jsonResponse['message'] ?? 'Login failed');
         }
       } else {
+        if (!mounted) return;
         _showErrorSnackbar('Invalid user or password');
       }
     } catch (e, stacktrace) {
       print('Login Exception: $e');
       print(stacktrace);
+      if (!mounted) return;
       _showErrorSnackbar('An error occurred. Please try again later.');
     }
+  }
+
+// ================= showUpdateDialog =================
+  void showUpdateDialog({
+    required VoidCallback onPressedUpdate,
+  }) {
+    if (!mounted) return; // 🔥 ป้องกันเรียก dialog หลัง dispose
+
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Update Application',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 22,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'new version: $versionNew',
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'Kindly update the application to the latest version to ensure optimal performance and security.',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14,
+              color: Colors.black54,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.black12,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.white,
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        // if (mounted) {
+                          Navigator.of(dialogContext).pop();
+                        // }
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade400,
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.green.shade300,
+                          blurRadius: 8,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextButton(
+                      onPressed: onPressedUpdate,
+                      child: Text(
+                        'Update',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   String forgot_mail = '';
@@ -884,11 +1176,11 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final response = await http.post(
         uri,
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
           'email': forgot_mail.trim(),
         },
       );
-
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
 
@@ -937,6 +1229,121 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  // void showUpdateDialog({
+  //   required VoidCallback onPressedUpdate,
+  // }) {
+  //   showDialog(
+  //     context: context,
+  //     barrierColor: Colors.black54,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext dialogContext) {
+  //       return AlertDialog(
+  //         title: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(
+  //               'Update Application',
+  //               style: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 22,
+  //                 color: Colors.black87,
+  //                 fontWeight: FontWeight.w700,
+  //               ),
+  //             ),
+  //             SizedBox(height: 8),
+  //             Text(
+  //               'new version: $versionNew',
+  //               style: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 14,
+  //                 color: Colors.black54,
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         content: Text(
+  //           // 'โปรดดำเนินการอัปเดตแอปพลิเคชันเป็นเวอร์ชันล่าสุด เพื่อความปลอดภัยและประสิทธิภาพที่ดียิ่งขึ้น',
+  //           'Kindly update the application to the latest version to ensure optimal performance and security.',
+  //           style: TextStyle(
+  //             fontFamily: 'Arial',
+  //             fontSize: 14,
+  //             color: Colors.black54,
+  //             fontWeight: FontWeight.w500,
+  //           ),
+  //         ),
+  //         actions: [
+  //           Center(
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //               children: [
+  //                 Container(
+  //                   width: MediaQuery.of(context).size.width * 0.3,
+  //                   decoration: BoxDecoration(
+  //                     color: Colors.black12,
+  //                     borderRadius: BorderRadius.circular(100),
+  //                     boxShadow: const [
+  //                       BoxShadow(
+  //                         color: Colors.white,
+  //                         blurRadius: 8,
+  //                         offset: Offset(0, 2),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   child: TextButton(
+  //                     onPressed: () {
+  //                       Navigator.of(dialogContext).pop();
+  //                     },
+  //                     child: Text(
+  //                       'Cancel',
+  //                       style: TextStyle(
+  //                         fontSize: 14,
+  //                         color: Colors.black87,
+  //                         fontWeight: FontWeight.w500,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 Container(
+  //                   width: MediaQuery.of(context).size.width * 0.3,
+  //                   decoration: BoxDecoration(
+  //                     color: Colors.green.shade400,
+  //                     borderRadius: BorderRadius.circular(100),
+  //                     boxShadow: [
+  //                       BoxShadow(
+  //                         color: Colors.green.shade300,
+  //                         blurRadius: 8,
+  //                         offset: Offset(0, 2),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   child: TextButton(
+  //                     onPressed: onPressedUpdate,
+  //                     child: Text(
+  //                       'Update',
+  //                       style: TextStyle(
+  //                         fontSize: 14,
+  //                         color: Colors.white,
+  //                         fontWeight: FontWeight.w500,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
+  // void onPressedUpdate() {
+  //   // เปิดลิงก์ไปยัง App Store / Play Store
+  //   final url = "https://your-app-update-link.com";
+  //   launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  // }
 }
 
 class Employee {
@@ -969,13 +1376,6 @@ class Employee {
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) {
-    // String avatarPath = json['emp_avatar'] ?? '';
-    // String logoPath = json['comp_logo'] ?? '';
-    // String fullAvatar = avatarPath.isNotEmpty
-    //     ? "${avatarPath.replaceAll("\\", "/")}"
-    //     : '';
-    // String fullLogo =
-    //     logoPath.isNotEmpty ? "${logoPath.replaceAll("\\", "/")}" : '';
     return Employee(
       comp_id: json['comp_id'] ?? '',
       emp_id: json['emp_id'] ?? '',
@@ -989,6 +1389,47 @@ class Employee {
       password_verify: json['password_verify'] ?? '',
       pass_pro: json['pass_pro'] ?? '',
       endpoint: json['endpoint'] ?? '',
+    );
+  }
+}
+
+class MenuPermission {
+  final bool account;
+  final bool contact;
+  final bool project;
+  final bool activity;
+  final bool calendar;
+  final bool time;
+  final bool work;
+  final bool language;
+  final bool about;
+  final bool logout;
+
+  const MenuPermission({
+    required this.account,
+    required this.contact,
+    required this.project,
+    required this.activity,
+    required this.calendar,
+    required this.time,
+    required this.work,
+    required this.language,
+    required this.about,
+    required this.logout,
+  });
+
+  factory MenuPermission.fromJson(Map<String, dynamic> json) {
+    return MenuPermission(
+      account: json['account'] ?? '',
+      contact: json['contact'] ?? '',
+      project: json['project'] ?? '',
+      activity: json['activity'] ?? '',
+      calendar: json['calendar'] ?? '',
+      time: json['time'] ?? '',
+      work: json['work'] ?? '',
+      language: json['language'] ?? '',
+      about: json['about'] ?? '',
+      logout: json['logout'] ?? '',
     );
   }
 }

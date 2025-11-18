@@ -40,12 +40,14 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
   }
 
   void _getUpdateText() {
-    _firstnameController.text = widget.contact.cus_cont_name;
-    _lastnameController.text = widget.contact.cus_cont_surname;
+    _firstnameController.text = widget.contact.cont_firstname;
+    _lastnameController.text = widget.contact.cont_lastname;
     _nicknameController.text = widget.contact.cus_cont_nick;
     _mobileController.text = _telView(widget.contact);
     _emailController.text = widget.contact.cont_email;
     _positionController.text = widget.contact.cus_posi_id;
+    cont_emo = widget.contact.cus_cont_emo;
+    // emo_icon_title = widget.contact.cus_cont_name;
   }
 
   String telView = '';
@@ -141,27 +143,6 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _fetchUpdateContact();
-                },
-                child: Text(
-                  'DONE',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              SizedBox(width: 16)
-            ],
-          ),
-        ],
       ),
       body: SafeArea(child: _getDetailWidget(widget.contact)),
       // bottomNavigationBar: BottomBarDefault(
@@ -295,7 +276,9 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
             _textController('Email', _emailController, false, Icons.numbers),
             _textController(
                 'Mobile', _mobileController, false, Icons.phone_android_rounded),
-            SizedBox(height: 16),
+            SizedBox(height: 8),
+            _buildButton(),
+            SizedBox(height: 8),
           ],
         ),
       ),
@@ -304,17 +287,17 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
 
   Widget _lineWidget() {
     return Padding(
-      padding: EdgeInsets.only(top: 18, bottom: 18),
+      padding: EdgeInsets.only(top: 8, bottom: 8),
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade50,
+            color: Colors.grey.shade50,
             height: 3,
             width: double.infinity,
           ),
           SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade100,
+            color: Colors.grey.shade100,
             height: 3,
             width: double.infinity,
           ),
@@ -784,6 +767,119 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     );
   }
 
+  Widget _buildButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(12),
+          backgroundColor: Colors.red,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        ),
+        onPressed: _showCustomDialog,
+        child: Text(
+          'Send',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Update Contact',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Please confirm your update contact?.',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  if (cont_group_id != '' &&
+                      _firstnameController.text.trim() != '' &&
+                      _lastnameController.text.trim() != '' &&
+                      gender_id != '' &&
+                      role_id != '' &&
+                      cont_emo != '') {
+                    await _fetchUpdateContact();
+                  } else {
+                    showSnackBar('Please fill in all required information.');
+                  }
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
+  }
+
   String gender_id = '';
   String cont_group_id = '';
   String role_id = '';
@@ -805,7 +901,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/account.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -836,7 +932,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/gender.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -864,7 +960,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/group_name.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -894,7 +990,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/emotion.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -925,7 +1021,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/role.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -952,7 +1048,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/update_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
@@ -996,7 +1092,7 @@ class _ContactEditDetailState extends State<ContactEditDetail> {
     print("base64 prefix: ${_base64Image.substring(0, 50)}...");
     final response = await http.post(
       Uri.parse("$hostDev/api/origami/crm/contact/save_contact_photo.php"),
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         "cus_cont_id": widget.contact.cus_cont_id,
         "emp_id": widget.employee.emp_id,

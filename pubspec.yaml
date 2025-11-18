@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.3+7
+version: 1.0.3+14
 
 environment:
   sdk: ^3.5.4
@@ -30,65 +30,71 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+
+  # UI & Icons
   cupertino_icons: ^1.0.8
-  flutter_launcher_icons: ^0.14.4
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^4.0.0
   google_fonts: ^6.2.1
   font_awesome_flutter: ^10.7.0
+  flutter_launcher_icons: ^0.14.4
   awesome_bottom_bar: ^1.2.4
+  shimmer: ^3.0.0
   loading_animation_widget: ^1.2.1
+  flutter_animate: 4.5.0
+  flutter_speed_dial: ^7.0.0
+  flutter_custom_clippers: ^2.1.0
+  flutter_advanced_switch: ^3.1.0
+  flutter_switch: ^0.3.2
+  quickalert: ^1.1.0
+  multi_select_flutter: ^4.1.3
+  percent_indicator: ^4.2.3
+
+  # Camera & Media
+  camera: ^0.11.0
+  image_picker: ^1.1.2
+  file_picker: ^8.0.5
+  open_file: ^3.4.0
+  carousel_slider: ^5.0.0
+
+  # Maps & Location
+  google_maps_flutter: ^2.6.1
+  geolocator: ^12.0.0
+  permission_handler: ^11.3.1
+  flutter_timezone: ^5.0.0
+
+  # Data & Storage
   shared_preferences: ^2.2.0
   hive_flutter: ^1.1.0
   hive: ^2.0.5
   path_provider: ^2.1.4
-  intl: ^0.19.0
-  flutter_speed_dial: ^7.0.0
-  flutter_custom_clippers: ^2.1.0
-  camera: ^0.11.0
-#  carousel_slider_plus: ^7.0.0
-  dropdown_button2: ^2.3.9
-  image_picker: ^1.1.2
   path: ^1.9.0
-  provider: ^6.1.2
-  permission_handler: ^11.3.1
-  google_maps_flutter: ^2.6.1
-  geolocator: ^12.0.0
-  signature: ^5.5.0
-#  location: ^6.0.2
-  flutter_advanced_switch: ^3.1.0 #Switch
-  syncfusion_flutter_calendar: ^29.1.33 #20.3.55
-  file_picker: ^8.0.5
-  percent_indicator: ^4.2.3
-  device_info_plus: ^10.1.2
-  flutter_switch: ^0.3.2
-  multi_select_flutter: ^4.1.3
-  open_file: ^3.4.0
-  dash_chat_2: ^0.0.21
-#  chewie: ^1.11.0
-  carousel_slider: ^5.0.0
-#  youtube_player_flutter: ^9.1.1
-  quickalert: ^1.1.0
-#  drawerbehavior: ^3.0.2
-  shimmer: ^3.0.0 # loading
-  intl_phone_field: ^3.2.0
   http: ^1.4.0
   mime: ^2.0.0
-  flutter_slidable: ^3.1.2
-  flutter_animate: 4.5.0
+  provider: ^6.1.2
+
+  # Calendar & Charts
+  syncfusion_flutter_calendar: ^29.1.33
+  syncfusion_flutter_charts: ^29.1.38
+
+  # Signature
+  signature: ^5.5.0
+
+  # Notifications
   flutter_local_notifications: ^19.4.2
-  flutter_timezone: ^5.0.0
+
+  # Phone & Intl
+  intl: ^0.19.0
+  intl_phone_field: ^3.2.0
+
+  # Chat
+  dash_chat_2: ^0.0.21
+
+  # Others
+  dropdown_button2: ^2.3.9
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
 
 
 flutter_launcher_icons:
@@ -121,6 +127,7 @@ flutter:
     - assets/images/iconsNeed/productN.jpg
     - assets/images/iconsNeed/purchaseN.jpg
     - assets/images/logoOrigami/default_bg.png
+    - assets/images/logoOrigami/platform.png
     - assets/images/logoOrigami/ogm_logo.png
     - assets/images/logoOrigami/origami_logo.png
     - assets/images/logoOrigami/allable_logo.png
@@ -141,6 +148,10 @@ flutter:
     - assets/origami_logo.png
     - assets/images/icons_cam.png
     - assets/images/icons_img.png
+    - assets/images/project_default.jpg
+    - assets/images/file_image.png
+    - assets/images/img_quota.png
+    - assets/images/img_request.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

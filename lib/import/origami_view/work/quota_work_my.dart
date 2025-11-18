@@ -1,19 +1,23 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
+import 'package:origamilift/import/origami_view/work/quota_work_all.dart';
 import 'package:origamilift/import/origami_view/work/work.dart';
 
-import '../Contact/contact_add/contact_add_detail.dart';
-import '../Contact/contact_edit/contact_edit_detail.dart';
-
-class WorkQuote extends StatefulWidget {
-  const WorkQuote({Key? key, required this.employee}) : super(key: key);
+class WorkQuotaMy extends StatefulWidget {
+  const WorkQuotaMy({
+    Key? key,
+    required this.employee,
+    required this.emp_id,
+  }) : super(key: key);
   final Employee employee;
+  final String emp_id;
+
   @override
-  _WorkQuoteState createState() => _WorkQuoteState();
+  _WorkQuotaMyState createState() => _WorkQuotaMyState();
 }
 
-class _WorkQuoteState extends State<WorkQuote> {
+class _WorkQuotaMyState extends State<WorkQuotaMy> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _reasonController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
@@ -70,61 +74,67 @@ class _WorkQuoteState extends State<WorkQuote> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white24,
-      body: FutureBuilder<List<StatusWork>>(
-          future: fetchStatusWork(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Color(0xFFFF9900),
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Text(
-                    'Loading...',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF555555),
-                    ),
-                  ),
-                ],
-              ));
-            } else if (snapshot.hasError) {
-              return Center(
-                  child: Text(
-                'Error: ${snapshot.error}',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  color: const Color(0xFF555555),
-                ),
-              ));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(
-                  child: Text(
-                'No Data Available in table.',
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                ),
-              ));
-            } else {
-              return _quoteWork(snapshot.data ?? []);
-            }
-          }),
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8 ,right: 8),
+        child: loadingQuotaWork(),
+      ),
     );
   }
 
-  Widget _quoteWork(List<StatusWork> dataWork) {
+  Widget loadingQuotaWork() {
+    return FutureBuilder<List<StatusWork>>(
+        future: fetchStatusWork(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  color: Color(0xFFFF9900),
+                ),
+                SizedBox(
+                  width: 12,
+                ),
+                Text(
+                  'Loading...',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF555555),
+                  ),
+                ),
+              ],
+            ));
+          } else if (snapshot.hasError) {
+            return Center(
+                child: Text(
+              'Error: ${snapshot.error}',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: const Color(0xFF555555),
+              ),
+            ));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+                child: Text(
+              'No Data Available in table.',
+              style: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ));
+          } else {
+            return _QuotaWork(snapshot.data ?? []);
+          }
+        });
+  }
+
+  Widget _QuotaWork(List<StatusWork> dataWork) {
     return ListView.builder(
       itemCount: dataWork.length,
       itemBuilder: (context, index) {
@@ -191,7 +201,7 @@ class _WorkQuoteState extends State<WorkQuote> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Used : ${(used == '' || used == null) ? ' - ' : used ?? ''} Hour',
+                    'Used : ${(used == '') ? '0' : used ?? ''} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
@@ -203,7 +213,7 @@ class _WorkQuoteState extends State<WorkQuote> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Balance : $balabe Hour',
+                    'Balance : ${balabe == '00:00'?'0':balabe} Hour',
                     style: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
@@ -230,7 +240,7 @@ class _WorkQuoteState extends State<WorkQuote> {
       headers: {'Authorization': 'Bearer $token'},
       body: {
         'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
+        'emp_id': widget.emp_id,
         'Authorization': token,
       },
     );
@@ -243,60 +253,5 @@ class _WorkQuoteState extends State<WorkQuote> {
     } else {
       throw Exception('Failed to load instructors');
     }
-  }
-
-  void _messageDialog(title, message, String img) {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // ป้องกันการกดนอกกรอบเพื่อปิด
-      builder: (BuildContext context) {
-        // ตั้งเวลาให้ปิดอัตโนมัติภายใน 2 วินาที
-        Future.delayed(const Duration(seconds: 2), () {
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
-          }
-        });
-
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Column(
-            children: [
-              Image.network(
-                img,
-                height: 200,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.network(
-                    'https://cdn-icons-png.freepik.com/512/5610/5610944.png',
-                    height: 200,
-                    fit: BoxFit.contain,
-                  );
-                },
-              ),
-              SizedBox(height: 16),
-              Text(
-                title,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 28,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          content: Text(
-            message,
-            style: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 18,
-              color: Colors.black87,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        );
-      },
-    );
   }
 }

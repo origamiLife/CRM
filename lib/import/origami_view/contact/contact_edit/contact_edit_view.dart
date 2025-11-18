@@ -30,11 +30,11 @@ class _ContactViewState extends State<ContactView> {
   }
 
   List<TabItem> items = [
-    TabItem(
+    const TabItem(
       icon: Icons.perm_contact_cal_outlined,
       title: 'Contact Detail',
     ),
-    TabItem(
+    const TabItem(
       icon: Icons.perm_contact_cal_outlined,
       title: 'Owner contact',
     ),
@@ -59,8 +59,8 @@ class _ContactViewState extends State<ContactView> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFF9900),
-        title: Align(
+        backgroundColor: const Color(0xFFFF9900),
+        title: const Align(
           alignment: Alignment.centerLeft,
           child: Text(
             '',
@@ -73,7 +73,7 @@ class _ContactViewState extends State<ContactView> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios,
             color: Colors.white,
           ),
@@ -92,7 +92,7 @@ class _ContactViewState extends State<ContactView> {
                             contact: widget.contact)),
                   );
                 },
-                child: Text(
+                child: const Text(
                   'Edit',
                   style: TextStyle(
                     fontFamily: 'Arial',
@@ -102,7 +102,7 @@ class _ContactViewState extends State<ContactView> {
                   ),
                 ),
               ),
-              VerticalDivider(
+              const VerticalDivider(
                 color: Colors.white,
                 thickness: 1,
                 indent: 16, // ขอบด้านบน
@@ -112,7 +112,7 @@ class _ContactViewState extends State<ContactView> {
                 onTap: () {
                   _showCustomDeleteDialog();
                 },
-                child: Text(
+                child: const Text(
                   'Delete',
                   style: TextStyle(
                     fontFamily: 'Arial',
@@ -122,7 +122,7 @@ class _ContactViewState extends State<ContactView> {
                   ),
                 ),
               ),
-              SizedBox(width: 16)
+              const SizedBox(width: 16)
             ],
           ),
         ],
@@ -135,7 +135,7 @@ class _ContactViewState extends State<ContactView> {
   Future<void> _makePhoneCall(String tel) async {
     if (tel.isEmpty || !RegExp(r'^[0-9+]+$').hasMatch(tel)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('เบอร์โทรไม่ถูกต้อง'),
           backgroundColor: Colors.black87,
         ),
@@ -179,7 +179,7 @@ class _ContactViewState extends State<ContactView> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 16,left: 16,right: 16),
+          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
           child: Row(
             children: [
               Padding(
@@ -212,21 +212,22 @@ class _ContactViewState extends State<ContactView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        "${contact.cus_name}",
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16,
-                          color: Colors.orange,
-                          fontWeight: FontWeight.w700,
+                      if (contact.cus_name == '')
+                        Text(
+                          "${contact.cus_name}",
+                          style: const TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 16,
+                            color: Colors.orange,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         contact.cont_type,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 12,
                           color: Colors.grey,
@@ -235,10 +236,10 @@ class _ContactViewState extends State<ContactView> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         "name : ${contact.cont_name}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 12,
                           color: Colors.grey,
@@ -247,10 +248,10 @@ class _ContactViewState extends State<ContactView> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
                         'Tel : ${_telView(contact)}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 12,
                           color: Colors.grey,
@@ -261,7 +262,7 @@ class _ContactViewState extends State<ContactView> {
                       ),
                       Text(
                         'Email : ${contact.cont_email}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 12,
                           color: Colors.grey,
@@ -277,7 +278,7 @@ class _ContactViewState extends State<ContactView> {
             ],
           ),
         ),
-        Divider(),
+        const Divider(),
         // Padding(
         //   padding: const EdgeInsets.only(right: 14, left: 14, bottom: 14),
         //   child: Row(
@@ -355,23 +356,23 @@ class _ContactViewState extends State<ContactView> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   _subDetail('Name', "${contact.cont_name}", Icons.person,
                       Colors.black54),
                   _subDetail('Nickname', "${contact.cus_cont_nick}",
                       Icons.person, Colors.black54),
                   _subDetail('Gender', "${contact.gender_name}",
                       Icons.merge_type, Colors.black54),
-                  _subDetail('Email', contact.cont_email, Icons.email,
-                      Colors.black54),
+                  _subDetail(
+                      'Email', contact.cont_email, Icons.email, Colors.black54),
                   _subDetail('Tel', _telView(contact),
                       Icons.phone_android_outlined, Colors.black54),
                   _subDetail('Position', contact.cus_posi_id,
                       Icons.work_history_outlined, Colors.black54),
                   _subDetail('Role', contact.role_name,
                       Icons.workspaces_outline, Colors.black54),
-                  _subDetail('Emotion', contact.cus_cont_emo,
-                      Icons.donut_large_rounded, Colors.black54),
+                  // _subDetail('Emotion', contact.cus_cont_emo,
+                  //     Icons.donut_large_rounded, Colors.black54),
                   // _subDetail('Operation', contact.cus_cont_emo,
                   //     Icons.workspaces_outline, Colors.grey.shade400),
                   // _subDetail('Marital', contact.status, Icons.source,
@@ -389,20 +390,20 @@ class _ContactViewState extends State<ContactView> {
 
   Widget _lineWidget() {
     return Padding(
-      padding: EdgeInsets.only(top: 18, bottom: 18),
+      padding: const EdgeInsets.only(top: 18, bottom: 18),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 4,right: 4),
+            padding: const EdgeInsets.only(left: 4, right: 4),
             child: Container(
-              color: Colors.orange.shade50,
+              color: Colors.grey.shade50,
               height: 3,
               width: double.infinity,
             ),
           ),
-          SizedBox(height: 1),
+          const SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade100,
+            color: Colors.grey.shade100,
             height: 3,
             width: double.infinity,
           ),
@@ -417,12 +418,13 @@ class _ContactViewState extends State<ContactView> {
       children: [
         Row(
           children: [
+            if (title != 'Emotion')
             Icon(
               icon,
               color: CIcon,
               size: 28,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -431,24 +433,32 @@ class _ContactViewState extends State<ContactView> {
                     (title == '') ? '-' : title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14,
                       color: Colors.black54,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    (accountData == '') ? '-' : accountData,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14,
-                      color: Colors.grey,
+                  const SizedBox(height: 4),
+                  if (title == 'Emotion')
+                    Image.network(
+                      accountData, // A default placeholder image in case of an error
+                      width: 22,
+                      height: 22,
+                      fit: BoxFit.cover,
+                    )
+                  else
+                    Text(
+                      (accountData == '') ? '-' : accountData,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -465,7 +475,7 @@ class _ContactViewState extends State<ContactView> {
     try {
       final response = await http.post(
         uri,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {'Authorization': 'Bearer $tokenMD5'},
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
@@ -496,11 +506,11 @@ class _ContactViewState extends State<ContactView> {
   void _showCustomDeleteDialog() {
     showDialog(
       context: context,
-      barrierColor:Colors.black54,
+      barrierColor: Colors.black54,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             'Delete Contact',
             style: TextStyle(
               fontFamily: 'Arial',
@@ -511,7 +521,7 @@ class _ContactViewState extends State<ContactView> {
           ),
           content: Text(
             'Do you want to delete this ${widget.contact.firstname_th} ${widget.contact.lastname_th}?',
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Arial',
               fontSize: 16,
               color: Color(0xFF555555),
@@ -529,7 +539,7 @@ class _ContactViewState extends State<ContactView> {
                 onPressed: () {
                   Navigator.pop(dialogContext);
                 },
-                child: Text(
+                child: const Text(
                   'Cancel',
                   style: TextStyle(
                     fontSize: 16,
@@ -545,7 +555,7 @@ class _ContactViewState extends State<ContactView> {
                 color: Colors.red.shade400,
                 borderRadius: BorderRadius.circular(100),
                 boxShadow: [
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.red,
                     blurRadius: 8,
                     offset: Offset(0, 2),
@@ -557,11 +567,11 @@ class _ContactViewState extends State<ContactView> {
                   Navigator.pop(dialogContext);
                   _fetchDeleteContact();
                 },
-                child: Text(
+                child: const Text(
                   'Delete',
                   style: TextStyle(
                     fontSize: 18,
-                    color: Colors.orange,
+                    color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -579,7 +589,7 @@ class _ContactViewState extends State<ContactView> {
       SnackBar(
         content: Text(
           message,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Arial',
             color: Colors.white,
           ),

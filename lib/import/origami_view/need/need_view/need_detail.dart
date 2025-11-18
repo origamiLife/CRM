@@ -32,18 +32,12 @@ class NeedDetail extends StatefulWidget {
 }
 
 class _NeedDetailState extends State<NeedDetail> {
-  @override
   TextEditingController _subjectController = TextEditingController();
   TextEditingController _noteController = TextEditingController();
-  TextEditingController _quantityController = TextEditingController();
+  TextEditingController _detailController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
-
-  static var optionStyle = TextStyle(
-      fontFamily: 'Arial',
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
-      color: Color(0xFF555555));
+  TextEditingController dropdownSearchController = TextEditingController();
 
   DateTime _selectedEffective = DateTime.now();
   DateTime _selectedReturn = DateTime.now();
@@ -67,16 +61,41 @@ class _NeedDetailState extends State<NeedDetail> {
     Day();
     inputAPI();
     Item_type_id = widget.needTypeItem!.type_id ?? '';
-    // _quantityController.addListener(() {
-    //   // ฟังก์ชันนี้จะถูกเรียกทุกครั้งเมื่อข้อความใน _searchController เปลี่ยนแปลง
-    //   print("Current text: ${_quantityController.text}");
-    // });
+    _amountController.addListener(() {
+      setState(() {
+        quantityT = _amountController.text;
+        quantity = double.tryParse(_amountController.text) ?? 0;
+        sum = price * quantity;
+        sumT = sum.toString();
+      });
+      print("AmountController text: ${_amountController.text}");
+    });
+    _priceController.addListener(() {
+      setState(() {
+        priceT = _priceController.text;
+        price = double.tryParse(_priceController.text) ?? 0;
+        sum = price * quantity;
+        sumT = sum.toString();
+      });
+      print("PriceController text: ${_priceController.text}");
+    });
+    _detailController.addListener(() {
+      setState(() {
+        _detail = _detailController.text;
+      });
+      print("QuantityController text: ${_detailController.text}");
+    });
   }
 
   @override
   void dispose() {
-    // _searchProject.dispose();
     super.dispose();
+    _subjectController.clear();
+    _noteController.clear();
+    _detailController.clear();
+    _amountController.clear();
+    _priceController.clear();
+    dropdownSearchController.dispose();
   }
 
   Future<void> _effectiveDate(BuildContext context) async {
@@ -112,7 +131,7 @@ class _NeedDetailState extends State<NeedDetail> {
                 ),
                 TextButton(
                   child: Text(
-                    '$Close',
+                    'Close',
                     style: TextStyle(
                         fontFamily: 'Arial',
                         fontWeight: FontWeight.bold,
@@ -166,7 +185,7 @@ class _NeedDetailState extends State<NeedDetail> {
                 ),
                 TextButton(
                   child: Text(
-                    '$Close',
+                    'Close',
                     style: TextStyle(
                         fontFamily: 'Arial',
                         fontWeight: FontWeight.bold,
@@ -287,7 +306,7 @@ class _NeedDetailState extends State<NeedDetail> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.orange,
         title: Row(
           children: [
             Container(
@@ -297,8 +316,8 @@ class _NeedDetailState extends State<NeedDetail> {
                     : detailItem?.need_type_name ?? '',
                 style: TextStyle(
                     fontFamily: 'Arial',
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                    fontWeight: FontWeight.w700,
+                    color: Colors.orange),
               ),
             ),
             Spacer(),
@@ -316,51 +335,21 @@ class _NeedDetailState extends State<NeedDetail> {
                   },
                 );
               },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Icon(
                   Icons.file_present,
-                  color: Colors.white,
+                  color: Colors.orange,
                 ),
               ),
             )
           ],
         ),
-        actions: [],
-        backgroundColor: Color(0xFFFF9900),
+        actions: const [],
+        backgroundColor: Colors.white,
+        elevation: 1,
       ),
-      body: (widget.request_id == '')
-          ? _getContentWidget()
-          : FutureBuilder<String>(
-              future: futureLoadData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        color: Color(0xFFFF9900),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        'Loading...',
-                        style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ));
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  return _getContentWidget();
-                }
-              },
-            ),
+      body: _getContentWidget(),
     );
   }
 
@@ -371,130 +360,49 @@ class _NeedDetailState extends State<NeedDetail> {
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(8),
           child: Column(
             children: [
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        _buildSectionTitle('$Subject'),
-                        Text(
-                          '*',
-                          style: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red),
-                        ),
-                      ],
-                    ),
-                    _buildTextField(_subjectController, '$Subject...', (value) {
-                      _searchSubject = value;
-                    }),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle('$Reason'),
-                  _buildTextField(_noteController, '$Type_something...',
-                      (value) {
-                    _reson = value;
-                  }),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle('Priority'),
-                  _priority(priorityOption),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Expanded(
+                  _textController('Subject : ', _subjectController, false,
+                      Icons.file_copy_outlined, ''),
+                  _textController('Reason : ', _noteController, false,
+                      Icons.file_copy_outlined, ''),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSectionTitle('$Effective_date'),
-                        Container(
-                          height: 48,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _effectiveDate(context);
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    (_effective == '')
-                                        ? detailItem?.effectiveDate ?? ''
-                                        : _effective,
-                                    style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14,
-                                        color: Color(0xFF555555)),
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.calendar_month,
-                                    color: Color(0xFF555555),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        _buildSectionTitle('Priority : '),
+                        _priority(priorityOption),
                       ],
                     ),
                   ),
-                  SizedBox(width: 8),
-                  (widget.needTypeItem!.type_id == "ASS")
-                      ? Expanded(
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+                    child: Row(
+                      children: [
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildSectionTitle('$Return_date'),
+                              _buildSectionTitle('Effective date'),
                               Container(
                                 height: 48,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
+                                  borderRadius: BorderRadius.circular(8),
                                   color: Colors.white,
                                   border: Border.all(
-                                    color: Colors.grey,
+                                    color: Colors.grey.shade400,
                                     width: 1.0,
                                   ),
                                 ),
                                 child: InkWell(
                                   onTap: () {
                                     setState(() {
-                                      _returnDate(context);
+                                      _effectiveDate(context);
                                     });
                                   },
                                   child: Padding(
@@ -502,9 +410,9 @@ class _NeedDetailState extends State<NeedDetail> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          (_return == '')
-                                              ? detailItem?.returnDate ?? ''
-                                              : _return,
+                                          (_effective == '')
+                                              ? detailItem?.effectiveDate ?? ''
+                                              : _effective,
                                           style: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 14,
@@ -522,192 +430,222 @@ class _NeedDetailState extends State<NeedDetail> {
                               ),
                             ],
                           ),
-                        )
-                      : Expanded(child: Container())
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionTitle('$Department'),
-                        _department(departmentOption)
+                        ),
+                        SizedBox(width: 8),
+                        (widget.needTypeItem!.type_id == "ASS")
+                            ? Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildSectionTitle('Return date'),
+                                    Container(
+                                      height: 48,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: Colors.grey.shade400,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _returnDate(context);
+                                          });
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                (_return == '')
+                                                    ? detailItem?.returnDate ??
+                                                        ''
+                                                    : _return,
+                                                style: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 14,
+                                                    color: Color(0xFF555555)),
+                                              ),
+                                              Spacer(),
+                                              Icon(
+                                                Icons.calendar_month,
+                                                color: Color(0xFF555555),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Expanded(child: Container())
                       ],
                     ),
                   ),
                   SizedBox(
-                    width: 8,
+                    height: 8,
                   ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionTitle('$Division'),
-                        _division(DivisionOption),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle('$Payto'),
-                  _employee(employeeOption),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle('$Project'),
-                  _project(projectList),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle('$Account'),
-                  _account(accountOption),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle('$Asset'),
-                  _asset(assetOption),
-                ],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle('$Contact'),
-                  _contact(contactOption),
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              InkWell(
-                onTap: () {
-                  if (_subjectController.text == '' ||
-                      _effective == '' ||
-                      employeeId == '') {
-                    showDialog(
-                      context: context,
-                      barrierColor:Colors.black54,
-                      builder: (BuildContext dialogContext) {
-                        return AlertDialog(
-                          elevation: 0,
-                          title: Icon(
-                            Icons.info_outline,
-                            size: 64,
-                            color: Colors.red,
-                          ),
-                          content: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  '$Error_Detail',
-                                  style: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16,
-                                      // fontWeight: FontWeight.bold,
-                                      color: Color(0xFF555555)),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text(
-                                '$Close',
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  color: Color(0xFF555555),
-                                ),
-                              ),
-                              onPressed: () {
-                                // Navigator.of(dialogContext).pop();
-                                Navigator.pop(context);
-                              },
-                            ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionTitle('Department'),
+                            _department(departmentOption)
                           ],
-                        );
-                      },
-                    );
-                  } else {
-                    // save post
-                    SaveItemId = addItemId;
-                    SaveItemDate = addItemDate;
-                    SaveItemNote = addItemNote;
-                    SaveItemQuantity = addItemQuantity;
-                    SaveItemPrice = addItemPrice;
-                    SaveItemUnit = addItemUnit;
-                    if (SaveItemId.length == 0) {
-                      showModalBottomSheet<void>(
-                        barrierColor: Colors.black87,
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        isScrollControlled: true,
-                        isDismissible: false,
-                        enableDrag: false,
-                        builder: (BuildContext context) {
-                          return _item();
-                        },
-                      );
-                    } else {
-                      setState(() {
-                        saveItemList;
-                        fetchSave();
-                      });
-                    }
-                  }
-                },
-                child: Card(
-                  color: Color(0xFFFF9900),
-                  child: Container(
-                    width: double.infinity,
-                    height: 50,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'Save',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionTitle('$Division'),
+                            _division(DivisionOption),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle('Pay to'),
+                      _employee(employeeOption),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle('Project'),
+                      _project(projectList),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle('Account'),
+                      _account(accountOption),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle('$Asset'),
+                      _asset(assetOption),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle('$Contact'),
+                      _contact(contactOption),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                child: _buildButton('Save', Colors.red, 'z'),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _textController(
+      String text, controller, bool key, IconData numbers, String hint) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              color: Color(0xFF555555),
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 4),
+          Container(
+            width: double.infinity,
+            child: TextFormField(
+              controller: controller,
+              readOnly: key,
+              maxLines: null,
+              autofocus: false,
+              obscureText: false,
+              decoration: InputDecoration(
+                isDense: true,
+                fillColor:
+                    key == false ? Colors.grey.shade50 : Colors.grey.shade300,
+                labelStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                hintText: hint,
+                hintStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: Color(0xFF555555),
+                  fontSize: 14,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey.shade400,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: key == false
+                        ? Colors.orange.shade300
+                        : Colors.grey.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                // prefixIcon: Icon(numbers, color: Colors.black54),
+              ),
+              style: TextStyle(
+                fontFamily: 'Arial',
+                color: key ? Colors.black87 : Color(0xFF555555),
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -725,10 +663,10 @@ class _NeedDetailState extends State<NeedDetail> {
       height: 48,
       // width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(8),
         color: Colors.white,
         border: Border.all(
-          color: Colors.grey,
+          color: Colors.grey.shade400,
           width: 1.0,
         ),
       ),
@@ -848,18 +786,24 @@ class _NeedDetailState extends State<NeedDetail> {
       title: editprojectText,
       textTitle: projectId,
       onTap: () {
-        setState(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MiniProject(
-                callback: (String value) => editprojectText = value,
-                employee: widget.employee,
-                callbackId: (String value) => projectId = value,
-              ),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MiniProject(
+              employee: widget.employee,
+              callback: (String value) {
+                setState(() {
+                  editprojectText = value;
+                });
+              },
+              callbackId: (String value) {
+                setState(() {
+                  projectId = value;
+                });
+              },
             ),
-          );
-        });
+          ),
+        );
       },
     );
   }
@@ -872,18 +816,24 @@ class _NeedDetailState extends State<NeedDetail> {
       title: editDepartmentText,
       textTitle: departmentId,
       onTap: () {
-        setState(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MiniDepartment(
-                callback: (String value) => editDepartmentText = value,
-                employee: widget.employee,
-                callbackId: (String value) => departmentId = value,
-              ),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MiniDepartment(
+              employee: widget.employee,
+              callback: (String value) {
+                setState(() {
+                  editDepartmentText = value;
+                });
+              },
+              callbackId: (String value) {
+                setState(() {
+                  departmentId = value;
+                });
+              },
             ),
-          );
-        });
+          ),
+        );
       },
     );
   }
@@ -901,10 +851,17 @@ class _NeedDetailState extends State<NeedDetail> {
             context,
             MaterialPageRoute(
               builder: (context) => MiniDivision(
-                callback: (String value) => editDivisionText = value,
                 employee: widget.employee,
-                
-                callbackId: (String value) => divisionId = value,
+                callback: (String value) {
+                  setState(() {
+                    editDivisionText = value;
+                  });
+                },
+                callbackId: (String value) {
+                  setState(() {
+                    divisionId = value;
+                  });
+                },
               ),
             ),
           );
@@ -921,19 +878,24 @@ class _NeedDetailState extends State<NeedDetail> {
       title: editEmployeeText,
       textTitle: employeeId,
       onTap: () {
-        setState(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MiniEmployee(
-                callback: (String value) => editEmployeeText = value,
-                employee: widget.employee,
-                
-                callbackId: (String value) => employeeId = value,
-              ),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MiniEmployee(
+              employee: widget.employee,
+              callback: (String value) {
+                setState(() {
+                  editEmployeeText = value;
+                });
+              },
+              callbackId: (String value) {
+                setState(() {
+                  employeeId = value;
+                });
+              },
             ),
-          );
-        });
+          ),
+        );
       },
     );
   }
@@ -951,10 +913,17 @@ class _NeedDetailState extends State<NeedDetail> {
             context,
             MaterialPageRoute(
               builder: (context) => MiniAccount(
-                callback: (String value) => editAccountText = value,
                 employee: widget.employee,
-                
-                callbackId: (String value) => accountId = value,
+                callback: (String value) {
+                  setState(() {
+                    editAccountText = value;
+                  });
+                },
+                callbackId: (String value) {
+                  setState(() {
+                    accountId = value;
+                  });
+                },
               ),
             ),
           );
@@ -976,10 +945,17 @@ class _NeedDetailState extends State<NeedDetail> {
             context,
             MaterialPageRoute(
               builder: (context) => MiniAsset(
-                callback: (String value) => editAssetText = value,
                 employee: widget.employee,
-                
-                callbackId: (String value) => assetId = value,
+                callback: (String value) {
+                  setState(() {
+                    editAssetText = value;
+                  });
+                },
+                callbackId: (String value) {
+                  setState(() {
+                    assetId = value;
+                  });
+                },
               ),
             ),
           );
@@ -1001,10 +977,17 @@ class _NeedDetailState extends State<NeedDetail> {
             context,
             MaterialPageRoute(
               builder: (context) => MiniContact(
-                callback: (String value) => editContactText = value,
                 employee: widget.employee,
-                
-                callbackId: (String value) => contactId = value,
+                callback: (String value) {
+                  setState(() {
+                    editContactText = value;
+                  });
+                },
+                callbackId: (String value) {
+                  setState(() {
+                    contactId = value;
+                  });
+                },
               ),
             ),
           );
@@ -1014,33 +997,40 @@ class _NeedDetailState extends State<NeedDetail> {
   }
 
   List<ItemData> filteredItem = [];
-  String edititemText = 'Item';
+  String edititemText = '';
   String selectItemId = '';
   Widget _selectItem(List<ItemData> itemOption) {
     return DropdownNeed(
-      title: edititemText,
-      textTitle: selectItemId,
-      onTap: () {
-        setState(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MiniItem(
-                callbackID: (String value) => selectItemId = value,
-                callbackNAME: (String value) => edititemText = value,
-                employee: widget.employee,
-                
-                Item_type_id: widget.needTypeItem!.type_id ?? '',
+        title: edititemText,
+        textTitle: selectItemId,
+        onTap: () async {
+          Navigator.pop(context); // ปิด bottom sheet ก่อน
+          Future.delayed(Duration(milliseconds: 100), () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MiniItem(
+                  Item_type_id: widget.needTypeItem?.type_id ?? '',
+                  employee: widget.employee,
+                  callbackID: (String value) {
+                    setState(() {
+                      selectItemId = value;
+                    });
+                  },
+                  callbackNAME: (String value) {
+                    setState(() {
+                      edititemText = value;
+                    });
+                  },
+                ),
               ),
-            ),
-          );
+            );
+          });
         });
-      },
-    );
   }
 
   List<ItemData> filteredUnit = [];
-  String editunitText = 'unit';
+  String editunitText = '';
   String unitText = '';
   String editunit_id = '';
   Widget _selectUnit(List<UnitData> unitOption) {
@@ -1053,10 +1043,17 @@ class _NeedDetailState extends State<NeedDetail> {
             context,
             MaterialPageRoute(
               builder: (context) => MiniUnit(
-                callbackName: (String value) => unitText = editunitText = value,
-                callbackId: (String value) => editunit_id = value,
                 employee: widget.employee,
-                
+                callbackName: (String value) {
+                  setState(() {
+                    unitText = editunitText = value;
+                  });
+                },
+                callbackId: (String value) {
+                  setState(() {
+                    editunit_id = value;
+                  });
+                },
               ),
             ),
           );
@@ -1130,7 +1127,7 @@ class _NeedDetailState extends State<NeedDetail> {
                     padding: const EdgeInsets.only(top: 6),
                     child: Center(
                       child: Text(
-                        '$Item',
+                        'OTHER',
                         style: TextStyle(
                           fontFamily: 'Arial',
                           color: Color(0xFF555555),
@@ -1166,72 +1163,132 @@ class _NeedDetailState extends State<NeedDetail> {
             body: Column(
               children: [
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _iT(),
-                        SizedBox(height: 16),
-                      ],
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: _otherWidget(),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 8, left: 8, right: 8, bottom: 24),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Color(0xFFFF9900),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                          onPressed: () => _handleAddItem(context),
-                          child: Container(
-                            padding: EdgeInsets.all(14),
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                'Save',
-                                style: TextStyle(
-                                    fontFamily: 'Arial', fontSize: 16.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Color(0xFFFF9900),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                          onPressed: () => _handleCloseItem(context),
-                          child: Container(
-                            padding: EdgeInsets.all(14),
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                '$Close_Item',
-                                style: TextStyle(
-                                    fontFamily: 'Arial', fontSize: 16.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _buildButton('Send', Colors.red, 'x'),
+                    )),
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _buildButton('Close', Colors.grey.shade300, 'y'),
+                    )),
+                  ],
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, Color color, String s) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(12),
+          backgroundColor: color,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        ),
+        onPressed: () {
+          if (s == 'x') {
+            _handleAddItem(context);
+          } else if (s == 'y') {
+            _handleCloseItem(context);
+          } else {
+            if (_subjectController.text == '' ||
+                _effective == '' ||
+                employeeId == '') {
+              showDialog(
+                context: context,
+                barrierColor: Colors.black54,
+                builder: (BuildContext dialogContext) {
+                  return AlertDialog(
+                    elevation: 0,
+                    title: const Icon(
+                      Icons.info_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
+                    content: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Error Detail',
+                            style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16,
+                                // fontWeight: FontWeight.bold,
+                                color: Color(0xFF555555)),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text(
+                          'Close',
+                          style: TextStyle(
+                            fontFamily: 'Arial',
+                            color: Color(0xFF555555),
+                          ),
+                        ),
+                        onPressed: () {
+                          // Navigator.of(dialogContext).pop();
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              // save post
+              SaveItemId = addItemId;
+              SaveItemDate = addItemDate;
+              SaveItemNote = addItemNote;
+              SaveItemQuantity = addItemQuantity;
+              SaveItemPrice = addItemPrice;
+              SaveItemUnit = addItemUnit;
+              if (addItemId.isEmpty) {
+                showModalBottomSheet<void>(
+                  barrierColor: Colors.black87,
+                  backgroundColor: Colors.transparent,
+                  context: context,
+                  isScrollControlled: true,
+                  isDismissible: false,
+                  enableDrag: false,
+                  builder: (BuildContext context) {
+                    return _item();
+                  },
+                );
+              } else {
+                saveItemList;
+                fetchSave();
+              }
+            }
+          }
+        },
+        child: Text(
+          text,
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
@@ -1284,7 +1341,7 @@ class _NeedDetailState extends State<NeedDetail> {
     selectItemId = '';
     edititemText = 'Item';
     _itemdate = '';
-    _quantityController.clear();
+    _detailController.clear();
     _amountController.clear();
     _priceController.clear();
     editunit_id = '';
@@ -1298,7 +1355,7 @@ class _NeedDetailState extends State<NeedDetail> {
   void showErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,
-      barrierColor:Colors.black54,
+      barrierColor: Colors.black54,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           elevation: 0,
@@ -1343,130 +1400,154 @@ class _NeedDetailState extends State<NeedDetail> {
     );
   }
 
-  Widget _iT() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSectionTitle('$Item :'),
-          _selectItem(itemOption),
-          _buildSectionTitle('$Detail :'),
-          _buildTextField(_quantityController, '$Type_something...', (value) {
-            _detail = value;
-          }),
-          _buildSectionTitle('$Quantity :'),
-          _buildTextField(_amountController, '0', (value) {
-            setState(() {
-              quantityT = value;
-              quantity = double.tryParse(value) ?? 0;
-              sum = price * quantity;
-              sumT = sum.toString();
-            });
-          }),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionTitle('$Price :'),
-                    _buildTextField(_priceController, '0', (value) {
-                      setState(() {
-                        priceT = value;
-                        price = double.tryParse(value) ?? 0;
-                        sum = price * quantity;
-                        sumT = sum.toString();
-                      });
-                    }),
-                  ],
+  Widget _otherWidget() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSectionTitle('Item :'),
+            _selectItem(itemOption),
+            // _buildSectionTitle('$Detail :'),
+            // _buildTextField(_detailController, '$Type_something...', (value) {
+            //   _detail = value;
+            // }),
+
+            _textController('Detail : ', _detailController, false,
+                Icons.file_copy_outlined, ''),
+
+            _textController('Quantity : ', _amountController, false,
+                Icons.file_copy_outlined, ''),
+
+            // _buildSectionTitle('$Quantity :'),
+            // _buildTextField(_amountController, '0', (value) {
+            //   setState(() {
+            //     quantityT = value;
+            //     quantity = double.tryParse(value) ?? 0;
+            //     sum = price * quantity;
+            //     sumT = sum.toString();
+            //   });
+            // }),
+            Row(
+              children: [
+                Expanded(
+                  child: _textController('Price : ', _priceController, false,
+                      Icons.file_copy_outlined, ''),
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     _buildSectionTitle('$Price :'),
+                  //     _buildTextField(_priceController, '0', (value) {
+                  //       setState(() {
+                  //         priceT = value;
+                  //         price = double.tryParse(value) ?? 0;
+                  //         sum = price * quantity;
+                  //         sumT = sum.toString();
+                  //       });
+                  //     }),
+                  //   ],
+                  // ),
                 ),
-              ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionTitle('$Unit :'),
-                    _selectUnit(unitOption),
-                  ],
+                SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle('Unit :'),
+                      _selectUnit(unitOption),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          _buildSectionTitle('$Total_price :'),
-          _buildTotalPriceContainer(),
-          _buildSectionTitle('$Add_Image'),
-          _buildImagePicker(),
-        ],
+              ],
+            ),
+            _textController(
+              'Total price : ',
+              null,
+              true,
+              Icons.file_copy_outlined,
+              (_amountController.text.isEmpty || _priceController.text.isEmpty)
+                  ? '0'
+                  : '${quantity * price}',
+            ),
+            SizedBox(height: 8),
+            _buildSectionTitle('Bill :'),
+            _buildImagePicker(),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+      padding: const EdgeInsets.only(bottom: 4),
       child: Text(
         title,
-        style: optionStyle,
+        style: TextStyle(
+          fontFamily: 'Arial',
+          color: Color(0xFF555555),
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hintText,
-      Function(String) onChanged) {
-    return Container(
-      decoration: _inputDecoration(),
-      child: TextFormField(
-        minLines: (controller == _noteController) ? 5 : null,
-        maxLines: null,
-        controller: controller,
-        keyboardType:
-            hintText == '0' ? TextInputType.number : TextInputType.text,
-        style: TextStyle(
-            fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
-        decoration: InputDecoration(
-          isDense: true,
-          filled: true,
-          fillColor: Colors.white,
-          hintText: hintText,
-          hintStyle: TextStyle(
-              fontFamily: 'Arial', fontSize: 14, color: Colors.black38),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide.none),
-        ),
-        onChanged: onChanged,
-      ),
-    );
-  }
+  // Widget _buildTextField(TextEditingController controller, String hintText,
+  //     Function(String) onChanged) {
+  //   return Container(
+  //     decoration: _inputDecoration(),
+  //     child: TextFormField(
+  //       minLines: (controller == _noteController) ? 5 : null,
+  //       maxLines: null,
+  //       controller: controller,
+  //       keyboardType:
+  //           hintText == '0' ? TextInputType.number : TextInputType.text,
+  //       style: TextStyle(
+  //           fontFamily: 'Arial', fontSize: 14, color: Color(0xFF555555)),
+  //       decoration: InputDecoration(
+  //         isDense: true,
+  //         filled: true,
+  //         fillColor: Colors.white,
+  //         hintText: hintText,
+  //         hintStyle: TextStyle(
+  //             fontFamily: 'Arial', fontSize: 14, color: Colors.black38),
+  //         border: OutlineInputBorder(
+  //             borderRadius: BorderRadius.circular(8),
+  //             borderSide: BorderSide.none),
+  //       ),
+  //       onChanged: onChanged,
+  //     ),
+  //   );
+  // }
 
   BoxDecoration _inputDecoration() {
     return BoxDecoration(
-      borderRadius: BorderRadius.circular(15.0),
+      borderRadius: BorderRadius.circular(8),
       border: Border.all(color: Colors.grey, width: 1.0),
     );
   }
 
-  Widget _buildTotalPriceContainer() {
-    return Container(
-      height: 48,
-      width: double.infinity,
-      alignment: Alignment.centerLeft,
-      decoration: _inputDecoration(),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: Text(
-          (_amountController.text.isEmpty || _priceController.text.isEmpty)
-              ? '0'
-              : '${quantity * price}',
-          style: TextStyle(
-              fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
-        ),
-      ),
-    );
-  }
-
+  // Widget _buildTotalPriceContainer() {
+  //   return Container(
+  //     height: 48,
+  //     width: double.infinity,
+  //     alignment: Alignment.centerLeft,
+  //     decoration: _inputDecoration(),
+  //     child: Padding(
+  //       padding: const EdgeInsets.only(left: 8.0),
+  //       child: Text(
+  //         (_amountController.text.isEmpty || _priceController.text.isEmpty)
+  //             ? '0'
+  //             : '${quantity * price}',
+  //         style: TextStyle(
+  //             fontFamily: 'Arial', fontSize: 16, color: Color(0xFF555555)),
+  //       ),
+  //     ),
+  //   );
+  // }
+  ///-------------------Show-----------------
   Widget _buildImagePicker() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -1474,13 +1555,14 @@ class _NeedDetailState extends State<NeedDetail> {
         children: [
           InkWell(
             onTap: () {
-              Navigator.pop(context);
-              showModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.transparent,
-                isScrollControlled: true,
-                builder: (context) => _bill(),
-              );
+              getImages();
+              // Navigator.pop(context);
+              // showModalBottomSheet(
+              //   context: context,
+              //   backgroundColor: Colors.transparent,
+              //   isScrollControlled: true,
+              //   builder: (context) => _bill(),
+              // );
             },
             child: _buildAddImageButton(),
           ),
@@ -1506,6 +1588,7 @@ class _NeedDetailState extends State<NeedDetail> {
     );
   }
 
+  ///-------------------Add-----------------
   Widget _buildAddImageButton() {
     return Container(
       alignment: Alignment.center,
@@ -1529,6 +1612,8 @@ class _NeedDetailState extends State<NeedDetail> {
     );
   }
 
+  ///------------------------------------
+  ///
   int? Aa = 0;
   int? Ab = 0;
 
@@ -1738,59 +1823,59 @@ class _NeedDetailState extends State<NeedDetail> {
   }
 
   bool _isLoading = false;
-  Widget _bill() {
-    return Container(
-      color: Colors.white,
-      child: FractionallySizedBox(
-        // heightFactor: 1,
-        child: Scaffold(
-            backgroundColor: (selectedImages.isNotEmpty)
-                ? Colors.white
-                : Colors.grey.shade100,
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              title: Text(''),
-            ),
-            body: Column(
-              children: [
-                Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Icon(
-                          null, //Icons.camera_alt_outlined,
-                          color: Color(0xFF555555),
-                        ),
-                        Text(
-                          '$Bill',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const Icon(
-                          null, //Icons.camera_alt_outlined,
-                          color: Color(0xFF555555),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: selectedImages.isNotEmpty
-                      ? SingleChildScrollView(child: _InPhoto())
-                      : _InPhoto(),
-                ),
-              ],
-            )),
-      ),
-    );
-  }
+  // Widget _bill() {
+  //   return Container(
+  //     color: Colors.white,
+  //     child: FractionallySizedBox(
+  //       // heightFactor: 1,
+  //       child: Scaffold(
+  //           backgroundColor: (selectedImages.isNotEmpty)
+  //               ? Colors.white
+  //               : Colors.grey.shade100,
+  //           appBar: AppBar(
+  //             backgroundColor: Colors.white,
+  //             title: Text(''),
+  //           ),
+  //           body: Column(
+  //             children: [
+  //               Container(
+  //                 color: Colors.white,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(16),
+  //                   child: Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                     children: [
+  //                       const Icon(
+  //                         null, //Icons.camera_alt_outlined,
+  //                         color: Color(0xFF555555),
+  //                       ),
+  //                       Text(
+  //                         '$Bill',
+  //                         style: TextStyle(
+  //                           fontFamily: 'Arial',
+  //                           fontSize: 20,
+  //                           color: Colors.black,
+  //                           fontWeight: FontWeight.w700,
+  //                         ),
+  //                       ),
+  //                       const Icon(
+  //                         null, //Icons.camera_alt_outlined,
+  //                         color: Color(0xFF555555),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //               Expanded(
+  //                 child: selectedImages.isNotEmpty
+  //                     ? SingleChildScrollView(child: _InPhoto())
+  //                     : _InPhoto(),
+  //               ),
+  //             ],
+  //           )),
+  //     ),
+  //   );
+  // }
 
   List<String> myList = [];
   List<String> imageItem = [];
@@ -1798,29 +1883,20 @@ class _NeedDetailState extends State<NeedDetail> {
   String base64 = '';
   Future<String?> imageToBase64(String imagePath, List<String> myList) async {
     try {
-      // Read the image file as bytes
       final file = File(imagePath);
       final imageBytes = await file.readAsBytes();
 
-      // Convert the bytes to a Base64 string
       final base64 = base64Encode(imageBytes);
-      // Add the Base64 string to the list if it's not already present
       if (!myList.contains(base64)) {
-        // if (isSave == true) {
-        //   base64Image = base64Encode(imageBytes);
-        // } else {
         isSave = false;
         myList.add(base64);
         myList = myList.toSet().toList();
-        // imageItem = myList;
-        // }
         print(base64Image);
         print(imageItem);
       }
 
       return base64Image;
     } catch (e) {
-      // Handle any errors that might occur
       print('Error reading image file: $e');
       return null;
     }
@@ -1828,247 +1904,251 @@ class _NeedDetailState extends State<NeedDetail> {
 
   final CarouselSliderController _controller = CarouselSliderController();
   int _currentIndex = 0;
-  Widget _InPhoto() {
-    return Column(
-      children: [
-        selectedImages.isNotEmpty
-            ? Column(
-                children: [
-                  CarouselSlider.builder(
-                    carouselController: _controller,
-                    itemCount: selectedImages.length,
-                    itemBuilder: (context, index, realIndex) {
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 1.0,
-                                ),
-                              ),
-                              child: kIsWeb
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.network(
-                                          selectedImages[index].path))
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.file(
-                                        selectedImages[index],
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: List.generate(
-                                selectedImages.length,
-                                (indexImage) {
-                                  final base64String = imageToBase64(
-                                      selectedImages[indexImage].path, myList);
-                                  print(base64String);
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 4, right: 4),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: (index == indexImage)
-                                            ? Colors.grey
-                                            : Colors.transparent,
-                                        border: Border.all(
-                                          color: (index == indexImage)
-                                              ? Colors.grey
-                                              : Colors.grey,
-                                          width: 1.0,
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.all(4),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                    options: CarouselOptions(
-                      height: MediaQuery.of(context).size.height * 0.78,
-                      autoPlay: false,
-                      autoPlayInterval: Duration(seconds: 3),
-                      enlargeCenterPage: false,
-                      // aspectRatio: 16 / 9,
-                      viewportFraction: 1,
-                      initialPage: _currentIndex,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              )
-            : Expanded(
-                child: InkWell(
-                  onTap: () => getImages(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.image_outlined,color: Colors.grey.shade400,size: 400,),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom:100),
-                        child: Text(
-                          'Add Image',
-                          style: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 50,
-                            color: Colors.grey.shade400,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-        SizedBox(
-          height: 4,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                  showModalBottomSheet<void>(
-                      barrierColor: Colors.black87,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      enableDrag: false,
-                      builder: (BuildContext context) {
-                        return _item();
-                      });
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  child: Card(
-                    color: Color(0xFFFF9900),
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        '$Add_Image',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  selectedImages = [];
-                  myList = [];
-                  imageItem = [];
-                  Navigator.pop(context);
-                  showModalBottomSheet<void>(
-                      barrierColor: Colors.black87,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      enableDrag: false,
-                      builder: (BuildContext context) {
-                        return _item();
-                      });
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  child: Card(
-                    color: Color(0xFFFF9900),
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        '$Close',
-                        style: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 18,
-        ),
-      ],
-    );
-  }
+  // Widget _InPhoto() {
+  //   return Column(
+  //     children: [
+  //       selectedImages.isNotEmpty
+  //           ? Column(
+  //               children: [
+  //                 CarouselSlider.builder(
+  //                   carouselController: _controller,
+  //                   itemCount: selectedImages.length,
+  //                   itemBuilder: (context, index, realIndex) {
+  //                     return Column(
+  //                       children: [
+  //                         Expanded(
+  //                           child: Container(
+  //                             decoration: BoxDecoration(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               border: Border.all(
+  //                                 color: Colors.grey,
+  //                                 width: 1.0,
+  //                               ),
+  //                             ),
+  //                             child: kIsWeb
+  //                                 ? ClipRRect(
+  //                                     borderRadius: BorderRadius.circular(12),
+  //                                     child: Image.network(
+  //                                         selectedImages[index].path))
+  //                                 : ClipRRect(
+  //                                     borderRadius: BorderRadius.circular(12),
+  //                                     child: Image.file(
+  //                                       selectedImages[index],
+  //                                       fit: BoxFit.cover,
+  //                                     ),
+  //                                   ),
+  //                           ),
+  //                         ),
+  //                         SizedBox(
+  //                           height: 20,
+  //                         ),
+  //                         SingleChildScrollView(
+  //                           scrollDirection: Axis.horizontal,
+  //                           child: Row(
+  //                             children: List.generate(
+  //                               selectedImages.length,
+  //                               (indexImage) {
+  //                                 final base64String = imageToBase64(
+  //                                     selectedImages[indexImage].path, myList);
+  //                                 print(base64String);
+  //                                 return Padding(
+  //                                   padding: const EdgeInsets.only(
+  //                                       left: 4, right: 4),
+  //                                   child: Container(
+  //                                     decoration: BoxDecoration(
+  //                                       borderRadius: BorderRadius.circular(10),
+  //                                       color: (index == indexImage)
+  //                                           ? Colors.grey
+  //                                           : Colors.transparent,
+  //                                       border: Border.all(
+  //                                         color: (index == indexImage)
+  //                                             ? Colors.grey
+  //                                             : Colors.grey,
+  //                                         width: 1.0,
+  //                                       ),
+  //                                     ),
+  //                                     padding: EdgeInsets.all(4),
+  //                                   ),
+  //                                 );
+  //                               },
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     );
+  //                   },
+  //                   options: CarouselOptions(
+  //                     height: MediaQuery.of(context).size.height * 0.78,
+  //                     autoPlay: false,
+  //                     autoPlayInterval: Duration(seconds: 3),
+  //                     enlargeCenterPage: false,
+  //                     // aspectRatio: 16 / 9,
+  //                     viewportFraction: 1,
+  //                     initialPage: _currentIndex,
+  //                     onPageChanged: (index, reason) {
+  //                       setState(() {
+  //                         _currentIndex = index;
+  //                       });
+  //                     },
+  //                   ),
+  //                 ),
+  //               ],
+  //             )
+  //           : Expanded(
+  //               child: InkWell(
+  //                 onTap: () => getImages(),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   crossAxisAlignment: CrossAxisAlignment.center,
+  //                   children: [
+  //                     Icon(
+  //                       Icons.image_outlined,
+  //                       color: Colors.grey.shade400,
+  //                       size: 400,
+  //                     ),
+  //                     Padding(
+  //                       padding: const EdgeInsets.only(bottom: 100),
+  //                       child: Text(
+  //                         'Add Image',
+  //                         style: TextStyle(
+  //                           fontFamily: 'Arial',
+  //                           fontSize: 50,
+  //                           color: Colors.grey.shade400,
+  //                           fontWeight: FontWeight.w500,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //       SizedBox(
+  //         height: 4,
+  //       ),
+  //       Row(
+  //         children: [
+  //           Expanded(
+  //             child: InkWell(
+  //               onTap: () {
+  //                 Navigator.pop(context);
+  //                 showModalBottomSheet<void>(
+  //                     barrierColor: Colors.black87,
+  //                     backgroundColor: Colors.transparent,
+  //                     context: context,
+  //                     isScrollControlled: true,
+  //                     isDismissible: false,
+  //                     enableDrag: false,
+  //                     builder: (BuildContext context) {
+  //                       return _item();
+  //                     });
+  //               },
+  //               child: Padding(
+  //                 padding: EdgeInsets.only(left: 16, right: 16),
+  //                 child: Card(
+  //                   color: Color(0xFFFF9900),
+  //                   child: Container(
+  //                     width: double.infinity,
+  //                     height: 50,
+  //                     alignment: Alignment.center,
+  //                     padding: EdgeInsets.all(16),
+  //                     child: Text(
+  //                       '$Add_Image',
+  //                       style: TextStyle(
+  //                         fontFamily: 'Arial',
+  //                         fontSize: 16.0,
+  //                         color: Colors.white,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           Expanded(
+  //             child: InkWell(
+  //               onTap: () {
+  //                 selectedImages = [];
+  //                 myList = [];
+  //                 imageItem = [];
+  //                 Navigator.pop(context);
+  //                 showModalBottomSheet<void>(
+  //                     barrierColor: Colors.black87,
+  //                     backgroundColor: Colors.transparent,
+  //                     context: context,
+  //                     isScrollControlled: true,
+  //                     isDismissible: false,
+  //                     enableDrag: false,
+  //                     builder: (BuildContext context) {
+  //                       return _item();
+  //                     });
+  //               },
+  //               child: Padding(
+  //                 padding: EdgeInsets.only(left: 16, right: 16),
+  //                 child: Card(
+  //                   color: Color(0xFFFF9900),
+  //                   child: Container(
+  //                     width: double.infinity,
+  //                     height: 50,
+  //                     alignment: Alignment.center,
+  //                     padding: EdgeInsets.all(16),
+  //                     child: Text(
+  //                       '$Close',
+  //                       style: TextStyle(
+  //                         fontFamily: 'Arial',
+  //                         fontSize: 16.0,
+  //                         color: Colors.white,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       SizedBox(
+  //         height: 18,
+  //       ),
+  //     ],
+  //   );
+  // }
 
   final ImagePicker picker = ImagePicker();
 
-  void _pickCameraImage() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final XFile? image = await picker.pickImage(source: ImageSource.camera);
-      if (image != null) {
-        selectedImages.add(File(image.path));
-
-        Navigator.pop(context); // ย้ายออกจาก setState
-
-        showModalBottomSheet<void>(
-          barrierColor: Colors.black12,
-          backgroundColor: Colors.transparent,
-          context: context,
-          isScrollControlled: true,
-          isDismissible: false,
-          enableDrag: false,
-          builder: (BuildContext context) {
-            return _bill();
-          },
-        );
-      }
-    } catch (e) {
-      print('Error picking image: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+  // void _pickCameraImage() async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //
+  //   try {
+  //     final XFile? image = await picker.pickImage(source: ImageSource.camera);
+  //     if (image != null) {
+  //       selectedImages.add(File(image.path));
+  //
+  //       Navigator.pop(context); // ย้ายออกจาก setState
+  //
+  //       showModalBottomSheet<void>(
+  //         barrierColor: Colors.black12,
+  //         backgroundColor: Colors.transparent,
+  //         context: context,
+  //         isScrollControlled: true,
+  //         isDismissible: false,
+  //         enableDrag: false,
+  //         builder: (BuildContext context) {
+  //           return _bill();
+  //         },
+  //       );
+  //     }
+  //   } catch (e) {
+  //     print('Error picking image: $e');
+  //   } finally {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
 
   void getImages() async {
     final pickedFile = await picker.pickMultiImage(
@@ -2085,6 +2165,7 @@ class _NeedDetailState extends State<NeedDetail> {
             selectedImages.add(
               File(xfilePick[i].path),
             );
+            imageToBase64(selectedImages[0].path, myList);
             Navigator.pop(context);
             setState(() {
               showModalBottomSheet<void>(
@@ -2095,7 +2176,7 @@ class _NeedDetailState extends State<NeedDetail> {
                 isDismissible: false,
                 enableDrag: false,
                 builder: (BuildContext context) {
-                  return _bill();
+                  return _item();
                 },
               );
             });
@@ -2126,7 +2207,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? project_name = "";
   Future<void> fetchProject(project_number, project_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/project.php?page=$project_number&search=$project_name');
+        '$hostDev/api/origami/need/project.php?page=$project_number&search=$project_name');
     try {
       final response = await http.post(
         uri,
@@ -2172,7 +2253,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? account_name = "";
   Future<void> fetchAccount(account_number, account_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/account.php?page=$account_number&search=$account_name');
+        '$hostDev/api/origami/need/account.php?page=$account_number&search=$account_name');
     try {
       final response = await http.post(
         uri,
@@ -2216,7 +2297,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? contact_name = "";
   Future<void> fetchContact(contact_number, contact_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/contact.php?page=$contact_number&search=$contact_name');
+        '$hostDev/api/origami/need/contact.php?page=$contact_number&search=$contact_name');
     try {
       final response = await http.post(
         uri,
@@ -2260,7 +2341,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? department_name = "";
   Future<void> fetchDepartment(department_number, department_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/department.php?page=$department_number&search=$department_name');
+        '$hostDev/api/origami/need/department.php?page=$department_number&search=$department_name');
     try {
       final response = await http.post(
         uri,
@@ -2305,7 +2386,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? asset_name = "";
   Future<void> fetchAsset(asset_number, asset_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/asset.php?page=$asset_number&search=$asset_name');
+        '$hostDev/api/origami/need/asset.php?page=$asset_number&search=$asset_name');
     try {
       final response = await http.post(
         uri,
@@ -2350,7 +2431,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? division_name = "";
   Future<void> fetchDivision(division_number, division_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/division.php?page=$division_number&search=$division_name');
+        '$hostDev/api/origami/need/division.php?page=$division_number&search=$division_name');
     try {
       final response = await http.post(
         uri,
@@ -2395,7 +2476,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? employee_name = "";
   Future<void> fetchEmployee(employee_number, employee_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/employee.php?page=$employee_number&search=$employee_name');
+        '$hostDev/api/origami/need/employee.php?page=$employee_number&search=$employee_name');
     try {
       final response = await http.post(
         uri,
@@ -2441,7 +2522,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? Item_type_id = "";
   Future<void> fetchItem(item_number, item_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=$Item_type_id');
+        '$hostDev/api/origami/need/item.php?page=$item_number&search=$item_name&need_type=$Item_type_id');
     try {
       final response = await http.post(
         uri,
@@ -2486,7 +2567,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? unit_name = "";
   Future<void> fetchUnit(unit_number, unit_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/unit.php?page=$unit_number&search=$unit_name');
+        '$hostDev/api/origami/need/unit.php?page=$unit_number&search=$unit_name');
     try {
       final response = await http.post(
         uri,
@@ -2530,7 +2611,7 @@ class _NeedDetailState extends State<NeedDetail> {
   String? priority_name = "";
   Future<void> fetchPriority(priority_number, priority_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/priority.php?page=$priority_number&search=$priority_name');
+        '$hostDev/api/origami/need/priority.php?page=$priority_number&search=$priority_name');
     try {
       final response = await http.post(
         uri,
@@ -2589,7 +2670,7 @@ class _NeedDetailState extends State<NeedDetail> {
   bool isLoading = false;
   bool isSave = false;
   Future<void> fetchSave() async {
-    final uri = Uri.parse('$hostWeb/api/origami/need/save.php');
+    final uri = Uri.parse('$hostDev/api/origami/need/save.php');
     String jsonNeedItem =
         jsonEncode(saveItemList.map((item) => item.toJson()).toList());
     print(jsonNeedItem);
@@ -2607,17 +2688,17 @@ class _NeedDetailState extends State<NeedDetail> {
           'Authorization': token,
           'request_id': widget.request_id,
           'need_type': widget.needTypeItem!.type_id,
-          'need_subject': "$_searchSubject",
-          'priority_id': "$priorityId",
-          'need_reason': "$_reson",
-          'effective_date': "$_effective",
-          'department_id': "$departmentId",
-          'division_id': "$divisionId",
-          'need_payto': "$employeeId",
-          'project_id': "$projectId",
-          'asset_id': "$assetId",
-          'account_id': "$accountId",
-          'contact_id': "$contactId",
+          'need_subject': _subjectController.text,
+          'priority_id': priorityId,
+          'need_reason': _noteController.text,
+          'effective_date': _effective,
+          'department_id': departmentId,
+          'division_id': divisionId,
+          'need_payto': employeeId,
+          'project_id': projectId,
+          'asset_id': assetId,
+          'account_id': accountId,
+          'contact_id': contactId,
           'need_item_data': jsonNeedItem,
         },
       );
@@ -2659,7 +2740,7 @@ class _NeedDetailState extends State<NeedDetail> {
   NeedData? detailItem;
   int i = 0;
   Future<void> fetchDetail(action_type, need_id, type_id) async {
-    final uri = Uri.parse('$hostWeb/api/origami/need/detail.php');
+    final uri = Uri.parse('$hostDev/api/origami/need/detail.php');
     try {
       final response = await http.post(
         uri,
@@ -2708,7 +2789,7 @@ class _NeedDetailState extends State<NeedDetail> {
   }
 
   Future<void> fetchDeleteItem(item_sort) async {
-    final uri = Uri.parse('$hostWeb/api/origami/need/delete-item.php');
+    final uri = Uri.parse('$hostDev/api/origami/need/delete-item.php');
     try {
       final response = await http.post(
         uri,

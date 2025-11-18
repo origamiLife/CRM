@@ -2,10 +2,6 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 import 'package:origamilift/import/origami_view/work/work.dart';
-import 'package:origamilift/import/origami_view/work/update_work.dart';
-
-import '../Contact/contact_add/contact_add_detail.dart';
-import '../Contact/contact_edit/contact_edit_detail.dart';
 
 class WorkRequestApprove extends StatefulWidget {
   const WorkRequestApprove({

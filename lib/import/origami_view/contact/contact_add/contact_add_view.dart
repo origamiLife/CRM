@@ -4,6 +4,7 @@ import 'package:origamilift/import/import.dart';
 
 import 'contact_add_detail.dart';
 import 'contact_add_owner.dart';
+import 'contact_card.dart';
 
 class ContactAddView extends StatefulWidget {
   const ContactAddView({
@@ -30,21 +31,25 @@ class _ContactAddViewState extends State<ContactAddView> {
 
   List<TabItem> items = [
     TabItem(
-      icon: Icons.perm_contact_cal_outlined,
-      title: 'Contact Detail',
+      icon: FontAwesomeIcons.vcard,
+      title: 'Information',
+    ),
+    TabItem(
+      icon: FontAwesomeIcons.barcode,
+      title: 'Card',
     ),
   ];
 
   int _selectedIndex = 0;
 
-  String page = "Contact Detail";
+  String page = "Information";
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       if (index == 0) {
-        page = "Contact Detail";
+        page = "Information";
       } else if (index == 1) {
-        page = "Other Infomation";
+        page = "Card";
       }
     });
   }
@@ -53,20 +58,20 @@ class _ContactAddViewState extends State<ContactAddView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ContactAddDetail(employee: widget.employee),
-      // bottomNavigationBar: BottomBarDefault(
-      //   items: items,
-      //   iconSize: 18,
-      //   animated: true,
-      //   titleStyle: TextStyle(
-      //           fontFamily: 'Arial',),
-      //   backgroundColor: Colors.white,
-      //   color: Colors.grey.shade400,
-      //   colorSelected: Color(0xFFFF9900),
-      //   indexSelected: _selectedIndex,
-      //   // paddingVertical: 25,
-      //   onTap: _onItemTapped,
-      // ),
+      body: _getContentWidget(),
+      bottomNavigationBar: BottomBarDefault(
+        items: items,
+        iconSize: 18,
+        animated: true,
+        titleStyle: TextStyle(
+                fontFamily: 'Arial',),
+        backgroundColor: Colors.white,
+        color: Colors.grey.shade400,
+        colorSelected: Color(0xFFFF9900),
+        indexSelected: _selectedIndex,
+        // paddingVertical: 25,
+        onTap: _onItemTapped,
+      ),
     );
   }
 
@@ -75,9 +80,9 @@ class _ContactAddViewState extends State<ContactAddView> {
       case 0:
         return ContactAddDetail(employee: widget.employee);
       case 1:
-        return ContactAddOwner();
+        return ContactAddCard(employee: widget.employee);
       default:
-        return Container();
+        return ContactAddDetail(employee: widget.employee);
     }
   }
 

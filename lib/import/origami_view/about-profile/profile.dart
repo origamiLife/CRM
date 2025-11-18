@@ -200,8 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: Color(int.parse(
-                                          '0xFF${profileData.dna_color}')),
+                                      color: hexToColor(profileData.dna_color),
                                       width: 3,
                                     ),
                                   ),
@@ -230,8 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: Color(int.parse(
-                                          '0xFF${profileData.dna_color}')),
+                                      color: hexToColor(profileData.dna_color),
                                       width: 3,
                                     ),
                                   ),

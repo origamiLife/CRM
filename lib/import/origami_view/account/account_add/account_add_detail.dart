@@ -68,39 +68,6 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          InkWell(
-            onTap: () async {
-              if (cus_code != '' &&
-                  cus_type_id != '' &&
-                  cus_type != '' &&
-                  cus_status_id != '' &&
-                  source_id != '' &&
-                  _nameTHController.text.trim() != '' &&
-                  _nameENController.text.trim() != '' &&
-                  _telephoneController.text.trim() != '' &&
-                  _emailController.text.trim() != '') {
-                await _fetchAddAccount();
-              } else {
-                showSnackBar('Please fill in all required information.');
-              }
-            },
-            child: const Row(
-              children: [
-                Text(
-                  'DONE',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(width: 16)
-              ],
-            ),
-          ),
-        ],
       ),
       body: SafeArea(child: _logoInformation()),
     );
@@ -131,7 +98,6 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
           ),
         ),
         SizedBox(height: 8),
-        // _lineWidget(),
         Row(
           children: [
             Expanded(
@@ -191,7 +157,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             ),
           ],
         ),
-        // _lineWidget(),
+        _lineWidget(),
         _textController(
             'Customer Name (TH)', _nameTHController, false, Icons.paste),
         _textController(
@@ -209,7 +175,7 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
             });
           }, hint: '',
         ),
-        // _lineWidget(),
+        _lineWidget(),
         _buildDropdown<SourceAccount>(
           label: 'Source',
           items: sourceList,
@@ -227,24 +193,26 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
         _textController('Email', _emailController, false, Icons.mail),
         _textController(
             'Mobile', _telephoneController, false, Icons.phone_android_rounded),
-        SizedBox(height: 16),
+        SizedBox(height: 8),
+        _buildButton(),
+        SizedBox(height: 8),
       ],
     );
   }
 
   Widget _lineWidget() {
     return Padding(
-      padding: EdgeInsets.only(top: 18, bottom: 18),
+      padding: EdgeInsets.only(top: 8, bottom: 8),
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade50,
+            color: Colors.grey.shade50,
             height: 3,
             width: double.infinity,
           ),
           SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade100,
+            color: Colors.grey.shade100,
             height: 3,
             width: double.infinity,
           ),
@@ -460,6 +428,122 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
     );
   }
 
+  Widget _buildButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(12),
+          backgroundColor: Colors.red,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        ),
+        onPressed: _showCustomDialog,
+        child: Text(
+          'Send',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Create Account',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Please confirm your create account?.',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  if (cus_code != '' &&
+                      cus_type_id != '' &&
+                      cus_type != '' &&
+                      cus_status_id != '' &&
+                      source_id != '' &&
+                      _nameTHController.text.trim() != '' &&
+                      _nameENController.text.trim() != '' &&
+                      _telephoneController.text.trim() != '' &&
+                      _emailController.text.trim() != '') {
+                    await _fetchAddAccount();
+                  } else {
+                    showSnackBar('Please fill in all required information.');
+                  }
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
+  }
+
   String cus_group_id = '';
   String cus_code = '';
   String cus_type_id = '';
@@ -618,10 +702,8 @@ class _AccountAddDetailState extends State<AccountAddDetail> {
       },
     );
     if (response.statusCode == 200) {
-      // final Map<String, dynamic> jsonResponse = json.decode(response.body);
       final jsonResponse = jsonDecode(response.body);
       final message = jsonResponse['message'];
-
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

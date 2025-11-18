@@ -739,14 +739,14 @@ class _NeedRequestState extends State<NeedRequest> {
   List<ApprovelData> ApprovelList = [];
 
   Future<void> fetchApprovel() async {
-    final uri = Uri.parse('$hostWeb/api/origami/need/approval.php');
+    final uri = Uri.parse('$hostDev/api/origami/need/approval.php');
     try {
       final response = await http.post(
         uri,
         headers: {'Authorization': 'Bearer $token'},
         body: {
-          'comp_id': '2',
-          'emp_id': '2',
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
           'Authorization': token,
         },
       );
@@ -774,7 +774,7 @@ class _NeedRequestState extends State<NeedRequest> {
   }
 
   Future<void> fetchApprovelMassage(need_id, approve_flag, comment) async {
-    final uri = Uri.parse('$hostWeb/api/origami/need/approval_manage.php');
+    final uri = Uri.parse('$hostDev/api/origami/need/approval_manage.php');
     try {
       final response = await http.post(
         uri,

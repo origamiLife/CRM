@@ -20,50 +20,67 @@ class ActivityScreen extends StatefulWidget {
 class _ActivityScreenState extends State<ActivityScreen> {
   TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  bool isLoading = true;
+  bool isLoading = false;
   bool isAtEnd = false; // ตัวแปรเก็บค่าเมื่อเลื่อนถึงรายการสุดท้าย
-  List<GetActivity> filteredActivityList = [];
 
   @override
   void initState() {
     super.initState();
-    _loadContacts();
-    _scrollController.addListener(_scrollListener);
-    _searchController.addListener(_filterActivityList);
-    filteredActivityList = List.from(activityList);
-  }
-
-  void _loadContacts() async {
-    if (_isFirstTime) _isFirstTime = false;
-    newActivities = await _fetchModelActivity();
-    // กรอง ID ที่ยังไม่มีใน contactList
-    final existingIds = activityList
-        .map((c) => c.activity_id)
-        .toSet(); // สมมุติว่า c.id คือ cus_cont_id
-    final uniqueNewContacts = newActivities
-        .where((c) => !existingIds.contains(c.activity_id))
-        .toList();
-
-    activityList.addAll(uniqueNewContacts);
-    activityList.sort(
-        (a, b) => b.activity_id.compareTo(a.activity_id)); // ถ้าใช้ DateTime
-    setState(() {
-      // contactList = newContacts;
-      filteredActivityList = activityList; // อัปเดตอันที่กรองด้วย
-      isLoading = false;
-    });
-  }
-
-  void _filterActivityList() {
-    setState(() {
-      String query = _searchController.text.toLowerCase();
-      filteredActivityList = activityList.where((activity) {
-        return activity.activity_project_name?.toLowerCase().contains(query) ??
-            false;
-      }).toList();
-    });
+    // _loadContacts();
     _fetchModelActivity();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 50) {
+        // ถึงท้าย list แล้ว เรียก fetchModelProject()
+        _fetchModelActivity();
+      }
+    });
+    _searchController.addListener(() {
+      final query = _searchController.text.toLowerCase();
+      setState(() {
+        filteredItems = modelAccountList.where((items) {
+          return items.account_name_en.toLowerCase().contains(query) ?? false;
+        }).toList();
+      });
+      _isFirstTime = true;
+      modelAccountList.clear();
+      _fetchModelActivity();
+    });
   }
+
+  // void _loadContacts() async {
+  //   if (_isFirstTime) _isFirstTime = false;
+  //   newActivities = await _fetchModelActivity();
+  //   // กรอง ID ที่ยังไม่มีใน contactList
+  //   final existingIds = activityList
+  //       .map((c) => c.activity_id)
+  //       .toSet(); // สมมุติว่า c.id คือ cus_cont_id
+  //   final uniqueNewContacts = newActivities
+  //       .where((c) => !existingIds.contains(c.activity_id))
+  //       .toList();
+  //
+  //   activityList.addAll(uniqueNewContacts);
+  //   activityList.sort(
+  //       (a, b) => b.activity_id.compareTo(a.activity_id)); // ถ้าใช้ DateTime
+  //   setState(() {
+  //     // contactList = newContacts;
+  //     filteredActivityList = activityList; // อัปเดตอันที่กรองด้วย
+  //     isLoading = false;
+  //   });
+  // }
+
+  // void _filterActivityList() {
+  //   setState(() {
+  //     String query = _searchController.text.toLowerCase();
+  //     filteredActivityList = activityList.where((activity) {
+  //       return activity.activity_project_name?.toLowerCase().contains(query) ??
+  //           false;
+  //     }).toList();
+  //   });
+  //   _isFirstTime = true;
+  //   modelActivityList.clear();
+  //   _fetchModelActivity();
+  // }
 
   @override
   void dispose() {
@@ -101,7 +118,21 @@ class _ActivityScreenState extends State<ActivityScreen> {
             children: [
               _buildSearchField(),
               Expanded(
-                child: _getContentWidget(),
+                child: (filteredItems.isNotEmpty)
+                    ? _getContentWidget()
+                    : const Center(
+                  child: Text(
+                    'No Data Available in table.',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
               ),
             ],
           ),
@@ -171,7 +202,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
   }
 
   Widget _getContentWidget() {
-    if (isLoading) {
+    if (isLoading == false) {
       // แสดง shimmer loading แทน
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 15),
@@ -221,149 +252,117 @@ class _ActivityScreenState extends State<ActivityScreen> {
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: ListView.builder(
-          controller: _scrollController,
-          itemCount: filteredActivityList.length,
-          itemBuilder: (context, index) {
-            filteredActivityList
-                .sort((a, b) => b.activity_id.compareTo(a.activity_id));
-            final activity = filteredActivityList[index];
-            print('activityList.length : ${filteredActivityList.length}');
-            return InkWell(
-              onTap: () {
-                if (activity.activity_join_status == '0') {
-                  _showCustomApproveDialog(activity);
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ActivityEditView(
-                        employee: widget.employee,
-                        activity: activity,
-                        index: index,
-                      ),
-                    ),
-                  ).then((value) {
-                    // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-                    setState(() {
-                      indexItems = 0;
-                      _fetchModelActivity(); // เรียกฟังก์ชันโหลด API ใหม่
-                    });
-                  });
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Stack(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 4, bottom: 4, right: 8),
-                              child: CircleAvatar(
-                                radius: 25,
-                                backgroundColor: Colors.grey,
-                                child: CircleAvatar(
-                                  radius: 24,
-                                  backgroundColor: Colors.white,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Image.network(
-                                      widget.employee.emp_avatar ?? '',
-                                      fit: BoxFit.contain,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Image.network(
-                                          '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
-                                          width: double
-                                              .infinity, // ความกว้างเต็มจอ
-                                          fit: BoxFit.contain,
-                                        );
-                                      },
+      child: Column(
+        children: [
+          Flexible(
+            child: ListView.builder(
+                controller: _scrollController,
+                itemCount: filteredItems.length,
+                itemBuilder: (context, index) {
+                  // filteredItems
+                  //     .sort((a, b) => b.activity_id.compareTo(a.activity_id));
+                  final activity = filteredItems[index];
+                  print('activityList.length : ${filteredItems.length}');
+                  return InkWell(
+                    onTap: () {
+                      if (activity.activity_join_status == '0') {
+                        _showCustomApproveDialog(activity);
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ActivityEditView(
+                              employee: widget.employee,
+                              activity: activity,
+                              index: index,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 4, bottom: 4, right: 8),
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundColor: Colors.grey,
+                                      child: CircleAvatar(
+                                        radius: 24,
+                                        backgroundColor: Colors.white,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(50),
+                                          child: Image.network(
+                                            widget.employee.emp_avatar ?? '',
+                                            fit: BoxFit.contain,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Image.network(
+                                                '$hostDev/uploads/employee/20140715173028man20key.png', // A default placeholder image in case of an error
+                                                width: double
+                                                    .infinity, // ความกว้างเต็มจอ
+                                                fit: BoxFit.contain,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              right: 0,
-                              child: Icon(
-                                Icons.bolt,
-                                color: Colors.amber,
-                                size: 32,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                activity.activity_project_name ?? '',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14,
-                                  color: Color(0xFFFF9900),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              // Text(
-                              //   activity.activity_location ?? '',
-                              //   maxLines: 1,
-                              //   style: TextStyle(
-                              //     fontFamily: 'Arial',
-                              //     fontSize: 12,
-                              //     color: Color(0xFF555555),
-                              //     fontWeight: FontWeight.w500,
-                              //   ),
-                              // ),
-                              // const SizedBox(
-                              //   height: 5,
-                              // ),
-                              Text(
-                                '${widget.employee.emp_name ?? ''} - ${activity.project_name ?? ''}',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                  Positioned(
+                                    right: 0,
+                                    child: Icon(
+                                      Icons.bolt,
+                                      color: Colors.amber,
+                                      size: 32,
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(
-                                height: 5,
+                                width: 10,
                               ),
-                              Text(
-                                '${activity.activity_start_date ?? ''} ${activity.activity_start_time_ ?? ''} - ${activity.activity_end_date ?? ''} ${activity.activity_end_time_ ?? ''}',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Place : ${activity.activity_place_type == 'in' ? 'Indoor' : 'Outdoor'}",
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      activity.activity_project_name ?? '',
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14,
+                                        color: Color(0xFFFF9900),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    // Text(
+                                    //   activity.activity_location ?? '',
+                                    //   maxLines: 1,
+                                    //   style: TextStyle(
+                                    //     fontFamily: 'Arial',
+                                    //     fontSize: 12,
+                                    //     color: Color(0xFF555555),
+                                    //     fontWeight: FontWeight.w500,
+                                    //   ),
+                                    // ),
+                                    // const SizedBox(
+                                    //   height: 5,
+                                    // ),
+                                    Text(
+                                      '${widget.employee.emp_name ?? ''} - ${activity.project_name ?? ''}',
                                       maxLines: 1,
                                       style: TextStyle(
                                         fontFamily: 'Arial',
@@ -372,118 +371,172 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                  ),
-                                  (activity.activity_join_status == '0')
-                                      ? Row(
-                                          children: [
-                                            Container(
-                                              // height: 28,
-                                              padding: const EdgeInsets.only(
-                                                  left: 16,
-                                                  right: 16,
-                                                  top: 2,
-                                                  bottom: 2),
-                                              decoration: BoxDecoration(
-                                                color: Colors.red.shade400,
-                                                border: Border.all(
-                                                  color: Colors.red.shade400,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  'delete',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 12,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 4),
-                                            Container(
-                                              // height: 28,
-                                              padding: const EdgeInsets.only(
-                                                  left: 16,
-                                                  right: 16,
-                                                  top: 2,
-                                                  bottom: 2),
-                                              decoration: BoxDecoration(
-                                                color: Colors.green,
-                                                border: Border.all(
-                                                  color: Colors.green,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  'approve',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 12,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : Container(
-                                          // height: 28,
-                                          padding: const EdgeInsets.only(
-                                              left: 16,
-                                              right: 16,
-                                              top: 2,
-                                              bottom: 2),
-                                          decoration: BoxDecoration(
-                                            color: (activity.activity_status ==
-                                                    'close')
-                                                ? Color(0xFFFF9900)
-                                                : Colors.blue.shade200,
-                                            border: Border.all(
-                                              color:
-                                                  (activity.activity_status ==
-                                                          'close')
-                                                      ? Color(0xFFFF9900)
-                                                      : Colors.blue.shade200,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              (activity.activity_status == '')
-                                                  ? 'plan'
-                                                  : activity.activity_status,
-                                              style: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 12,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w700),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      '${activity.activity_start_date ?? ''} ${activity.activity_start_time_ ?? ''} - ${activity.activity_end_date ?? ''} ${activity.activity_end_time_ ?? ''}',
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            "Place : ${activity.activity_place_type == 'in' ? 'Indoor' : 'Outdoor'}",
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 12,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
                                         ),
-                                ],
+                                        (activity.activity_join_status == '0')
+                                            ? Row(
+                                                children: [
+                                                  Container(
+                                                    // height: 28,
+                                                    padding: const EdgeInsets.only(
+                                                        left: 16,
+                                                        right: 16,
+                                                        top: 2,
+                                                        bottom: 2),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.red.shade400,
+                                                      border: Border.all(
+                                                        color: Colors.red.shade400,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(20),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        'delete',
+                                                        style: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 12,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w700),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 4),
+                                                  Container(
+                                                    // height: 28,
+                                                    padding: const EdgeInsets.only(
+                                                        left: 16,
+                                                        right: 16,
+                                                        top: 2,
+                                                        bottom: 2),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.green,
+                                                      border: Border.all(
+                                                        color: Colors.green,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(20),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        'approve',
+                                                        style: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 12,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w700),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Container(
+                                                // height: 28,
+                                                padding: const EdgeInsets.only(
+                                                    left: 16,
+                                                    right: 16,
+                                                    top: 2,
+                                                    bottom: 2),
+                                                decoration: BoxDecoration(
+                                                  color: (activity.activity_status ==
+                                                          'close')
+                                                      ? Color(0xFFFF9900)
+                                                      : Colors.blue.shade200,
+                                                  border: Border.all(
+                                                    color:
+                                                        (activity.activity_status ==
+                                                                'close')
+                                                            ? Color(0xFFFF9900)
+                                                            : Colors.blue.shade200,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    (activity.activity_status == '')
+                                                        ? 'plan'
+                                                        : activity.activity_status,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 12,
+                                                        color: Colors.white,
+                                                        fontWeight: FontWeight.w700),
+                                                  ),
+                                                ),
+                                              ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Divider(color: Colors.grey.shade300),
+                          ),
+                        ],
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Divider(color: Colors.grey.shade300),
-                    ),
-                  ],
+                  );
+                }),
+          ),
+          if(filteredItems.isNotEmpty)
+          Row(
+            mainAxisAlignment:MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 2, right: 2),
+                child: Text(
+                  '1 - ${filteredItems.length}',
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Colors.black54,
+                    fontSize: 14,
+                  ),
                 ),
               ),
-            );
-          }),
+              IconButton(onPressed: (){
+                indexItems = indexItems + limit;
+                _isFirstTime = true;
+                _fetchModelActivity();
+              }, icon: Icon(Icons.chevron_right)),
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -599,12 +652,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                   ),
                                 ));
                               } else {
-                                final sortedList =
-                                    List<ActivityType>.from(snapshot.data ?? [])
-                                      ..sort((a, b) => a.activity_type_name
-                                          .compareTo(b.activity_type_name));
+                                // final sortedList =
+                                //     List<ActivityType>.from(snapshot.data ?? [])
+                                //       ..sort((a, b) => a.activity_type_name
+                                //           .compareTo(b.activity_type_name));
 
-                                return typeWidget(sortedList);
+                                return typeWidget(snapshot.data!);
                               }
                             }),
                       ),
@@ -715,14 +768,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   listType: activityList,
                 ),
               ),
-            ).then((value) {
-              // เมื่อกลับมาหน้า 1 จะทำงานในส่วนนี้
-              setState(() {
-                indexItems = 0;
-                _fetchModelActivity(); // เรียกฟังก์ชันโหลด API ใหม่
-                Navigator.pop(context);
-              });
-            });
+            );
           },
           child: Card(
             shape:
@@ -763,10 +809,13 @@ class _ActivityScreenState extends State<ActivityScreen> {
   bool _isFirstTime = true;
   int indexItems = 0;
   int sum = 0;
-  List<GetActivity> activityList = [];
+  List<GetActivity> modelAccountList = [];
   List<GetActivity> newActivities = [];
-
-  Future<List<GetActivity>> _fetchModelActivity() async {
+  List<GetActivity> filteredItems = [];
+  int limit = 0;
+  Future<void> _fetchModelActivity() async {
+    print('isAtEnd :;: $isAtEnd');
+    if (isAtEnd) return;
     final uri = Uri.parse("$hostDev/api/origami/crm/activity/get_activity.php");
     try {
       final response = await http.post(
@@ -775,13 +824,16 @@ class _ActivityScreenState extends State<ActivityScreen> {
         body: {
           'comp_id': widget.employee.comp_id,
           'emp_id': widget.employee.emp_id,
+          'index': (_searchController.text != '')?'0':indexItems.toString(),
+          'search':_searchController.text,
         },
       );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> activityJson = jsonResponse['data'] ?? [];
-
+        final status = jsonResponse['status'] ?? '';
+        limit = jsonResponse['count'] ?? 0;
         newActivities = activityJson
             .map((json) => GetActivity.fromJson(json))
             .where((a) => a.activity_del != 'del') // ✅ filter ออก
@@ -789,28 +841,28 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
         setState(() {
           // กรอง id ที่ซ้ำ
-          Set<String> seenIds = activityList.map((e) => e.activity_id).toSet();
+          Set<String> seenIds = modelAccountList.map((e) => e.activity_id).toSet();
           newActivities =
               newActivities.where((a) => seenIds.add(a.activity_id)).toList();
 
-          activityList.addAll(newActivities);
-          activityList.sort((a, b) => b.activity_id.compareTo(a.activity_id));
-          if (_isFirstTime) {
-            filteredActivityList = activityList;
-            _isFirstTime = false; // ป้องกันการรันซ้ำ
+          modelAccountList.addAll(newActivities);
+          // modelAccountList.sort((a, b) => b.activity_id.compareTo(a.activity_id));
+          if(status == 'success'){
+            isLoading = true;
           }
-
-          isAtEnd = false; // โหลดเสร็จแล้ว
+          setState(() {
+            if (_isFirstTime) {
+              filteredItems = List.from(modelAccountList);
+              _isFirstTime = false;
+            }
+          });
         });
-        return newActivities;
-        print("Total activities: ${activityList.length}");
       } else {
         throw Exception(
             'Failed to load data, status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching data: $e');
-      return [];
     }
   }
 

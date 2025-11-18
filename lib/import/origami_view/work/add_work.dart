@@ -228,7 +228,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                   label: 'Work Type',
                                   items: typeList,
                                   selectedValue: selectedType,
-                                  getLabel: (item) => item.leave_type_name_en??'',
+                                  getLabel: (item) =>
+                                      item.leave_type_name_en ?? '',
                                   onChanged: (value) {
                                     setState(() {
                                       selectedType = value;
@@ -312,7 +313,11 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                         _calendarStartDate(context);
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.only(top: 8,bottom: 8,left: 4,right: 4),
+                                        padding: const EdgeInsets.only(
+                                            top: 8,
+                                            bottom: 8,
+                                            left: 4,
+                                            right: 4),
                                         child: Row(
                                           children: [
                                             Icon(
@@ -354,7 +359,11 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
                                         _calendarEndDate(context);
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.only(top: 8,bottom: 8,left: 4,right: 4),
+                                        padding: const EdgeInsets.only(
+                                            top: 8,
+                                            bottom: 8,
+                                            left: 4,
+                                            right: 4),
                                         child: Row(
                                           children: [
                                             Icon(
@@ -715,7 +724,8 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
         print('File Name: $fileName');
         print('File Size: $fileSize');
         print('File Extension: $fileExtension');
-        print('Base64 (ย่อ): ${base64File.substring(0, 50)}...'); // แสดงแค่ 50 ตัวอักษร
+        print(
+            'Base64 (ย่อ): ${base64File.substring(0, 50)}...'); // แสดงแค่ 50 ตัวอักษร
       }
     } else {
       print('ยกเลิกการเลือกไฟล์');
@@ -1216,11 +1226,11 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
     print('_fetchAddWork:::AddWork');
     print('------------------------------------------------------------');
     if (_reasonController.text != '') {
-      statusDialog(
-        'Success',
-        'message',
-        'https://cdn-icons-png.freepik.com/512/5610/5610944.png',
-      );
+      // statusDialog(
+      //   'Success',
+      //   'message',
+      //   'https://cdn-icons-png.freepik.com/512/5610/5610944.png',
+      // );
       _fetchAddWork(requestNoMoney, startTime, endTime);
     }
   }
@@ -1314,21 +1324,13 @@ class _WorkApplyAddState extends State<WorkApplyAdd> {
         if (requestWork.isNotEmpty && selectedType == null) {
           request_name = widget.employee.emp_name;
         }
-        for (int i = 0; i < requestWork.length; i++) {
-          if (widget.employee.emp_id == requestWork[i].approve_emp_id) {
-            is_approve = 'Y';
-            break ;
-          }
-        }
       });
-      print('is_approve:: $is_approve');
     } else {
       throw Exception('Failed to load instructors');
     }
   }
 
   String holiday = '';
-  String is_approve = 'N';
   String leave_request_id = '';
   Future<void> _fetchAddWork(
       String requestNoMoney, String startTime, String endTime) async {

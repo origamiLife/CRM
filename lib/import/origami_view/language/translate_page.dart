@@ -1,9 +1,10 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
+import 'dart:math' as math;
 
 int selectedNoti = 0;
-int notiHour = 0;
+int notiHour = 9;
 int notiMinute = 0;
 
 class TranslatePage extends StatefulWidget {
@@ -197,6 +198,45 @@ class _TranslatePageState extends State<TranslatePage> {
               padding: const EdgeInsets.all(4),
               child: Divider(),
             ),
+
+        //       Stack(
+        //         alignment: Alignment.center,
+        //         children: [
+        //           LoadingAnimationWidget.beat(
+        //             size: 100,
+        //             color: Colors.white24,
+        //           ),
+        //           GestureDetector(
+        //             onTap: () {},
+        //             child: CircleAvatar(
+        //               radius: 50,
+        //               child: Image.asset('assets/images/stamp/stamp_button_in.png'),
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //
+        // CircleAvatar(
+        //         radius: 50,
+        //         backgroundColor: Colors.transparent,
+        //         child: ClipOval(
+        //           child: Opacity(
+        //             opacity: 0.9,
+        //             child: ColorFiltered(
+        //               colorFilter: const ColorFilter.mode(
+        //                 Colors.black54,
+        //                 BlendMode.saturation,
+        //               ),
+        //               child: Image.asset(
+        //                 'assets/images/stamp/stamp_button_in.png',
+        //                 fit: BoxFit.cover,
+        //                 width: 100,
+        //                 height: 100,
+        //               ),
+        //             ),
+        //           ),
+        //         ),
+        //       ),
             // Row(
             //   children: [
             //     Expanded(

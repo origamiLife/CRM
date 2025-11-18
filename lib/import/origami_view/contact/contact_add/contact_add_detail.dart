@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
 
 import '../../account/account_add/account_add_detail.dart';
+import '../../account/account_screen.dart';
 import '../../activity/add/activity_add.dart';
 import '../../need/need_view/need_detail.dart';
 
@@ -71,38 +72,6 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          InkWell(
-            onTap: () async {
-              if (cont_group_id != '' &&
-                  _firstnameController.text.trim() != '' &&
-                  _lastnameController.text.trim() != '' &&
-                  gender_id != '' &&
-                  _emailController.text.trim() != '' &&
-                  _mobileController.text.trim() != '' &&
-                  role_id != '' &&
-                  cont_emo != '') {
-                await _fetchAddContact();
-              } else {
-                showSnackBar('Please fill in all required information.');
-              }
-            },
-            child: const Row(
-              children: [
-                Text(
-                  'DONE',
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(width: 16)
-              ],
-            ),
-          ),
-        ],
       ),
       body: _logoInformation(context),
     );
@@ -127,7 +96,6 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
               ),
             ),
             SizedBox(height: 8),
-            _lineWidget(),
             _buildDropdown<groupnameContact>(
               label: 'Title',
               items: groupnameList,
@@ -187,11 +155,11 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
                 });
               }, hint: '',
             ),
-            _buildDropdown<AccountContact>(
+            _buildDropdown<ModelAccount>(
               label: 'Account',
               items: accountList,
               selectedValue: selectedAccount,
-              getLabel: (item) => item.cus_name_en??'',
+              getLabel: (item) => item.account_name??'',
               onChanged: (value) {
                 setState(() {
                   selectedAccount = value;
@@ -202,7 +170,9 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
             _textController('Email', _emailController, false, Icons.numbers),
             _textController(
                 'Mobile', _mobileController, false, Icons.phone_android_rounded),
-            SizedBox(height: 16),
+            SizedBox(height: 8),
+            _buildButton(),
+            SizedBox(height: 8),
           ],
         ),
       ),
@@ -215,13 +185,13 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
       child: Column(
         children: [
           Container(
-            color: Colors.orange.shade50,
+            color: Colors.grey.shade50,
             height: 3,
             width: double.infinity,
           ),
           SizedBox(height: 1),
           Container(
-            color: Colors.orange.shade100,
+            color: Colors.grey.shade100,
             height: 3,
             width: double.infinity,
           ),
@@ -445,6 +415,119 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
     );
   }
 
+  Widget _buildButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(12),
+          backgroundColor: Colors.red,
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        ),
+        onPressed: _showCustomDialog,
+        child: Text(
+          'Send',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCustomDialog() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Add Contact',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 22,
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Text(
+            'Please confirm your create contact?.',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              color: Color(0xFF555555),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.35,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade400,
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  if (cont_group_id != '' &&
+                      _firstnameController.text.trim() != '' &&
+                      _lastnameController.text.trim() != '' &&
+                      gender_id != '' &&
+                      role_id != '' &&
+                      cont_emo != '') {
+                    await _fetchAddContact();
+                  } else {
+                    showSnackBar('Please fill in all required information.');
+                  }
+                },
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            // Confirm Button
+          ],
+        );
+      },
+    );
+  }
+
   DateTime _selectedDateEnd = DateTime.now();
   String startDate = '';
   String endDate = '';
@@ -468,36 +551,47 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
   }
 
 
-  AccountContact? selectedAccount;
-  List<AccountContact> accountList = [];
+  ModelAccount? selectedAccount;
+  List<ModelAccount> accountList = [];
   String account_id = '';
   String account_name = '';
   Future<void> _fetchAccount() async {
-    final uri =
-    Uri.parse("$hostDev/api/origami/crm/contact/component/account.php");
-    final response = await http.post(
-      uri,
-      headers: {'Authorization': 'Bearer $token'},
-      body: {
-        'comp_id': widget.employee.comp_id,
-        'emp_id': widget.employee.emp_id,
-      },
-    );
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> dataJson = jsonResponse['data'] ?? [];
-      setState(() {
-        accountList =
-            dataJson.map((json) => AccountContact.fromJson(json)).toList();
-        if (accountList.isNotEmpty && selectedAccount == null) {
-          selectedAccount = accountList[0];
-          account_id = selectedAccount?.cus_id??'';
-          account_name = selectedAccount?.cus_name_en??'';
-          print('print account_name $account_name');
-        }
-      });
-    } else {
-      throw Exception('Failed to load instructors');
+    try {
+      final uri =
+      Uri.parse("$hostDev/api/origami/crm/account/list-account.php");
+      final response = await http.post(
+        uri,
+        headers: {'Authorization': 'Bearer $tokenMD5'},
+        body: {
+          'comp_id': widget.employee.comp_id,
+          'emp_id': widget.employee.emp_id,
+          'index': '0',
+          'search': dropdownSearchController.text,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final List<dynamic> dataJson = jsonResponse['account_data'] ?? [];
+        bool status = jsonResponse['status'];
+        setState(() {
+          accountList =
+              dataJson.map((json) => ModelAccount.fromJson(json)).toList();
+          if (accountList.isNotEmpty && selectedAccount == null) {
+            selectedAccount = accountList[0];
+            account_id = selectedAccount?.cus_id??'';
+            account_name = selectedAccount?.account_name??'';
+            print('print account_name $account_name');
+          }
+        });
+      } else {
+        throw Exception(
+            'Failed to load data, status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    } finally {
+      // _isLoading = false;
     }
   }
 
@@ -509,7 +603,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/gender.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -539,7 +633,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/group_name.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -568,7 +662,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/emotion.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -598,7 +692,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
         Uri.parse("$hostDev/api/origami/crm/contact/component/role.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
       },
@@ -625,7 +719,7 @@ class _ContactAddDetailState extends State<ContactAddDetail> {
     final uri = Uri.parse("$hostDev/api/origami/crm/contact/add_contact.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,

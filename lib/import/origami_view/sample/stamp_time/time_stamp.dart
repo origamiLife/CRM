@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'dart:math' show cos, sqrt, asin;
+import 'dart:math' as math;
 // import 'package:location/location.dart';
 import 'package:origamilift/import/import.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
@@ -12,16 +13,16 @@ class TimeSample extends StatefulWidget {
   const TimeSample({
     super.key,
     required this.employee,
-    this.timeStampSim,
     required this.fetchBranchCallback,
     required this.branch_name,
-    required this.branch_id,
+    required this.isbranch_id,
+    this.TStamp,
   });
   final Employee employee;
-  final GetTimeStampSim? timeStampSim;
   final Future<void> Function() fetchBranchCallback;
   final String branch_name;
-  final String branch_id;
+  final bool isbranch_id;
+  final GetTimeStampSim? TStamp;
 
   @override
   _TimeSampleState createState() => _TimeSampleState();
@@ -33,7 +34,7 @@ class _TimeSampleState extends State<TimeSample> {
   Color fillColor = Color.fromRGBO(128, 255, 0, 0).withOpacity(0.2);
   Color strokeColor = Color.fromRGBO(0, 185, 0, 1);
   LatLng? _tappedLocation; // ตัวแปรเก็บตำแหน่งที่ผู้ใช้แตะบนแผนที่
-  late GoogleMapController _mapController;
+  GoogleMapController? _mapController;
   // late Location _location;
   // LocationData? _userLocation;
   DateTime _currentTime = DateTime.now();
@@ -44,11 +45,18 @@ class _TimeSampleState extends State<TimeSample> {
   String longitude = '';
   double distanceT = 0;
   double radiusT = 0;
-  bool isFirst = false;
+  bool isbranch_id = false;
+  String branchId = '';
+
 
   @override
   void initState() {
     super.initState();
+    isbranch_id = widget.isbranch_id;
+    print('initState -> isbranch_id :: $isbranch_id');
+    fetchBranch();
+    _mounted = true;
+    requestLocationPermission();
     _platform();
     // ✅ ให้รอ build เสร็จแล้วค่อยเช็ก location
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -63,6 +71,24 @@ class _TimeSampleState extends State<TimeSample> {
         });
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant TimeSample oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // ถ้าพิกัดเปลี่ยน
+    if (widget.TStamp?.branch_lat != oldWidget.TStamp?.branch_lat ||
+        widget.TStamp?.branch_lng != oldWidget.TStamp?.branch_lng) {
+      final double newLat =
+          double.tryParse(widget.TStamp?.branch_lat ?? '') ?? 0;
+      final double newLng =
+          double.tryParse(widget.TStamp?.branch_lng ?? '') ?? 0;
+
+      if (newLat != 0 && newLng != 0) {
+        _moveCameraTo(LatLng(newLat, newLng));
+      }
+    }
   }
 
   bool isGps = false;
@@ -96,7 +122,8 @@ class _TimeSampleState extends State<TimeSample> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Please enable location permissions in the app settings.')),
+              content: Text(
+                  'Please enable location permissions in the app settings.')),
         );
       }
       // ❗ไม่ควรเปิด app settings ทันทีตอน init
@@ -140,7 +167,9 @@ class _TimeSampleState extends State<TimeSample> {
       // 🔹 เปิดหน้า App Settings เพื่อให้ผู้ใช้เปิดสิทธิ์เอง
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enable location permissions in the app settings.')),
+          const SnackBar(
+              content: Text(
+                  'Please enable location permissions in the app settings.')),
         );
       }
       await Geolocator.openAppSettings();
@@ -169,21 +198,8 @@ class _TimeSampleState extends State<TimeSample> {
   @override
   void dispose() {
     _mounted = false;
-    _positionStream?.cancel(); // ✅ หยุดฟังเมื่อปิด widget
+    _positionStream?.cancel();
     super.dispose();
-  }
-
-  Future<void> _createCustomMarker() async {
-    setState(() {
-      _markers.add(
-        Marker(
-          markerId: MarkerId('target_marker'),
-          position: LatLng(double.parse(widget.timeStampSim?.branch_lat ?? ''),
-              double.parse(widget.timeStampSim?.branch_lng ?? '')),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        ),
-      );
-    });
   }
 
   StreamSubscription<Position>? _positionStream;
@@ -196,27 +212,25 @@ class _TimeSampleState extends State<TimeSample> {
           distanceFilter: 10,
         ),
       ).listen((Position position) {
-        if (_mounted) {
-          setState(() {
-            userPosition = position;
-            _checkUserInRadius(); // เรียกฟังก์ชันของคุณเอง
-          });
-        }
+        if (!_mounted) return;
+
+        setState(() {
+          userPosition = position;
+        });
+
+        _checkUserInRadius();
       });
     } else {
-      // print("Permission denied");
+      print("Permission denied");
     }
   }
 
   Future<void> _checkUserInRadius() async {
-    if (userPosition == null || widget.timeStampSim  == null) return;
+    if (userPosition == null) return;
 
-    final double branchLat =
-        double.tryParse(widget.timeStampSim!.branch_lat) ?? 0.0;
-    final double branchLng =
-        double.tryParse(widget.timeStampSim!.branch_lng) ?? 0.0;
-    final double radius =
-        double.tryParse(widget.timeStampSim!.branch_radius) ?? 0.0;
+    final double branchLat = double.tryParse(branch_lat ?? '') ?? 0.0;
+    final double branchLng = double.tryParse(branch_lng ?? '') ?? 0.0;
+    final double radius = double.tryParse(branch_radius ?? '') ?? 0.0;
 
     final double userLat = userPosition!.latitude;
     final double userLng = userPosition!.longitude;
@@ -225,30 +239,42 @@ class _TimeSampleState extends State<TimeSample> {
 
     final bool isInsideRadius = distance <= radius;
 
+    if (!_mounted) return;
+
     setState(() {
       distanceT = distance;
       radiusT = radius;
       _checkInOut = isInsideRadius;
-
-      // สีเขียว = อยู่ในรัศมี | สีแดง = อยู่นอกรัศมี
-      fillColor = isInsideRadius
-          ? Color.fromRGBO(128, 255, 0, 0).withOpacity(0.3)
-          : Colors.red.withOpacity(0.2);
-
-      strokeColor = isInsideRadius ? Color.fromRGBO(0, 185, 0, 1) : Colors.red;
+      fillColor = const Color.fromRGBO(128, 255, 0, 0).withOpacity(0.3);
+      strokeColor = const Color.fromRGBO(0, 185, 0, 1);
+      // fillColor = isInsideRadius
+      //     ? const Color.fromRGBO(128, 255, 0, 0).withOpacity(0.2)
+      //     : const Color.fromRGBO(255, 0, 0, 0.2);
+      //
+      // strokeColor = isInsideRadius
+      //     ? const Color.fromRGBO(128, 255, 0, 0).withOpacity(1)
+      //     : const Color.fromRGBO(255, 0, 0, 0.5);
     });
-    _createCustomMarker();
+
+    // ✅ กล้องเลื่อนไปหาผู้ใช้ทุกครั้งที่ตำแหน่งเปลี่ยน
+    await _moveCameraTo(LatLng(userLat, userLng));
   }
 
   double _calculateDistance(
       double lat1, double lon1, double lat2, double lon2) {
-    const double earthRadius = 6371000; // รัศมีโลกในหน่วยเมตร
-    final double dLat = (lat2 - lat1) * (pi / 180);
-    final double dLon = (lon2 - lon1) * (pi / 180);
-    final double a = 0.5 -
-        cos(dLat) / 2 +
-        cos(lat1 * (pi / 180)) * cos(lat2 * (pi / 180)) * (1 - cos(dLon)) / 2;
-    return earthRadius * 2 * asin(sqrt(a));
+    const double R = 6371000; // รัศมีโลก (เมตร)
+    final double dLat = (lat2 - lat1) * pi / 180.0;
+    final double dLon = (lon2 - lon1) * pi / 180.0;
+
+    final double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1 * pi / 180.0) *
+            cos(lat2 * pi / 180.0) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    final double distance = R * c;
+    return distance;
   }
 
   void _platform() {
@@ -261,9 +287,31 @@ class _TimeSampleState extends State<TimeSample> {
     }
   }
 
+  void ifElseWidget() {
+    if (widget.TStamp?.branch_lat != null ||
+        widget.TStamp?.branch_lng != null ||
+        widget.TStamp?.branch_lat != '' ||
+        widget.TStamp?.branch_lng != '') {
+      branch_lat = widget.TStamp?.branch_lat ?? '';
+      branch_lng = widget.TStamp?.branch_lng ?? '';
+      branch_radius = widget.TStamp?.branch_radius ?? '';
+    }
+    if (widget.TStamp?.stamp_in != null ||
+        widget.TStamp?.stamp_out != null ||
+        widget.TStamp?.stamp_in != '' ||
+        widget.TStamp?.stamp_out != '') {
+      checkStampIn = widget.TStamp?.stamp_in ?? '';
+      checkStampOut = widget.TStamp?.stamp_out ?? '';
+    }
+  }
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    if (widget.TStamp != null) {
+      ifElseWidget();
+    }
+    // ifElseWidget();
     final TN =
         "${_currentTime.hour.toString().padLeft(2, '0')}:${_currentTime.minute.toString().padLeft(2, '0')}:${_currentTime.second.toString().padLeft(2, '0')}";
     return GestureDetector(
@@ -274,42 +322,41 @@ class _TimeSampleState extends State<TimeSample> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Color(0xFFFF9900),
-        body: FutureBuilder<GetTimeStampSim>(
-          future: fetchGetTimeStampSim(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Text(
-                    'Loading...',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ));
-              // Text('Error: ${snapshot.error}');
-            } else {
-              return _getContentWidget(snapshot.data!, TN);
-            }
-          },
-        ),
+        body: _getContentData(TN),
       ),
     );
   }
 
-  Widget _getContentWidget(GetTimeStampSim branch, String tn) {
+  Widget _getContentData(String tn) {
+    if (isbranch_id == false) {
+      return const Center(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            color: Colors.white,
+          ),
+          SizedBox(
+            width: 12,
+          ),
+          Text(
+            'Loading...',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ));
+      // Text('Error: ${snapshot.error}');
+    } else {
+      return _getContentWidget(tn);
+    }
+  }
+
+  Widget _getContentWidget(String tn) {
     return SafeArea(
       child: Column(
         children: [
@@ -321,23 +368,22 @@ class _TimeSampleState extends State<TimeSample> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _buildTimeWidget(tn),
-                  const SizedBox(height: 10),
-                  _buildLocationInfo(branch),
-                  const SizedBox(height: 16),
-                  _buildInOutTime(branch),
+                  const SizedBox(height: 14),
+                  _buildLocationInfo(),
+                  const SizedBox(height: 20),
+                  _buildInOutTime(),
                 ],
               ),
             ),
           ),
           Expanded(
               flex: 3,
-              child: (isLocationPermissionGranted == false ||
-                      (branchLat == null || branchLng == null))
+              child: (branch_lat == '' || branch_lng == '')
                   ? _buildGoogleMapNone()
-                  : _buildGoogleMap(branch)),
+                  : _buildGoogleMap()),
           Expanded(
             flex: 2,
-            child: _buildStampButtons(branch),
+            child: _buildStampButtons(),
           ),
         ],
       ),
@@ -359,41 +405,46 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
-  Widget _buildGoogleMap(GetTimeStampSim branch) {
+  Widget _buildGoogleMap() {
+    final double lat = double.tryParse(branch_lat) ?? 13.736717;
+    final double lng = double.tryParse(branch_lng) ?? 100.523186;
+    final LatLng currentCenter = _tappedLocation ?? LatLng(lat, lng);
+
     return GoogleMap(
-      onMapCreated: (controller) => _mapController = controller,
-      markers: _tappedLocation == null
-          ? {
-              Marker(
-                markerId: MarkerId('tapped'),
-                position: LatLng(double.parse(branch.branch_lat),
-                    double.parse(branch.branch_lng)),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueRed),
-              ),
-            }
-          : {
-              Marker(
-                markerId: MarkerId('tapped'), // สร้าง Marker ID
-                position: _tappedLocation!, // แสดง marker ที่ตำแหน่งที่แตะ
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueRed),
-              ),
-            },
+      onMapCreated: _onMapCreated,
       initialCameraPosition: CameraPosition(
-          target: LatLng(
-            double.parse(branch.branch_lat),
-            double.parse(branch.branch_lng),
-          ),
-          zoom: 18),
+        target: LatLng(lat, lng),
+        zoom: 18,
+      ),
+      markers: {
+        Marker(
+          markerId: const MarkerId('branch'),
+          position: currentCenter,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        ),
+      },
+      // markers: {
+      //   Marker(
+      //     markerId: const MarkerId('branch'),
+      //     position: LatLng(lat, lng),
+      //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      //   ),
+      //   if (userPosition != null)
+      //     Marker(
+      //       markerId: const MarkerId('user'),
+      //       position: LatLng(userPosition!.latitude, userPosition!.longitude),
+      //       icon: BitmapDescriptor.defaultMarkerWithHue(
+      //         _checkInOut
+      //             ? BitmapDescriptor.hueGreen // อยู่ในรัศมี
+      //             : BitmapDescriptor.hueRed,   // อยู่นอกรัศมี
+      //       ),
+      //     ),
+      // },
       circles: {
         Circle(
           circleId: const CircleId('radius_circle'),
-          center: LatLng(
-            double.parse(branch.branch_lat),
-            double.parse(branch.branch_lng),
-          ),
-          radius: double.tryParse(branch.branch_radius) ?? 100,
+          center: LatLng(lat, lng),
+          radius: double.tryParse(branch_radius) ?? 100,
           fillColor: fillColor,
           strokeColor: strokeColor,
           strokeWidth: 2,
@@ -408,28 +459,50 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+  }
+
+  Future<void> _moveCameraTo(LatLng target) async {
+    if (_mapController == null) return;
+    await _mapController!.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: target, zoom: 18),
+      ),
+    );
+  }
+
+  void _onMapTapped(LatLng position) {
+    setState(() {
+      _tappedLocation = position;
+      print(
+          '${_tappedLocation?.latitude ?? ''} ,${_tappedLocation?.longitude ?? ''}');
+    });
+    _moveCameraTo(position);
+  }
+
   Widget _buildTimeWidget(String timeNow) {
     return Text(
       timeNow,
       style: const TextStyle(
         fontFamily: 'Arial',
-        fontSize: 60,
+        fontSize: 70,
         color: Colors.white,
         fontWeight: FontWeight.w500,
       ),
     );
   }
 
-  Widget _buildLocationInfo(GetTimeStampSim b) {
+  Widget _buildLocationInfo() {
     return Row(
       children: [
         const Icon(Icons.location_on, color: Colors.white),
         const SizedBox(width: 4),
         Text(
-          "$compDescription (${b.branch_name})",
+          "$compDescription (${(widget.branch_name != '') ? widget.TStamp?.branch_name ?? '' : branch_name})",
           style: const TextStyle(
             fontFamily: 'Arial',
-            fontSize: 14,
+            fontSize: 16,
             color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
@@ -438,15 +511,15 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
-  Widget _buildInOutTime(GetTimeStampSim b) {
+  Widget _buildInOutTime() {
     return Row(
       children: [
         const Expanded(
           child: Text(
-            'Input : ',
+            'In : ',
             style: TextStyle(
               fontFamily: 'Arial',
-              fontSize: 14,
+              fontSize: 16,
               color: Colors.white,
               fontWeight: FontWeight.w700,
             ),
@@ -454,9 +527,7 @@ class _TimeSampleState extends State<TimeSample> {
         ),
         Expanded(
           child: Text(
-            (checkStampIn != '')
-                ? formatTime(checkStampIn)
-                : formatTime(b.stamp_in),
+            formatTime(checkStampIn),
             style: const TextStyle(
               fontFamily: 'Arial',
               fontSize: 14,
@@ -467,7 +538,7 @@ class _TimeSampleState extends State<TimeSample> {
         ),
         const Expanded(
           child: Text(
-            'Output : ',
+            'Out : ',
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 14,
@@ -478,9 +549,7 @@ class _TimeSampleState extends State<TimeSample> {
         ),
         Expanded(
           child: Text(
-            (checkStampOut != '')
-                ? formatTime(checkStampOut)
-                : formatTime(b.stamp_out),
+            formatTime(checkStampOut),
             style: const TextStyle(
               fontFamily: 'Arial',
               fontSize: 14,
@@ -493,30 +562,50 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
-  Widget _buildStampButtons(GetTimeStampSim b) {
-    final isStampedIn = (b.stamp_in ?? '').isNotEmpty;
-    final isStampedOut = (b.stamp_out ?? '').isNotEmpty;
-
+  Widget _buildStampButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            LoadingAnimationWidget.beat(
-              size: 100,
-              color: Colors.white24,
-            ),
-            GestureDetector(
-              onTap: () => _pickImage(ImageSource.camera, b),
-              child: CircleAvatar(
-                radius: 50,
-                child: Image.asset('assets/images/stamp/stamp_button_in.png'),
+        if (checkStampIn == '')
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              LoadingAnimationWidget.beat(
+                size: 100,
+                color: Colors.white24,
+              ),
+              GestureDetector(
+                onTap: () => _pickImage(ImageSource.camera),
+                child: CircleAvatar(
+                  radius: 50,
+                  child: Image.asset('assets/images/stamp/stamp_button_in.png'),
+                ),
+              ),
+            ],
+          )
+        else
+          CircleAvatar(
+            radius: 50,
+            backgroundColor: Colors.transparent,
+            child: ClipOval(
+              child: Opacity(
+                opacity: 0.9,
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Colors.black54,
+                    BlendMode.saturation,
+                  ),
+                  child: Image.asset(
+                    'assets/images/stamp/stamp_button_in.png',
+                    fit: BoxFit.cover,
+                    width: 100,
+                    height: 100,
+                  ),
+                ),
               ),
             ),
-          ],
-        ),
-        if (!isStampedOut)
+          ),
+        if (checkStampOut == '')
           Stack(
             alignment: Alignment.center,
             children: [
@@ -526,7 +615,7 @@ class _TimeSampleState extends State<TimeSample> {
                 color: Colors.white24,
               ),
               GestureDetector(
-                onTap: () => _pickImage(ImageSource.camera, b),
+                onTap: () => _pickImage(ImageSource.camera),
                 child: CircleAvatar(
                   radius: 50,
                   child:
@@ -541,8 +630,6 @@ class _TimeSampleState extends State<TimeSample> {
             backgroundImage:
                 AssetImage('assets/images/stamp/stamp_button_disable.png'),
           ),
-
-
       ],
     );
   }
@@ -557,7 +644,7 @@ class _TimeSampleState extends State<TimeSample> {
   }
 
   bool _isStamping = false;
-  Future<void> _pickImage(ImageSource source, GetTimeStampSim b) async {
+  Future<void> _pickImage(ImageSource source) async {
     await _checkUserInRadius();
     if (_isStamping) return;
     _isStamping = true;
@@ -572,7 +659,7 @@ class _TimeSampleState extends State<TimeSample> {
       }
 
       // ✅ 2. ตรวจสอบเงื่อนไข CheckIn/Out
-      if (_checkInOut == true || b.branch_fixed == 'N') {
+      if (_checkInOut == true || widget.TStamp?.branch_fixed == 'N') {
         // ✅ 3. เปิดกล้องหลังจากผ่านทุกการตรวจสอบแล้ว
         final XFile? image = await _picker.pickImage(source: source);
         if (image == null) return;
@@ -580,34 +667,36 @@ class _TimeSampleState extends State<TimeSample> {
         final file = File(image.path);
         final imageBytes = await file.readAsBytes();
         final base64String = base64Encode(imageBytes);
+        print('image :: ${image}');
+        print('file :: ${file}');
+        print('imageBytes :: ${imageBytes}');
 
         // ✅ 4. อัปเดตข้อมูลใน state
         setState(() {
           _base64Image = base64String;
           latitude = '${userPosition?.latitude}';
           longitude = '${userPosition?.longitude}';
-          stamp_type = (b.stamp_in == '') ? 'in' : 'out';
+          stamp_type = (widget.TStamp?.stamp_in == '') ? 'in' : 'out';
         });
 
         await widget.fetchBranchCallback();
 
         // ✅ 5. Log ข้อมูลดีบัก
         print('Stamp Type: $stamp_type');
-        print('Branch ID: ${widget.timeStampSim?.branch_id}');
+        print('Branch ID: ${widget.TStamp?.branch_id}');
         print('Latitude: $latitude');
         print('Longitude: $longitude');
-        print('Platform: $platform');
         print('Base64 Image: $_base64Image');
+        print('Platform: $platform');
 
         // ✅ 6. ทำงานหลัก (เข้า ABC)
+        isbranch_id = false;
         _fetchStamp();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text(
-                  'You are outside the specified radius area and cannot stamp.')),
-        );
-        // _showOutOfAreaMessage("You are outside the specified radius area and cannot stamp.");
+        statusDialog(
+            'Radius',
+            'You are outside the specified radius area and cannot stamp.',
+            'https://cdn-icons-png.freepik.com/512/5610/5610967.png');
       }
     } catch (e) {
       print('Error picking image: $e');
@@ -619,39 +708,48 @@ class _TimeSampleState extends State<TimeSample> {
   final ImagePicker _picker = ImagePicker();
   String _base64Image = '';
   String stamp_type = 'out';
+  String branch_name = '';
+  String branch_radius = '';
+  String branch_lat = '';
+  String branch_lng = '';
   double? branchLat;
   double? branchLng;
   String compDescription = '';
-  Future<GetTimeStampSim> fetchGetTimeStampSim() async {
-    final uri = Uri.parse("$hostDev/api/origami/time/branch.php");
+  List<GetTimeStampSim> _branches = [];
+  Future<void> fetchBranch() async {
+    final uri = Uri.parse("$hostDev/api/origami/time/default.php");
     final response = await http.post(
       uri,
       headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,
-        'branch_id': (isFirst == false)
-            ? widget.branch_id
-            : widget.timeStampSim?.branch_id ?? '2',
       },
     );
-
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      final branchData = jsonResponse['branch_data'];
-
-      compDescription = jsonResponse['comp_description'] ?? '';
-
-      branchLat ??= double.tryParse(branchData['branch_lat'].toString());
-      branchLng ??= double.tryParse(branchData['branch_lng'].toString());
-      // _mapController.animateCamera(
-      //   CameraUpdate.newLatLng(LatLng(double.parse(branchData['branch_lat'].toString() ?? ''),
-      //       double.parse(branchData['branch_lng'].toString() ?? ''))),
-      // );
-      isFirst = true;
-      return GetTimeStampSim.fromJson(branchData);
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> dataJson = jsonResponse['branch_data'] ?? [];
+      // ✅ สร้าง List ของ object ก่อนใช้งาน
+      _branches =
+          dataJson.map((json) => GetTimeStampSim.fromJson(json)).toList();
+      // ✅ ใช้ key แทน dot
+      for (int i = 0; i < _branches.length; i++) {
+        if (_branches[i].branch_default == '1') {
+          compDescription = jsonResponse['comp_description'] ?? '';
+          branchId = _branches[i].branch_id;
+          checkStampIn = _branches[i].stamp_in;
+          checkStampOut = _branches[i].stamp_out;
+          branch_lat = _branches[i].branch_lat;
+          branch_lng = _branches[i].branch_lng;
+          branch_name = _branches[i].branch_name;
+          branch_radius = _branches[i].branch_radius;
+          isbranch_id = true;
+          _mounted = true;
+          break;
+        }
+      }
     } else {
-      throw Exception('Failed to load branch data');
+      throw Exception('Failed to load contacts');
     }
   }
 
@@ -659,37 +757,46 @@ class _TimeSampleState extends State<TimeSample> {
   String checkStampOut = '';
 
   Future<void> _fetchStamp() async {
-    try {
-      final response = await http.post(
-        Uri.parse('$hostDev/api/origami/time/stamp.php'),
-        headers: {'Authorization': 'Bearer $tokenMD5'},
-        body: {
-          'comp_id': widget.employee.comp_id,
-          'emp_id': widget.employee.emp_id,
-          'stamp_type': stamp_type, //in,out
-          //________________________activity_id_______________________//
-          'activity_id': '0',
-          //________________________branch_id_______________________//
-          'branch_id': widget.timeStampSim?.branch_id ?? '2',
-          'latitude': latitude,
-          'longitude': longitude,
-          'device': platform,
-          'photo': _base64Image,
-        },
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        setState(() {
-          checkStampIn = jsonResponse['stamp_in'];
-          checkStampOut = jsonResponse['stamp_out'];
-        });
+    final response = await http.post(
+      Uri.parse('$hostDev/api/origami/time/stamp.php'),
+      headers: {'Authorization': 'Bearer $tokenMD5'},
+      body: {
+        'comp_id': widget.employee.comp_id,
+        'emp_id': widget.employee.emp_id,
+        'stamp_type': stamp_type, //in,out
+        //________________________activity_id_______________________//
+        'activity_id': '0',
+        //________________________branch_id_______________________//
+        'branch_id': widget.TStamp?.branch_id??'2',
+        'latitude': latitude,
+        'longitude': longitude,
+        'device': platform,
+        'photo': _base64Image,
+      },
+    );
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final datajson = jsonResponse['data'];
+      final stamp = GetTimeStampSim.fromJson(datajson);
+      checkStampIn = stamp.stamp_in;
+      checkStampOut = stamp.stamp_out;
+      statusDialog('Success', jsonResponse['message'],
+          'https://cdn-icons-png.freepik.com/512/5610/5610944.png');
 
-        showStampSnackBar(jsonResponse['message']);
-      } else {
-        throw Exception('Failed to load status data');
-      }
-    } catch (e) {
-      throw Exception('Failed to load personal data: $e');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OrigamiPage(
+            employee: widget.employee,
+            popPage: 5,
+          ),
+        ),
+      );
+      // fetchBranch();
+      print('fetchStamp -> isbranch_id :: $isbranch_id');
+      print('fetchStamp -> message :: ${jsonResponse['message']}');
+    } else {
+      throw Exception('Failed to load status data');
     }
   }
 
@@ -726,38 +833,99 @@ class _TimeSampleState extends State<TimeSample> {
     );
   }
 
-  void _showOutOfAreaMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: Duration(seconds: 2),
-        content: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
+  void statusDialog(title, message, String img) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // ป้องกันการกดนอกกรอบเพื่อปิด
+      builder: (BuildContext context) {
+        // ตั้งเวลาให้ปิดอัตโนมัติภายใน 2 วินาที
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+        });
+
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Column(
+            children: [
+              Image.network(
+                img,
+                height: 150,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.network(
+                    'https://cdn-icons-png.freepik.com/512/5610/5610944.png',
+                    height: 150,
+                    fit: BoxFit.contain,
+                  );
+                },
               ),
-              child: Icon(Icons.clear, color: Colors.red, size: 20),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(left: 14),
-                child: Text(
-                  message,
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+              SizedBox(height: 16),
+              Text(
+                title,
+                style: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 28,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 18,
+              color: Colors.black87,
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
+
+  // Future<void> _fetchGetTimeStampSim(String branch_id) async {
+  //   print('TStamp?.branch_id ${branch_id}');
+  //   final uri = Uri.parse("$hostDev/api/origami/time/branch.php");
+  //   final response = await http.post(
+  //     uri,
+  //     headers: {'Authorization': 'Bearer $tokenMD5'},
+  //     body: {
+  //       'comp_id': widget.employee.comp_id,
+  //       'emp_id': widget.employee.emp_id,
+  //       'branch_id': branch_id,
+  //     },
+  //   );
+  //
+  //   if (response.statusCode == 200) {
+  //     final jsonResponse = json.decode(response.body);
+  //     final status = jsonResponse['status'] ?? false;
+  //     final branchData = jsonResponse['branch_data'];
+  //     final StampSim = GetTimeStampSim.fromJson(branchData);
+  //     if (status == true) {
+  //       compDescription = jsonResponse['comp_description'] ?? '';
+  //       // setState(() {
+  //       // checkStampIn = StampSim.stamp_in ?? '-';
+  //       // checkStampOut = StampSim.stamp_out ?? '-';
+  //       // branch_name = StampSim.branch_name;
+  //       // branch_radius = StampSim.branch_radius;
+  //       // branch_lat = StampSim.branch_lat;
+  //       // branch_lng = StampSim.branch_lng;
+  //       // isbranch_id = true;
+  //       // });
+  //
+  //       print('fetchGetTimeStampSim -> isbranch_id :: $isbranch_id');
+  //     }
+  //   } else {
+  //     print('response.statusCode = ${response.statusCode}');
+  //     print('response.body = ${response.body}');
+  //     throw Exception('Failed to load branch data');
+  //   }
+  // }
 }
 
 class GetTimeStampSim {
@@ -789,7 +957,7 @@ class GetTimeStampSim {
       branch_lat: json['branch_lat'] ?? '',
       branch_lng: json['branch_lng'] ?? '',
       branch_name: json['branch_name'] ?? '',
-      branch_radius: json['branch_radius'] ?? '',
+      branch_radius: json['branch_radius'].toString() ?? '',
       branch_fixed: json['branch_fixed'] ?? '',
       branch_default: json['branch_default'] ?? '',
       stamp_in: json['stamp_in'] ?? '',

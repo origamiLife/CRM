@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:origamilift/import/import.dart';
-import 'package:origamilift/import/origami_view/work/quote_work.dart';
+import 'package:origamilift/import/origami_view/work/quota_work.dart';
 import 'package:origamilift/import/origami_view/work/add_work.dart';
 import 'package:origamilift/import/origami_view/work/history_work.dart';
 import 'package:origamilift/import/origami_view/work/request_work.dart';
@@ -51,8 +51,8 @@ class _WorkPageState extends State<WorkPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Image.network(
-                              'https://cdn-icons-png.flaticon.com/512/2956/2956966.png',
+                            Image.asset(
+                              'assets/images/file_image.png',
                               height: 30,
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) =>
@@ -80,8 +80,8 @@ class _WorkPageState extends State<WorkPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Image.network(
-                                'https://cdn-icons-png.flaticon.com/512/9737/9737677.png',
+                              Image.asset(
+                                'assets/images/img_request.png',
                                 height: 30,
                                 fit: BoxFit.contain,
                                 errorBuilder: (context, error, stackTrace) =>
@@ -108,8 +108,8 @@ class _WorkPageState extends State<WorkPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Image.network(
-                              'https://cdn-icons-png.flaticon.com/512/5807/5807936.png',
+                            Image.asset(
+                              'assets/images/img_quota.png',
                               height: 30,
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) =>
@@ -118,7 +118,7 @@ class _WorkPageState extends State<WorkPage> {
                             const SizedBox(height: 2),
                             const Expanded(
                               child: Text(
-                                'Work Quote',
+                                'Work Quota',
                                 style: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 12,
@@ -140,7 +140,7 @@ class _WorkPageState extends State<WorkPage> {
                     if (_isApproved == true)
                       WorkRequestApprove(
                           employee: widget.employee, is_status: is_status),
-                    WorkQuote(employee: widget.employee),
+                    WorkQuota(employee: widget.employee, emp_id: widget.employee.emp_id, isapprove: _isApproved,),
                   ],
                 ),
               ),

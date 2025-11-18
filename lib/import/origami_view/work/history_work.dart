@@ -255,8 +255,8 @@ class _WorkHistoryState extends State<WorkHistory> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(2),
-                                child: Image.network(
-                                  'https://cdn-icons-png.flaticon.com/512/2956/2956966.png',
+                                child: Image.asset(
+                                  'assets/images/file_image.png',
                                   width: 75,
                                   height: 75,
                                   fit: BoxFit.contain,

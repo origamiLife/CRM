@@ -18,6 +18,7 @@ class ActivityList extends StatefulWidget {
 }
 
 class _ActivityListState extends State<ActivityList> {
+  ScrollController _scrollController = ScrollController();
   bool isLoading = true;
   bool isAtEnd = false;
 
@@ -62,42 +63,64 @@ class _ActivityListState extends State<ActivityList> {
           future: _fetchModelActivity(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Color(0xFFFF9900),
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Text(
-                    'Loading...',
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF555555),
-                    ),
-                  ),
-                ],
-              ));
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: ListView.builder(
+                  itemCount: 20, // จำนวน shimmer item ที่แสดงระหว่างโหลด
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 100,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                      height: 12,
+                                      width: double.infinity,
+                                      color: Colors.white),
+                                  SizedBox(height: 5),
+                                  Container(
+                                      height: 12, width: 100, color: Colors.white),
+                                  SizedBox(height: 5),
+                                  Container(
+                                      height: 12, width: 150, color: Colors.white),
+                                  SizedBox(height: 5),
+                                  Container(
+                                      height: 12, width: 120, color: Colors.white),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
                   child: Text(
-                NotFoundDataTS,
-                style: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 16.0,
-                  color: const Color(0xFF555555),
-                  fontWeight: FontWeight.w700,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ));
+                    'No Data Available in table.',
+                    style: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                    ),
+                  ));
             } else {
               return Container(
                 color: Colors.white,
@@ -122,7 +145,7 @@ class _ActivityListState extends State<ActivityList> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: ListView.builder(
-          // controller: _scrollController,
+          controller: _scrollController,
           itemCount: list.length,
           itemBuilder: (context, index) {
             list.sort((a, b) => b.activity_id.compareTo(a.activity_id));
@@ -179,7 +202,7 @@ class _ActivityListState extends State<ActivityList> {
                                 ),
                               ),
                             ),
-                            Positioned(
+                            const Positioned(
                               right: 0,
                               child: Icon(
                                 Icons.bolt,
@@ -251,16 +274,12 @@ class _ActivityListState extends State<ActivityList> {
     );
   }
 
-  int indexItems = 0;
-  int sum = 0;
-  List<GetActivity> activityList = [];
-  List<GetActivity> newActivities = [];
   Future<List<GetActivity>> _fetchModelActivity() async {
     final uri = Uri.parse(
         "$hostDev/api/origami/crm/activity/stamp_activity/stamp_list.php");
     final response = await http.post(
       uri,
-      headers: {'Authorization': 'Bearer $token'},
+      headers: {'Authorization': 'Bearer $tokenMD5'},
       body: {
         'comp_id': widget.employee.comp_id,
         'emp_id': widget.employee.emp_id,

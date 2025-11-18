@@ -10,8 +10,8 @@ class MiniProject extends StatefulWidget {
       required this.callbackId,
       })
       : super(key: key);
-  final String Function(String) callback;
-  final String Function(String) callbackId;
+  final Function(String) callback;
+  final Function(String) callbackId;
   final Employee employee;
   @override
   _MiniProjectState createState() => _MiniProjectState();
@@ -41,188 +41,164 @@ class _MiniProjectState extends State<MiniProject> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 1,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.orange,
+          title: const Text(
+            'Project',
+            style: TextStyle(
+              fontFamily: 'Arial',
+              fontWeight: FontWeight.w500,
+              color: Colors.orange,),
+          ),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.orange,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Card(
-                  elevation: 0,
-                  color: Colors.transparent,
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 40, top: 8)),
-                ),
-                Card(
-                  color: Color(0xFFFF9900),
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 40, top: 8)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: TextFormField(
-                    controller: _searchProject,
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(
-                      fontFamily: 'Arial',
-                      color: Color(0xFF555555),
-                      fontSize: 14,
-                    ),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 14),
-                      hintText: 'Search...',
-                      hintStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14,
-                          color: Color(0xFF555555)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Color(0xFFFF9900),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        project_name = value;
-                        fetchProject(int_project, project_name);
-                        _searchText = value;
-                        // filterData_Account();
-                      });
-                    },
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  controller: _searchProject,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    color: Color(0xFF555555),
+                    fontSize: 14,
                   ),
-                ),
-                (_searchText == '')
-                    ? Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Search',
-                              style: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16,
-                                color: Color(0xFF555555),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            // InkWell(
-                            //   onTap: (){
-                            //     setState(() {
-                            //       _showDown = true;
-                            //     });
-                            //   },
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       Text(
-                            //         'แสดงโครงการทั้งหมด',
-                            //         style: TextStyle(
-                            // fontFamily: 'Arial',
-                            //           fontSize: 18,
-                            //           decoration: TextDecoration.underline,
-                            //           // color: Color(0xFFFF9900),
-                            //         ),),
-                            //       SizedBox(width: 8,),
-                            //       Icon(Icons.arrow_drop_down,color:Color(0xFF555555),)
-                            //     ],
-                            //   ),
-                            // )
-                          ],
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: projectList.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      project_name =
-                                          projectList[index].project_name ?? '';
-                                      project_id =
-                                          projectList[index].project_id ?? '';
-                                      widget.callback(project_name ?? '');
-                                      widget.callbackId(project_id ?? '');
-                                      Navigator.pop(context, project_name);
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Text(
-                                      "${projectList[index].project_name ?? ''}",
-                                      style: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 16,
-                                        color: Color(0xFF555555),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
-                                  child: Divider(),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 14),
+                    hintText: 'Search...',
+                    hintStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        color: Color(0xFF555555)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Color(0xFFFF9900),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่ไม่ได้โฟกัส
+                        width: 1.0,
                       ),
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          // int_project = int_project - 2;
-                          // fetchProject(int_project.toString(), "");
-                          Navigator.pop(context);
-                        });
-                      },
-                      child: Row(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFFF9900), // ขอบสีส้มตอนที่โฟกัส
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      project_name = value;
+                      fetchProject(int_project, project_name);
+                      _searchText = value;
+                      // filterData_Account();
+                    });
+                  },
+                ),
+              ),
+              (_searchText == '')
+                  ? const Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.navigate_before,
-                            color: Color(0xFFFF9900),
-                          ),
                           Text(
-                            "$Back",
+                            'No Data Available in table.',
                             style: TextStyle(
                               fontFamily: 'Arial',
+                              fontSize: 16,
                               color: Color(0xFF555555),
                             ),
                           ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          // InkWell(
+                          //   onTap: (){
+                          //     setState(() {
+                          //       _showDown = true;
+                          //     });
+                          //   },
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       Text(
+                          //         'แสดงโครงการทั้งหมด',
+                          //         style: TextStyle(
+                          // fontFamily: 'Arial',
+                          //           fontSize: 18,
+                          //           decoration: TextDecoration.underline,
+                          //           // color: Color(0xFFFF9900),
+                          //         ),),
+                          //       SizedBox(width: 8,),
+                          //       Icon(Icons.arrow_drop_down,color:Color(0xFF555555),)
+                          //     ],
+                          //   ),
+                          // )
                         ],
                       ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: projectList.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    project_name =
+                                        projectList[index].project_name ?? '';
+                                    project_id =
+                                        projectList[index].project_id ?? '';
+                                    widget.callback(project_name ?? '');
+                                    widget.callbackId(project_id ?? '');
+                                    Navigator.pop(context, project_name);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    "${projectList[index].project_name ?? ''}",
+                                    style: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16,
+                                      color: Color(0xFF555555),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 16, right: 16),
+                                child: Divider(),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+            ],
           ),
         ));
   }
@@ -237,7 +213,7 @@ class _MiniProjectState extends State<MiniProject> {
   String? project_id = "";
   Future<void> fetchProject(project_number, project_name) async {
     final uri = Uri.parse(
-        '$hostWeb/api/origami/need/project.php?page=$project_number&search=$project_name');
+        '$hostDev/api/origami/need/project.php?page=$project_number&search=$project_name');
     try {
       final response = await http.post(
         uri,
